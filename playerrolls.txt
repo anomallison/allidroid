@@ -1,0 +1,47 @@
+ a 1!
+ a 2!
+ a 3!
+ a 4!
+ a 5!
+ a 6!
+ a 7!
+ an 8!
+ a 9!
+ a 10!
+ an 11!
+ a 12!
+ a 13!
+ a 14!
+ a 15!
+ a 16!
+ a 17!
+ an 18!
+ a 19!
+ a 20!
+ a 99!
+ a critical success!
+ a critical fail!
+ "yes"
+ "no"
+ "ask again later"
+ "as I see it, yes"
+ "outlook not good"
+ "outlook good"
+ "you dun fucked up"
+... you don't want to know...
+... wouldn't you like to know...
+... again, die is cocked.
+... again, the die fell of the table.
+... something, iunno.
+... who can even read this die?
+... oh...
+... these aren't dice.
+... oh god no...
+... better not tell you.
+... well that was a mistake.
+... that's not a dice, that's a spoon.
+... that's not a dice, that's a cheeto.
+ into a haystack!
+ through a bunch of barrels!
+ the wrong dice, c'mon now.
+, Yahtzee!
