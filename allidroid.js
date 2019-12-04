@@ -59,6 +59,20 @@ var currentgay = 0;
 
 const MAX_DICE_ROLL = 999999999;
 
+
+//
+// finds if an array (typically of roles) has a name value equal to val
+//
+
+function hasName(arr, val) 
+{
+	return arr.some(function(arrVal)
+	{
+		return val == arrVal.name;
+	});
+}
+
+
 //
 //
 // MESSAGE RECEIVED
@@ -66,7 +80,7 @@ const MAX_DICE_ROLL = 999999999;
 //
 
 client.on('message', (receivedMessage) => {
-    if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
+    if (receivedMessage.author == client.user || hasName(receivedMessage.guild.members.get(receivedMessage.author.id).roles,'Bot Banned')) { // Prevent bot from responding to its own messages
         return
     }
     
@@ -1001,4 +1015,5 @@ client.on('error', console.error);
 //
 // engage ALLIDROID
 
-client.login("NTY1NDg2NTY0OTQwMTg1NjAx.XK3Jew.xIA6ulI3dwz4D8YJOKn7Et9mrns");
+client.login("NTY1NDg2NTY0OTQwMTg1NjAx.XK3Jew.xIA6ulI3dwz4D8YJOKn7Et9mrns"); //allidroid logon
+//client.login("NjQ3Mzc1NjYxMjMyODE2MTQw.XedJVw.BqrMw5wMnzzKLIrZWFDnHtG9KRg"); //test logon
