@@ -1015,5 +1015,5 @@ client.on('error', console.error);
 //
 // engage ALLIDROID
 
-client.login('NTY1NDg2NTY0OTQwMTg1NjAx.Xegehg.oK1rLk08F2r4V5qfJvFy7yY7-1I'); //allidroid logon
+client.login('NTY1NDg2NTY0OTQwMTg1NjAx.XegfBg.8KAhoPcZh_qv5Ab9IzDTrORTAF4'); //allidroid logon
 // client.login('NjQ3Mzc1NjYxMjMyODE2MTQw.XedJVw.BqrMw5wMnzzKLIrZWFDnHtG9KRg'); //test logon
