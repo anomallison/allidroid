@@ -8,7 +8,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "!monster"
+    "test": "!monster",
+	"start": "nohup node allidroid.js > log.txt 2>&1 & echo $! > pid.txt",
+	"stop": "kill $(tail pid.txt)"
   },
   "author": "allison galloway",
   "license": "ISC"
