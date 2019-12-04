@@ -51,6 +51,9 @@ var au_twists = JSON.parse(fs.readFileSync('au_twists.json'));
 var character_list = JSON.parse(fs.readFileSync('characters_list.json'));
 
 //
+var logintoken = fs.readFileSync('token.txt').toString();
+
+//
 //
 // extremely important Gay variable
 //
@@ -1015,5 +1018,4 @@ client.on('error', console.error);
 //
 // engage ALLIDROID
 
-client.login('NTY1NDg2NTY0OTQwMTg1NjAx.XegfBg.8KAhoPcZh_qv5Ab9IzDTrORTAF4'); //allidroid logon
-// client.login('NjQ3Mzc1NjYxMjMyODE2MTQw.XedJVw.BqrMw5wMnzzKLIrZWFDnHtG9KRg'); //test logon
+client.login(logintoken); //allidroid logon
