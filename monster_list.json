@@ -1,0 +1,287 @@
+[
+	{
+		"single": "monstrosity",
+		"plural": "monstrosities",
+		"lists": ["monster","boss"]
+	},
+	{
+		"single": "demon",
+		"plural": "demons",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "people eater",
+		"plural": "people eaters",
+		"lists": ["monster"]
+	},
+	{
+		"single": "shoggoth",
+		"plural": "shoggoths",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "millipede",
+		"plural": "millipedes",
+		"lists": ["monster","boss","friend","species"]
+	},
+	{
+		"single": "horror",
+		"plural": "horrors",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "bee",
+		"plural": "bees",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "robot",
+		"plural": "robots",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "werepenguin",
+		"plural": "werepenguins",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "cyclops",
+		"plural": "cyclopses",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "anchovy",
+		"plural": "anchovies",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "mass of eyes",
+		"plural": "masses of eyes",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "octopus",
+		"plural": "octopuses",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "mass of flesh",
+		"plural": "messes of flesh",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "dragon",
+		"plural": "dragons",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "horror from beyond",
+		"plural": "horrors from beyond",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "bio-weapon",
+		"plural": "bio-weapons",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "secret experiment",
+		"plural": "secret experiments",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "innocuous treasure chest",
+		"plural": "innocuous treasure chests",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "sword wielding child",
+		"plural": "sword wielding children",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "tyrannosaurus",
+		"plural": "tyrannosauruses",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "brachiosaurus",
+		"plural": "brachiosauruses",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "stegosaurus",
+		"plural": "stegosauruses",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "plateosaurus",
+		"plural": "plateosauruses",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "marshosaurus",
+		"plural": "marshosauruses",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "allosaurus",
+		"plural": "allosauruses",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "cookie monster",
+		"plural": "cookie monsters",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "train",
+		"plural": "trains",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "cat",
+		"plural": "cats",
+		"lists": ["monster","boss","friend","species"]
+	},
+	{
+		"single": "dingo",
+		"plural": "dingoes",
+		"lists": ["monster","boss","friend","species"]
+	},
+	{
+		"single": "emu",
+		"plural": "emus",
+		"lists": ["monster","boss","friend","species"]
+	},
+	{
+		"single": "kangaroo",
+		"plural": "kangaroos",
+		"lists": ["monster","boss","friend","species"]
+	},
+	{
+		"single": "bird",
+		"plural": "birds",
+		"lists": ["monster","boss","friend","species"]
+	},
+	{
+		"single": "sasquatch",
+		"plural": "sasquatches",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "godzilla",
+		"plural": "godzillas",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "loch ness monster",
+		"plural": "loch ness monsters",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "tomato with a face",
+		"plural": "tomatoes with faces",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "jackolantern",
+		"plural": "jackolanterns",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "raven",
+		"plural": "ravens",
+		"lists": ["monster","boss","friend","species"]
+	},
+	{
+		"single": "drider",
+		"plural": "driders",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "beastfolk",
+		"plural": "beastfolk",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "ogre",
+		"plural": "ogres",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "elf",
+		"plural": "elves",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "dwarf",
+		"plural": "dwarves",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "halfling",
+		"plural": "halflings",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "orc",
+		"plural": "orcs",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "gnome",
+		"plural": "gnomes",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "tengu",
+		"plural": "tengu",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "goblin",
+		"plural": "goblins",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "human",
+		"plural": "humans",
+		"lists": ["species"]
+	},
+	{
+		"single": "[species] vampire",
+		"plural": "[species] vampires",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "zombie [species]",
+		"plural": "zombie [species]",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "[species] skeleton",
+		"plural": "[species] skeletons",
+		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "catfolk",
+		"plural": "catfolk",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "kitsune",
+		"plural": "kitsune",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "minotaur",
+		"plural": "minotaurs",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "[species] himbo",
+		"plural": "[species] himbos",
+		"lists": ["monster","boss","friend","sexy"]
+	}
+]

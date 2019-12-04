@@ -1,0 +1,464 @@
+[
+	{
+		"word": "angry",
+		"priority": 3,
+		"lists": ["monster","boss"],
+		"antonyms": ["peaceful"],
+		"synonyms": []
+	},
+	{
+		"word": "awkward",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "bloodied",
+		"priority": 6,
+		"lists": ["monster","boss"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "bubbly",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": ["miserable"],
+		"synonyms": ["effervescent"]
+	},
+	{
+		"word": "butch",
+		"priority": 9,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "caring",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "cheerful",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "chemically-enhanced",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "chitinous",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "confused",
+		"priority": 3,
+		"lists": ["monster","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "cybernetic",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "drunken",
+		"priority": 3,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "dummy thic",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "ecclesiastical",
+		"priority": 9,
+		"lists": ["monster","boss"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "enthusiastic",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "fangorious",
+		"priority": 4,
+		"lists": ["monster","boss"],
+		"antonyms": [],
+		"synonyms": ["vicious"]
+	},
+	{
+		"word": "fleshy",
+		"priority": 4,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "flying",
+		"priority": 10,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": ["winged"]
+	},
+	{
+		"word": "gelatinous",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "genetically-engineered",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "ghastly",
+		"priority": 3,
+		"lists": ["monster","boss"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "ghostly",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "giant",
+		"priority": 2,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": ["miniature"],
+		"synonyms": []
+	},
+	{
+		"word": "glitched",
+		"priority": 1,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "goopy",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "hairy",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "headless",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "litigous",
+		"priority": 4,
+		"lists": ["monster","boss"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "malignant",
+		"priority": 4,
+		"lists": ["monster","boss"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "miniature",
+		"priority": 2,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": ["giant"],
+		"synonyms": []
+	},
+	{
+		"word": "minty fresh",
+		"priority": 1,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "miserable",
+		"priority": 3,
+		"lists": ["monster"],
+		"antonyms": ["bubby"],
+		"synonyms": []
+	},
+	{
+		"word": "mutant",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "obviously fake",
+		"priority": 1,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "peaceful",
+		"priority": 3,
+		"lists": ["friend","sexy"],
+		"antonyms": ["angry"],
+		"synonyms": []
+	},
+	{
+		"word": "phosphorescent",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "pretty",
+		"priority": 2,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "protective",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "psychic",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "pulsating",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "purple",
+		"priority": 8,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": ["green","blue","red","grey","orange","rainbow"]
+	},
+	{
+		"word": "radioactive",
+		"priority": 4,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "rather silly looking",
+		"priority": 9,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "sassy",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "scaly",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "sharp looking",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": ["smart looking"]
+	},
+	{
+		"word": "skittering",
+		"priority": 3,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "slight perturbed",
+		"priority": 3,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": ["perturbed"]
+	},
+	{
+		"word": "slimy",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "stalking",
+		"priority": 3,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "sticky",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "suspiciously handsome",
+		"priority": 9,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": ["unexpectedly handsome"]
+	},
+	{
+		"word": "sweet",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "swole",
+		"priority": 3,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": ["buff"]
+	},
+	{
+		"word": "uncontrollably farting",
+		"priority": 10,
+		"lists": ["monster"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "uncontrollably laughing",
+		"priority": 10,
+		"lists": ["monster"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "vampiric",
+		"priority": 4,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "very bi",
+		"priority": 7,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": ["bisexual"]
+	},
+	{
+		"word": "very gay",
+		"priority": 7,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": ["gay"]
+	},
+	{
+		"word": "vile",
+		"priority": 1,
+		"lists": ["monster","boss"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "wandering",
+		"priority": 1,
+		"lists": ["monster","boss","friend"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "writhing",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "thirsty",
+		"priority": 3,
+		"lists": ["sexy"],
+		"antonyms": [],
+		"synonyms": ["horny"]
+	},
+	{
+		"word": "busty",
+		"priority": 6,
+		"lists": ["sexy"],
+		"antonyms": [],
+		"synonyms": ["well endowed"]
+	},
+	{
+		"word": "hypnotising",
+		"priority": 6,
+		"lists": ["boss","sexy"],
+		"antonyms": [],
+		"synonyms": ["mesmerising", "enthralling"]
+	},
+	{
+		"word": "smiling",
+		"priority": 1,
+		"lists": ["monster","boss","friend","sexy"],
+		"antonyms": [],
+		"synonyms": []
+	}
+]

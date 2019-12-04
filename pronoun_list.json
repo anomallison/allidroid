@@ -1,0 +1,107 @@
+[
+	{
+		"subject": "he",
+		"object": "him",
+		"possessivesubject": "his",
+		"possessiveobject": "his",
+		"objectself": "himself"
+	},
+	{
+		"subject": "she",
+		"object": "her",
+		"possessivesubject": "her",
+		"possessiveobject": "hers",
+		"objectself": "herself"
+	},
+	{
+		"subject": "they",
+		"object": "them",
+		"possessivesubject": "their",
+		"possessiveobject": "theirs",
+		"objectself": "themself"
+	},
+	{
+		"subject": "xey",
+		"object": "xim",
+		"possessivesubject": "xir",
+		"possessiveobject": "xirs",
+		"objectself": "ximself"
+	},
+	{
+		"subject": "xey",
+		"object": "xem",
+		"possessivesubject": "xer",
+		"possessiveobject": "xers",
+		"objectself": "xemself"
+	},
+	{
+		"subject": "zey",
+		"object": "zim",
+		"possessivesubject": "zis",
+		"possessiveobject": "zis",
+		"objectself": "zimself"
+	},
+	{
+		"subject": "zey",
+		"object": "zer",
+		"possessivesubject": "zer",
+		"possessiveobject": "zers",
+		"objectself": "zerself"
+	},
+	{
+		"subject": "e",
+		"object": "em",
+		"possessivesubject": "es",
+		"possessiveobject": "es",
+		"objectself": "emself"
+	},
+	{
+		"subject": "e",
+		"object": "er",
+		"possessivesubject": "er",
+		"possessiveobject": "ers",
+		"objectself": "erself"
+	},
+	{
+		"subject": "it",
+		"object": "it",
+		"possessivesubject": "its",
+		"possessiveobject": "its",
+		"objectself": "itself"
+	},
+	{
+		"subject": "fae",
+		"object": "faer",
+		"possessivesubject": "faer",
+		"possessiveobject": "faers",
+		"objectself": "faeself"
+	},
+	{
+		"subject": "fae",
+		"object": "faer",
+		"possessivesubject": "faer",
+		"possessiveobject": "faers",
+		"objectself": "faeself"
+	},
+	{
+		"subject": "xe",
+		"object": "xyr",
+		"possessivesubject": "xyr",
+		"possessiveobject": "xyrs",
+		"objectself": "xyrself"
+	},
+	{
+		"subject": "ze",
+		"object": "zyr",
+		"possessivesubject": "zyr",
+		"possessiveobject": "zyrs",
+		"objectself": "zyrself"
+	},
+	{
+		"subject": "se",
+		"object": "sem",
+		"possessivesubject": "seir",
+		"possessiveobject": "seirs",
+		"objectself": "seirself"
+	}
+]

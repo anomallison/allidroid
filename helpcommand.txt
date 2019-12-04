@@ -1,0 +1,24 @@
+``I have the following commands:
+
+!help - Brings up this command
+
+!monster - Generates a basic monster
+
+!friend - Generates a friendly monster
+
+!boss - Generates a boss, who may also be a monster, with items and underlings
+
+!roll - Rolls a dice, or a string. XdY format, with X being the number of dice and Y being the sides per dice. Alternatively Y can be a string of characters
+example: !roll 2d6   !roll 7d7   !roll 4dLOL   !roll 20dHelloWorld
+
+!gay - Adds to the current total gay level of the bot as a whole
+
+!lesbian - Generates a lesbian
+
+!lesbifriend - Generates a lesbian who is friendly
+
+!slash - Generates a slashfic prompt, requires a character set, such as fe3h or da, an optional pairing format, such as f/f, m/m/m, or a/m/f/a, and an optional sublist such as blackeagles, bluelions, goldendeer, churchofseiros. Can use multiple character sets or sublists by separating with a ,
+example: !slash fe3h f/f !slash me,da m/a !slash fe3h f/f/f blackeagles,goldendeer
+
+!feedback - gives a link to the Google Form to give AnomAllison, my creator, feedback about Allidroid
+``

@@ -1,0 +1,117 @@
+[
+	{
+		"base": "glowing with malign light",
+		"synonyms": ["glowing with blessed light","that glows in the dark"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "humming with arcane power",
+		"synonyms": ["tingling with arcane power","pulsing with arcane power"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "studded with iron",
+		"synonyms": ["studded with platinum","studded with mithril","studded with uranium","studded with cardboard"],
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"base": "filled with candy",
+		"synonyms": ["filled with blood","filled with tears","filled with regret"],
+		"lists": ["accessory"]
+	},
+	{
+		"base": "that can't stop singing showtunes",
+		"synonyms": ["that cant stop laughing","that cant stop singing lullabies"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "that can talk",
+		"synonyms": ["that can talk and won't shut up"],
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"base": "in its original packaging",
+		"synonyms": ["in mint condition"],
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"base": "powered by an antimatter reactor",
+		"synonyms": ["powered by antimatter power cells","powered by a fusion reaction","powered by fusion power cells","powered by a dragon's heart","powered by the souls of the dead","powered by arcane sigils","powered by eldritch sigils","powered by dark rituals"],
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"base": "covered in mystic seals",
+		"synonyms": ["covered in eldritch sigils"],
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"base": "dripping with deadly venom",
+		"synonyms": [],
+		"lists": ["weapon"]
+	},
+	{
+		"base": "blessed by the gods",
+		"synonyms": ["blessed by dark powers","blessed by nature"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "cursed by dark powers",
+		"synonyms": ["cursed by the gods","cursed by nature"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "with the soul of a dragon",
+		"synonyms": [],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "tempered by the breath of a dragon",
+		"synonyms": ["tempered by the fires of hell","tempered by the freezing cold of the void"],
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"base": "humming with necromantic power",
+		"synonyms": ["dripping with necromantic power","seething with necromantic power"],
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"base": "seething with eldritch magic",
+		"synonyms": ["dripping with eldritch magic","brimming with eldritch magic"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "infused with gay energy",
+		"synonyms": ["pulsing with gay energy","humming with gay energy","blessed with gay energy","dripping with gay energy","glowing with gay energy","burning with gay energy","tingling with gay energy","powered by gay energy"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "burning with violent anger",
+		"synonyms": ["burning with dark powers"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "with an aura of magical ice",
+		"synonyms": ["with an aura of magical fire","with an aura of eldritch energy","with an aura of arcane energy","with an aura of magical lightning"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "engulf in eldritch flame",
+		"synonyms": ["engulfed in arcane lightning","engulfed in necromantic ice"],
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"base": "infused with elemental ice",
+		"synonyms": ["infused with elemental fire","infused with elemental lightning"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "brimming with elemental ice",
+		"synonyms": ["brimming with elemental fire","brimming with elemental lightning"],
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "energized by storms",
+		"synonyms": ["tingling with the power of storms"],
+		"lists": ["weapon","armour","accessory","friend"]
+	}
+]

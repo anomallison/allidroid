@@ -1,0 +1,142 @@
+[
+	{
+		"title": "doctor",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "lord",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "master",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "queen",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "king",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "emperor",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "holder",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "overseer",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "general",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "sargeant",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "minister",
+		"connective": "for",
+		"singular": false
+	},
+	{
+		"title": "advisor",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "oracle",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "warrior",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "archmagi",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "angel",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "demon",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "swordsman",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "knight",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "count",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "countess",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "duke",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "duchess",
+		"connective": "of",
+		"singular": true
+	},
+	{
+		"title": "horseman",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "guardian",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "manager",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "assistant manager",
+		"connective": "of",
+		"singular": false
+	},
+	{
+		"title": "head",
+		"connective": "of",
+		"singular": false
+	}
+]

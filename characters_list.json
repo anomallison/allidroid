@@ -1,0 +1,905 @@
+[
+	{
+		"id": "fe3h-00",
+		"name": "Byleth",
+		"gender": "a",
+		"invalidpairs": ["fe3h-12"],
+		"lists":["blackeagles","bluelions","goldendeer","churchofseiros"]
+	},
+	{
+		"id": "fe3h-01",
+		"name": "Hubert",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["blackeagles"]
+	},
+	{
+		"id": "fe3h-02",
+		"name": "Ferdinand",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["blackeagles"]
+	},
+	{
+		"id": "fe3h-03",
+		"name": "Caspar",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["blackeagles"]
+	},
+	{
+		"id": "fe3h-04",
+		"name": "Linhardt",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["blackeagles"]
+	},
+	{
+		"id": "fe3h-05",
+		"name": "Dimitri",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["bluelions"]
+	},
+	{
+		"id": "fe3h-06",
+		"name": "Dedue",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["bluelions"]
+	},
+	{
+		"id": "fe3h-07",
+		"name": "Felix",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["bluelions"]
+	},
+	{
+		"id": "fe3h-08",
+		"name": "Ashe",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["bluelions"]
+	},
+	{
+		"id": "fe3h-09",
+		"name": "Sylvain",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["bluelions"]
+	},
+	{
+		"id": "fe3h-0A",
+		"name": "Claude",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "fe3h-0B",
+		"name": "Lorenz",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "fe3h-0C",
+		"name": "Raphael",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "fe3h-0D",
+		"name": "Ignatz",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "fe3h-0E",
+		"name": "Hanneman",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-0F",
+		"name": "Seteth",
+		"gender": "m",
+		"invalidpairs": ["fe3h-23"],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-10",
+		"name": "Jeritza",
+		"gender": "m",
+		"invalidpairs": ["fe3h-1A"],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-11",
+		"name": "Cyril",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-12",
+		"name": "Jeralt",
+		"gender": "m",
+		"invalidpairs": ["fe3h-00"],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-13",
+		"name": "Alois",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-14",
+		"name": "Gilbert",
+		"gender": "m",
+		"invalidpairs": ["fe3h-1B"],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-15",
+		"name": "Sothis",
+		"gender": "f",
+		"invalidpairs": ["fe3h-21"],
+		"lists":[]
+	},
+	{
+		"id": "fe3h-16",
+		"name": "Edelgard",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["blackeagles"]
+	},
+	{
+		"id": "fe3h-17",
+		"name": "Dorothea",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["blackeagles"]
+	},
+	{
+		"id": "fe3h-18",
+		"name": "Bernadetta",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["blackeagles"]
+	},
+	{
+		"id": "fe3h-19",
+		"name": "Petra",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["blackeagles"]
+	},
+	{
+		"id": "fe3h-1A",
+		"name": "Mercedes",
+		"gender": "f",
+		"invalidpairs": ["fe3h-10"],
+		"lists":["bluelions"]
+	},
+	{
+		"id": "fe3h-1B",
+		"name": "Annette",
+		"gender": "f",
+		"invalidpairs": ["fe3h-14"],
+		"lists":["bluelions"]
+	},
+	{
+		"id": "fe3h-1C",
+		"name": "Ingrid",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["bluelions"]
+	},
+	{
+		"id": "fe3h-1D",
+		"name": "Hilda",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "fe3h-1E",
+		"name": "Lysithea",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "fe3h-1F",
+		"name": "Marianne",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "fe3h-20",
+		"name": "Leonie",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "fe3h-21",
+		"name": "Rhea",
+		"gender": "f",
+		"invalidpairs": ["fe3h-15"],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-22",
+		"name": "Manuela",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-23",
+		"name": "Flayn",
+		"gender": "f",
+		"invalidpairs": ["fe3h-0F"],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-24",
+		"name": "Catherine",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-25",
+		"name": "Shamir",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-26",
+		"name": "Judith",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["goldendeer"]
+	},
+	{
+		"id": "da-00",
+		"name": "The Warden",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-01",
+		"name": "Shale",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-02",
+		"name": "Loghain",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-03",
+		"name": "Alistair",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-04",
+		"name": "Sten",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-05",
+		"name": "Oghren",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-06",
+		"name": "Zevran",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-07",
+		"name": "Duncan",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-08",
+		"name": "Cailan",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-09",
+		"name": "Anders",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-0A",
+		"name": "Hawke",
+		"gender": "a",
+		"invalidpairs": ["da-0E","da-1C"],
+		"lists":[]
+	},
+	{
+		"id": "da-0B",
+		"name": "Orsino",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-0C",
+		"name": "Arishok",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-0D",
+		"name": "Varric",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-0E",
+		"name": "Carver",
+		"gender": "m",
+		"invalidpairs": ["da-0A","da-1C"],
+		"lists":[]
+	},
+	{
+		"id": "da-0F",
+		"name": "Fenris",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-10",
+		"name": "Sebastian",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-11",
+		"name": "The Inquisitor",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-12",
+		"name": "Corypheus",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-13",
+		"name": "Morrigan",
+		"gender": "f",
+		"invalidpairs": ["da-16"],
+		"lists":[]
+	},
+	{
+		"id": "da-14",
+		"name": "Leliana",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-15",
+		"name": "Wynne",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-16",
+		"name": "Flemeth",
+		"gender": "f",
+		"invalidpairs": ["da-13"],
+		"lists":[]
+	},
+	{
+		"id": "da-17",
+		"name": "Anora",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-18",
+		"name": "Mhairi",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-19",
+		"name": "Sigrun",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-1A",
+		"name": "Velanna",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-1B",
+		"name": "Meredith",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-1C",
+		"name": "Bethany",
+		"gender": "f",
+		"invalidpairs": ["da-0A","da-0E"],
+		"lists":[]
+	},
+	{
+		"id": "da-1D",
+		"name": "Aveline",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-1E",
+		"name": "Isabela",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-1F",
+		"name": "Merill",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "da-20",
+		"name": "Tallis",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-00",
+		"name": "Shepherd",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-01",
+		"name": "Garrus",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-02",
+		"name": "Kaiden",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-03",
+		"name": "Liara",
+		"gender": "f",
+		"invalidpairs": ["me-0A"],
+		"lists":[]
+	},
+	{
+		"id": "me-04",
+		"name": "Tali",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-05",
+		"name": "Wrex",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-06",
+		"name": "Ashley",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-07",
+		"name": "Dr. Chakwas",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-08",
+		"name": "Joker",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-09",
+		"name": "Saren",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-0A",
+		"name": "Benezia",
+		"gender": "f",
+		"invalidpairs": ["me-03"],
+		"lists":[]
+	},
+	{
+		"id": "me-0B",
+		"name": "Sovereign",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-0C",
+		"name": "The Thorian",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-0D",
+		"name": "Blasto",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-0E",
+		"name": "Grunt",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-0F",
+		"name": "Jack",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-10",
+		"name": "Jacob",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-11",
+		"name": "Kasumi",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-12",
+		"name": "Legion",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-13",
+		"name": "Miranda",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-14",
+		"name": "Mordin",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-15",
+		"name": "Samara",
+		"gender": "f",
+		"invalidpairs": ["me-16"],
+		"lists":[]
+	},
+	{
+		"id": "me-16",
+		"name": "Morinth",
+		"gender": "f",
+		"invalidpairs": ["me-15"],
+		"lists":[]
+	},
+	{
+		"id": "me-17",
+		"name": "Thane",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-18",
+		"name": "Zaeed",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-19",
+		"name": "Aria",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-1A",
+		"name": "EDI",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-1B",
+		"name": "The Illusive Man",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-1C",
+		"name": "Kelly",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-1D",
+		"name": "Harbinger",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-1E",
+		"name": "Vega",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "me-1F",
+		"name": "Javik",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+		{
+		"id": "g9-00",
+		"name": "Gideon",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-01",
+		"name": "Harrowhark",
+		"gender": "f",
+		"invalidpairs": ["g9-02","g9-03"],
+		"lists":[]
+	},
+	{
+		"id": "g9-02",
+		"name": "Pelleamena",
+		"gender": "f",
+		"invalidpairs": ["g9-01"],
+		"lists":[]
+	},
+	{
+		"id": "g9-03",
+		"name": "Primahark",
+		"gender": "m",
+		"invalidpairs": ["g9-01"],
+		"lists":[]
+	},
+	{
+		"id": "g9-04",
+		"name": "Ortus",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-05",
+		"name": "Crux",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-06",
+		"name": "Aiglamene",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-07",
+		"name": "Lachrimorta",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-08",
+		"name": "Aisamorta",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-09",
+		"name": "The Emperor",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-0A",
+		"name": "Judith",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-0B",
+		"name": "Marta",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-0C",
+		"name": "Coronabeth",
+		"gender": "f",
+		"invalidpairs": ["g9-0D"],
+		"lists":[]
+	},
+	{
+		"id": "g9-0D",
+		"name": "Ianthe",
+		"gender": "f",
+		"invalidpairs": ["g9-0C"],
+		"lists":[]
+	},
+	{
+		"id": "g9-0E",
+		"name": "Naberius",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},,
+	{
+		"id": "g9-0F",
+		"name": "Abigail",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-10",
+		"name": "Magnus",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-11",
+		"name": "Palamedes",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-12",
+		"name": "Camilla",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-13",
+		"name": "Dulcinea",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-14",
+		"name": "Prostesilaus",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-15",
+		"name": "Silas",
+		"gender": "m",
+		"invalidpairs": ["g9-16"],
+		"lists":[]
+	},
+	{
+		"id": "g9-16",
+		"name": "Colum",
+		"gender": "m",
+		"invalidpairs": ["g9-15"],
+		"lists":[]
+	},
+	{
+		"id": "g9-17",
+		"name": "Teacher",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "g9-18",
+		"name": "Cytherea",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	}
+]

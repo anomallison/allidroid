@@ -1,0 +1,362 @@
+[
+	{
+		"single": ["that's flailing [possessivesubject] limbs wildly"],
+		"plural": ["that're flailing their limbs wildly"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's covered in razor sharp spines"],
+		"plural": ["that're covered in razor sharp spines"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's covered in ambergris"],
+		"plural": ["that're covered in ambergris"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's covered in feathers"],
+		"plural": ["that're covered in feathers"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's punching demons into gibblets"],
+		"plural": ["that're punching demons into gibblets"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's eating well cooked bacon"],
+		"plural": ["that're eating well cooked bacon"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's feasting on human flesh"],
+		"plural": ["that're feasting on human flesh"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["with flesh rotting from [possessivesubject] bones"],
+		"plural": ["with flesh rotting from their bones"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["with sharp tentacles flailing from [possessivesubject] body"],
+		"plural": ["with sharp tentacles flailing from their bodies"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's on fire"],
+		"plural": ["that're on fire"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's downing a 6 pack"],
+		"plural": ["that're downing a 6 pack"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's offering poutine"],
+		"plural": ["that're offering poutine"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's swinging a sword poorly"],
+		"plural": ["that're swinging swords poorly"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's swinging a spear proficiently"],
+		"plural": ["that're swinging spears proficiently"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's throwing rocks wildly"],
+		"plural": ["that're throwing rocks wildly"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's eyes are darting around suspiciously"],
+		"plural": ["that's eyes are darting around suspiciously"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's covered in chattering mouths gnashing their teeth"],
+		"plural": ["that're covered in chattering mouths gnashing their teeth"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing a VR headset"],
+		"plural": ["that're wearing VR headsets"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing a high visability vest"],
+		"plural": ["that're wearing high visability vests"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing exactly what you'd expect"],
+		"plural": ["that're wearing exactly what you'd expect"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing, I dunno, stuff"],
+		"plural": ["that're wearing, I dunno, stuff"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's covered in... ew..."],
+		"plural": ["that're covered in... ew..."],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's chewing on bones"],
+		"plural": ["that're chewing on bones"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["with arrows protruding from [object]"],
+		"plural": ["with arrows protruding from them"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["with fungi growing over [object]"],
+		"plural": ["with fungi growing over them"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing a crown of flowers"],
+		"plural": ["that're wearing crowns of flowers"],
+		"lists": ["monster","friend"]
+	},
+	{
+		"single": ["that's wearing a bowler hat"],
+		"plural": ["that're wearing bowler hats"],
+		"lists": ["monster","friend"]
+	},
+	{
+		"single": ["that's wearing two monocles"],
+		"plural": ["that're all wearing two monocles"],
+		"lists": ["monster","friend"]
+	},
+	{
+		"single": ["that's wearing a monocle"],
+		"plural": ["that're wearing monocles"],
+		"lists": ["monster","friend"]
+	},
+	{
+		"single": ["that's spinning a pocket watch carelessly"],
+		"plural": ["that're spinning pocket watches carelessly"],
+		"lists": ["monster","friend"]
+	},
+	{
+		"single": ["that's staring into nothingness"],
+		"plural": ["that're staring into nothingness"],
+		"lists": ["monster","friend"]
+	},
+	{
+		"single": ["that is totally being like that"],
+		"plural": ["that are totally being like that"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's sneaking around, poorly"],
+		"plural": ["that're sneaking around, poorly"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's humming [possessivesubject] own theme music"],
+		"plural": ["that're humming their own theme music"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's carrying a large sack of unknown contents"],
+		"plural": ["that're carrying a large sack of unknown contents"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing a big sheriff's badge"],
+		"plural": ["that're wearing big deputy's badges"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing a lanyard"],
+		"plural": ["that're wearing lanyards"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing a fake moustache"],
+		"plural": ["that're wearing fake moustaches"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's brandishing [possessivesubject] mother's credit card"],
+		"plural": ["that're brandishing their mother's credit cards"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's brandishing an ornate looking dagger"],
+		"plural": ["that're brandishing ornate looking daggers"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's juggling fancy looking axes"],
+		"plural": ["that're juggling fancy looking axes"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's wearing an awfully ratty cloak"],
+		"plural": ["that're wearing awfully ratty cloaks"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's eating a birthday cake with [possessivesubject] fists"],
+		"plural": ["that're eating a birthday cake with their fists"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's carrying an octopus"],
+		"plural": ["that're carrying an octopus"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["that's chanting something catchy", "that's chanting something sinister"],
+		"plural": ["that're chanting something catchy", "that're chanting something sinister"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["who knows too much"],
+		"plural": ["who know too much"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["with no conscience"],
+		"plural": ["with no conscience"],
+		"lists": ["monster"]
+	},
+	{
+		"single": ["who's quietly reading a book", "who's quietly drawing a picture"],
+		"plural": ["who're quietly reading a book", "who're quietly reading piles of books", "who're quietly drawing pictures"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who's curled up asleep on a big pillow"],
+		"plural": ["who're curled up asleep on a big pillow"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who's happy to see you"],
+		"plural": ["who're happy to see you"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who's bringing you a plushie friend", "who's bringing you an octopus friend"],
+		"plural": ["who're bringing you lots of plushie friends", "who're bringing you a big octopus friend", "who're bringing you a giant plushie friends", "who're bringing you lots of octopus friends"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who's bringing you a cat to pet", "who's bringing you a dog to pet"],
+		"plural": ["who're bringing you cats to pet", "who're bringing you a dog to pet"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who brought you a lovely card"],
+		"plural": ["who brought you lovely cards"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who likes you for being you"],
+		"plural": ["who like you for being you"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who believes in you"],
+		"plural": ["who believe in you"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who's cheering for you"],
+		"plural": ["who're cheering for you"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who gives good hugs"],
+		"plural": ["who give good hugs"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who makes tasty muffins"],
+		"plural": ["who make tasty muffins"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who values your friendship", "who knows you got this", "who's sending you lots of love", "who wants you to know you're appreciated"],
+		"plural": ["who value your friendship", "who know you got this", "who're sending you lots of love", "who want you to know you're appreciated"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who'll help however [subject] can", "who has your back"],
+		"plural": ["who'll help however they can", "who have your back"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who made you some hot cocoa", "who got you some ice cream", "who's making you soup, right now", "who made you a batch of cookies"],
+		"plural": ["who made you some hot cocoa", "who got you some ice cream", "who're making you soup, right now", "who made you a big batch of cookies"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who's offering you flowers", "who's offering you chocolates", "who's offering you cake"],
+		"plural": ["who're offering you flowers", "who're offering you chocolates", "who're offering you cake"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["who's bringing you blankets and pillows"],
+		"plural": ["who're bringing you blankets and pillows"],
+		"lists": ["friend"]
+	},
+	{
+		"single": ["that's beckoning you come hither"],
+		"plural": ["that're beckoning you come hither"],
+		"lists": ["sexy"]
+	},
+	{
+		"single": ["in a pikachu onesie", "in a wolf onesie", "in a penguin onesie", "in a sylveon onesie"],
+		"plural": ["in pikachu onesies", "in wolf onesies", "in penguin onesies", "in sylveon onesies"],
+		"lists": ["friend","sexy"]
+	},
+	{
+		"single": ["in lace underwear and a negligee", "in skimpy swimwear"],
+		"plural": ["in lace underwear and negligees", "in skimpy swimwear"],
+		"lists": ["sexy"]
+	},
+	{
+		"single": ["pouring massage oil over [objectself]"],
+		"plural": ["pouring massage oil over themselves"],
+		"lists": ["sexy"]
+	},
+	{
+		"single": ["that's in heat", "that needs to breed"],
+		"plural": ["that're in heat", "that need to breed"],
+		"lists": ["sexy"]
+	},
+	{
+		"single": ["that's panting with excitement"],
+		"plural": ["that're panting with excitement"],
+		"lists": ["sexy"]
+	},
+	{
+		"single": ["that's bucking [possessivesubject] hips"],
+		"plural": ["that're bucking their hips"],
+		"lists": ["sexy"]
+	},
+	{
+		"single": ["that's all tied up in shibari","that's handcuffed and blindfolded"],
+		"plural": ["that're all tied up in shibari","that're handcuffed and blindfolded"],
+		"lists": ["sexy"]
+	},
+	{
+		"single": ["that's staring down at you with [possessivesubject] tongue between [possessivesubject] teeth"],
+		"plural": ["that're staring down at you, gleefully"],
+		"lists": ["sexy"]
+	}
+]

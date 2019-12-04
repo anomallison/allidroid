@@ -1,0 +1,130 @@
+[
+	{
+		"single": "fighter",
+		"plural": "fighters"
+	},
+	{
+		"single": "wizard",
+		"plural": "wizards"
+	},
+	{
+		"single": "necromancer",
+		"plural": "necromancers"
+	},
+	{
+		"single": "rogue",
+		"plural": "rogues"
+	},
+	{
+		"single": "thief",
+		"plural": "thieves"
+	},
+	{
+		"single": "physician",
+		"plural": "physicians"
+	},
+	{
+		"single": "planar traveller",
+		"plural": "planar traveller"
+	},
+	{
+		"single": "summoner",
+		"plural": "summoners"
+	},
+	{
+		"single": "druid",
+		"plural": "druids"
+	},
+	{
+		"single": "berserker",
+		"plural": "berserkers"
+	},
+	{
+		"single": "lesbian",
+		"plural": "lesbians"
+	},
+	{
+		"single": "engineer",
+		"plural": "engineers"
+	},
+	{
+		"single": "psychic warrior",
+		"plural": "psychic warriors"
+	},
+	{
+		"single": "sniper",
+		"plural": "snipers"
+	},
+	{
+		"single": "medic",
+		"plural": "medics"
+	},
+	{
+		"single": "cleric",
+		"plural": "clerics"
+	},
+	{
+		"single": "hypnotist",
+		"plural": "hypnotists"
+	},
+	{
+		"single": "soldier",
+		"plural": "soldiers"
+	},
+	{
+		"single": "bounty hunter",
+		"plural": "bounty hunters"
+	},
+	{
+		"single": "destroyer",
+		"plural": "destroyers"
+	},
+	{
+		"single": "blackguard",
+		"plural": "blackguard"
+	},
+	{
+		"single": "frostguard",
+		"plural": "frostguard"
+	},
+	{
+		"single": "godslayer",
+		"plural": "godslayers"
+	},
+	{
+		"single": "vampire slayer",
+		"plural": "vampire slayers"
+	},
+	{
+		"single": "doom slayer",
+		"plural": "doom slayers"
+	},
+	{
+		"single": "templar",
+		"plural": "templar"
+	},
+	{
+		"single": "witch",
+		"plural": "witches"
+	},
+	{
+		"single": "alchemist",
+		"plural": "alchemists"
+	},
+	{
+		"single": "knight errant",
+		"plural": "knights errant"
+	},
+	{
+		"single": "cultist",
+		"plural": "cultists"
+	},
+	{
+		"single": "paladin",
+		"plural": "paladins"
+	},
+	{
+		"single": "inquisitor",
+		"plural": "inquisitors"
+	}
+]
