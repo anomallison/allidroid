@@ -69,6 +69,8 @@ const MAX_DICE_ROLL = 999999999;
 
 function hasName(arr, val) 
 {
+	if (arr == null)
+		return false;
 	return arr.some(function(arrVal)
 	{
 		return val == arrVal.name;
@@ -83,7 +85,11 @@ function hasName(arr, val)
 //
 
 client.on('message', (receivedMessage) => {
-    if (receivedMessage.author == client.user || hasName(receivedMessage.guild.members.get(receivedMessage.author.id).roles,'Bot Banned')) { // Prevent bot from responding to its own messages
+    if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
+        return
+    }
+	
+	if (receivedMessage.guild != null && hasName(receivedMessage.guild.members.get(receivedMessage.author.id).roles,'Bot Banned')) { // Don't respond to banned users in channels
         return
     }
     
