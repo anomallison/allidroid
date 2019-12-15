@@ -316,5 +316,23 @@
 		"number": 1,
 		"type": "accessory",
 		"synonyms": ["golden cudgel","mithril wand","scepter of fine ivory"]
+	},
+	{
+		"name": "pet cat",
+		"number": 1,
+		"type": "accessory",
+		"synonyms": ["pet dog","pet lizard","pet rat"]
+	},
+	{
+		"name": "glasses",
+		"number": 1,
+		"type": "accessories",
+		"synonyms": ["monocle","spectacles","goggles"]
+	},
+	{
+		"name": "crossbow",
+		"number": 1,
+		"type": "weapon",
+		"synonyms": ["longbow","sling","hand-held catapult"]
 	}
 ]

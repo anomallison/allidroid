@@ -283,5 +283,20 @@
 		"single": "[species] himbo",
 		"plural": "[species] himbos",
 		"lists": ["monster","boss","friend","sexy"]
+	},
+	{
+		"single": "dhampir",
+		"plural": "dhampirs",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "turtleman",
+		"plural": "turtlemen",
+		"lists": ["monster","boss","friend","sexy","species"]
+	},
+	{
+		"single": "frogfolk",
+		"plural": "frogfolk",
+		"lists": ["monster","boss","friend","sexy","species"]
 	}
 ]
