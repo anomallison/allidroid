@@ -1237,14 +1237,15 @@ function generatePhonemeName(maxsyllables = 7, minimumsyllables = 1)
 				tempphonemelist = tempphonemelist.filter(filterByManyList,tempmultilist);
 			}
 			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants"));
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants")); //double weight for consonsants
 		}
 		else
 		{
 			tempphonemelist = phonemes_english.filter(filterByList,"vowels");
 		}
 	
-		random_int = Math.floor(Math.random()*(phonemes_english.length));
-		last = phonemes_english[random_int];
+		random_int = Math.floor(Math.random()*(tempphonemelist.length));
+		last = tempphonemelist[random_int];
 		name.push(last);
 	}
 	
@@ -1257,7 +1258,7 @@ function generatePhonemeName(maxsyllables = 7, minimumsyllables = 1)
 		spelling += getPhonemeSpelling(name[i]);
 	}
 	
-	return "\[" + pronounciation + "\] " + spelling;
+	return "\[" + pronounciation + "\] " + grammarCapitalFirstLetter(spelling); 
 }
 
 
