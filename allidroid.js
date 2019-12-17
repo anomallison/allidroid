@@ -58,6 +58,9 @@ var weirdprincess_carriages = JSON.parse(fs.readFileSync('weirdprincess_carriage
 var weirdprincess_retinues = JSON.parse(fs.readFileSync('weirdprincess_retinues.json'));
 var weirdprincess_retinuetraits = JSON.parse(fs.readFileSync('weirdprincess_retinuetraits.json'));
 
+//phoneme files
+var phonemes_english = JSON.parse(fs.readFileSync('phonemes_english.json'));
+
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
@@ -70,20 +73,6 @@ var currentgay = 0;
 
 const MAX_DICE_ROLL = 999999999;
 
-
-//
-// finds if an array (typically of roles) has a name value equal to val
-//
-
-function hasName(arr, val) 
-{
-	if (arr == null)
-		return false;
-	return arr.some(function(arrVal)
-	{
-		return val == arrVal.name;
-	});
-}
 
 
 //
@@ -237,6 +226,27 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
+    } else if (normalizedCommand == "generatename") 
+	{
+		if (arguments.length > 1)
+		{
+			output = generatePhonemeName(parseInt(arguments[0]), parseInt(arguments[1]));
+		} else if (arguments.length == 1)
+		{
+			output = generatePhonemeName(parseInt(arguments[0]));
+		} else
+		{
+			output = generatePhonemeName();
+		}
+		
+		if (output == null)
+		{
+			console.log("failed command: generatename");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
     }
 	else
 	{
@@ -272,6 +282,20 @@ function howgay()
 	}
 	gayresult += currentgay + " gay";
 	return gayresult;
+}
+
+//
+// finds if an array (typically of roles) has a name value equal to val
+//
+
+function hasName(arr, val) 
+{
+	if (arr == null)
+		return false;
+	return arr.some(function(arrVal)
+	{
+		return val == arrVal.name;
+	});
 }
 
 //
@@ -1020,7 +1044,7 @@ function generateBoss()
 
 function getPrincessObjectString(object)
 {
-	if (object.synonyms.legnth == 0)
+	if (object.synonyms.length == 0)
 	{
 		return object.base;
 	}
@@ -1043,8 +1067,8 @@ function getPrincessType(list = "")
 	}
 	else
 	{
-		arraylist = [list];
-		temptypelist = weirdprincess_types.filter(filterByList,arraylist);
+		//arraylist = [list];
+		temptypelist = weirdprincess_types.filter(filterByList,list);
 	}
 	
 	if (temptypelist.length < 1)
@@ -1093,13 +1117,13 @@ function generateWeirdPrincess()
 	let random_int = Math.floor(Math.random()*(weirdprincess_colours.length));
 	let colour = weirdprincess_colours[random_int];
 	
-	let arraylist = [colour]; // because the filterByList actally takes an array
-	let tempobjectarray = weirdprincess_appearances.filter(filterByList,arraylist); // temp array I will overwrite repeatedly...
+	//let arraylist = [colour]; // because the filterByList actally takes an array
+	let tempobjectarray = weirdprincess_appearances.filter(filterByList,colour); // temp array I will overwrite repeatedly...
 	
 	random_int = Math.floor(Math.random()*(tempobjectarray.length));
 	let appearance = getPrincessObjectString(tempobjectarray[random_int]);
 	
-	tempobjectarray = weirdprincess_clothings.filter(filterByList,arraylist);
+	tempobjectarray = weirdprincess_clothings.filter(filterByList,colour);
 	
 	random_int = Math.floor(Math.random()*(tempobjectarray.length));
 	let clothing = getPrincessObjectString(tempobjectarray[random_int]);
@@ -1130,6 +1154,91 @@ function generateWeirdPrincess()
 		retinue + " marked by " + retinuetrait;
 		
 	return princessFinal;
+}
+
+//
+// gets the spelling possibilities of a phoneme
+
+function getPhonemeSpelling(object)
+{
+	if (object.spellings.length == 0)
+	{
+		console.log("Get Phoneme Spelling error; no spellings in this phoneme");
+	}
+	
+	let random_int = Math.floor(Math.random()*(object.spellings.length));
+	return object.spellings[random_int];
+}
+
+//
+// garbage name generator
+
+function generatePhonemeName(maxsyllables = 7, minimumsyllables = 1)
+{
+	if (maxsyllables < minimumsyllables)
+	{
+		console.log("maxsyllables: " + maxsyllables + ", minimumsyllables: " + minimumsyllables);
+		return "when using !name, maximum syllables must not be lower than minimum syllables";
+	}
+	if (isNaN(maxsyllables) || isNaN(minimumsyllables) || maxsyllables < 1 || minimumsyllables < 1)
+	{
+		return "the !name command only accepts numbers above 0"
+	}
+	
+	let name = [];
+	let random_int = Math.floor(Math.random()*(phonemes_english.length));
+	let last = phonemes_english[random_int];
+	let syllablecount = Math.floor((Math.random()*maxsyllables)+minimumsyllables);
+	
+	name.push(last);
+	
+	let tempphonemelist;
+	let tempmultilist;
+	
+	for (i = 1; i < syllablecount; i++)
+	{
+		if (last.lists.includes("vowels") )
+		{
+			if (last.lists.includes("close"))
+			{
+				tempphonemelist = phonemes_english.filter(filterByList,"vowels");
+				tempmultilist = ["mid","open"];
+				tempphonemelist = tempphonemelist.filter(filterByManyList,tempmultilist);
+			}
+			else if (last.lists.includes("mid"))
+			{
+				tempphonemelist = phonemes_english.filter(filterByList,"vowels");
+				tempmultilist = ["close","open"];
+				tempphonemelist = tempphonemelist.filter(filterByManyList,tempmultilist);
+			}
+			else
+			{
+				tempphonemelist = phonemes_english.filter(filterByList,"vowels");
+				tempmultilist = ["close","mid"];
+				tempphonemelist = tempphonemelist.filter(filterByManyList,tempmultilist);
+			}
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants"));
+		}
+		else
+		{
+			tempphonemelist = phonemes_english.filter(filterByList,"vowels");
+		}
+	
+		random_int = Math.floor(Math.random()*(phonemes_english.length));
+		last = phonemes_english[random_int];
+		name.push(last);
+	}
+	
+	let pronounciation = "";
+	let spelling = "";
+	
+	for (i = 0; i < name.length; i++)
+	{
+		pronounciation += name[i].phoneme;
+		spelling += getPhonemeSpelling(name[i]);
+	}
+	
+	return "\[" + pronounciation + "\] " + spelling;
 }
 
 

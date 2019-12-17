@@ -1,0 +1,222 @@
+[
+	{
+		"phoneme": "iː",
+		"spellings": ["ee","ea"],
+		"lists": ["vowels","monophthongs","close"]
+	},
+	{
+		"phoneme": "ɪ",
+		"spellings": ["i"],
+		"lists": ["vowels","monophthongs","close"]
+	},
+	{
+		"phoneme": "ʊ",
+		"spellings": ["oo"],
+		"lists": ["vowels","monophthongs","close"]
+	},
+	{
+		"phoneme": "uː",
+		"spellings": ["oo"],
+		"lists": ["vowels","monophthongs","close"]
+	},
+	{
+		"phoneme": "e",
+		"spellings": ["e"],
+		"lists": ["vowels","monophthongs","mid"]
+	},
+	{
+		"phoneme": "ə",
+		"spellings": ["er"],
+		"lists": ["vowels","monophthongs","mid"]
+	},
+	{
+		"phoneme": "ɜː",
+		"spellings": ["ir","ur"],
+		"lists": ["vowels","monophthongs","mid"]
+	},
+	{
+		"phoneme": "ɔː",
+		"spellings": ["oor"],
+		"lists": ["vowels","monophthongs","close"]
+	},
+	{
+		"phoneme": "æ",
+		"spellings": ["a"],
+		"lists": ["vowels","monophthongs","open"]
+	},
+	{
+		"phoneme": "ʌ",
+		"spellings": ["u"],
+		"lists": ["vowels","monophthongs","open"]
+	},
+	{
+		"phoneme": "ɑː",
+		"spellings": ["ar"],
+		"lists": ["vowels","monophthongs","open"]
+	},
+	{
+		"phoneme": "ɒ",
+		"spellings": ["o"],
+		"lists": ["vowels","monophthongs","mid"]
+	},
+	{
+		"phoneme": "ɪə",
+		"spellings": ["ere"],
+		"lists": ["vowels","diphthongs","mid"]
+	},
+	{
+		"phoneme": "eɪ",
+		"spellings": ["ai"],
+		"lists": ["vowels","diphthongs","close"]
+	},
+	{
+		"phoneme": "ʊə",
+		"spellings": ["ou"],
+		"lists": ["vowels","diphthongs","mid"]
+	},
+	{
+		"phoneme": "ɔɪ",
+		"spellings": ["oi"],
+		"lists": ["vowels","diphthongs","close"]
+	},
+	{
+		"phoneme": "əʊ",
+		"spellings": ["ow"],
+		"lists": ["vowels","diphthongs","close"]
+	},
+	{
+		"phoneme": "eə",
+		"spellings": ["air"],
+		"lists": ["vowels","diphthongs","mid"]
+	},
+	{
+		"phoneme": "aɪ",
+		"spellings": ["y"],
+		"lists": ["vowels","diphthongs","close"]
+	},
+	{
+		"phoneme": "aʊ",
+		"spellings": ["ow"],
+		"lists": ["vowels","diphthongs","close"]
+	},
+	{
+		"phoneme": "p",
+		"spellings": ["p"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "b",
+		"spellings": ["b"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "t",
+		"spellings": ["t"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "d",
+		"spellings": ["d"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "tʃ",
+		"spellings": ["ch"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "dʒ",
+		"spellings": ["j","ge"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "k",
+		"spellings": ["c","k"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "g",
+		"spellings": ["g"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "f",
+		"spellings": ["f"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "v",
+		"spellings": ["v"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "θ",
+		"spellings": ["th"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "ð",
+		"spellings": ["th"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "s",
+		"spellings": ["s"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "z",
+		"spellings": ["z"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "ʃ",
+		"spellings": ["sh"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "ʒ",
+		"spellings": ["s"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "m",
+		"spellings": ["m"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "n",
+		"spellings": ["n"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "ŋ",
+		"spellings": ["ng"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "h",
+		"spellings": ["h"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "l",
+		"spellings": ["l"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "r",
+		"spellings": ["r"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "w",
+		"spellings": ["w"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "j",
+		"spellings": ["y"],
+		"lists": ["consonants"]
+	}
+]
