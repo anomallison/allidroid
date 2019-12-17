@@ -964,6 +964,18 @@ function generateArtifact()
 	let baseitem = item_nouns[random_int];
 	let tempprefixlist = item_prefixes.filter(filterByList,baseitem.type);
 	let tempsuffixlist = item_suffixes.filter(filterByList,baseitem.type);
+	
+	if (tempprefixlist.length == 0)
+	{
+		console.log("generate artifact error, error making prefix list, item type: " + baseitem.type);
+		return null;
+	}
+	if (tempsuffixlist.length == 0)
+	{
+		console.log("generate artifact error, error making suffix list, item type: " + baseitem.type);
+		return null;
+	}
+	
 	let baserand = Math.random();
 	let item_string = "";
 	
@@ -1007,10 +1019,17 @@ function generateBoss()
 	
 	let numberofitems = Math.floor((Math.random()*4)+(Math.random()*5))-2;
 	let items = [];
+	let tempitem;
 	
 	for (let i = 0; i < numberofitems; i++)
 	{
-		items.push(generateArtifact());
+		tempitem = generateArtifact();
+		if (tempitem == null)
+		{
+			console.log("generate boss error, could not generate artifact");
+			return null;
+		}
+		items.push(tempitem);
 	}
 	
 	if (monster_titleP.singular && baserand < 0.33) // full title
@@ -1197,7 +1216,7 @@ function generatePhonemeName(maxsyllables = 7, minimumsyllables = 1)
 	
 	for (i = 1; i < syllablecount; i++)
 	{
-		if (last.lists.includes("vowels") )
+		if (last.lists.includes("vowels"))
 		{
 			if (last.lists.includes("close"))
 			{

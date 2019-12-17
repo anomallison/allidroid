@@ -296,7 +296,7 @@
 	{
 		"name": "glasses",
 		"number": 1,
-		"type": "accessories",
+		"type": "accessory",
 		"synonyms": ["monocle","spectacles","goggles"]
 	},
 	{
