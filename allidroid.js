@@ -36,10 +36,6 @@ var title_prefixes = JSON.parse(fs.readFileSync('title_prefix_list.json'));
 var title_suffixes = JSON.parse(fs.readFileSync('title_suffix_list.json'));
 var monster_classes = JSON.parse(fs.readFileSync('class_list.json'));
 
-//var bossmonster_reputation = fs.readFileSync('boss_reputations.txt').toString().split("\n");
-//var bossmonster_fightstyle_ey = fs.readFileSync('boss_fighting_styles_ey.txt').toString().split("\n");
-//var bossmonster_fightstyle_im = fs.readFileSync('boss_fighting_styles_im.txt').toString().split("\n");
-
 //artifact files
 var item_nouns = JSON.parse(fs.readFileSync('item_list.json'));
 var item_suffixes = JSON.parse(fs.readFileSync('item_suffix_list.json'));
@@ -49,6 +45,18 @@ var item_prefixes = JSON.parse(fs.readFileSync('item_prefix_list.json'));
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
 var au_twists = JSON.parse(fs.readFileSync('au_twists.json'));
 var character_list = JSON.parse(fs.readFileSync('characters_list.json'));
+
+//weird princess files
+var weirdprincess_types = JSON.parse(fs.readFileSync('weirdprincess_types.json'));
+var weirdprincess_colours = JSON.parse(fs.readFileSync('weirdprincess_colours.json'));
+var weirdprincess_appearances = JSON.parse(fs.readFileSync('weirdprincess_appearances.json'));
+var weirdprincess_clothings = JSON.parse(fs.readFileSync('weirdprincess_clothings.json'));
+var weirdprincess_desires = JSON.parse(fs.readFileSync('weirdprincess_desires.json'));
+var weirdprincess_vulnerabilities = JSON.parse(fs.readFileSync('weirdprincess_vulnerabilities.json'));
+var weirdprincess_authority = JSON.parse(fs.readFileSync('weirdprincess_authority.json'));
+var weirdprincess_carriages = JSON.parse(fs.readFileSync('weirdprincess_carriages.json'));
+var weirdprincess_retinues = JSON.parse(fs.readFileSync('weirdprincess_retinues.json'));
+var weirdprincess_retinuetraits = JSON.parse(fs.readFileSync('weirdprincess_retinuetraits.json'));
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -193,7 +201,7 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    }  else if (normalizedCommand == "slash") 
+    } else if (normalizedCommand == "slash") 
 	{
 		if (arguments.length > 2)
 		{
@@ -218,7 +226,18 @@ function processCommand(receivedMessage)
 	{
 		receivedMessage.channel.send(fs.readFileSync('feedback_link.txt').toString());
 		return;
-	}
+	} else if (normalizedCommand == "princess") 
+	{
+		output = generateWeirdPrincess();
+		if (output == null)
+		{
+			console.log("failed command: princess");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
+    }
 	else
 	{
 		let possibleString = nani();
@@ -237,13 +256,13 @@ function processCommand(receivedMessage)
 
 function howgay()
 {
-	let randomRoll = Math.floor((Math.random() * 500) + 1);
+	let randomRoll = Math.floor((Math.random() * 475) + 26);
 	let gayresult = "";
 	currentgay += randomRoll;
-	if (randomRoll > 425)
+	if (randomRoll > 416)
 	{
 		gayresult += "critical gay! "
-		randomRoll = Math.floor((Math.random() * 500) + 1);
+		randomRoll = Math.floor((Math.random() * 4000) + 1001);
 		currentgay += randomRoll;
 	}
 	if (currentgay > 1000000000)
@@ -998,13 +1017,132 @@ function generateBoss()
 	return grammarCapitalFirstLetter(boss_string);;
 }
 
+
+function getPrincessObjectString(object)
+{
+	if (object.synonyms.legnth == 0)
+	{
+		return object.base;
+	}
+	let tempstringlist = object.synonyms.slice();
+	tempstringlist.push(object.base);
+	
+	let random_int = Math.floor(Math.random()*(tempstringlist.length));
+	return tempstringlist[random_int];
+}
+
+//
+// returns a weird princess type, filtered by a list, if one is provided
+
+function getPrincessType(list = "")
+{
+	let temptypelist = []
+	if (list == "")
+	{
+		temptypelist = weirdprincess_types.slice();
+	}
+	else
+	{
+		arraylist = [list];
+		temptypelist = weirdprincess_types.filter(filterByList,arraylist);
+	}
+	
+	if (temptypelist.length < 1)
+	{
+		console.log("get Princess Type error, no valid princess type list");
+		return null;
+	}
+	
+	let random_int = Math.floor(Math.random()*(temptypelist.length));
+	return getPrincessObjectString(temptypelist[random_int]);
+}
+
+//
+// generate a weird princess, based on ??? from polyamorousQ
+
+function generateWeirdPrincess()
+{
+	let type = getPrincessType();
+	let subtype;
+	
+	let position = type.indexOf("\[");
+	let endposition = -1;
+	let twistsubstr = "";
+	let substr_number = 0;
+	
+	//subtype stuff for the type string
+	while (position != -1)
+	{
+		endposition = type.indexOf("\]");
+		if (endposition == -1)
+		{
+			console.log("generate Weird Princess error, subtring replacement error, missing \'\]\' character");
+			return null;
+		}
+		typesubstr = type.substring(position+1,endposition);
+		subtype = getPrincessType(typesubstr);
+		if (subtype == null)
+		{
+			console.log("generate Weird Princess error, sub type failure");
+			return null;
+		}
+		type = type.substr(0,position) + subtype + type.substr(endposition+1);
+		position = type.indexOf("\[");
+	}
+	
+	let random_int = Math.floor(Math.random()*(weirdprincess_colours.length));
+	let colour = weirdprincess_colours[random_int];
+	
+	let arraylist = [colour]; // because the filterByList actally takes an array
+	let tempobjectarray = weirdprincess_appearances.filter(filterByList,arraylist); // temp array I will overwrite repeatedly...
+	
+	random_int = Math.floor(Math.random()*(tempobjectarray.length));
+	let appearance = getPrincessObjectString(tempobjectarray[random_int]);
+	
+	tempobjectarray = weirdprincess_clothings.filter(filterByList,arraylist);
+	
+	random_int = Math.floor(Math.random()*(tempobjectarray.length));
+	let clothing = getPrincessObjectString(tempobjectarray[random_int]);
+	
+	random_int = Math.floor(Math.random()*(weirdprincess_desires.length));
+	let desire = weirdprincess_desires[random_int]
+	
+	random_int = Math.floor(Math.random()*(weirdprincess_vulnerabilities.length));
+	let vulnerability = weirdprincess_vulnerabilities[random_int]
+	
+	random_int = Math.floor(Math.random()*(weirdprincess_authority.length));
+	let authority = weirdprincess_authority[random_int]
+	
+	random_int = Math.floor(Math.random()*(weirdprincess_carriages.length));
+	let carriage = weirdprincess_carriages[random_int]
+	
+	random_int = Math.floor(Math.random()*(weirdprincess_retinues.length));
+	let retinue = weirdprincess_retinues[random_int]
+	
+	random_int = Math.floor(Math.random()*(weirdprincess_retinuetraits.length));
+	let retinuetrait = weirdprincess_retinuetraits[random_int]
+	
+	let princessFinal = "The princess is " + grammarAorAn(type.charAt(0)).toLowerCase() + " " +
+		type + ", she stands " + colour + " with " + appearance + " wearing " +
+		clothing + ", she desires " + desire + ", " +
+		"the princess can only be permanent killed " + vulnerability +
+		", she signals her authority with " + authority + " and holds court with " +
+		retinue + " marked by " + retinuetrait;
+		
+	return princessFinal;
+}
+
+
+//
 //
 //
 // nani!?
 //
 //
+//
 
-function nani() {
+function nani() 
+{
 	let baserand = Math.random();
 	if (baserand < 0.89)
 		return "";

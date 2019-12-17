@@ -15,13 +15,7 @@
 		"name": "giant axe",
 		"number": 1,
 		"type": "weapon",
-		"synonyms": []
-	},
-	{
-		"name": "really really big hammer",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": []
+		"synonyms": ["really really big hammer"]
 	},
 	{
 		"name": "orb of oscillating colours",
@@ -42,52 +36,28 @@
 		"synonyms": ["twisted doll"]
 	},
 	{
-		"name": "jewel encrusted wand",
-		"number": 1,
-		"type": "accessory",
-		"synonyms": []
-	},
-	{
-		"name": "revolver",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": []
-	},
-	{
 		"name": "shotgun",
 		"number": 1,
 		"type": "weapon",
-		"synonyms": []
-	},
-	{
-		"name": "sniper rifle",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": []
-	},
-	{
-		"name": "gauss cannon",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": []
+		"synonyms": ["sniper rifle","gauss cannon","revolver"]
 	},
 	{
 		"name": "minigun",
 		"number": 1,
 		"type": "weapon",
-		"synonyms": []
+		"synonyms": ["light machine gun"]
 	},
 	{
 		"name": "mobile phone",
 		"number": 1,
 		"type": "accessory",
-		"synonyms": []
+		"synonyms": ["walkie talkie"]
 	},
 	{
 		"name": "decanter",
 		"number": 1,
 		"type": "accessory",
-		"synonyms": []
+		"synonyms": ["flask"]
 	},
 	{
 		"name": "engraved human skull",
@@ -105,7 +75,7 @@
 		"name": "spike chain whip",
 		"number": 1,
 		"type": "weapon",
-		"synonyms": []
+		"synonyms": ["cat o' nine tails"]
 	},
 	{
 		"name": "bladed scarf",
@@ -315,7 +285,7 @@
 		"name": "scepter of finely carved wood",
 		"number": 1,
 		"type": "accessory",
-		"synonyms": ["golden cudgel","mithril wand","scepter of fine ivory"]
+		"synonyms": ["golden cudgel","mithril wand","scepter of fine ivory","jewel encrusted wand"]
 	},
 	{
 		"name": "pet cat",

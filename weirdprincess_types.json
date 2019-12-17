@@ -1,0 +1,62 @@
+[
+	{
+		"base": "human",
+		"synonyms": [],
+		"lists": ["species"]
+	},
+	{
+		"base": "elf",
+		"synonyms": ["drow"],
+		"lists": ["species"]
+	},
+	{
+		"base": "goblin",
+		"synonyms": [],
+		"lists": ["species"]
+	},
+	{
+		"base": "orc",
+		"synonyms": [],
+		"lists": ["species"]
+	},
+	{
+		"base": "octopod merfolk",
+		"synonyms": ["crustacian merfolk", "merfolk"],
+		"lists": ["species"]
+	},
+	{
+		"base": "tiefling",
+		"synonyms": ["aasimar","sylph","darkling"],
+		"lists": ["species"]
+	},
+	{
+		"base": "giant",
+		"synonyms": ["troll","ogre"],
+		"lists": ["species"]
+	},
+	{
+		"base": "medusa",
+		"synonyms": [],
+		"lists": ["species"]
+	},
+	{
+		"base": "skeletal [species]",
+		"synonyms": [],
+		"lists": []
+	},
+	{
+		"base": "[species] vampire",
+		"synonyms": [],
+		"lists": []
+	},
+	{
+		"base": "[species] child",
+		"synonyms": [],
+		"lists": []
+	},
+	{
+		"base": "[species] conjoined twins",
+		"synonyms": [],
+		"lists": []
+	}
+]
