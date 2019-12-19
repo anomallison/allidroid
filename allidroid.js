@@ -269,7 +269,7 @@ function howgay()
 	let randomRoll = Math.floor((Math.random() * 475) + 26);
 	let gayresult = "";
 	currentgay += randomRoll;
-	if (randomRoll > 416)
+	if (randomRoll > 421)
 	{
 		gayresult += "critical gay! "
 		randomRoll = Math.floor((Math.random() * 4000) + 1001);
@@ -1199,15 +1199,15 @@ function generatePhonemeName(maxsyllables = 7, minimumsyllables = 1)
 		console.log("maxsyllables: " + maxsyllables + ", minimumsyllables: " + minimumsyllables);
 		return "when using !name, maximum syllables must not be lower than minimum syllables";
 	}
-	if (isNaN(maxsyllables) || isNaN(minimumsyllables) || maxsyllables < 1 || minimumsyllables < 1)
+	if (isNaN(maxsyllables) || isNaN(minimumsyllables) || maxsyllables < 1 || minimumsyllables < 1 || maxsyllables > 99 || minimumsyllables > 99)
 	{
-		return "the !name command only accepts numbers above 0"
+		return "the !name command only accepts numbers between 0 and 100"
 	}
 	
 	let name = [];
 	let random_int = Math.floor(Math.random()*(phonemes_english.length));
 	let last = phonemes_english[random_int];
-	let syllablecount = Math.floor((Math.random()*maxsyllables)+minimumsyllables);
+	let syllablecount = Math.floor((Math.random()*(maxsyllables-minimumsyllables+1))+minimumsyllables);
 	
 	name.push(last);
 	
@@ -1241,7 +1241,8 @@ function generatePhonemeName(maxsyllables = 7, minimumsyllables = 1)
 		}
 		else
 		{
-			tempphonemelist = phonemes_english.filter(filterByList,"vowels");
+			tempphonemelist = phonemes_english.slice();
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"vowels")); //double weight for vowels
 		}
 	
 		random_int = Math.floor(Math.random()*(tempphonemelist.length));
