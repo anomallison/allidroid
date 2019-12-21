@@ -6,7 +6,7 @@
 	},
 	{
 		"phoneme": "ɪ",
-		"spellings": ["i"],
+		"spellings": ["i","e"],
 		"lists": ["vowels","monophthongs","close"]
 	},
 	{
@@ -126,7 +126,7 @@
 	},
 	{
 		"phoneme": "dʒ",
-		"spellings": ["j","ge"],
+		"spellings": ["j","g"],
 		"lists": ["consonants"]
 	},
 	{

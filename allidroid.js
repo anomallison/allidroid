@@ -61,6 +61,11 @@ var weirdprincess_retinuetraits = JSON.parse(fs.readFileSync('weirdprincess_reti
 //phoneme files
 var phonemes_english = JSON.parse(fs.readFileSync('phonemes_english.json'));
 
+//gacha file
+var gacha_reveals = JSON.parse(fs.readFileSync('gacha_reveals.json'));
+var gacha_comments = JSON.parse(fs.readFileSync('gacha_comments.json'));
+
+
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
@@ -242,6 +247,18 @@ function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: generatename");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
+    } else if (normalizedCommand == "gacha") 
+	{
+		output = playGacha();
+		
+		if (output == null)
+		{
+			console.log("failed command: gacha");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		}
@@ -954,6 +971,69 @@ function generateActiveMonster(list)
 
 //
 // revisit Groups of monsters
+
+//
+//
+// Gatcha command
+
+function playGacha()
+{
+	let baserand = Math.random();
+	let rarity = "Common";
+	
+	let random_int = Math.floor((Math.random()*gacha_reveals.length));
+	let reveal = gacha_reveals[random_int];
+	
+	random_int = Math.floor((Math.random()*gacha_comments.length));
+	let comment = gacha_comments[random_int];
+	
+	if (baserand < 0.02)
+	{
+		rarity = "Super Hyper Ultra Legendary";
+	}
+	else if (baserand < 0.06)
+	{
+		rarity = "Hyper Legendary";
+	}
+	else if (baserand < 0.11)
+	{
+		rarity = "Legendary";
+	}
+	else if (baserand < 0.17)
+	{
+		rarity = "Super Rare";
+	}
+	else if (baserand < 0.24)
+	{
+		rarity = "Rare";
+	}
+	else if (baserand < 0.32)
+	{
+		rarity = "Less Common";
+	}
+	else if (baserand < 0.41)
+	{
+		rarity = "Crappy Common";
+	}
+	else if (baserand < 0.51)
+	{
+		rarity = "Uncommon";
+	}
+	else if (baserand < 0.62)
+	{
+		rarity = "Worse Than Trash";
+	}
+	else if (baserand < 0.74)
+	{
+		rarity = "Less Common";
+	}
+	else if (baserand < 0.87)
+	{
+		rarity = "Trash";
+	}
+	
+	return reveal + " " + grammarAorAn(rarity.charAt(0)) + " " + rarity + " " + generateArtifact() + ". " + comment;
+}
 
 //
 // Generate an artifact, an item

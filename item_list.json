@@ -39,13 +39,7 @@
 		"name": "shotgun",
 		"number": 1,
 		"type": "weapon",
-		"synonyms": ["sniper rifle","gauss cannon","revolver"]
-	},
-	{
-		"name": "minigun",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": ["light machine gun"]
+		"synonyms": ["sniper rifle","gauss cannon","revolver","rocket launcher","plasma rifle","minigun","light machine gun"]
 	},
 	{
 		"name": "mobile phone",
@@ -129,7 +123,7 @@
 		"name": "steel pauldrons",
 		"number": 2,
 		"type": "armour",
-		"synonyms": ["mithrol pauldrons","iron pauldrons"]
+		"synonyms": ["mithril pauldrons","iron pauldrons"]
 	},
 	{
 		"name": "greaves",
@@ -166,18 +160,6 @@
 		"number": 1,
 		"type": "weapon",
 		"synonyms": ["scythe"]
-	},
-	{
-		"name": "rocket launcher",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": []
-	},
-	{
-		"name": "plasma rifle",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": []
 	},
 	{
 		"name": "arm of gemstones",
@@ -226,12 +208,6 @@
 		"number": 1,
 		"type": "accessory",
 		"synonyms": ["bunny tail","fox tail"]
-	},
-	{
-		"name": "fur cape",
-		"number": 1,
-		"type": "accessory",
-		"synonyms": ["silk cape","ratty cloak","kitty cloak"]
 	},
 	{
 		"name": "jar of eyeballs",
@@ -304,5 +280,23 @@
 		"number": 1,
 		"type": "weapon",
 		"synonyms": ["longbow","sling","hand-held catapult"]
+	},
+	{
+		"name": "pokéball",
+		"number": 1,
+		"type": "accessory",
+		"synonyms": ["great ball","ultra ball","masterball","park ball","beast ball"]
+	},
+	{
+		"name": "coffee maker",
+		"number": 1,
+		"type": "accessory",
+		"synonyms": ["toaster","sandwich press","electric kettle","waffle maker"]
+	},
+	{
+		"name": "spatula",
+		"number": 1,
+		"type": "accessory",
+		"synonyms": ["cheese grater","ladle","whisk"]
 	}
 ]
