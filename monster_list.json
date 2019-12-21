@@ -7,7 +7,7 @@
 	{
 		"single": "demon",
 		"plural": "demons",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "people eater",
@@ -22,7 +22,7 @@
 	{
 		"single": "millipede",
 		"plural": "millipedes",
-		"lists": ["monster","boss","friend","species"]
+		"lists": ["monster","boss","friend"]
 	},
 	{
 		"single": "horror",
@@ -32,22 +32,22 @@
 	{
 		"single": "bee",
 		"plural": "bees",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy"]
 	},
 	{
 		"single": "robot",
 		"plural": "robots",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "werepenguin",
 		"plural": "werepenguins",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "cyclops",
 		"plural": "cyclopses",
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","gacha"]
 	},
 	{
 		"single": "anchovy",
@@ -62,7 +62,7 @@
 	{
 		"single": "octopus",
 		"plural": "octopuses",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy"]
 	},
 	{
 		"single": "mass of flesh",
@@ -72,7 +72,7 @@
 	{
 		"single": "dragon",
 		"plural": "dragons",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "horror from beyond",
@@ -142,27 +142,27 @@
 	{
 		"single": "cat",
 		"plural": "cats",
-		"lists": ["monster","boss","friend","species"]
+		"lists": ["monster","boss","friend"]
 	},
 	{
 		"single": "dingo",
 		"plural": "dingoes",
-		"lists": ["monster","boss","friend","species"]
+		"lists": ["monster","boss","friend"]
 	},
 	{
 		"single": "emu",
 		"plural": "emus",
-		"lists": ["monster","boss","friend","species"]
+		"lists": ["monster","boss","friend"]
 	},
 	{
 		"single": "kangaroo",
 		"plural": "kangaroos",
-		"lists": ["monster","boss","friend","species"]
+		"lists": ["monster","boss","friend"]
 	},
 	{
 		"single": "bird",
 		"plural": "birds",
-		"lists": ["monster","boss","friend","species"]
+		"lists": ["monster","boss","friend"]
 	},
 	{
 		"single": "sasquatch",
@@ -187,62 +187,62 @@
 	{
 		"single": "jackolantern",
 		"plural": "jackolanterns",
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","gacha"]
 	},
 	{
 		"single": "raven",
 		"plural": "ravens",
-		"lists": ["monster","boss","friend","species"]
+		"lists": ["monster","boss","friend"]
 	},
 	{
 		"single": "drider",
 		"plural": "driders",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "beastfolk",
 		"plural": "beastfolk",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "ogre",
 		"plural": "ogres",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "elf",
 		"plural": "elves",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "dwarf",
 		"plural": "dwarves",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "halfling",
 		"plural": "halflings",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "orc",
 		"plural": "orcs",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "gnome",
 		"plural": "gnomes",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "tengu",
 		"plural": "tengu",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "goblin",
 		"plural": "goblins",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "human",
@@ -252,51 +252,51 @@
 	{
 		"single": "[species] vampire",
 		"plural": "[species] vampires",
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","gacha"]
 	},
 	{
 		"single": "zombie [species]",
 		"plural": "zombie [species]",
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","gacha"]
 	},
 	{
 		"single": "[species] skeleton",
 		"plural": "[species] skeletons",
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","gacha"]
 	},
 	{
 		"single": "catfolk",
 		"plural": "catfolk",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "kitsune",
 		"plural": "kitsune",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "minotaur",
 		"plural": "minotaurs",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "[species] himbo",
 		"plural": "[species] himbos",
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","gacha"]
 	},
 	{
 		"single": "dhampir",
 		"plural": "dhampirs",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","gacha"]
 	},
 	{
-		"single": "turtleman",
-		"plural": "turtlemen",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"single": "turtlefolk",
+		"plural": "turtlefolk",
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "frogfolk",
 		"plural": "frogfolk",
-		"lists": ["monster","boss","friend","sexy","species"]
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	}
 ]

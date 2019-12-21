@@ -77,13 +77,6 @@
 		"objectself": "faeself"
 	},
 	{
-		"subject": "fae",
-		"object": "faer",
-		"possessivesubject": "faer",
-		"possessiveobject": "faers",
-		"objectself": "faeself"
-	},
-	{
 		"subject": "xe",
 		"object": "xyr",
 		"possessivesubject": "xyr",

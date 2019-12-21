@@ -252,6 +252,18 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
+    } else if (normalizedCommand == "itemgacha") 
+	{
+		output = playItemGacha();
+		
+		if (output == null)
+		{
+			console.log("failed command: itemgacha");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
     } else if (normalizedCommand == "gacha") 
 	{
 		output = playGacha();
@@ -845,7 +857,7 @@ function getRandomMonster(list)
 //Generate basic monster
 //
 
-function generateMonster(list)
+function generateMonster(list, diesidesA = 5, diesidesB = 5, diemodifier = -3)
 {
 	let monster = getRandomMonster(list);
 	let tempadjectivelist = monster_adjectives.filter(filterByList,list);
@@ -857,7 +869,7 @@ function generateMonster(list)
 	
 	let current_adjectives = [];
 	let random_int = Math.floor((Math.random()*tempadjectivelist.length));
-	let numberofadjectives = Math.floor((Math.random()*5)+(Math.random()*5))-3;
+	let numberofadjectives = Math.floor((Math.random()*diesidesA)+(Math.random()*diesidesB))+diemodifier;
 	let current_action = monster_actions[Math.floor((Math.random()*monster_actions.length))];
 	
 	for (i = 0; i < numberofadjectives; i++)
@@ -973,64 +985,90 @@ function generateActiveMonster(list)
 // revisit Groups of monsters
 
 //
+// Gacha rarity
+
+function getGachaRarity(randomRoll)
+{
+	let rarity = "Common";
+	if (randomRoll < 0.02)
+	{
+		rarity = "Super Hyper Ultra Legendary";
+	}
+	else if (randomRoll < 0.06)
+	{
+		rarity = "Hyper Legendary";
+	}
+	else if (randomRoll < 0.11)
+	{
+		rarity = "Legendary";
+	}
+	else if (randomRoll < 0.17)
+	{
+		rarity = "Super Rare";
+	}
+	else if (randomRoll < 0.24)
+	{
+		rarity = "Rare";
+	}
+	else if (randomRoll < 0.32)
+	{
+		rarity = "Less Common";
+	}
+	else if (randomRoll < 0.41)
+	{
+		rarity = "Crappy Common";
+	}
+	else if (randomRoll < 0.51)
+	{
+		rarity = "Uncommon";
+	}
+	else if (randomRoll < 0.62)
+	{
+		rarity = "Worse Than Trash";
+	}
+	else if (randomRoll < 0.74)
+	{
+		rarity = "Less Common";
+	}
+	else if (randomRoll < 0.87)
+	{
+		rarity = "Trash";
+	}
+	return rarity;
+}
+
 //
-// Gatcha command
+//
+// Gacha command
 
 function playGacha()
 {
 	let baserand = Math.random();
-	let rarity = "Common";
+	let rarity = getGachaRarity(baserand);
+	let hero_base = generateMonster("gacha",2,1,1);
+	let hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single; 
+	
+	let hero_name = generateBossName(false);
+	//let hero_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
+	
+	return "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
+}
+
+
+//
+//
+// ItemGatcha command
+
+function playItemGacha()
+{
+	let baserand = Math.random();
+	let rarity = getGachaRarity(baserand);
 	
 	let random_int = Math.floor((Math.random()*gacha_reveals.length));
 	let reveal = gacha_reveals[random_int];
 	
 	random_int = Math.floor((Math.random()*gacha_comments.length));
 	let comment = gacha_comments[random_int];
-	
-	if (baserand < 0.02)
-	{
-		rarity = "Super Hyper Ultra Legendary";
-	}
-	else if (baserand < 0.06)
-	{
-		rarity = "Hyper Legendary";
-	}
-	else if (baserand < 0.11)
-	{
-		rarity = "Legendary";
-	}
-	else if (baserand < 0.17)
-	{
-		rarity = "Super Rare";
-	}
-	else if (baserand < 0.24)
-	{
-		rarity = "Rare";
-	}
-	else if (baserand < 0.32)
-	{
-		rarity = "Less Common";
-	}
-	else if (baserand < 0.41)
-	{
-		rarity = "Crappy Common";
-	}
-	else if (baserand < 0.51)
-	{
-		rarity = "Uncommon";
-	}
-	else if (baserand < 0.62)
-	{
-		rarity = "Worse Than Trash";
-	}
-	else if (baserand < 0.74)
-	{
-		rarity = "Less Common";
-	}
-	else if (baserand < 0.87)
-	{
-		rarity = "Trash";
-	}
 	
 	return reveal + " " + grammarAorAn(rarity.charAt(0)) + " " + rarity + " " + generateArtifact() + ". " + comment;
 }
@@ -1084,16 +1122,47 @@ function generateArtifact()
 }
 
 //
+// Generate boss name
+
+function generateBossName(with_title = true, short_title = false)
+{
+	let given_name = monster_names[Math.floor((Math.random()*monster_names.length))];
+	let surname = monster_surnames[Math.floor((Math.random()*monster_surnames.length))];
+	
+	if (!with_title)
+	{
+		return given_name + " " + surname;
+	}
+	
+	let monster_titleS = title_suffixes[Math.floor((Math.random()*title_suffixes.length))]; 
+	let monster_titleP = title_prefixes[Math.floor((Math.random()*title_prefixes.length))];
+	while (short_title && !monster_titleP.singular)
+	{
+		monster_titleP = title_prefixes[Math.floor((Math.random()*title_prefixes.length))];
+	}
+	
+	let name_string = "";
+	
+	let baserand = Math.random();
+	if (short_title || (monster_titleP.singular && baserand < 0.33)) // full title
+	{
+		name_string +=  monster_titleP.title + " " + given_name + " " + surname;
+	}
+	else
+	{
+		name_string += given_name + " " + surname + ", the " + monster_titleP.title + " " + monster_titleP.connective + " " + monster_titleS;
+	}
+	
+	return name_string;
+}
+
+//
 // Generate a special boss monster
 
 function generateBoss() 
 {
 	let boss_string = "";
     let monster_string = generateMonster("boss");
-	let given_name = monster_names[Math.floor((Math.random()*monster_names.length))];
-	let surname = monster_surnames[Math.floor((Math.random()*monster_surnames.length))];
-	let monster_titleP = title_prefixes[Math.floor((Math.random()*title_prefixes.length))];
-	let monster_titleS = title_suffixes[Math.floor((Math.random()*title_suffixes.length))]; //this is a string
 	let baserand = Math.random();
 	let monster_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
 	
@@ -1111,6 +1180,8 @@ function generateBoss()
 		}
 		items.push(tempitem);
 	}
+	
+	boss_string += generateBossName() + ", " + grammarAorAn(monster_string.charAt(0)).toLowerCase() + " " + monster_string;
 	
 	if (monster_titleP.singular && baserand < 0.33) // full title
 	{

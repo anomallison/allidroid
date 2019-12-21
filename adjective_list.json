@@ -51,7 +51,7 @@
 	{
 		"word": "chemically-enhanced",
 		"priority": 4,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -72,7 +72,7 @@
 	{
 		"word": "cybernetic",
 		"priority": 4,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -84,9 +84,9 @@
 		"synonyms": []
 	},
 	{
-		"word": "dummy thic",
+		"word": "dummy thicc",
 		"priority": 6,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -107,7 +107,7 @@
 	{
 		"word": "fangorious",
 		"priority": 4,
-		"lists": ["monster","boss"],
+		"lists": ["monster","boss","gacha"],
 		"antonyms": [],
 		"synonyms": ["vicious"]
 	},
@@ -175,6 +175,13 @@
 		"synonyms": []
 	},
 	{
+		"word": "gooey",
+		"priority": 6,
+		"lists": ["monster","boss","friend","sexy","gacha"],
+		"antonyms": [],
+		"synonyms": []
+	},
+	{
 		"word": "hairy",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy"],
@@ -226,7 +233,7 @@
 	{
 		"word": "mutant",
 		"priority": 4,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -254,7 +261,7 @@
 	{
 		"word": "pretty",
 		"priority": 2,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -268,7 +275,7 @@
 	{
 		"word": "psychic",
 		"priority": 4,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -303,7 +310,7 @@
 	{
 		"word": "sassy",
 		"priority": 3,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -359,21 +366,21 @@
 	{
 		"word": "suspiciously handsome",
 		"priority": 9,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": ["unexpectedly handsome"]
 	},
 	{
 		"word": "sweet",
 		"priority": 3,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
 	{
 		"word": "swole",
 		"priority": 3,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": ["buff"]
 	},
@@ -392,30 +399,23 @@
 		"synonyms": []
 	},
 	{
-		"word": "vampiric",
-		"priority": 4,
-		"lists": ["monster","boss","friend","sexy"],
-		"antonyms": [],
-		"synonyms": []
-	},
-	{
 		"word": "very bi",
 		"priority": 7,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": ["bisexual"]
 	},
 	{
 		"word": "very gay",
 		"priority": 7,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": ["gay"]
 	},
 	{
 		"word": "vile",
 		"priority": 1,
-		"lists": ["monster","boss"],
+		"lists": ["monster","boss","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -443,7 +443,7 @@
 	{
 		"word": "busty",
 		"priority": 6,
-		"lists": ["sexy"],
+		"lists": ["sexy","gacha"],
 		"antonyms": [],
 		"synonyms": ["well endowed"]
 	},

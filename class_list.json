@@ -25,7 +25,7 @@
 	},
 	{
 		"single": "planar traveller",
-		"plural": "planar traveller"
+		"plural": "planar travellers"
 	},
 	{
 		"single": "summoner",
@@ -38,10 +38,6 @@
 	{
 		"single": "berserker",
 		"plural": "berserkers"
-	},
-	{
-		"single": "lesbian",
-		"plural": "lesbians"
 	},
 	{
 		"single": "engineer",
@@ -126,5 +122,89 @@
 	{
 		"single": "inquisitor",
 		"plural": "inquisitors"
+	},
+	{
+		"single": "arcane knight",
+		"plural": "arcane knights"
+	},
+	{
+		"single": "archer",
+		"plural": "archers"
+	},
+	{
+		"single": "blacksmith",
+		"plural": "blacksmiths"
+	},
+	{
+		"single": "general",
+		"plural": "generals"
+	},
+	{
+		"single": "sorcerer",
+		"plural": "sorcerers"
+	},
+	{
+		"single": "sorceress",
+		"plural": "sorceresses"
+	},
+	{
+		"single": "ninja",
+		"plural": "ninjas"
+	},
+	{
+		"single": "samurai",
+		"plural": "samurai"
+	},
+	{
+		"single": "hacker",
+		"plural": "hackers"
+	},
+	{
+		"single": "assassin",
+		"plural": "assassins"
+	},
+	{
+		"single": "technician",
+		"plural": "technicians"
+	},
+	{
+		"single": "golemancer",
+		"plural": "golemancers"
+	},
+	{
+		"single": "blood mage",
+		"plural": "blood mages"
+	},
+	{
+		"single": "inventor",
+		"plural": "inventors"
+	},
+	{
+		"single": "bard",
+		"plural": "bards"
+	},
+	{
+		"single": "ranger",
+		"plural": "rangers"
+	},
+	{
+		"single": "warlock",
+		"plural": "warlocks"
+	},
+	{
+		"single": "monk",
+		"plural": "monks"
+	},
+	{
+		"single": "pugilist",
+		"plural": "pugilists"
+	},
+	{
+		"single": "infiltrator",
+		"plural": "infiltrators"
+	},
+	{
+		"single": "spy",
+		"plural": "spies"
 	}
 ]
