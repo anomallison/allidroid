@@ -91,16 +91,13 @@ client.on('message', (receivedMessage) => {
         return
     }
 	
-	if (receivedMessage.guild == null) { // Don't respond to banned users in channels
-        return
-    } else
-	{
-		let tempmember = receivedMessage.guild.members.get(receivedMessage.author.id);
-		if (tempmember != null && hasName(receivedMessage.guild.members.get(receivedMessage.author.id).roles,'Bot Banned'))
+	if (receivedMessage.guild != null) { // Don't respond to banned users in channels
+        let tempmember = receivedMessage.guild.members.get(receivedMessage.author.id);
+		if (tempmember != null && hasName(tempmember.roles,'Bot Banned'))
 		{
 			return
 		}
-	}
+    }
     
     if (receivedMessage.content.startsWith("!")) {
         processCommand(receivedMessage)
@@ -1189,33 +1186,24 @@ function generateBoss()
 	}
 	
 	boss_string += generateBossName() + ", " + grammarAorAn(monster_string.charAt(0)).toLowerCase() + " " + monster_string;
-	
-	if (monster_titleP.singular && baserand < 0.33) // full title
-	{
-		boss_string +=  monster_titleP.title + " " + given_name + " " + surname + ", " + grammarAorAn(monster_string.charAt(0)).toLowerCase() + " " + monster_string;
-	}
-	else
-	{
-		boss_string += given_name + " " + surname + ", the " + monster_titleP.title + " " + monster_titleP.connective + " " + monster_titleS + ", " + grammarAorAn(monster_string.charAt(0)).toLowerCase() + " " + monster_string;
-	}
-	
-	if (items.length > 0)
+	if (numberofitems > 0)
 	{
 		boss_string += " with " + monster_pronouns.possessivesubject + " " + items[0];
-		for (let i = 1; i < items.length; i++)
-		{
-			if (i == (items.length -1))
-			{
-				boss_string += ", and " + items[i];
-			}
-			else
-			{
-				boss_string += ", " +  items[i];
-			}
-		}
 	}
-	
-	return grammarCapitalFirstLetter(boss_string);;
+	for (let i = 1; i < numberofitems; i++)
+	{
+		if ((i+1) == numberofitems)
+		{
+			boss_string += ", and ";
+		}
+		else
+		{
+			boss_string += ", ";
+		}
+		boss_string += items[i];
+	}
+
+	return grammarCapitalFirstLetter(boss_string);
 }
 
 
