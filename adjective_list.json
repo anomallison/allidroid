@@ -44,7 +44,7 @@
 	{
 		"word": "cheerful",
 		"priority": 3,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -126,13 +126,6 @@
 		"synonyms": ["winged"]
 	},
 	{
-		"word": "gelatinous",
-		"priority": 6,
-		"lists": ["monster","boss","friend","sexy"],
-		"antonyms": [],
-		"synonyms": []
-	},
-	{
 		"word": "genetically-engineered",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy"],
@@ -171,14 +164,14 @@
 		"word": "goopy",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy"],
-		"antonyms": [],
-		"synonyms": []
+		"antonyms": ["goopy"],
+		"synonyms": ["gelatinous"]
 	},
 	{
 		"word": "gooey",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy","gacha"],
-		"antonyms": [],
+		"antonyms": ["goopy"],
 		"synonyms": []
 	},
 	{

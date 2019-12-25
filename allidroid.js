@@ -91,9 +91,16 @@ client.on('message', (receivedMessage) => {
         return
     }
 	
-	if (receivedMessage.guild != null && hasName(receivedMessage.guild.members.get(receivedMessage.author.id).roles,'Bot Banned')) { // Don't respond to banned users in channels
+	if (receivedMessage.guild == null) { // Don't respond to banned users in channels
         return
-    }
+    } else
+	{
+		let tempmember = receivedMessage.guild.members.get(receivedMessage.author.id);
+		if (tempmember != null && hasName(receivedMessage.guild.members.get(receivedMessage.author.id).roles,'Bot Banned'))
+		{
+			return
+		}
+	}
     
     if (receivedMessage.content.startsWith("!")) {
         processCommand(receivedMessage)
