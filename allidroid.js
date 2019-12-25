@@ -93,7 +93,7 @@ client.on('message', (receivedMessage) => {
 	
 	if (receivedMessage.guild != null) { // Don't respond to banned users in channels
         let tempmember = receivedMessage.guild.members.get(receivedMessage.author.id);
-		if (tempmember != null && hasName(tempmember.roles,'Bot Banned'))
+		if (tempmember != null || hasName(tempmember.roles,'Bot Banned'))
 		{
 			return
 		}
