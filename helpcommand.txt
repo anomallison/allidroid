@@ -23,6 +23,11 @@ example: !slash fe3h f/f !slash me,da m/a !slash fe3h f/f/f blackeagles,goldende
 !generatename - Generates a name, optionally can take a maximum phoneme count, or a maximum and a minimum phoneme count, however maximum cannot be less than minimum, and both must be above 0 and less than 100
 example: !generatename 10 !generatename 9 3
 
+!howgoodis - Takes something and tells you how good it is. Less enthusiastic of nothing.
+
+!gacha - Take your chances and receive... heroes? with rarity! It means just as much as any other gacha game! You can also give it a number, and it'll pull that many, between 1 and 12
+example: !gacha !gacha 3 !gacha 12
+
 !itemgacha - Take your chances and receive an item, with a rarity! It means just as much as any other gacha game!
 
 !princess - Generates a weird princess. It is a verbose command.

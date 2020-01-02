@@ -65,6 +65,8 @@ var phonemes_english = JSON.parse(fs.readFileSync('phonemes_english.json'));
 var gacha_reveals = JSON.parse(fs.readFileSync('gacha_reveals.json'));
 var gacha_comments = JSON.parse(fs.readFileSync('gacha_comments.json'));
 
+//good levels
+var good_levels = JSON.parse(fs.readFileSync('goodlevels.json'));
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -270,11 +272,23 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "gacha") 
 	{
-		output = playGacha();
+		output = playGacha(arguments[0]);
 		
 		if (output == null)
 		{
 			console.log("failed command: gacha");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
+    } else if (normalizedCommand == "howgoodis") 
+	{
+		output = howgood(arguments[0]);
+		
+		if (output == null)
+		{
+			console.log("failed command: howgoodis");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		}
@@ -315,6 +329,22 @@ function howgay()
 	}
 	gayresult += currentgay + " gay";
 	return gayresult;
+}
+
+//
+// How Good
+//
+
+function howgood(target)
+{
+	if (target == null || target.length < 1)
+	{
+		return "eh, is alright";
+	}
+	let random_percentage = Math.floor((Math.random()*20)+(Math.random()*20)+(Math.random()*20)+(Math.random()*20)+(Math.random()*20))+100;
+	let random_level = Math.floor(Math.random()*good_levels.length);
+	
+	return target + " is " + good_levels[random_level] + ", " + random_percentage.toString() + "\% good";
 }
 
 //
@@ -1045,8 +1075,16 @@ function getGachaRarity(randomRoll)
 //
 // Gacha command
 
-function playGacha()
+function playGacha(amount)
 {
+	if (amount == null || amount < 1)
+	{
+		amount = 1;
+	}
+	if (amount > 12)
+	{
+		amount = 12;
+	}
 	let baserand = Math.random();
 	let rarity = getGachaRarity(baserand);
 	let hero_base = generateMonster("gacha",2,1,1);
@@ -1055,7 +1093,18 @@ function playGacha()
 	let hero_name = generateBossName(false);
 	//let hero_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
 	
-	return "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
+	let fullreturnstring = "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
+	
+	for (let i = 1; i < amount; i++)
+	{
+		baserand = Math.random();
+		rarity = getGachaRarity(baserand);
+		hero_base = generateMonster("gacha",2,1,1);
+		hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single;
+		fullreturnstring += "\n[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
+	}
+	
+	return fullreturnstring;
 }
 
 
