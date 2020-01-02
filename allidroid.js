@@ -1101,6 +1101,7 @@ function playGacha(amount)
 		rarity = getGachaRarity(baserand);
 		hero_base = generateMonster("gacha",2,1,1);
 		hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single;
+		hero_name = generateBossName(false);
 		fullreturnstring += "\n[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
 	}
 	
