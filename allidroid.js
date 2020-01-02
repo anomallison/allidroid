@@ -65,8 +65,9 @@ var phonemes_english = JSON.parse(fs.readFileSync('phonemes_english.json'));
 var gacha_reveals = JSON.parse(fs.readFileSync('gacha_reveals.json'));
 var gacha_comments = JSON.parse(fs.readFileSync('gacha_comments.json'));
 
-//good levels
-var good_levels = JSON.parse(fs.readFileSync('goodlevels.json'));
+//good files
+var good_levels = JSON.parse(fs.readFileSync('good_levels.json'));
+var good_prefixes = JSON.parse(fs.readFileSync('good_prefixes.json'));
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -341,10 +342,23 @@ function howgood(target)
 	{
 		return "eh, is alright";
 	}
-	let random_percentage = Math.floor((Math.random()*20)+(Math.random()*20)+(Math.random()*20)+(Math.random()*20)+(Math.random()*20))+100;
-	let random_level = Math.floor(Math.random()*good_levels.length);
+	let random_percentage = Math.floor((Math.random()*4))+153;
+	let random_level = good_levels[Math.floor(Math.random()*good_levels.length)];
 	
-	return target + " is " + good_levels[random_level] + ", " + random_percentage.toString() + "\% good";
+	let temp_prefix_arr = good_prefixes.slice();
+	
+	let random_prefix = Math.floor(Math.random()*temp_prefix_arr.length);
+	let prefix_count = Math.floor(Math.random()*3)+1;
+	let prefix = temp_prefix_arr[random_prefix];
+	
+	for (let i = 1; i < prefix_count && temp_prefix_arr.length > 1; i++)
+	{
+		temp_prefix_arr.splice(random_prefix,1);
+		random_prefix = Math.floor(Math.random()*temp_prefix_arr.length);
+		prefix += " " + temp_prefix_arr[random_prefix];
+	}
+	
+	return target + " is " + prefix + " " + random_level + " " + random_percentage.toString() + "\% good";
 }
 
 //
