@@ -285,7 +285,7 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "howgoodis") 
 	{
-		output = howgood(arguments[0]);
+		output = howgood(arguments);
 		
 		if (output == null)
 		{
@@ -358,7 +358,13 @@ function howgood(target)
 		prefix += " " + temp_prefix_arr[random_prefix];
 	}
 	
-	return target + " is " + prefix + " " + random_level + " " + random_percentage.toString() + "\% good";
+	let target_string = target[0];
+	for (let i = 1; i < target.length; i++)
+	{
+		target_string += " " + target[i];
+	}
+	
+	return target_string + " is " + prefix + " " + random_level + " " + random_percentage.toString() + "\% good";
 }
 
 //
