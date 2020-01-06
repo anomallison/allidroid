@@ -255,7 +255,7 @@
 		"name": "short sword and scimitar",
 		"number": 2,
 		"type": "weapon",
-		"synonyms": ["dual daggers","axe and hammer","dual pistols"]
+		"synonyms": ["dual daggers","axe and hammer","dual pistols","punching daggers", "ninja claws"]
 	},
 	{
 		"name": "scepter of finely carved wood",
@@ -266,8 +266,8 @@
 	{
 		"name": "pet cat",
 		"number": 1,
-		"type": "accessory",
-		"synonyms": ["pet dog","pet lizard","pet rat"]
+		"type": "friend",
+		"synonyms": ["pet dog","pet lizard","pet rat","pet chicken","pet crow"]
 	},
 	{
 		"name": "glasses",
@@ -298,5 +298,11 @@
 		"number": 1,
 		"type": "accessory",
 		"synonyms": ["cheese grater","ladle","whisk"]
+	},
+	{
+		"name": "magikarp",
+		"number": 1,
+		"type": "friend",
+		"synonyms": ["zigzagoon","pikachu","psyduck","slowpoke"]
 	}
 ]

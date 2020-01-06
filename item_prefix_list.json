@@ -1,7 +1,7 @@
 [
 	{
 		"word": "godly",
-		"lists": ["weapon","armour","accessory"]
+		"lists": ["weapon","armour"]
 	},
 	{
 		"word": "awesome",
@@ -9,11 +9,11 @@
 	},
 	{
 		"word": "holy",
-		"lists": ["weapon","armour","accessory","friend"]
+		"lists": ["weapon","armour","accessory"]
 	},
 	{
 		"word": "unholy",
-		"lists": ["weapon","armour","accessory","friend"]
+		"lists": ["weapon","armour","accessory"]
 	},
 	{
 		"word": "valiant",
@@ -33,6 +33,10 @@
 	},
 	{
 		"word": "crystal",
+		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"word": "shiny",
 		"lists": ["weapon","armour","accessory","friend"]
 	},
 	{
@@ -201,15 +205,19 @@
 	},
 	{
 		"word": "cardboard replica",
-		"lists": ["weapon","armour","accessory","friend"]
+		"lists": ["weapon","armour","accessory"]
 	},
 	{
 		"word": "foam replica",
-		"lists": ["weapon","armour","accessory","friend"]
+		"lists": ["weapon","armour","accessory"]
 	},
 	{
 		"word": "papercraft",
-		"lists": ["weapon","armour","accessory","friend"]
+		"lists": ["weapon","armour","accessory"]
+	},
+	{
+		"word": "plushie",
+		"lists": ["friend"]
 	},
 	{
 		"word": "masterwork",

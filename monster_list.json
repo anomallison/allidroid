@@ -298,5 +298,35 @@
 		"single": "frogfolk",
 		"plural": "frogfolk",
 		"lists": ["monster","boss","friend","sexy","species","gacha"]
+	},
+	{
+		"single": "awakened tree",
+		"plural": "awakened trees",
+		"lists": ["monster","boss","friend"]
+	},
+	{
+		"single": "plantfolk",
+		"plural": "plantfolk",
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
+	},
+	{
+		"single": "rockfolk",
+		"plural": "rockfolk",
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
+	},
+	{
+		"single": "mermaid",
+		"plural": "mermaids",
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
+	},
+	{
+		"single": "sharkfolk",
+		"plural": "sharkfolk",
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
+	},
+	{
+		"single": "slimefolk",
+		"plural": "slimefolk",
+		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	}
 ]

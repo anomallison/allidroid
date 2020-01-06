@@ -113,5 +113,10 @@
 		"base": "energized by storms",
 		"synonyms": ["tingling with the power of storms"],
 		"lists": ["weapon","armour","accessory","friend"]
+	},
+	{
+		"base": "wearing a crown of flowers",
+		"synonyms": ["wearing chic armour","wearing a damn nice cape","wearing a fancy tie"],
+		"lists": ["friend"]
 	}
 ]

@@ -302,7 +302,7 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "setreminder") 
 	{
-		output = setReminder(arguments[0], argumentsbacktostring(arguments,1), receivedMessage.channel, receivedMessage.author);
+		output = setReminder(arguments[0], arguments[1], argumentsbacktostring(arguments,2), receivedMessage.channel, receivedMessage.author);
 		
 		if (output == null)
 		{
@@ -371,11 +371,29 @@ function howgay()
 // Reminder
 //
 
-function setReminder(delay, message, target_channel, sender)
+function setReminder(delay, units, message, target_channel, sender)
 {
 	if (reminder_array.length > 50000)
 	{
 		return "Sorry, I am at capacity for reminders";
+	}
+	
+	units = units.toLowerCase();
+	let millisecondstounit = 60000; // default to Minutes
+	
+	if (units == "hours" || units == "hrs" || units == "h")
+	{
+		millisecondstounit = 360000;
+	} else if (units == "minutes" || units == "mins" || units == "m")
+	{
+		millisecondstounit = 60000;
+	} else if (units == "seconds" || units == "secs" || units == "s")
+	{
+		millisecondstounit = 1000;
+	} else
+	{
+		//console.log("Set Reminder error, units invalid");
+		return "Invalid arguments, the units must be seconds, minutes, or hours, or acceptable shorthand for those";
 	}
 	
 	if (delay == null || message == null)
@@ -383,7 +401,15 @@ function setReminder(delay, message, target_channel, sender)
 		//console.log("Set Reminder error, delay or message are null");
 		return "Invalid arguments, I need a delay (in minutes) and a message";
 	}
-	if (delay < 1 || delay > 10080)
+	
+	let parsedDelay = parseInt(delay);
+	
+	if ( isNaN(parsedDelay) )
+	{
+		return "Invalid arguments, the delay must be a number";
+	}
+	
+	if (parsedDelay < 1 || parsedDelay > 10080)
 	{
 		//console.log("Set Reminder error, delay too short or too long");
 		return "Invalid delay, it must be more than 0, and less than 10080 (7 days)";
@@ -408,7 +434,7 @@ function setReminder(delay, message, target_channel, sender)
 	
 	reminder_array.push({
 		id: newid,
-		timer: setTimeout(sendReminder.bind(this,message,target_channel,newid),delay*60000)
+		timer: setTimeout(sendReminder.bind(this,message,target_channel,newid),parsedDelay*millisecondstounit)
 	});
 	return "Reminder set! The reminderid for this reminder is " + newid;
 }

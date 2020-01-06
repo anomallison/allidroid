@@ -34,8 +34,11 @@ example: !gacha !gacha 3 !gacha 12
 
 !princess - Generates a weird princess. It is a verbose command.
 
-!setreminder - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay set in minutes, and then the message which Allidroid will say
-example: !reminder 120 take your meds! !reminder 3 @AnomAllison your noodles are ready!
+!setreminder - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay, followed by the units (minutes, seconds, or hours), and then the message which Allidroid will say
+example: !setreminder 2 hours take your meds! !setreminder 3 minutes @AnomAllison your noodles are ready!
+
+!removereminder - This removes a reminder from Allidroid, by taking a reminderid (which is given when a reminder is set)
+example: !removereminder AnomAllison0
 
 !feedback - gives a link to the Google Form to give AnomAllison, my creator, feedback about Allidroid
 ``
