@@ -8,6 +8,8 @@
 
 !boss - Generates a boss, who may also be a monster, with items and underlings
 
+!sexymonster - Generates a potentially sexier monster
+
 !roll - Rolls a dice, or a string. XdY format, with X being the number of dice and Y being the sides per dice. Alternatively Y can be a string of characters
 example: !roll 2d6   !roll 7d7   !roll 4dLOL   !roll 20dHelloWorld
 
@@ -31,6 +33,9 @@ example: !gacha !gacha 3 !gacha 12
 !itemgacha - Take your chances and receive an item, with a rarity! It means just as much as any other gacha game!
 
 !princess - Generates a weird princess. It is a verbose command.
+
+!setreminder - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay set in minutes, and then the message which Allidroid will say
+example: !reminder 120 take your meds! !reminder 3 @AnomAllison your noodles are ready!
 
 !feedback - gives a link to the Google Form to give AnomAllison, my creator, feedback about Allidroid
 ``

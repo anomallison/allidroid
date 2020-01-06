@@ -51,7 +51,7 @@
 		"name": "decanter",
 		"number": 1,
 		"type": "accessory",
-		"synonyms": ["flask"]
+		"synonyms": ["flask", "tankard"]
 	},
 	{
 		"name": "engraved human skull",
@@ -81,25 +81,25 @@
 		"name": "bucket of ice",
 		"number": 1,
 		"type": "accessory",
-		"synonyms": ["bucket of dirt"]
+		"synonyms": ["bucket of dirt","jar of dirt","jar of mud","jar of snow"]
 	},
 	{
 		"name": "iron helm",
 		"number": 1,
 		"type": "armour",
-		"synonyms": ["mithril helm","steel helm"]
+		"synonyms": ["mithril helm","steel helm","fancy skullcap","wide brim travellers hat"]
 	},
 	{
 		"name": "mithril plate armour",
 		"number": 1,
 		"type": "armour",
-		"synonyms": ["steel plate armour","iron plate armour"]
+		"synonyms": ["steel plate armour","iron plate armour","adamantine plate armour"]
 	},
 	{
 		"name": "monster hide leather armour",
 		"number": 1,
 		"type": "armour",
-		"synonyms": ["brigadine"]
+		"synonyms": ["brigadine","silk robe","spidersilk bandage outfit"]
 	},
 	{
 		"name": "shiny rock",

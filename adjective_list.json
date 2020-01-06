@@ -413,6 +413,13 @@
 		"synonyms": []
 	},
 	{
+		"word": "powerful",
+		"priority": 1,
+		"lists": ["monster","boss","gacha","sexy","friend"],
+		"antonyms": [],
+		"synonyms": ["overpowered"]
+	},
+	{
 		"word": "wandering",
 		"priority": 1,
 		"lists": ["monster","boss","friend"],

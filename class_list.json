@@ -206,5 +206,13 @@
 	{
 		"single": "spy",
 		"plural": "spies"
+	},
+	{
+		"single": "bigboi",
+		"plural": "bigbois"
+	},
+	{
+		"single": "smolboi",
+		"plural": "smolbois"
 	}
 ]

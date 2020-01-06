@@ -72,6 +72,11 @@ var good_prefixes = JSON.parse(fs.readFileSync('good_prefixes.json'));
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
+
+//
+// the array of reminders, to allow reminders to be removed/destroyed (just in case)
+var reminder_array = [];
+
 //
 //
 // extremely important Gay variable
@@ -295,6 +300,36 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
+    } else if (normalizedCommand == "setreminder") 
+	{
+		output = setReminder(arguments[0], argumentsbacktostring(arguments,1), receivedMessage.channel, receivedMessage.author);
+		
+		if (output == null)
+		{
+			console.log("failed command: setreminder");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
+    } else if (normalizedCommand == "removereminder") 
+	{
+		output = removeReminder(arguments[0]);
+		
+		if (output == null)
+		{
+			console.log("failed command: removereminder");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else if (output == true)
+		{
+			receivedMessage.channel.send("The reminder has been removed!");
+			return;
+		} else if (output == false)
+		{
+			receivedMessage.channel.send("No reminder with that id was found");
+			return;
+		}
     }
 	else
 	{
@@ -330,6 +365,99 @@ function howgay()
 	}
 	gayresult += currentgay + " gay";
 	return gayresult;
+}
+
+//
+// Reminder
+//
+
+function setReminder(delay, message, target_channel, sender)
+{
+	if (reminder_array.length > 50000)
+	{
+		return "Sorry, I am at capacity for reminders";
+	}
+	
+	if (delay == null || message == null)
+	{
+		//console.log("Set Reminder error, delay or message are null");
+		return "Invalid arguments, I need a delay (in minutes) and a message";
+	}
+	if (delay < 1 || delay > 10080)
+	{
+		//console.log("Set Reminder error, delay too short or too long");
+		return "Invalid delay, it must be more than 0, and less than 10080 (7 days)";
+	}
+	if (message.length < 1)
+	{
+		//console.log("Set Reminder error, message empty");
+		return "Invalid message, a reminder needs a message of at least 1 character";
+	}
+	if (target_channel == null)
+	{
+		console.log("Set Reminder error, target_channel is null");
+		return null;
+	}
+	if (sender == null)
+	{
+		console.log("Set Reminder error, sender is null");
+		return null;
+	}
+	
+	newid = "" + sender.username + reminder_array.length;
+	
+	reminder_array.push({
+		id: newid,
+		timer: setTimeout(sendReminder.bind(this,message,target_channel,newid),delay*60000)
+	});
+	return "Reminder set! The reminderid for this reminder is " + newid;
+}
+
+function sendReminder(message, target_channel, reminderid)
+{
+	//client.channels.get(target_channel).send(message);
+	if (target_channel == null)
+	{
+		console.log("sendReminder failure: target_channel is null")
+		return;
+	}
+	target_channel.send(message);
+	console.log("Reminder \"" + reminderid + "\" sent");
+	removeReminder(reminderid);
+}
+
+function removeReminder(reminderid)
+{
+	for (let i = 0; i < reminder_array.length; i++)
+	{
+		if (reminder_array[i].id == reminderid)
+		{
+			clearTimeout(reminder_array[i].timer);
+			reminder_array.splice(i,1);
+			console.log("Reminder \"" + reminderid + "\" removed");
+			return true; //reminder removed
+		}
+	}
+	return false; //nothing removed
+}
+
+//
+// Reconstitute arguments to string
+//
+
+function argumentsbacktostring(target, start, end = -1)
+{
+	if (end == -1)
+	{
+		end = target.length;
+	}
+	let target_string = target[start];
+	for (let i = start+1; i < end; i++)
+	{
+		target_string += " " + target[i];
+	}
+	
+	return target_string;
 }
 
 //
