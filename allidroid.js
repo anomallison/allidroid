@@ -381,15 +381,16 @@ function setReminder(delay, units, message, target_channel, sender)
 	units = units.toLowerCase();
 	let millisecondstounit = 60000; // default to Minutes
 	
-	if (units == "hours" || units == "hrs" || units == "h")
+	if (units.charAt(0) == 'h')
 	{
-		millisecondstounit = 360000;
-	} else if (units == "minutes" || units == "mins" || units == "m")
+		millisecondstounit = 3600000;
+	} else if (units.charAt(0) == 'm')
 	{
 		millisecondstounit = 60000;
-	} else if (units == "seconds" || units == "secs" || units == "s")
+	} else if (units.charAt(0) == 's')
 	{
 		millisecondstounit = 1000;
+		
 	} else
 	{
 		//console.log("Set Reminder error, units invalid");
@@ -409,10 +410,10 @@ function setReminder(delay, units, message, target_channel, sender)
 		return "Invalid arguments, the delay must be a number";
 	}
 	
-	if (parsedDelay < 1 || parsedDelay > 10080)
+	if (parsedDelay < 1 || parsedDelay > 2,520,000)
 	{
 		//console.log("Set Reminder error, delay too short or too long");
-		return "Invalid delay, it must be more than 0, and less than 10080 (7 days)";
+		return "Invalid delay, it must be more than 0, and 7 days";
 	}
 	if (message.length < 1)
 	{
@@ -1562,7 +1563,7 @@ function getPhonemeSpelling(object)
 //
 // garbage name generator
 
-function generatePhonemeName(maxsyllables = 7, minimumsyllables = 1)
+function generatePhonemeName(maxsyllables = 9, minimumsyllables = 1)
 {
 	if (maxsyllables < minimumsyllables)
 	{
@@ -1608,11 +1609,16 @@ function generatePhonemeName(maxsyllables = 7, minimumsyllables = 1)
 			}
 			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants"));
 			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants")); //double weight for consonsants
+			if (last.lists.includes("diphthongs"))
+			{
+				tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants")); //triple weight for consonsants in this case
+			}
 		}
 		else
 		{
 			tempphonemelist = phonemes_english.slice();
-			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"vowels")); //double weight for vowels
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"vowels"));
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"vowels")); //triple weight for vowels
 		}
 	
 		random_int = Math.floor(Math.random()*(tempphonemelist.length));

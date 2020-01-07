@@ -328,5 +328,25 @@
 		"single": "slimefolk",
 		"plural": "slimefolk",
 		"lists": ["monster","boss","friend","sexy","species","gacha"]
+	},
+	{
+		"single": "ghoul",
+		"plural": "ghouls",
+		"lists": ["monster","boss","friend","sexy","gacha"]
+	},
+	{
+		"single": "wight",
+		"plural": "wights",
+		"lists": ["monster","boss","friend","sexy","gacha"]
+	},
+	{
+		"single": "wraith",
+		"plural": "wraiths",
+		"lists": ["monster","boss","friend","sexy","gacha"]
+	},
+	{
+		"single": "[species] ghost",
+		"plural": "[species] ghosts",
+		"lists": ["monster","boss","friend","sexy","gacha"]
 	}
 ]

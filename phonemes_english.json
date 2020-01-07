@@ -11,12 +11,12 @@
 	},
 	{
 		"phoneme": "ʊ",
-		"spellings": ["oo"],
+		"spellings": ["oo","ou"],
 		"lists": ["vowels","monophthongs","close"]
 	},
 	{
 		"phoneme": "uː",
-		"spellings": ["oo"],
+		"spellings": ["oo","ou"],
 		"lists": ["vowels","monophthongs","close"]
 	},
 	{
@@ -36,7 +36,7 @@
 	},
 	{
 		"phoneme": "ɔː",
-		"spellings": ["oor"],
+		"spellings": ["oor","our"],
 		"lists": ["vowels","monophthongs","close"]
 	},
 	{
@@ -171,7 +171,7 @@
 	},
 	{
 		"phoneme": "ʃ",
-		"spellings": ["sh"],
+		"spellings": ["sh","che"],
 		"lists": ["consonants"]
 	},
 	{

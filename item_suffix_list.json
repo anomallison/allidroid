@@ -118,5 +118,10 @@
 		"base": "wearing a crown of flowers",
 		"synonyms": ["wearing chic armour","wearing a damn nice cape","wearing a fancy tie"],
 		"lists": ["friend"]
+	},
+	{
+		"base": "holding a berry",
+		"synonyms": ["holding some leftovers","holding a bag of soft sand","holding a hard stone"],
+		"lists": ["friend"]
 	}
 ]

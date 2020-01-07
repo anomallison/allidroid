@@ -450,7 +450,7 @@
 	{
 		"word": "hypnotising",
 		"priority": 6,
-		"lists": ["boss","sexy"],
+		"lists": ["boss","friend","sexy"],
 		"antonyms": [],
 		"synonyms": ["mesmerising", "enthralling"]
 	},
@@ -459,6 +459,20 @@
 		"priority": 1,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
+		"synonyms": []
+	},
+	{
+		"word": "domineering",
+		"priority": 1,
+		"lists": ["boss","friend","sexy"],
+		"antonyms": ["submissive"],
+		"synonyms": []
+	},
+	{
+		"word": "submissive",
+		"priority": 1,
+		"lists": ["monster","friend","sexy"],
+		"antonyms": ["domineering"],
 		"synonyms": []
 	}
 ]

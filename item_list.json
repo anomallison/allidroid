@@ -303,6 +303,12 @@
 		"name": "magikarp",
 		"number": 1,
 		"type": "friend",
-		"synonyms": ["zigzagoon","pikachu","psyduck","slowpoke"]
+		"synonyms": ["zigzagoon","pikachu","psyduck","slowpoke","eevee","ratata","yungoos"]
+	},
+	{
+		"name": "sobble",
+		"number": 1,
+		"type": "friend",
+		"synonyms": ["piplup","rowlet","popplio","litten","charizard","bulbasaur","squirtle","grookey","scorbunny"]
 	}
 ]
