@@ -291,7 +291,7 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "how") 
 	{
-		output = howRating(arguments[0],arguments[1],argumentsbacktostring(arguments,2));
+		output = howRating(arguments);
 		
 		if (output == null)
 		{
@@ -479,6 +479,11 @@ function argumentsbacktostring(target, start, end = -1)
 	{
 		end = target.length;
 	}
+	if (start > end)
+	{
+		console.log("argumentsbacktostring error, start greater than end");
+		return null;
+	}
 	let target_string = target[start];
 	for (let i = start+1; i < end; i++)
 	{
@@ -492,8 +497,24 @@ function argumentsbacktostring(target, start, end = -1)
 // Fomerly How good is, now is many things
 //
 
-function howRating(adjective,conjunction,target)
+function howRating(sentence)
 {
+	let conjunctionloc = -1;
+	let adjective = "";
+	let target = "";
+	let conjunction = "";
+	for (let i = 0; i < sentence.length; i++)
+	{
+		if (sentence[i] == "is" || sentence[i] == "are")
+		{
+			conjunctionloc = i;
+		}
+	}
+	
+	adjective = argumentsbacktostring(sentence,0,conjunctionloc);
+	target = argumentsbacktostring(sentence,conjunctionloc+1);
+	conjunction = sentence[conjunctionloc];
+	
 	if (adjective == null || adjective.length < 1)
 	{
 		return "how what?";
