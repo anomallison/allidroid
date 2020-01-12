@@ -554,7 +554,7 @@ function howRating(adjective,conjunction,target)
 		}
 		else if (substr_number != false)
 		{
-			how_full = how_full.substr(0,position) + substr_number.toString() + target + how_full.substr(endposition+1);
+			how_full = how_full.substr(0,position) + substr_number.toString() + how_full.substr(endposition+1);
 		}
 		else
 		{
