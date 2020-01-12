@@ -6,39 +6,33 @@
 
 !friend - Generates a friendly monster
 
-!boss - Generates a boss, who may also be a monster, with items and underlings
+!boss - Generates a boss
 
 !sexymonster - Generates a potentially sexier monster
 
 !roll - Rolls a dice, or a string. XdY format, with X being the number of dice and Y being the sides per dice. Alternatively Y can be a string of characters
-example: !roll 2d6   !roll 7d7   !roll 4dLOL   !roll 20dHelloWorld
 
 !gay - Adds to the current total gay level of the bot as a whole
 
 !lesbian - Generates a lesbian
 
-!lesbifriend - Generates a lesbian who is friendly
+!lesbifriend - Generates a friend lesbian
 
 !slash - Generates a slashfic prompt, requires a character set, such as fe3h or da, an optional pairing format, such as f/f, m/m/m, or a/m/f/a, and an optional sublist such as blackeagles, bluelions, goldendeer, churchofseiros. Can use multiple character sets or sublists by separating with a ,
-example: !slash fe3h f/f !slash me,da m/a !slash fe3h f/f/f blackeagles,goldendeer
+example: !slash me,da m/a !slash fe3h f/f/f blackeagles,goldendeer
 
 !generatename - Generates a name, optionally can take a maximum phoneme count, or a maximum and a minimum phoneme count, however maximum cannot be less than minimum, and both must be above 0 and less than 100
-example: !generatename 10 !generatename 9 3
 
-!howgoodis - Takes something and tells you how good it is. Less enthusiastic of nothing.
+!how - type in a thing like "how delicious is gravy" or "how good are cats" and it will respond, echoing your sentiments
 
 !gacha - Take your chances and receive... heroes? with rarity! It means just as much as any other gacha game! You can also give it a number, and it'll pull that many, between 1 and 12
-example: !gacha !gacha 3 !gacha 12
-
-!itemgacha - Take your chances and receive an item, with a rarity! It means just as much as any other gacha game!
 
 !princess - Generates a weird princess. It is a verbose command.
 
 !setreminder - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay, followed by the units (minutes, seconds, or hours), and then the message which Allidroid will say
-example: !setreminder 2 hours take your meds! !setreminder 3 minutes @AnomAllison your noodles are ready!
+example: !setreminder 2 hours take your meds!
 
 !removereminder - This removes a reminder from Allidroid, by taking a reminderid (which is given when a reminder is set)
-example: !removereminder AnomAllison0
 
 !feedback - gives a link to the Google Form to give AnomAllison, my creator, feedback about Allidroid
 ``

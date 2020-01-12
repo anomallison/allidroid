@@ -310,5 +310,11 @@
 		"number": 1,
 		"type": "friend",
 		"synonyms": ["piplup","rowlet","popplio","litten","charizard","bulbasaur","squirtle","grookey","scorbunny"]
+	},
+	{
+		"name": "healing potion",
+		"number": 1,
+		"type": "accessory",
+		"synonyms": ["mana potion","elixir of life","bottle of magic honey","stamina potion"]
 	}
 ]

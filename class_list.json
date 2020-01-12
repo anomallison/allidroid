@@ -214,5 +214,10 @@
 	{
 		"single": "smolboi",
 		"plural": "smolbois"
+	},
+	{
+		"single": "cook",
+		"plural": "cooks"
 	}
+	
 ]

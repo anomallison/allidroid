@@ -348,5 +348,10 @@
 		"single": "[species] ghost",
 		"plural": "[species] ghosts",
 		"lists": ["monster","boss","friend","sexy","gacha"]
+	},
+	{
+		"single": "wolf",
+		"plural": "wolves",
+		"lists": ["monster","boss","friend"]
 	}
 ]

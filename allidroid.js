@@ -65,9 +65,10 @@ var phonemes_english = JSON.parse(fs.readFileSync('phonemes_english.json'));
 var gacha_reveals = JSON.parse(fs.readFileSync('gacha_reveals.json'));
 var gacha_comments = JSON.parse(fs.readFileSync('gacha_comments.json'));
 
-//good files
-var good_levels = JSON.parse(fs.readFileSync('good_levels.json'));
-var good_prefixes = JSON.parse(fs.readFileSync('good_prefixes.json'));
+//how files
+var how_levels = JSON.parse(fs.readFileSync('how_levels.json'));
+var how_prefixes = JSON.parse(fs.readFileSync('how_prefixes.json'));
+var how_suffixes = JSON.parse(fs.readFileSync('how_suffixes.json'));
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -288,13 +289,13 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    } else if (normalizedCommand == "howgoodis") 
+    } else if (normalizedCommand == "how") 
 	{
-		output = howgood(arguments);
+		output = howRating(arguments[0],arguments[1],argumentsbacktostring(arguments,2));
 		
 		if (output == null)
 		{
-			console.log("failed command: howgoodis");
+			console.log("failed command: how");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		}
@@ -330,7 +331,7 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send("No reminder with that id was found");
 			return;
 		}
-    }
+    } 
 	else
 	{
 		let possibleString = nani();
@@ -488,19 +489,28 @@ function argumentsbacktostring(target, start, end = -1)
 }
 
 //
-// How Good
+// Fomerly How good is, now is many things
 //
 
-function howgood(target)
+function howRating(adjective,conjunction,target)
 {
+	if (adjective == null || adjective.length < 1)
+	{
+		return "how what?";
+	}
+	if (conjunction == null || conjunction.length < 1)
+	{
+		return "how " + adjective + " what?";
+	}
 	if (target == null || target.length < 1)
 	{
-		return "eh, is alright";
+		return "how " + adjective + " " + conjunction + " what?";
 	}
-	let random_percentage = Math.floor((Math.random()*4))+153;
-	let random_level = good_levels[Math.floor(Math.random()*good_levels.length)];
+	let baserand = Math.random();
+	let random_level = how_levels[Math.floor(Math.random()*how_levels.length)];
+	let suffix = how_suffixes[Math.floor(Math.random()*how_suffixes.length)];
 	
-	let temp_prefix_arr = good_prefixes.slice();
+	let temp_prefix_arr = how_prefixes.slice();
 	
 	let random_prefix = Math.floor(Math.random()*temp_prefix_arr.length);
 	let prefix_count = Math.floor(Math.random()*3)+1;
@@ -519,7 +529,41 @@ function howgood(target)
 		target_string += " " + target[i];
 	}
 	
-	return target_string + " is " + prefix + " " + random_level + " " + random_percentage.toString() + "\% good";
+	let how_full = target + " " + conjunction + " " + prefix + " " + random_level + ". " + grammarCapitalFirstLetter(suffix) + ".";
+	
+	let position = how_full.indexOf("\[");
+	let endposition = -1;
+	let howsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = how_full.indexOf("\]");
+		howsubstr = how_full.substring(position+1,endposition);
+		substr_number = randomNumberForText(howsubstr);
+		if (howsubstr == "adjective")
+		{
+			how_full = how_full.substr(0,position) + adjective + how_full.substr(endposition+1);
+		}
+		else if (howsubstr == "conjunction")
+		{
+			how_full = how_full.substr(0,position) + conjunction + how_full.substr(endposition+1);
+		}
+		else if (howsubstr == "target")
+		{
+			how_full = how_full.substr(0,position) + target + how_full.substr(endposition+1);
+		}
+		else if (substr_number != false)
+		{
+			how_full = how_full.substr(0,position) + substr_number.toString() + target + how_full.substr(endposition+1);
+		}
+		else
+		{
+			how_full = how_full.substr(0,position) + how_full.substr(endposition+1);
+		}
+		position = how_full.indexOf("\[");
+	}
+	
+	return how_full;
 }
 
 //
@@ -735,7 +779,7 @@ function randomNumberForText(r)
 	
 	if (isNaN(maximumNumber) || isNaN(minimumNumber) || maximumNumber == -1)
 	{
-		return -1;
+		return false;omNum
 	}
 	return Math.floor(Math.random()*(maximumNumber-minimumNumber)+minimumNumber);
 }
@@ -888,7 +932,7 @@ function slashfic(charlist = "", pairing = "a/a", sublists = "")
 				twist = twist.substr(0,position) + "both" + twist.substr(endposition+1);
 			}
 		}
-		else if (substr_number != -1)
+		else if (substr_number != false)
 		{
 			twist = twist.substr(0,position) + substr_number.toString() + twist.substr(endposition+1);
 		}
