@@ -301,9 +301,15 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    } else if (normalizedCommand == "setreminder") 
+    } else if (normalizedCommand == "remindme") 
 	{
-		output = setReminder(arguments[0], arguments[1], argumentsbacktostring(arguments,2), receivedMessage.channel, receivedMessage.author);
+		if (arguments[0].toLowerCase() == "in")
+		{
+			output = setReminder(arguments[1], arguments[2], argumentsbacktostring(arguments,3), receivedMessage.channel, receivedMessage.author);
+		} else
+		{
+			output = setReminder(arguments[0], arguments[1], argumentsbacktostring(arguments,2), receivedMessage.channel, receivedMessage.author);
+		}
 		
 		if (output == null)
 		{
@@ -544,10 +550,18 @@ function howRating(sentence)
 		prefix += " " + temp_prefix_arr[random_prefix];
 	}
 	
-	let target_string = target[0];
-	for (let i = 1; i < target.length; i++)
+	let endchar = target.charAt(target.length-1);
+	let slicedchar = 0;
+	while ((isAlphaNumericChar(endchar)) && slicedchar < target.length)
 	{
-		target_string += " " + target[i];
+		slicedchar++;
+		console.log("slicedchar: " + slicedchar);
+		endchar = target.charAt(target.length-(1+slicedchar));
+		console.log("endchar: " + endchar);
+	}
+	if (slicedchar > 0)
+	{
+		target = target.slice(0,target.length-slicedchar);
 	}
 	
 	let how_full = target + " " + conjunction + " " + prefix + " " + random_level + ". " + grammarCapitalFirstLetter(suffix) + ".";
@@ -1093,6 +1107,14 @@ function grammarCapitalFirstLetter(c)
 {
 	c = c.substring(0,1).toUpperCase() + c.substring(1);
 	return c;
+}
+
+//
+//
+
+function isAlphaNumericChar(c)
+{
+	return /[^a-zA-Z0-9]/.test(c);
 }
 
 //

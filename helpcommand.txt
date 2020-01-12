@@ -29,8 +29,8 @@ example: !slash me,da m/a !slash fe3h f/f/f blackeagles,goldendeer
 
 !princess - Generates a weird princess. It is a verbose command.
 
-!setreminder - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay, followed by the units (minutes, seconds, or hours), and then the message which Allidroid will say
-example: !setreminder 2 hours take your meds!
+!remindme - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay, followed by the units (minutes, seconds, or hours), and then the message which Allidroid will say
+example: !remindme 2 hours take your meds!
 
 !removereminder - This removes a reminder from Allidroid, by taking a reminderid (which is given when a reminder is set)
 
