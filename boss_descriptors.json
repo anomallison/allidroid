@@ -4,7 +4,7 @@
 		"lists":["arm","leg","chest"]
 	},
 	{
-		"text":"[possessivesubject] [part] has been replaced with a mechanical prosthetic of cold steel",
+		"text":"[possessivesubject] [part] that's been replaced with a mechanical prosthetic of cold steel",
 		"lists":["arm","leg"]
 	},
 	{
@@ -16,7 +16,39 @@
 		"lists":["mouth"]
 	},
 	{
+		"text":"a snaggletooth poking from [possessivesubject] mouth",
+		"lists":["mouth"]
+	},
+	{
+		"text":"flicking a forked tongue between [possessivesubject] lips",
+		"lists":["mouth"]
+	},
+	{
+		"text":"teeth jagged and stained red",
+		"lists":["mouth"]
+	},
+	{
+		"text":"lips a deep, unnatural vermillion",
+		"lists":["lips"]
+	},
+	{
+		"text":"[possessivesubject] veins that seem to pull the blood from [possessivesubject] lips",
+		"lists":["lips"]
+	},
+	{
 		"text":"[possessivesubject] face stained purple and blue, [possessivesubject] veins stark against [possessivesubject] skin white as parafin",
+		"lists":["head"]
+	},
+	{
+		"text":"a scar running down [possessivesubject] face like a trophy of fighting a blade and winning",
+		"lists":["head"]
+	},
+	{
+		"text":"stitches that nearly crosshatch [possessivesubject] face",
+		"lists":["head"]
+	},
+	{
+		"text":"faint scars from the installation of facial cybernetic mods",
 		"lists":["head"]
 	},
 	{
@@ -24,11 +56,39 @@
 		"lists":["horn"]
 	},
 	{
-		"text":"[possessivesubject] eyes filled with darkness, [possessivesubject] iris a black circle in an inky void",
+		"text":"[possessivesubject] horn curving inwards, decorated with strings of beads",
+		"lists":["horn"]
+	},
+	{
+		"text":"an eye filled with darkness, [possessivesubject] iris a black circle in an inky void",
 		"lists":["eye"]
 	},
 	{
+		"text":"a sunken, empty eyesocket",
+		"lists":["eye"]
+	},
+	{
+		"text":"an eye red and bloodshot",
+		"lists":["eye"]
+	},
+	{
+		"text":"an eye that's a pitch black orb",
+		"lists":["eye"]
+	},
+	{
+		"text":"an eye socket filled with a carved, precious gemstone",
+		"lists":["eye"]
+	},
+	{
+		"text":"[possessivesubject] sleek, advanced cybernetic [part]",
+		"lists":["arm","leg","chest","wing","eye","tail","fin"]
+	},
+	{
 		"text":"[possessivesubject] arm twisted and ending in clawed hands, stained with gore",
+		"lists":["arm"]
+	},
+	{
+		"text":"a tattoo that covers the length of [possessivesubject] arm",
 		"lists":["arm"]
 	},
 	{
@@ -36,7 +96,19 @@
 		"lists":["antenna"]
 	},
 	{
+		"text":"[possessivesubject] antenna that's broken and flops and occasionally twitches",
+		"lists":["antenna"]
+	},
+	{
 		"text":"[possessivesubject] wing covered in scar tissue, a crosshatch of pain written over the membrane",
+		"lists":["wing"]
+	},
+	{
+		"text":"[possessivesubject] wing with patches of leather sewn over what can only be wounds from battle",
+		"lists":["wing"]
+	},
+	{
+		"text":"[possessivesubject] wing that sparkles with veins of gold and silver",
 		"lists":["wing"]
 	},
 	{
@@ -44,24 +116,28 @@
 		"lists":["leg"]
 	},
 	{
-		"text":"[possessivesubject] ear adorned with many rings and studs, some with gemstones on them",
-		"lists":["ear"]
+		"text":"[possessivesubject] [part] covered in tightly wrapped bandages",
+		"lists":["leg","arm","head","chest"]
 	},
 	{
-		"text":"[possessivesubject] tail is heavily tattooed, with some studs pierced into it",
+		"text":"[possessivesubject] [part] adorned with many rings and studs, some with gemstones on them",
+		"lists":["ear","fin","horn"]
+	},
+	{
+		"text":"[possessivesubject] [part] notched and worn from combat",
+		"lists":["ear","fin","horn"]
+	},
+	{
+		"text":"[possessivesubject] tail that is heavily tattooed, with some studs pierced into it",
 		"lists":["tail"]
 	},
 	{
-		"text":"[possessivesubject] engine is absent, perhaps removed and place into another machine",
+		"text":"[possessivesubject] engine that is absent, perhaps removed and place into another machine",
 		"lists":["engine"]
 	},
 	{
-		"text":"[possessivesubject] engine has been greatly modified, wirring with unusual vigor",
+		"text":"[possessivesubject] engine that's been greatly modified, wirring with unusual vigor",
 		"lists":["engine"]
-	},
-	{
-		"text":"[possessivesubject] that's notched with marks of battle",
-		"lists":["fin"]
 	},
 	{
 		"text":"[possessivesubject] branch broken and twisted, hanging languidly",

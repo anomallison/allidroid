@@ -1549,15 +1549,15 @@ function generateBoss()
 	}
 
 	
-	let randomfriendpotential = Math.floor(Math.random()*7); // EVERYONE CAN HAVE FRIENDS
+	let randomfriendpotential = Math.floor(Math.random()*5); // EVERYONE CAN HAVE FRIENDS
 	for (let i = 0; i < randomfriendpotential; i++)
 	{
 		boss_item_slots.push("friend");
 	}
 	
 	
-	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/4+(Math.random()*monster_base.parts.length)/4);
-	let numberofitems = Math.floor((boss_item_slots.length/8) + (Math.random()*(boss_item_slots.length + 3))/4);
+	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/5+(Math.random()*monster_base.parts.length)/5);
+	let numberofitems = Math.floor((boss_item_slots.length/10) + (Math.random()*(boss_item_slots.length + 1))/4);
 	
 	let items = [];
 	let tempitem;
