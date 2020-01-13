@@ -746,6 +746,10 @@ function getAdjectiveString(adjective)
 
 function getItemNoun(item)
 {
+	if (item == null)
+	{
+		return null;
+	}
 	if (item.synonyms.length > 0)
 	{
 		let random_int = Math.floor(Math.random()*(item.synonyms.length+1));
@@ -1491,6 +1495,10 @@ function generateBossName(with_title = true, short_title = false)
 function getPartDesciptor(part)
 {
 	descriptorlist = monster_descriptors.filter(filterByList,part);
+	if (descriptorlist.length < 1)
+	{
+		return null;
+	}
 	descriptor = descriptorlist[Math.floor(Math.random()*(descriptorlist.length))];
 	
 	return descriptor.text;

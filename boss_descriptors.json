@@ -9,11 +9,11 @@
 	},
 	{
 		"text":"wires coiled around [possessivesubject] [part], piercing and cutting and entwined around needles in some places",
-		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail"]
+		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail","fin"]
 	},
 	{
 		"text":"[possessivesubject] [part] scarred and protuding with the parts of forced cybernetic enhancement",
-		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail"]
+		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail","fin"]
 	},
 	{
 		"text":"a warped mouth, filled with lined rows of teeth",
@@ -62,5 +62,9 @@
 	{
 		"text":"[possessivesubject] engine has been greatly modified, wirring with unusual vigor",
 		"lists":["engine"]
+	},
+	{
+		"text":"[possessivesubject] that's notched with marks of battle",
+		"lists":["fin"]
 	}
 ]
