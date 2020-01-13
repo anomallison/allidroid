@@ -1616,7 +1616,7 @@ function generateBoss()
 	for (let i = 0; i < numberofuniqueparts; i++)
 	{
 		
-		if ((i+1) == numberofuniqueparts)
+		if (numberofuniqueparts > 1 && (i+1) == numberofuniqueparts)
 		{
 			boss_string += " and ";
 		}
