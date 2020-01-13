@@ -1497,6 +1497,31 @@ function getPartDesciptor(part)
 }
 
 //
+// sort an array of items by slot
+//
+
+function sortItemArray(arr)
+{
+	let temparr = arr.slice();
+	let sortedarr = [];
+	
+	for (let slot in item_slots)
+	{
+		for (let i = 0; i < temparr.length; i++)
+		{
+			if (temparr[i].slots.includes(item_slots[slot]))
+			{
+				sortedarr.push(temparr[i]);
+				temparr.splice(i,1);
+				i--;
+			}
+		}
+	}
+	
+	return sortedarr;
+}
+
+//
 // Generate a special boss monster
 
 function generateBoss() 
@@ -1649,6 +1674,8 @@ function generateBoss()
 		
 		boss_parts.splice(temppart,1);
 	}
+	
+	items = sortItemArray(items);
 	
 	if (numberofitems > 0)
 	{
