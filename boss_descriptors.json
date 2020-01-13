@@ -8,10 +8,6 @@
 		"lists":["arm","leg"]
 	},
 	{
-		"text":"wires coiled around [possessivesubject] [part], piercing and cutting and entwined around needles in some places",
-		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail","fin"]
-	},
-	{
 		"text":"[possessivesubject] [part] scarred and protuding with the parts of forced cybernetic enhancement",
 		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail","fin"]
 	},
@@ -66,5 +62,33 @@
 	{
 		"text":"[possessivesubject] that's notched with marks of battle",
 		"lists":["fin"]
+	},
+	{
+		"text":"[possessivesubject] branch broken and twisted, hanging languidly",
+		"lists":["branch"]
+	},
+	{
+		"text":"[possessivesubject] branch that rhythmically waves with the groove",
+		"lists":["branch"]
+	},
+	{
+		"text":"[possessivesubject] branch broken and fallen",
+		"lists":["branch"]
+	},
+	{
+		"text":"[possessivesubject] branch that seems like it is making rude gestures",
+		"lists":["branch"]
+	},
+	{
+		"text":"[possessivesubject] trunk carved with generations of messages",
+		"lists":["trunk"]
+	},
+	{
+		"text":"[possessivesubject] trunk carved with generations of insults",
+		"lists":["trunk"]
+	},
+	{
+		"text":"[possessivesubject] trunk with a face carved into it",
+		"lists":["trunk"]
 	}
 ]
