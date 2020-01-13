@@ -1,223 +1,338 @@
 [
 	{
 		"single": "fighter",
-		"plural": "fighters"
+		"plural": "fighters",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive"]
 	},
 	{
 		"single": "wizard",
-		"plural": "wizards"
+		"plural": "wizards",
+		"slots": ["weapon","coat","neck","ring","tool"],
+		"favitems": ["magical"]
 	},
 	{
 		"single": "necromancer",
-		"plural": "necromancers"
+		"plural": "necromancers",
+		"slots": ["weapon","coat","neck","ring","tool"],
+		"favitems": ["magical","aggressive","dark"]
 	},
 	{
 		"single": "rogue",
-		"plural": "rogues"
+		"plural": "rogues",
+		"slots": ["weapon","weapon","pants","shirt","tool","tool","tool","tool"],
+		"favitems": ["mundane","thief"]
 	},
 	{
 		"single": "thief",
-		"plural": "thieves"
+		"plural": "thieves",
+		"slots": ["weapon","weapon","pants","shirt","tool","tool","tool","tool"],
+		"favitems": ["mundane","thief"]
 	},
 	{
 		"single": "physician",
-		"plural": "physicians"
+		"plural": "physicians",
+		"slots": ["tool","tool","coat","pants","shirt"],
+		"favitems": ["mundane"]
 	},
 	{
 		"single": "planar traveller",
-		"plural": "planar travellers"
+		"plural": "planar travellers",
+		"slots": ["weapon","coat","neck","ring","tool"],
+		"favitems": ["magical"]
 	},
 	{
 		"single": "summoner",
-		"plural": "summoners"
+		"plural": "summoners",
+		"slots": ["weapon","coat","neck","ring","tool"],
+		"favitems": ["magical"]
 	},
 	{
 		"single": "druid",
-		"plural": "druids"
+		"plural": "druids",
+		"slots": ["weapon","coat","neck","ring","tool"],
+		"favitems": ["magical"]
 	},
 	{
 		"single": "berserker",
-		"plural": "berserkers"
+		"plural": "berserkers",
+		"slots": ["weapon","weapon","weapon","coat","tool"],
+		"favitems": ["mundane","aggressive"]
 	},
 	{
 		"single": "engineer",
-		"plural": "engineers"
+		"plural": "engineers",
+		"slots": ["tool","tool","coat","pants","shirt"],
+		"favitems": ["mundane","advanced"]
 	},
 	{
 		"single": "psychic warrior",
-		"plural": "psychic warriors"
+		"plural": "psychic warriors",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive"]
 	},
 	{
 		"single": "sniper",
-		"plural": "snipers"
+		"plural": "snipers",
+		"slots": ["weapon","pants","shirt","tool","tool"],
+		"favitems": ["mundane","aggressive","ranged"]
 	},
 	{
 		"single": "medic",
-		"plural": "medics"
+		"plural": "medics",
+		"slots": ["tool","tool","coat","pants","shirt"],
+		"favitems": ["mundane"]
 	},
 	{
 		"single": "cleric",
-		"plural": "clerics"
+		"plural": "clerics",
+		"slots": ["weapon","coat","neck","ring","tool"],
+		"favitems": ["magical","holy"]
 	},
 	{
 		"single": "hypnotist",
-		"plural": "hypnotists"
+		"plural": "hypnotists",
+		"slots": ["coat","neck","ring","tool"],
+		"favitems": ["magical"]
 	},
 	{
 		"single": "soldier",
-		"plural": "soldiers"
+		"plural": "soldiers",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive"]
 	},
 	{
 		"single": "bounty hunter",
-		"plural": "bounty hunters"
+		"plural": "bounty hunters",
+		"slots": ["weapon","weapon","coat","hat","tool","tool"],
+		"favitems": ["mundane","aggressive","thief"]
 	},
 	{
 		"single": "destroyer",
-		"plural": "destroyers"
+		"plural": "destroyers",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive"]
 	},
 	{
 		"single": "blackguard",
-		"plural": "blackguard"
+		"plural": "blackguard",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive"]
 	},
 	{
 		"single": "frostguard",
-		"plural": "frostguard"
+		"plural": "frostguard",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive"]
 	},
 	{
 		"single": "godslayer",
-		"plural": "godslayers"
+		"plural": "godslayers",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["magical","aggressive"]
 	},
 	{
 		"single": "vampire slayer",
-		"plural": "vampire slayers"
+		"plural": "vampire slayers",
+		"slots": ["weapon","weapon","coat","hat","tool","tool"],
+		"favitems": ["magical","aggressive","holy"]
 	},
 	{
 		"single": "doom slayer",
-		"plural": "doom slayers"
+		"plural": "doom slayers",
+		"slots": ["weapon","weapon","weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive","advanced","advanced","advanced"]
 	},
 	{
 		"single": "templar",
-		"plural": "templar"
+		"plural": "templar",
+		"slots": ["weapon","offhand","coat","hat","tool","tool"],
+		"favitems": ["magical","aggressive","holy"]
 	},
 	{
 		"single": "witch",
-		"plural": "witches"
+		"plural": "witches",
+		"slots": ["weapon","coat","neck","ring","tool","tool"],
+		"favitems": ["magical","aggressive","dark"]
 	},
 	{
 		"single": "alchemist",
-		"plural": "alchemists"
+		"plural": "alchemists",
+		"slots": ["coat","neck","ring","tool","tool","tool","tool","tool","tool"],
+		"favitems": ["magical","aggressive","mundane"]
 	},
 	{
 		"single": "knight errant",
-		"plural": "knights errant"
+		"plural": "knights errant",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive","advanced"]
 	},
 	{
 		"single": "cultist",
-		"plural": "cultists"
+		"plural": "cultists",
+		"slots": ["weapon","coat","neck","ring","tool","tool"],
+		"favitems": ["magical","aggressive","dark"]
 	},
 	{
 		"single": "paladin",
-		"plural": "paladins"
+		"plural": "paladins",
+		"slots": ["weapon","offhand","coat","hat","tool","tool"],
+		"favitems": ["magical","aggressive","holy"]
 	},
 	{
 		"single": "inquisitor",
-		"plural": "inquisitors"
+		"plural": "inquisitors",
+		"slots": ["weapon","coat","neck","ring","tool","tool"],
+		"favitems": ["magical","aggressive","holy"]
 	},
 	{
 		"single": "arcane knight",
-		"plural": "arcane knights"
+		"plural": "arcane knights",
+		"slots": ["weapon","offhand","coat","hat","tool","tool"],
+		"favitems": ["magical","aggressive"]
 	},
 	{
 		"single": "archer",
-		"plural": "archers"
+		"plural": "archers",
+		"slots": ["weapon","weapon","coat","tool"],
+		"favitems": ["mundane","aggressive","ranged"]
 	},
 	{
 		"single": "blacksmith",
-		"plural": "blacksmiths"
+		"plural": "blacksmiths",
+		"slots": ["tool","tool","coat","pants","shirt"],
+		"favitems": ["mundane"]
 	},
 	{
 		"single": "general",
-		"plural": "generals"
+		"plural": "generals",
+		"slots": ["weapon","offhand","coat","hat","tool","tool"],
+		"favitems": []
 	},
 	{
 		"single": "sorcerer",
-		"plural": "sorcerers"
-	},
-	{
-		"single": "sorceress",
-		"plural": "sorceresses"
+		"plural": "sorcerers",
+		"slots": ["weapon","coat","neck","ring","tool","tool"],
+		"favitems": ["magical","dark"]
 	},
 	{
 		"single": "ninja",
-		"plural": "ninjas"
+		"plural": "ninjas",
+		"slots": ["weapon","weapon","weapon","pants","shirt","tool"],
+		"favitems": ["mundane","aggressive","thief"]
 	},
 	{
 		"single": "samurai",
-		"plural": "samurai"
+		"plural": "samurai",
+		"slots": ["weapon","weapon","coat","hat","tool"],
+		"favitems": ["mundane","aggressive"]
 	},
 	{
 		"single": "hacker",
-		"plural": "hackers"
+		"plural": "hackers",
+		"slots": ["tool","tool","tool"],
+		"favitems": ["advanced"]
 	},
 	{
 		"single": "assassin",
-		"plural": "assassins"
+		"plural": "assassins",
+		"slots": ["weapon","weapon","pants","shirt","tool","tool","tool"],
+		"favitems": ["mundane","aggressive","thief"]
 	},
 	{
 		"single": "technician",
-		"plural": "technicians"
+		"plural": "technicians",
+		"slots": ["tool","tool","coat","pants","shirt"],
+		"favitems": ["mundane","advanced"]
 	},
 	{
 		"single": "golemancer",
-		"plural": "golemancers"
+		"plural": "golemancers",
+		"slots": ["coat","neck","ring","tool","tool","tool"],
+		"favitems": ["magical"]
 	},
 	{
 		"single": "blood mage",
-		"plural": "blood mages"
+		"plural": "blood mages",
+		"slots": ["weapon","weapon","coat","neck","ring","tool"],
+		"favitems": ["magical","dark"]
 	},
 	{
 		"single": "inventor",
-		"plural": "inventors"
+		"plural": "inventors",
+		"slots": ["coat","neck","ring","tool","tool","tool"],
+		"favitems": ["advanced"]
 	},
 	{
 		"single": "bard",
-		"plural": "bards"
+		"plural": "bards",
+		"slots": ["weapon","weapon","coat","neck","ring","tool","tool"],
+		"favitems": ["magical","musical"]
 	},
 	{
 		"single": "ranger",
-		"plural": "rangers"
+		"plural": "rangers",
+		"slots": ["weapon","weapon","coat","tool"],
+		"favitems": ["mundane","aggressive","ranged"]
 	},
 	{
 		"single": "warlock",
-		"plural": "warlocks"
+		"plural": "warlocks",
+		"slots": ["weapon","coat","neck","ring","tool"],
+		"favitems": ["magical","dark"]
 	},
 	{
 		"single": "monk",
-		"plural": "monks"
+		"plural": "monks",
+		"slots": ["shirt","pants","neck","ring"],
+		"favitems": ["mundane"]
 	},
 	{
 		"single": "pugilist",
-		"plural": "pugilists"
+		"plural": "pugilists",
+		"slots": ["shirt","pants","neck","ring"],
+		"favitems": ["mundane"]
 	},
 	{
 		"single": "infiltrator",
-		"plural": "infiltrators"
+		"plural": "infiltrators",
+		"slots": ["weapon","pants","shirt","tool","tool","tool"],
+		"favitems": ["mundane","thief"]
 	},
 	{
 		"single": "spy",
-		"plural": "spies"
+		"plural": "spies",
+		"slots": ["weapon","pants","shirt","tool","tool","tool"],
+		"favitems": ["mundane","thief","ranged"]
 	},
 	{
 		"single": "bigboi",
-		"plural": "bigbois"
+		"plural": "bigbois",
+		"slots": ["weapon","coat","pants","shirt","hat"],
+		"favitems": []
 	},
 	{
 		"single": "smolboi",
-		"plural": "smolbois"
+		"plural": "smolbois",
+		"slots": ["weapon","coat","pants","shirt","hat"],
+		"favitems": []
 	},
 	{
 		"single": "cook",
-		"plural": "cooks"
+		"plural": "cooks",
+		"slots": ["weapon","coat","pants","shirt","hat"],
+		"favitems": ["cooking"]
+	},
+	{
+		"single": "pokémon trainer",
+		"plural": "pokémon trainers",
+		"slots": ["friend","friend","friend","friend","tool","tool","tool","tool"],
+		"favitems": ["pokemon"]
+	},
+	{
+		"single": "himbo",
+		"plural": "himbos",
+		"slots": ["pants","shirt","hat","tool","friend"],
+		"favitems": []
 	}
-	
 ]

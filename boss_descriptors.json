@@ -1,0 +1,66 @@
+[
+	{
+		"text":"a scar that runs down a trail down [possessivesubject] [part] splitting an old faded tattoo",
+		"lists":["arm","leg","chest"]
+	},
+	{
+		"text":"[possessivesubject] [part] has been replaced with a mechanical prosthetic of cold steel",
+		"lists":["arm","leg"]
+	},
+	{
+		"text":"wires coiled around [possessivesubject] [part], piercing and cutting and entwined around needles in some places",
+		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail"]
+	},
+	{
+		"text":"[possessivesubject] [part] scarred and protuding with the parts of forced cybernetic enhancement",
+		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail"]
+	},
+	{
+		"text":"a warped mouth, filled with lined rows of teeth",
+		"lists":["mouth"]
+	},
+	{
+		"text":"[possessivesubject] face stained purple and blue, [possessivesubject] veins stark against [possessivesubject] skin white as parafin",
+		"lists":["head"]
+	},
+	{
+		"text":"[possessivesubject] horn twisting upwards and around, decorated with studs of gold and gem stones",
+		"lists":["horn"]
+	},
+	{
+		"text":"[possessivesubject] eyes filled with darkness, [possessivesubject] iris a black circle in an inky void",
+		"lists":["eye"]
+	},
+	{
+		"text":"[possessivesubject] arm twisted and ending in clawed hands, stained with gore",
+		"lists":["arm"]
+	},
+	{
+		"text":"[possessivesubject] antenna that twitches and cracks unsettlingly",
+		"lists":["antenna"]
+	},
+	{
+		"text":"[possessivesubject] wing covered in scar tissue, a crosshatch of pain written over the membrane",
+		"lists":["wing"]
+	},
+	{
+		"text":"[possessivesubject] leg removed just below the knee, with a rather ordinary peg in it's place",
+		"lists":["leg"]
+	},
+	{
+		"text":"[possessivesubject] ear adorned with many rings and studs, some with gemstones on them",
+		"lists":["ear"]
+	},
+	{
+		"text":"[possessivesubject] tail is heavily tattooed, with some studs pierced into it",
+		"lists":["tail"]
+	},
+	{
+		"text":"[possessivesubject] engine is absent, perhaps removed and place into another machine",
+		"lists":["engine"]
+	},
+	{
+		"text":"[possessivesubject] engine has been greatly modified, wirring with unusual vigor",
+		"lists":["engine"]
+	}
+]

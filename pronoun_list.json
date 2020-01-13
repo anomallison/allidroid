@@ -4,97 +4,111 @@
 		"object": "him",
 		"possessivesubject": "his",
 		"possessiveobject": "his",
-		"objectself": "himself"
+		"objectself": "himself",
+		"conjunction": "is"
 	},
 	{
 		"subject": "she",
 		"object": "her",
 		"possessivesubject": "her",
 		"possessiveobject": "hers",
-		"objectself": "herself"
+		"objectself": "herself",
+		"conjunction": "is"
 	},
 	{
 		"subject": "they",
 		"object": "them",
 		"possessivesubject": "their",
 		"possessiveobject": "theirs",
-		"objectself": "themself"
+		"objectself": "themself",
+		"conjunction": "are"
 	},
 	{
 		"subject": "xey",
 		"object": "xim",
 		"possessivesubject": "xir",
 		"possessiveobject": "xirs",
-		"objectself": "ximself"
+		"objectself": "ximself",
+		"conjunction": "are"
 	},
 	{
 		"subject": "xey",
 		"object": "xem",
 		"possessivesubject": "xer",
 		"possessiveobject": "xers",
-		"objectself": "xemself"
+		"objectself": "xemself",
+		"conjunction": "are"
 	},
 	{
 		"subject": "zey",
 		"object": "zim",
 		"possessivesubject": "zis",
 		"possessiveobject": "zis",
-		"objectself": "zimself"
+		"objectself": "zimself",
+		"conjunction": "are"
 	},
 	{
 		"subject": "zey",
 		"object": "zer",
 		"possessivesubject": "zer",
 		"possessiveobject": "zers",
-		"objectself": "zerself"
+		"objectself": "zerself",
+		"conjunction": "are"
 	},
 	{
 		"subject": "e",
 		"object": "em",
 		"possessivesubject": "es",
 		"possessiveobject": "es",
-		"objectself": "emself"
+		"objectself": "emself",
+		"conjunction": "is"
 	},
 	{
 		"subject": "e",
 		"object": "er",
 		"possessivesubject": "er",
 		"possessiveobject": "ers",
-		"objectself": "erself"
+		"objectself": "erself",
+		"conjunction": "is"
 	},
 	{
 		"subject": "it",
 		"object": "it",
 		"possessivesubject": "its",
 		"possessiveobject": "its",
-		"objectself": "itself"
+		"objectself": "itself",
+		"conjunction": "is"
 	},
 	{
 		"subject": "fae",
 		"object": "faer",
 		"possessivesubject": "faer",
 		"possessiveobject": "faers",
-		"objectself": "faeself"
+		"objectself": "faeself",
+		"conjunction": "are"
 	},
 	{
 		"subject": "xe",
 		"object": "xyr",
 		"possessivesubject": "xyr",
 		"possessiveobject": "xyrs",
-		"objectself": "xyrself"
+		"objectself": "xyrself",
+		"conjunction": "is"
 	},
 	{
 		"subject": "ze",
 		"object": "zyr",
 		"possessivesubject": "zyr",
 		"possessiveobject": "zyrs",
-		"objectself": "zyrself"
+		"objectself": "zyrself",
+		"conjunction": "is"
 	},
 	{
 		"subject": "se",
 		"object": "sem",
 		"possessivesubject": "seir",
 		"possessiveobject": "seirs",
-		"objectself": "seirself"
+		"objectself": "seirself",
+		"conjunction": "is"
 	}
 ]

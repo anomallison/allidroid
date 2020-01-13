@@ -26,20 +26,22 @@ var pronouns = JSON.parse(fs.readFileSync('pronoun_list.json'));
 var monster_adjectives = JSON.parse(fs.readFileSync('adjective_list.json'));
 var monster_actions = JSON.parse(fs.readFileSync('action_list.json'));
 var monster_nouns = JSON.parse(fs.readFileSync('monster_list.json'));
-var group_types = JSON.parse(fs.readFileSync('group_type_list.json'));
+//var group_types = JSON.parse(fs.readFileSync('group_type_list.json'));
 
-var costume_material = JSON.parse(fs.readFileSync('costume_material_list.json'));
+//var costume_material = JSON.parse(fs.readFileSync('costume_material_list.json'));
 
 var monster_names = JSON.parse(fs.readFileSync('name_given_list.json'));
 var monster_surnames = JSON.parse(fs.readFileSync('name_surname_list.json'));
 var title_prefixes = JSON.parse(fs.readFileSync('title_prefix_list.json'));
 var title_suffixes = JSON.parse(fs.readFileSync('title_suffix_list.json'));
 var monster_classes = JSON.parse(fs.readFileSync('class_list.json'));
+var monster_descriptors = JSON.parse(fs.readFileSync('boss_descriptors.json'));
 
 //artifact files
 var item_nouns = JSON.parse(fs.readFileSync('item_list.json'));
 var item_suffixes = JSON.parse(fs.readFileSync('item_suffix_list.json'));
 var item_prefixes = JSON.parse(fs.readFileSync('item_prefix_list.json'));
+var item_slots = JSON.parse(fs.readFileSync('item_slots.json'));
 
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
@@ -265,18 +267,6 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    } else if (normalizedCommand == "itemgacha") 
-	{
-		output = playItemGacha();
-		
-		if (output == null)
-		{
-			console.log("failed command: itemgacha");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		}
-		receivedMessage.channel.send(output);
-		return;
     } else if (normalizedCommand == "gacha") 
 	{
 		output = playGacha(arguments[0]);
@@ -291,7 +281,14 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "how") 
 	{
-		output = howRating(arguments);
+		if (arguments[0] == "much")
+		{
+			output = howMuch(arguments);
+		} else
+		{
+			output = howRating(arguments);
+		}
+		
 		
 		if (output == null)
 		{
@@ -555,9 +552,7 @@ function howRating(sentence)
 	while ((isAlphaNumericChar(endchar)) && slicedchar < target.length)
 	{
 		slicedchar++;
-		console.log("slicedchar: " + slicedchar);
 		endchar = target.charAt(target.length-(1+slicedchar));
-		console.log("endchar: " + endchar);
 	}
 	if (slicedchar > 0)
 	{
@@ -601,6 +596,57 @@ function howRating(sentence)
 	return how_full;
 }
 
+function howMuch(sentence)
+{
+	let random_level = how_levels[Math.floor(Math.random()*how_levels.length)];
+	
+	let temp_prefix_arr = how_prefixes.slice();
+	
+	let random_prefix = Math.floor(Math.random()*temp_prefix_arr.length);
+	let prefix_count = Math.floor(Math.random()*4)+1;
+	let prefix = temp_prefix_arr[random_prefix];
+	
+	for (let i = 1; i < prefix_count && temp_prefix_arr.length > 1; i++)
+	{
+		temp_prefix_arr.splice(random_prefix,1);
+		random_prefix = Math.floor(Math.random()*temp_prefix_arr.length);
+		prefix += " " + temp_prefix_arr[random_prefix];
+	}
+	
+	let how_full = prefix + " " + random_level + ".";
+	
+	let position = how_full.indexOf("\[");
+	let endposition = -1;
+	let howsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = how_full.indexOf("\]");
+		howsubstr = how_full.substring(position+1,endposition);
+		substr_number = randomNumberForText(howsubstr);
+		if (howsubstr == "adjective")
+		{
+			how_full = how_full.substr(0,position) + "much" + how_full.substr(endposition+1);
+		}
+		else
+		{
+			how_full = how_full.substr(0,position) + how_full.substr(endposition+1);
+		}
+		position = how_full.indexOf("\[");
+	}
+	
+	return how_full;
+}
+
+//
+// finds first instance of a string in an array of strings
+//
+
+function hasString(s)
+{
+	return s == this;
+}
+
 //
 // finds if an array (typically of roles) has a name value equal to val
 //
@@ -624,6 +670,20 @@ function filterByList(object)
 	for (let i in object.lists)
 	{
 		if (this == object.lists[i])
+			return true;
+	}
+	return false;
+}
+
+//
+// filter the objects by whether 'this' is one of the slots on this object
+//
+
+function filterBySlot(object)
+{
+	for (let i in object.slots)
+	{
+		if (this == object.slots[i])
 			return true;
 	}
 	return false;
@@ -686,15 +746,15 @@ function getAdjectiveString(adjective)
 
 function getItemNoun(item)
 {
-		if (item.synonyms.length > 0)
-		{
-			let random_int = Math.floor(Math.random()*(item.synonyms.length+1));
-			if (random_int < item.synonyms.length)
-				return item.synonyms[random_int];
-			else
-				return item.name;
-		}
-		return item.name;
+	if (item.synonyms.length > 0)
+	{
+		let random_int = Math.floor(Math.random()*(item.synonyms.length+1));
+		if (random_int < item.synonyms.length)
+			return item.synonyms[random_int];
+		else
+			return item.name;
+	}
+	return item.name;
 }
 
 //
@@ -1370,71 +1430,23 @@ function playGacha(amount)
 	return fullreturnstring;
 }
 
-
-//
-//
-// ItemGatcha command
-
-function playItemGacha()
-{
-	let baserand = Math.random();
-	let rarity = getGachaRarity(baserand);
-	
-	let random_int = Math.floor((Math.random()*gacha_reveals.length));
-	let reveal = gacha_reveals[random_int];
-	
-	random_int = Math.floor((Math.random()*gacha_comments.length));
-	let comment = gacha_comments[random_int];
-	
-	return reveal + " " + grammarAorAn(rarity.charAt(0)) + " " + rarity + " " + generateArtifact() + ". " + comment;
-}
-
 //
 // Generate an artifact, an item
 
-function generateArtifact()
+function generateArtifact(slot,favoureditems)
 {
-	let random_int = Math.floor((Math.random()*item_nouns.length));
-	let baseitem = item_nouns[random_int];
-	let tempprefixlist = item_prefixes.filter(filterByList,baseitem.type);
-	let tempsuffixlist = item_suffixes.filter(filterByList,baseitem.type);
+	let itempool = item_nouns.slice();
 	
-	if (tempprefixlist.length == 0)
+	if (favoureditems != null && favoureditems.length > 0)
 	{
-		console.log("generate artifact error, error making prefix list, item type: " + baseitem.type);
-		return null;
+		for (let i = 0; i < favoureditems.length; i++)
+		{
+			itempool = itempool.concat(item_nouns.filter(filterByList,favoureditems[i]));
+		}
 	}
-	if (tempsuffixlist.length == 0)
-	{
-		console.log("generate artifact error, error making suffix list, item type: " + baseitem.type);
-		return null;
-	}
+	itempool = itempool.filter(filterBySlot,slot);
 	
-	let baserand = Math.random();
-	let item_string = "";
-	
-	random_int = Math.floor((Math.random()*tempprefixlist.length));
-	
-	let prefixstring = tempprefixlist[random_int].word;
-	
-	random_int = Math.floor((Math.random()*tempsuffixlist.length));
-	
-	let suffixstring = getSuffixString(tempsuffixlist[random_int]);
-	
-	if (baserand < 0.67)
-	{
-		item_string = prefixstring + " " + getItemNoun(baseitem) + " " + suffixstring;
-	}
-	else if (baserand < 0.835)
-	{
-		item_string = prefixstring + " " + getItemNoun(baseitem);
-	}
-	else
-	{
-		item_string = getItemNoun(baseitem) + " " + suffixstring;
-	}
-	
-	return item_string;
+	return itempool[Math.floor((Math.random()*itempool.length))];
 }
 
 //
@@ -1473,46 +1485,243 @@ function generateBossName(with_title = true, short_title = false)
 }
 
 //
+// get a random part description for a part
+//
+
+function getPartDesciptor(part)
+{
+	descriptorlist = monster_descriptors.filter(filterByList,part);
+	descriptor = descriptorlist[Math.floor(Math.random()*(descriptorlist.length))];
+	
+	return descriptor.text;
+}
+
+//
 // Generate a special boss monster
 
 function generateBoss() 
 {
 	let boss_string = "";
-    let monster_string = generateMonster("boss");
+    let monster_base = getRandomMonster("boss");
+	let boss_class = monster_classes[Math.floor(Math.random()*monster_classes.length)]
 	let baserand = Math.random();
 	let monster_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
+	let boss_parts = monster_base.parts.slice();
+	let is_animal = monster_base.lists.includes("animal");
+	let boss_item_slots = monster_base.slots.slice();
 	
-	let numberofitems = Math.floor((Math.random()*4)+(Math.random()*5))-2;
+	if (!is_animal)
+	{
+		boss_item_slots = boss_item_slots.concat(boss_class.slots);
+	}
+
+	
+	let randomfriendpotential = Math.floor(Math.random()*7); // EVERYONE CAN HAVE FRIENDS
+	for (let i = 0; i < randomfriendpotential; i++)
+	{
+		boss_item_slots.push("friend");
+	}
+	
+	
+	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/4+(Math.random()*monster_base.parts.length)/4);
+	let numberofitems = Math.floor((boss_item_slots.length/8) + (Math.random()*(boss_item_slots.length + 3))/4);
+	
 	let items = [];
 	let tempitem;
+	let tempslot = "";
+	let tempint = -1;
 	
 	for (let i = 0; i < numberofitems; i++)
 	{
-		tempitem = generateArtifact();
+		tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)]
+		tempitem = generateArtifact(tempslot,boss_class.favitems);
 		if (tempitem == null)
 		{
-			console.log("generate boss error, could not generate artifact");
-			return null;
-		}
-		items.push(tempitem);
-	}
-	
-	boss_string += generateBossName() + ", " + grammarAorAn(monster_string.charAt(0)).toLowerCase() + " " + monster_string;
-	if (numberofitems > 0)
-	{
-		boss_string += " with " + monster_pronouns.possessivesubject + " " + items[0];
-	}
-	for (let i = 1; i < numberofitems; i++)
-	{
-		if ((i+1) == numberofitems)
-		{
-			boss_string += ", and ";
+			//console.log("generate boss error, could not generate artifact");
+			//return null;
+			i--;
+			numberofitems--;
 		}
 		else
 		{
+			items.push(tempitem);
+		}
+		tempint = boss_item_slots.findIndex(hasString,tempslot);
+		boss_item_slots.splice(tempint,1);
+		tempint = boss_item_slots.findIndex(hasString,tempslot);
+		if (tempint > -1)
+		{
+			boss_item_slots.splice(tempint,1);
+		}
+		tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)]
+	}
+	
+	if (is_animal)
+	{
+		boss_string += generateBossName(false,false) + ", the " + monster_base.single 
+			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
+	}
+	else
+	{
+		boss_string += generateBossName(false,false) + ", the " + boss_class.single 
+			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
+	}
+	
+	
+	let position = -1;
+	let endposition = -1;
+	let bosssubstr = "";
+	
+	boss_string += grammarCapitalFirstLetter(monster_pronouns.subject) + " " + monster_pronouns.conjunction
+		+ " " + grammarAorAn(monster_base.single.charAt(0)).toLowerCase() + " " + monster_base.single;
+	
+	if (numberofuniqueparts > 0)
+	{
+		boss_string += " with";
+	}
+	
+	for (let i = 0; i < numberofuniqueparts; i++)
+	{
+		
+		if ((i+1) == numberofuniqueparts)
+		{
+			boss_string += " and ";
+		}
+		else if (i > 0)
+		{
 			boss_string += ", ";
 		}
-		boss_string += items[i];
+		else
+		{
+			boss_string += " ";
+		}
+		
+		temppart = Math.floor(Math.random()*boss_parts.length);
+		boss_string += getPartDesciptor(boss_parts[temppart]);
+		
+		position = boss_string.indexOf("\[");
+		endposition = -1;
+		bosssubstr = "";
+		
+		while (position != -1)
+		{
+			endposition = boss_string.indexOf("\]");
+			bosssubstr = boss_string.substring(position+1,endposition);
+			substr_number = randomNumberForText(bosssubstr);
+			if (bosssubstr == "subject")
+			{
+				boss_string = boss_string.substr(0,position) + monster_pronouns.subject + boss_string.substr(endposition+1);
+			}
+			else if (bosssubstr == "object")
+			{
+				boss_string = boss_string.substr(0,position) + monster_pronouns.object + boss_string.substr(endposition+1);
+			}
+			else if (bosssubstr == "possessivesubject")
+			{
+				boss_string = boss_string.substr(0,position) + monster_pronouns.possessivesubject + boss_string.substr(endposition+1);
+			}
+			else if (bosssubstr == "possessiveobject")
+			{
+				boss_string = boss_string.substr(0,position) + monster_pronouns.possessiveobject + boss_string.substr(endposition+1);
+			}
+			else if (bosssubstr == "objectself")
+			{
+				boss_string = boss_string.substr(0,position) + monster_pronouns.objectself + boss_string.substr(endposition+1);
+			}
+			else if (bosssubstr == "part")
+			{
+				boss_string = boss_string.substr(0,position) + boss_parts[temppart] + boss_string.substr(endposition+1);
+			}
+			else if (bosssubstr == "species")
+			{
+				boss_string = boss_string.substr(0,position) + getRandomMonster("species").single + boss_string.substr(endposition+1);
+			}
+			else if (substr_number != false)
+			{
+				boss_string = boss_string.substr(0,position) + substr_number.toString() + boss_string.substr(endposition+1);
+			}
+			else
+			{
+				boss_string = boss_string.substr(0,position) + boss_string.substr(endposition+1);
+			}
+			position = boss_string.indexOf("\[");
+		}
+		
+		boss_parts.splice(temppart,1);
+	}
+	
+	if (numberofitems > 0)
+	{
+		if (numberofuniqueparts > 0)
+		{
+			boss_string += ", and";
+		}
+		boss_string += " outfitted with " + monster_pronouns.possessivesubject + " " + getItemNoun(items[0]);
+	}
+	for (let i = 1; i < numberofitems; i++)
+	{
+		if (numberofitems > 1 && (i+1) == numberofitems)
+		{
+			if (numberofitems == 2)
+			{
+				boss_string += " and "; //+  monster_pronouns.possessivesubject + " ";
+			}
+			else
+			{
+				boss_string += ", and "; //+  monster_pronouns.possessivesubject + " ";
+			}
+		}
+		else
+		{
+			boss_string += ", "; //+  monster_pronouns.possessivesubject + " ";
+		}
+		boss_string += getItemNoun(items[i]);
+	}
+	
+	boss_string += "."
+	
+	position = boss_string.indexOf("\[");
+	endposition = -1;
+	bosssubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = boss_string.indexOf("\]");
+		bosssubstr = boss_string.substring(position+1,endposition);
+		substr_number = randomNumberForText(bosssubstr);
+		if (bosssubstr == "subject")
+		{
+			boss_string = boss_string.substr(0,position) + monster_pronouns.subject + boss_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "object")
+		{
+			boss_string = boss_string.substr(0,position) + monster_pronouns.object + boss_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "possessivesubject")
+		{
+			boss_string = boss_string.substr(0,position) + monster_pronouns.possessivesubject + boss_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "possessiveobject")
+		{
+			boss_string = boss_string.substr(0,position) + monster_pronouns.possessiveobject + boss_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "objectself")
+		{
+			boss_string = boss_string.substr(0,position) + monster_pronouns.objectself + boss_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "species")
+		{
+			boss_string = boss_string.substr(0,position) + getRandomMonster("species").single + boss_string.substr(endposition+1);
+		}
+		else if (substr_number != false)
+		{
+			boss_string = boss_string.substr(0,position) + substr_number.toString() + boss_string.substr(endposition+1);
+		}
+		else
+		{
+			boss_string = boss_string.substr(0,position) + boss_string.substr(endposition+1);
+		}
+		position = boss_string.indexOf("\[");
 	}
 
 	return grammarCapitalFirstLetter(boss_string);

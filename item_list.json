@@ -2,319 +2,351 @@
 	{
 		"name": "long curved dagger",
 		"number": 1,
-		"type": "weapon",
-		"synonyms": ["kukri"]
+		"slots": ["weapon","offhand"],
+		"lists": ["aggressive","mundane","thief"],
+		"synonyms": ["kukri","tiny knife","oversized knife"]
 	},
 	{
 		"name": "two handed curved blade",
 		"number": 1,
-		"type": "weapon",
-		"synonyms": ["katana"]
+		"slots": ["weapon"],
+		"lists": ["aggressive","mundane"],
+		"synonyms": ["katana","giant axe","really really big hammer","spike chain whip","cat o' nine tails","scythe","steel long sword","wakizashi","bronze gladius","obsidian toothed sword","bronze headed spear"]
 	},
 	{
-		"name": "giant axe",
+		"name": "scepter of finely carved wood",
 		"number": 1,
-		"type": "weapon",
-		"synonyms": ["really really big hammer"]
-	},
-	{
-		"name": "orb of oscillating colours",
-		"number": 1,
-		"type": "accessory",
-		"synonyms": []
-	},
-	{
-		"name": "tiny knife",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": ["oversized knife"]
+		"slots": ["weapon","offhand","tool"],
+		"lists": ["magical"],
+		"synonyms": ["golden cudgel","mithril wand","scepter of fine ivory","jewel encrusted wand","orb of oscillating colours"]
 	},
 	{
 		"name": "adorable plushie voodoo doll",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["weapon","offhand","tool"],
+		"lists": ["magical","dark"],
 		"synonyms": ["twisted doll"]
 	},
 	{
 		"name": "shotgun",
 		"number": 1,
-		"type": "weapon",
+		"slots": ["weapon"],
+		"lists": ["advanced","ranged"],
 		"synonyms": ["sniper rifle","gauss cannon","revolver","rocket launcher","plasma rifle","minigun","light machine gun"]
 	},
 	{
 		"name": "mobile phone",
 		"number": 1,
-		"type": "accessory",
-		"synonyms": ["walkie talkie"]
+		"slots": ["tool"],
+		"lists": ["advanced"],
+		"synonyms": ["walkie talkie","laptop"]
 	},
 	{
 		"name": "decanter",
 		"number": 1,
-		"type": "accessory",
-		"synonyms": ["flask", "tankard"]
+		"slots": ["tool"],
+		"lists": ["mundane"],
+		"synonyms": ["flask", "tankard", "old beat up lantern","flashlight"]
 	},
 	{
 		"name": "engraved human skull",
 		"number": 1,
-		"type": "accessory",
-		"synonyms": ["engraved dragon skull","engraved cat skull"]
+		"slots": ["tool"],
+		"lists": ["magical","dark"],
+		"synonyms": ["engraved dragon skull","engraved cat skull","talking dinosaur skull","talking bird skull","talking lizard skull"]
 	},
 	{
 		"name": "slime friend",
 		"number": 1,
-		"type": "friend",
+		"slots": ["friend"],
+		"lists": ["magical","mundane"],
 		"synonyms": ["bird friend","tiny dragon friend","smol lizard friend","pixie friend","talking cat friend","miniature dinosaur friend","aggressive rock friend"]
-	},
-	{
-		"name": "spike chain whip",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": ["cat o' nine tails"]
 	},
 	{
 		"name": "bladed scarf",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["neck"],
+		"lists": ["mundane","aggressive"],
+		"synonyms": []
+	},
+	{
+		"name": "silk scarf",
+		"number": 1,
+		"slots": ["neck"],
+		"lists": ["mundane"],
 		"synonyms": ["wooly scarf"]
 	},
 	{
 		"name": "bucket of ice",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["mundane","magical"],
 		"synonyms": ["bucket of dirt","jar of dirt","jar of mud","jar of snow"]
 	},
 	{
 		"name": "iron helm",
 		"number": 1,
-		"type": "armour",
+		"slots": ["hat"],
+		"lists": ["mundane","aggressive"],
 		"synonyms": ["mithril helm","steel helm","fancy skullcap","wide brim travellers hat"]
+	},
+	{
+		"name": "wide brim travellers hat",
+		"number": 1,
+		"slots": ["hat"],
+		"lists": ["mundane"],
+		"synonyms": ["baseball cap","bowler hat","tophat"]
 	},
 	{
 		"name": "mithril plate armour",
 		"number": 1,
-		"type": "armour",
+		"slots": ["coat"],
+		"lists": ["mundane","aggressive"],
 		"synonyms": ["steel plate armour","iron plate armour","adamantine plate armour"]
 	},
 	{
 		"name": "monster hide leather armour",
 		"number": 1,
-		"type": "armour",
+		"slots": ["coat"],
+		"lists": ["mundane","aggressive"],
 		"synonyms": ["brigadine","silk robe","spidersilk bandage outfit"]
 	},
 	{
 		"name": "shiny rock",
 		"number": 1,
-		"type": "weapon",
+		"slots": ["weapon","tool"],
+		"lists": ["mundane","aggressive"],
 		"synonyms": ["heavy rock"]
 	},
 	{
 		"name": "stone effigy",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["magical","dark","holy"],
 		"synonyms": ["wooden effigy"]
 	},
 	{
 		"name": "pantaloons",
 		"number": 2,
-		"type": "armour",
+		"slots": ["pants"],
+		"lists": ["mundane"],
 		"synonyms": ["breeches"]
 	},
 	{
 		"name": "steel pauldrons",
 		"number": 2,
-		"type": "armour",
-		"synonyms": ["mithril pauldrons","iron pauldrons"]
+		"slots": ["shoulders"],
+		"lists": ["mundane","aggressive"],
+		"synonyms": ["mithril pauldrons","iron pauldrons","epaulettes"]
 	},
 	{
 		"name": "greaves",
 		"number": 2,
-		"type": "armour",
-		"synonyms": []
-	},
-	{
-		"name": "epaulettes",
-		"number": 2,
-		"type": "armour",
-		"synonyms": []
+		"slots": ["shoes"],
+		"lists": ["mundane","aggressive"],
+		"synonyms": ["leather boots","hightop shoes","knee-high boots"]
 	},
 	{
 		"name": "ornate robe",
 		"number": 1,
-		"type": "armour",
+		"slots": ["coat"],
+		"lists": ["mundane","magical"],
 		"synonyms": []
 	},
 	{
 		"name": "tattered rags",
 		"number": 2,
-		"type": "armour",
+		"slots": ["coat"],
+		"lists": ["mundane","magical"],
 		"synonyms": []
 	},
 	{
 		"name": "cat ears",
 		"number": 2,
-		"type": "accessory",
+		"slots": ["hat"],
+		"lists": ["mundane","magical"],
 		"synonyms": ["bunny ears","fox ears"]
 	},
 	{
 		"name": "sickle",
 		"number": 1,
-		"type": "weapon",
-		"synonyms": ["scythe"]
+		"slots": ["weapon","tool"],
+		"lists": ["mundane","magical"],
+		"synonyms": []
 	},
 	{
 		"name": "arm of gemstones",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["weapon","offhand","tool"],
+		"lists": ["magical"],
 		"synonyms": ["arm of mineral","arm of rock","arm of gemstones and mineral","arm of mineral and rock","arm of gemstones, mineral and rock"]
-	},
-	{
-		"name": "old beat up lantern",
-		"number": 1,
-		"type": "accessory",
-		"synonyms": ["dying flashlight"]
 	},
 	{
 		"name": "featureless mask",
 		"number": 1,
-		"type": "accessory",
-		"synonyms": []
+		"slots": ["face"],
+		"lists": ["magical"],
+		"synonyms": ["monocle"]
+	},
+	{
+		"name": "glasses",
+		"number": 2,
+		"slots": ["face"],
+		"lists": ["magical"],
+		"synonyms": ["spectacles","goggles"]
 	},
 	{
 		"name": "necklace of bones",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["neck"],
+		"lists": ["magical"],
 		"synonyms": ["necklace of teeth","necklace of eyeballs","necklace of sharp stones","gold amulet","emerald necklace","sapphire necklace"]
 	},
 	{
 		"name": "ruby bracelet",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["ring","tool"],
+		"lists": ["mundane"],
 		"synonyms": ["copper bracelet","silver bracelet","braclet of precious stones","beaded bracelet"]
 	},
 	{
 		"name": "copper ring",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["ring"],
+		"lists": ["mundane"],
 		"synonyms": ["silver ring","gold ring","diamond ring","bronze ring"]
 	},
 	{
 		"name": "fur cape",
 		"number": 1,
-		"type": "accessory",
-		"synonyms": ["silk cape","ratty cloak","kitty cloak","exceedingly long billowing cloak"]
+		"slots": ["neck","tool"],
+		"lists": ["mundane"],
+		"synonyms": ["silk cape","ratty cloak","kitty cloak","exceedingly long billowing cloak","pink neckerchief","purple neckerchief"]
 	},
 	{
 		"name": "cat tail",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool","belt"],
+		"lists": ["mundane","magical"],
 		"synonyms": ["bunny tail","fox tail"]
 	},
 	{
 		"name": "jar of eyeballs",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["magical","dark"],
 		"synonyms": ["jar of dentures","jar of fingers","jar of tongues"]
 	},
 	{
 		"name": "pouch of ashes",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["magical","mundane"],
 		"synonyms": ["pouch of snacks","pouch of nibbles","pouch of goodies"]
-	},
-	{
-		"name": "steel long sword",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": ["wakizashi","bronze gladius"]
 	},
 	{
 		"name": "big rod of adamantine",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["mundane"],
 		"synonyms": ["block of solid bronze","mithril cannonball","pig iron anvil"]
-	},
-	{
-		"name": "obsidian toothed sword",
-		"number": 1,
-		"type": "weapon",
-		"synonyms": ["bronze headed spear"]
-	},
-	{
-		"name": "talking dinosaur skull",
-		"number": 1,
-		"type": "accessory",
-		"synonyms": ["talking bird skull","talking lizard skull"]
 	},
 	{
 		"name": "big uncut gemstone",
 		"number": 1,
-		"type": "accessory",
-		"synonyms": []
+		"slots": ["tool"],
+		"lists": ["mundane","magical"],
+		"synonyms": ["lump of ore"]
 	},
 	{
 		"name": "short sword and scimitar",
 		"number": 2,
-		"type": "weapon",
+		"slots": ["weapon"],
+		"lists": ["mundane","aggressive"],
 		"synonyms": ["dual daggers","axe and hammer","dual pistols","punching daggers", "ninja claws"]
 	},
 	{
-		"name": "scepter of finely carved wood",
+		"name": "short sword",
 		"number": 1,
-		"type": "accessory",
-		"synonyms": ["golden cudgel","mithril wand","scepter of fine ivory","jewel encrusted wand"]
+		"slots": ["weapon","offhand"],
+		"lists": ["mundane","aggressive"],
+		"synonyms": ["dagger","light axe","light hammer","scimitar","punching dagger", "ninja claw"]
 	},
 	{
 		"name": "pet cat",
 		"number": 1,
-		"type": "friend",
+		"slots": ["friend"],
+		"lists": ["magical","mundane"],
 		"synonyms": ["pet dog","pet lizard","pet rat","pet chicken","pet crow"]
-	},
-	{
-		"name": "glasses",
-		"number": 1,
-		"type": "accessory",
-		"synonyms": ["monocle","spectacles","goggles"]
 	},
 	{
 		"name": "crossbow",
 		"number": 1,
-		"type": "weapon",
+		"slots": ["weapon"],
+		"lists": ["ranged","mundane"],
 		"synonyms": ["longbow","sling","hand-held catapult"]
 	},
 	{
 		"name": "pokéball",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["pokemon"],
 		"synonyms": ["great ball","ultra ball","masterball","park ball","beast ball"]
 	},
 	{
 		"name": "coffee maker",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["advanced","cooking"],
 		"synonyms": ["toaster","sandwich press","electric kettle","waffle maker"]
 	},
 	{
 		"name": "spatula",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["mundane","cooking"],
 		"synonyms": ["cheese grater","ladle","whisk"]
 	},
 	{
 		"name": "magikarp",
 		"number": 1,
-		"type": "friend",
+		"slots": ["friend"],
+		"lists": ["pokemon"],
 		"synonyms": ["zigzagoon","pikachu","psyduck","slowpoke","eevee","ratata","yungoos"]
 	},
 	{
 		"name": "sobble",
 		"number": 1,
-		"type": "friend",
+		"slots": ["friend"],
+		"lists": ["pokemon"],
 		"synonyms": ["piplup","rowlet","popplio","litten","charizard","bulbasaur","squirtle","grookey","scorbunny"]
 	},
 	{
 		"name": "healing potion",
 		"number": 1,
-		"type": "accessory",
+		"slots": ["tool"],
+		"lists": ["magical","mundane"],
 		"synonyms": ["mana potion","elixir of life","bottle of magic honey","stamina potion"]
+	},
+	{
+		"name": "loud hawaiian shirt",
+		"number": 1,
+		"slots": ["shirt"],
+		"lists": ["mundane"],
+		"synonyms": ["silk ruffled shirt","BAND t-shirt","ragged worn shirt","hazard prone shirt"]
+	},
+	{
+		"name": "mithril chain shirt",
+		"number": 1,
+		"slots": ["shirt"],
+		"lists": ["mundane","aggressive"],
+		"synonyms": ["studded leather shirt","steel chain shirt"]
+	},
+	{
+		"name": "holographic tee",
+		"number": 1,
+		"slots": ["shirt"],
+		"lists": ["advanced"],
+		"synonyms": ["nanobot armour shirt","ELECTRONICA BAND t-shirt","carbon nanotube shirt","self repairing shirt"]
 	}
 ]
