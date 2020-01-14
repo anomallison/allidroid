@@ -901,5 +901,124 @@
 		"gender": "f",
 		"invalidpairs": [],
 		"lists":[]
+	},
+	{
+		"id": "monsters-00",
+		"name": "Vampire",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-01",
+		"name": "Werewolf",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-02",
+		"name": "Mummy",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-03",
+		"name": "Frankenstein's Monster",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-04",
+		"name": "Dragon",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-05",
+		"name": "Zombie",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-06",
+		"name": "Ghoul",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-07",
+		"name": "Shapeshifter",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-08",
+		"name": "Tentacle Monster",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-09",
+		"name": "Slime",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-0A",
+		"name": "Minotaur",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-0B",
+		"name": "Succubus",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-0C",
+		"name": "Incubus",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-0D",
+		"name": "Satyr",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-0E",
+		"name": "Lizardfolk",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-0F",
+		"name": "Ratfolk",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "monsters-10",
+		"name": "Kappa",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
 	}
 ]

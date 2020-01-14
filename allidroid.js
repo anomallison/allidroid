@@ -1556,8 +1556,8 @@ function generateBoss()
 	}
 	
 	
-	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/5+(Math.random()*monster_base.parts.length)/5);
-	let numberofitems = Math.floor((boss_item_slots.length/10) + (Math.random()*(boss_item_slots.length + 1))/4);
+	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/4+(Math.random()*monster_base.parts.length)/4);
+	let numberofitems = Math.floor((boss_item_slots.length/10) + (Math.random()*(boss_item_slots.length + 1))/5);
 	
 	let items = [];
 	let tempitem;
@@ -1570,7 +1570,7 @@ function generateBoss()
 		tempitem = generateArtifact(tempslot,boss_class.favitems);
 		if (tempitem == null)
 		{
-			//console.log("generate boss error, could not generate artifact");
+			console.log("failed to generate item for slot: " + tempslot);
 			//return null;
 			i--;
 			numberofitems--;
@@ -1631,6 +1631,11 @@ function generateBoss()
 		
 		temppart = Math.floor(Math.random()*boss_parts.length);
 		boss_string += getPartDesciptor(boss_parts[temppart]);
+		
+		if (boss_string == null)
+		{
+			console.log("failed to generate item for slot: " + temppart)
+		}
 		
 		position = boss_string.indexOf("\[");
 		endposition = -1;
