@@ -931,15 +931,12 @@ function slashfic(charlist = "", pairing = "a/a", sublists = "")
 	let tempcharlist = character_list.filter(filterCharacterList,listfilter[0]);
 	let tempcharacter;
 	
-	if (listfilter.length > 1)
+	
+	for (let i = 1; i < listfilter.length; i++)
 	{
 		tempcharlist = tempcharlist.concat(character_list.filter(filterCharacterList,listfilter[i]));
-		for (let i = 1; i < listfilter.length; i++)
-		{
-			tempcharlist = tempcharlist.concat(character_list.filter(filterCharacterList,listfilter[i]));
-		}
 	}
-	
+
 	if(sublists.length > 0)
 	{
 		let sublistfull = sublists.split("\,");
@@ -957,7 +954,7 @@ function slashfic(charlist = "", pairing = "a/a", sublists = "")
 	{
 		random_int = Math.floor(Math.random()*tempcharlist.length);
 		random_int_start = random_int;
-		if (tempcharlist[random_int].gender.toString() == slashcharacters[i] || tempcharlist[random_int].gender.toString() == "a" || slashcharacters[i] == "a")
+		if (tempcharlist[random_int].gender == slashcharacters[i] || tempcharlist[random_int].gender.toString() == "a" || slashcharacters[i] == "a")
 		{
 			slashcharacters[i] = tempcharlist[random_int].name;
 			tempcharacter = tempcharlist[random_int];

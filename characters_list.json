@@ -904,119 +904,119 @@
 	},
 	{
 		"id": "monsters-00",
-		"name": "Vampire",
+		"name": "vampire",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-01",
-		"name": "Werewolf",
+		"name": "werewolf",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-02",
-		"name": "Mummy",
+		"name": "mummy",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-03",
-		"name": "Frankenstein's Monster",
+		"name": "Frankenstein's monster",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-04",
-		"name": "Dragon",
+		"name": "dragon",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-05",
-		"name": "Zombie",
+		"name": "zombie",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-06",
-		"name": "Ghoul",
+		"name": "ghoul",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-07",
-		"name": "Shapeshifter",
+		"name": "shapeshifter",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-08",
-		"name": "Tentacle Monster",
+		"name": "tentacle monster",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-09",
-		"name": "Slime",
+		"name": "slime",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
-		"id": "monsters-0A",
-		"name": "Minotaur",
+		"id": "monsters-0a",
+		"name": "minotaur",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
-		"id": "monsters-0B",
-		"name": "Succubus",
+		"id": "monsters-0b",
+		"name": "succubus",
 		"gender": "f",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
-		"id": "monsters-0C",
-		"name": "Incubus",
+		"id": "monsters-0c",
+		"name": "incubus",
 		"gender": "m",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
-		"id": "monsters-0D",
-		"name": "Satyr",
+		"id": "monsters-0d",
+		"name": "satyr",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
-		"id": "monsters-0E",
-		"name": "Lizardfolk",
+		"id": "monsters-0e",
+		"name": "lizardfolk",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
-		"id": "monsters-0F",
-		"name": "Ratfolk",
+		"id": "monsters-0f",
+		"name": "ratfolk",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "monsters-10",
-		"name": "Kappa",
+		"name": "kappa",
 		"gender": "a",
 		"invalidpairs": [],
 		"lists":[]
