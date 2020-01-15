@@ -1,230 +1,107 @@
 [
 	{
-		"word": "godly",
-		"lists": ["weapon","armour"]
+		"name": "keen",
+		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","dualweapons","ropeweapon","bow","sling","smallarms","longarms"],
+		"synonyms": ["vicious","bloody","awesome","weird","cruel","fiery","icy","shocking","relentless","antimatter powered","nanobot swarm"]
 	},
 	{
-		"word": "awesome",
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "cyberpunk",
+		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","dualweapons","ropeweapon","bow","sling","smallarms"],
+		"synonyms": ["arcanepunk","steampunk","bronzepunk"]
 	},
 	{
-		"word": "holy",
-		"lists": ["weapon","armour","accessory"]
+		"name": "extra large",
+		"lists": ["largeblade","largehammer"],
+		"synonyms": ["heavy","giant"]
 	},
 	{
-		"word": "unholy",
-		"lists": ["weapon","armour","accessory"]
+		"name": "razor sharp",
+		"lists": ["smallblade","largeblade"],
+		"synonyms": ["bloodletting","valiant","magnificent","vampiric"]
 	},
 	{
-		"word": "valiant",
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "hardy",
+		"lists": ["smallhammer","largehammer"],
+		"synonyms": ["smashing"]
 	},
 	{
-		"word": "meteoric",
-		"lists": ["weapon","armour","accessory"]
+		"name": "long",
+		"lists": ["polearm"],
+		"synonyms": ["bracing"]
 	},
 	{
-		"word": "weird",
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "synchronized",
+		"lists": ["dualweapons"],
+		"synonyms": ["paired"]
 	},
 	{
-		"word": "strange",
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "explosive",
+		"lists": ["bow","sling"],
+		"synonyms": ["supersonic"]
 	},
 	{
-		"word": "crystal",
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "piercing",
+		"lists": ["bow"],
+		"synonyms": [""]
 	},
 	{
-		"word": "shiny",
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "energized",
+		"lists": ["wands","magicoffhand"],
+		"synonyms": ["crackling","shocking","cold","burning","nanobot swarm"]
 	},
 	{
-		"word": "cruel",
-		"lists": ["weapon","friend"]
+		"name": "rapid fire",
+		"lists": ["smallarms","longarms"],
+		"synonyms": ["high capacity","heavy"]
 	},
 	{
-		"word": "savage",
-		"lists": ["weapon","friend"]
+		"name": "light",
+		"lists": ["longarms"],
+		"synonyms": []
 	},
 	{
-		"word": "sassy",
-		"lists": ["friend"]
+		"name": "entangling",
+		"lists": ["ropeweapon"],
+		"synonyms": ["lashing"]
 	},
 	{
-		"word": "angy",
-		"lists": ["friend"]
+		"name": "helpful",
+		"lists": ["tool"],
+		"synonyms": ["well made","masterwork","nanobot swarm","ever-warm","ever-cold"]
 	},
 	{
-		"word": "merciless",
-		"lists": ["weapon","friend"]
+		"name": "sassy",
+		"lists": ["friend","pokemon"],
+		"synonyms": ["angy","friendly","lonely","brave","gay","trans"]
 	},
 	{
-		"word": "vicious",
-		"lists": ["weapon","friend"]
+		"name": "protective",
+		"lists": ["accessory","armour","clothing"],
+		"synonyms": ["stylish"]
 	},
 	{
-		"word": "jagged",
-		"lists": ["weapon"]
+		"name": "enchanted",
+		"lists": ["accessory"],
+		"synonyms": []
 	},
 	{
-		"word": "unearthly",
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "reinforced",
+		"lists": ["armour"],
+		"synonyms": [""]
 	},
 	{
-		"word": "astral",
-		"lists": ["weapon","armour","accessory"]
+		"name": "warm",
+		"lists": ["clothing"],
+		"synonyms": ["cool","comfortable"]
 	},
 	{
-		"word": "elysian",
-		"lists": ["armour","accessory","friend"]
+		"name": "everlasting",
+		"lists": ["consumable"],
+		"synonyms": ["plentiful","delicious","individually wrapped"]
 	},
 	{
-		"word": "crimson",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "azure",
-		"lists": ["accessory"]
-	},
-	{
-		"word": "coral",
-		"lists": ["accessory"]
-	},
-	{
-		"word": "rainbow",
-		"lists": ["accessory"]
-	},
-	{
-		"word": "gay",
-		"lists": ["friend"]
-	},
-	{
-		"word": "blazing",
-		"lists": ["weapon","accessory"]
-	},
-	{
-		"word": "charged",
-		"lists": ["weapon","accessory"]
-	},
-	{
-		"word": "freezing",
-		"lists": ["weapon","accessory"]
-	},
-	{
-		"word": "blighting",
-		"lists": ["weapon","accessory"]
-	},
-	{
-		"word": "noxious",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "feral",
-		"lists": ["accessory","friend"]
-	},
-	{
-		"word": "gaean",
-		"lists": ["armour","accessory"]
-	},
-	{
-		"word": "raging",
-		"lists": ["weapon","friend"]
-	},
-	{
-		"word": "cunning",
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"word": "magical",
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"word": "fortified",
-		"lists": ["armour"]
-	},
-	{
-		"word": "fine",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "exquisite",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "clever",
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"word": "vampiric",
-		"lists": ["weapon","friend"]
-	},
-	{
-		"word": "keen",
-		"lists": ["weapon"]
-	},
-	{
-		"word": "plasma powered",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "rocket powered",
-		"lists": ["weapon","armour"]
-	},
-	{
-		"word": "AI guided",
-		"lists": ["weapon"]
-	},
-	{
-		"word": "laser guided",
-		"lists": ["weapon"]
-	},
-	{
-		"word": "psychic",
-		"lists": ["accessory","friend"]
-	},
-	{
-		"word": "nanobot swarm",
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"word": "monofilament edged",
-		"lists": ["weapon"]
-	},
-	{
-		"word": "steampunk",
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"word": "cyberpunk",
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"word": "arcanepunk",
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"word": "prop",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "cardboard replica",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "foam replica",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "papercraft",
-		"lists": ["weapon","armour","accessory"]
-	},
-	{
-		"word": "plushie",
-		"lists": ["friend"]
-	},
-	{
-		"word": "masterwork",
-		"lists": ["weapon","armour","accessory"]
+		"name": "shiny",
+		"lists": ["pokemon"],
+		"synonyms": ["Galar","Alolan"]
 	}
 ]

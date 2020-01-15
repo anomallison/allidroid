@@ -3,31 +3,31 @@
 		"single": "fighter",
 		"plural": "fighters",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "wizard",
 		"plural": "wizards",
 		"slots": ["weapon","coat","neck","ring","tool"],
-		"favitems": ["magical"]
+		"favitems": ["magical","magical"]
 	},
 	{
 		"single": "necromancer",
 		"plural": "necromancers",
 		"slots": ["weapon","coat","neck","ring","tool"],
-		"favitems": ["magical","aggressive","dark"]
+		"favitems": ["magical","dark","dark"]
 	},
 	{
 		"single": "rogue",
 		"plural": "rogues",
 		"slots": ["weapon","weapon","pants","shirt","tool","tool","tool","tool"],
-		"favitems": ["mundane","thief"]
+		"favitems": ["mundane","thief","thief"]
 	},
 	{
 		"single": "thief",
 		"plural": "thieves",
 		"slots": ["weapon","weapon","pants","shirt","tool","tool","tool","tool"],
-		"favitems": ["mundane","thief"]
+		"favitems": ["mundane","thief","thief"]
 	},
 	{
 		"single": "physician",
@@ -39,43 +39,43 @@
 		"single": "planar traveller",
 		"plural": "planar travellers",
 		"slots": ["weapon","coat","neck","ring","tool"],
-		"favitems": ["magical"]
+		"favitems": ["magical","magical"]
 	},
 	{
 		"single": "summoner",
 		"plural": "summoners",
 		"slots": ["weapon","coat","neck","ring","tool"],
-		"favitems": ["magical"]
+		"favitems": ["magical","magical"]
 	},
 	{
 		"single": "druid",
 		"plural": "druids",
 		"slots": ["weapon","coat","neck","ring","tool"],
-		"favitems": ["magical"]
+		"favitems": ["magical","magical"]
 	},
 	{
 		"single": "berserker",
 		"plural": "berserkers",
 		"slots": ["weapon","weapon","weapon","coat","tool"],
-		"favitems": ["mundane","aggressive"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "engineer",
 		"plural": "engineers",
 		"slots": ["tool","tool","coat","pants","shirt"],
-		"favitems": ["mundane","advanced"]
+		"favitems": ["advanced","advanced"]
 	},
 	{
 		"single": "psychic warrior",
 		"plural": "psychic warriors",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "sniper",
 		"plural": "snipers",
 		"slots": ["weapon","pants","shirt","tool","tool"],
-		"favitems": ["mundane","aggressive","ranged"]
+		"favitems": ["mundane","aggressive","ranged","ranged","ranged"]
 	},
 	{
 		"single": "medic",
@@ -87,115 +87,115 @@
 		"single": "cleric",
 		"plural": "clerics",
 		"slots": ["weapon","coat","neck","ring","tool"],
-		"favitems": ["magical","holy"]
+		"favitems": ["magical","holy","holy"]
 	},
 	{
 		"single": "hypnotist",
 		"plural": "hypnotists",
 		"slots": ["coat","neck","ring","tool"],
-		"favitems": ["magical"]
+		"favitems": ["magical","magical","mundane"]
 	},
 	{
 		"single": "soldier",
 		"plural": "soldiers",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "bounty hunter",
 		"plural": "bounty hunters",
 		"slots": ["weapon","weapon","coat","hat","tool","tool"],
-		"favitems": ["mundane","aggressive","thief"]
+		"favitems": ["mundane","aggressive","thief","aggressive","thief"]
 	},
 	{
 		"single": "destroyer",
 		"plural": "destroyers",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "blackguard",
 		"plural": "blackguard",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "frostguard",
 		"plural": "frostguard",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "godslayer",
 		"plural": "godslayers",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["magical","aggressive"]
+		"favitems": ["magical","aggressive","aggressive"]
 	},
 	{
 		"single": "vampire slayer",
 		"plural": "vampire slayers",
 		"slots": ["weapon","weapon","coat","hat","tool","tool"],
-		"favitems": ["magical","aggressive","holy"]
+		"favitems": ["magical","aggressive","aggressive","holy","holy"]
 	},
 	{
 		"single": "doom slayer",
 		"plural": "doom slayers",
 		"slots": ["weapon","weapon","weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive","advanced","advanced","advanced"]
+		"favitems": ["aggressive","aggressive","advanced","advanced","advanced","advanced"]
 	},
 	{
 		"single": "templar",
 		"plural": "templar",
 		"slots": ["weapon","offhand","coat","hat","tool","tool"],
-		"favitems": ["magical","aggressive","holy"]
+		"favitems": ["magical","aggressive","holy","aggressive","holy"]
 	},
 	{
 		"single": "witch",
 		"plural": "witches",
 		"slots": ["weapon","coat","neck","ring","tool","tool"],
-		"favitems": ["magical","aggressive","dark"]
+		"favitems": ["magical","dark","dark"]
 	},
 	{
 		"single": "alchemist",
 		"plural": "alchemists",
 		"slots": ["coat","neck","ring","tool","tool","tool","tool","tool","tool"],
-		"favitems": ["magical","aggressive","mundane"]
+		"favitems": ["magical","magical"]
 	},
 	{
 		"single": "knight errant",
 		"plural": "knights errant",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive","advanced"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "cultist",
 		"plural": "cultists",
 		"slots": ["weapon","coat","neck","ring","tool","tool"],
-		"favitems": ["magical","aggressive","dark"]
+		"favitems": ["magical","aggressive","dark","dark"]
 	},
 	{
 		"single": "paladin",
 		"plural": "paladins",
 		"slots": ["weapon","offhand","coat","hat","tool","tool"],
-		"favitems": ["magical","aggressive","holy"]
+		"favitems": ["magical","aggressive","holy","holy"]
 	},
 	{
 		"single": "inquisitor",
 		"plural": "inquisitors",
 		"slots": ["weapon","coat","neck","ring","tool","tool"],
-		"favitems": ["magical","aggressive","holy"]
+		"favitems": ["magical","aggressive","holy","holy"]
 	},
 	{
 		"single": "arcane knight",
 		"plural": "arcane knights",
 		"slots": ["weapon","offhand","coat","hat","tool","tool"],
-		"favitems": ["magical","aggressive"]
+		"favitems": ["magical","magical","aggressive","aggressive"]
 	},
 	{
 		"single": "archer",
 		"plural": "archers",
 		"slots": ["weapon","weapon","coat","tool"],
-		"favitems": ["mundane","aggressive","ranged"]
+		"favitems": ["mundane","aggressive","aggressive","ranged","ranged","ranged"]
 	},
 	{
 		"single": "blacksmith",
@@ -207,43 +207,43 @@
 		"single": "general",
 		"plural": "generals",
 		"slots": ["weapon","offhand","coat","hat","tool","tool"],
-		"favitems": []
+		"favitems": ["aggressive"]
 	},
 	{
 		"single": "sorcerer",
 		"plural": "sorcerers",
 		"slots": ["weapon","coat","neck","ring","tool","tool"],
-		"favitems": ["magical","dark"]
+		"favitems": ["magical","magical","dark"]
 	},
 	{
 		"single": "ninja",
 		"plural": "ninjas",
 		"slots": ["weapon","weapon","weapon","pants","shirt","tool"],
-		"favitems": ["mundane","aggressive","thief"]
+		"favitems": ["mundane","aggressive","thief","thief"]
 	},
 	{
 		"single": "samurai",
 		"plural": "samurai",
 		"slots": ["weapon","weapon","coat","hat","tool"],
-		"favitems": ["mundane","aggressive"]
+		"favitems": ["mundane","aggressive","aggressive"]
 	},
 	{
 		"single": "hacker",
 		"plural": "hackers",
 		"slots": ["tool","tool","tool"],
-		"favitems": ["advanced"]
+		"favitems": ["advanced","advanced","advanced","advanced"]
 	},
 	{
 		"single": "assassin",
 		"plural": "assassins",
 		"slots": ["weapon","weapon","pants","shirt","tool","tool","tool"],
-		"favitems": ["mundane","aggressive","thief"]
+		"favitems": ["mundane","aggressive","thief","thief"]
 	},
 	{
 		"single": "technician",
 		"plural": "technicians",
 		"slots": ["tool","tool","coat","pants","shirt"],
-		"favitems": ["mundane","advanced"]
+		"favitems": ["mundane","advanced","advanced","advanced"]
 	},
 	{
 		"single": "golemancer",
@@ -261,13 +261,13 @@
 		"single": "inventor",
 		"plural": "inventors",
 		"slots": ["coat","neck","ring","tool","tool","tool"],
-		"favitems": ["advanced"]
+		"favitems": ["advanced","advanced"]
 	},
 	{
 		"single": "bard",
 		"plural": "bards",
 		"slots": ["weapon","weapon","coat","neck","ring","tool","tool"],
-		"favitems": ["magical","musical"]
+		"favitems": ["magical","musical","musical","musical"]
 	},
 	{
 		"single": "ranger",
@@ -297,13 +297,13 @@
 		"single": "infiltrator",
 		"plural": "infiltrators",
 		"slots": ["weapon","pants","shirt","tool","tool","tool"],
-		"favitems": ["mundane","thief"]
+		"favitems": ["mundane","thief","thief"]
 	},
 	{
 		"single": "spy",
 		"plural": "spies",
 		"slots": ["weapon","pants","shirt","tool","tool","tool"],
-		"favitems": ["mundane","thief","ranged"]
+		"favitems": ["mundane","thief","thief","ranged"]
 	},
 	{
 		"single": "bigboi",
@@ -327,7 +327,7 @@
 		"single": "pokémon trainer",
 		"plural": "pokémon trainers",
 		"slots": ["friend","friend","friend","friend","tool","tool","tool","tool"],
-		"favitems": ["pokemon"]
+		"favitems": ["pokemon","pokemon","pokemon"]
 	},
 	{
 		"single": "himbo",

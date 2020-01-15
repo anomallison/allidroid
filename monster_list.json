@@ -228,7 +228,7 @@
 		"plural": "ravens",
 		"parts": ["wings","legs","chest","head","eyes","beak"],
 		"slots": ["neck","hat","face","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend"]
 	},
 	{
 		"single": "drider",
@@ -289,7 +289,7 @@
 	{
 		"single": "tengu",
 		"plural": "tengu",
-		"parts": ["arms","legs","chest","head","eyes","ears","beak","lips"],
+		"parts": ["arms","legs","chest","head","eyes","beak","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
 		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
@@ -359,14 +359,14 @@
 	{
 		"single": "turtlefolk",
 		"plural": "turtlefolk",
-		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips","shell"],
+		"parts": ["arms","legs","chest","head","eyes","mouth","lips","shell"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
 		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},
 	{
 		"single": "frogfolk",
 		"plural": "frogfolk",
-		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
+		"parts": ["arms","legs","chest","head","eyes","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
 		"lists": ["monster","boss","friend","sexy","species","gacha"]
 	},

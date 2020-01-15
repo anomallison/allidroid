@@ -746,10 +746,10 @@ function getAdjectiveString(adjective)
 }
 
 //
-// get a string from an item that is its name or a synonym
+// get a string from an object that is its name or a synonym
 //
 
-function getItemNoun(item)
+function getObjectName(item)
 {
 	if (item == null)
 	{
@@ -796,7 +796,7 @@ function nounlesbian()
 	if (noun < item_nouns.length)
 	{
 		noun = Math.floor(Math.random()*item_nouns.length);
-		lesbian = getItemNoun(item_nouns[noun]) + " lesbian";
+		lesbian = getObjectName(item_nouns[noun]) + " lesbian";
 	} 
 	else 
 	{
@@ -1507,6 +1507,23 @@ function getPartDesciptor(part)
 }
 
 //
+// takes a type and finds a prefix that fits it
+//
+
+function getItemPrefix(itemtype)
+{
+	tempprefixlist = item_prefixes.filter(filterByList,itemtype);
+	if (tempprefixlist.length < 1)
+	{
+		console.log("no prefixes for itemtype: " + itemtype);
+		return null;
+	}
+	let prefix = tempprefixlist[Math.floor(Math.random()*(tempprefixlist.length))];
+	
+	return getObjectName(prefix);
+}
+
+//
 // sort an array of items by slot
 //
 
@@ -1538,7 +1555,7 @@ function generateBoss()
 {
 	let boss_string = "";
     let monster_base = getRandomMonster("boss");
-	let boss_class = monster_classes[Math.floor(Math.random()*monster_classes.length)]
+	let boss_class = monster_classes[Math.floor(Math.random()*monster_classes.length)];
 	let baserand = Math.random();
 	let monster_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
 	let boss_parts = monster_base.parts.slice();
@@ -1655,32 +1672,51 @@ function generateBoss()
 	boss_string += ".\n";
 	
 	items = sortItemArray(items);
+	let prefix = null;
+	let suffix = null;
 	
-	if (numberofitems > 0)
-	{
-		boss_string += grammarCapitalFirstLetter(monster_pronouns.subject) + " " + monster_pronouns.conjunction + " outfitted with " + monster_pronouns.possessivesubject + " " + getItemNoun(items[0]);
-	}
-	for (let i = 1; i < numberofitems; i++)
+	let items_string = "";
+	for (let i = 0; i < numberofitems; i++)
 	{
 		if (numberofitems > 1 && (i+1) == numberofitems)
 		{
 			if (numberofitems == 2)
 			{
-				boss_string += " and "; //+  monster_pronouns.possessivesubject + " ";
+				items_string += " and "; //+  monster_pronouns.possessivesubject + " ";
 			}
 			else
 			{
-				boss_string += ", and "; //+  monster_pronouns.possessivesubject + " ";
+				items_string += ", and "; //+  monster_pronouns.possessivesubject + " ";
 			}
 		}
-		else
+		else if (i > 0)
 		{
-			boss_string += ", "; //+  monster_pronouns.possessivesubject + " ";
+			items_string += ", "; //+  monster_pronouns.possessivesubject + " ";
 		}
-		boss_string += getItemNoun(items[i]);
+		baserand = Math.random();
+		
+		prefix = getItemPrefix(items[i].type);
+		//suffix;
+		
+		if (baserand < 0.08 && suffix != null && prefix != null)
+		{
+			// prefix + suffix
+		}
+		else if (baserand < 0.22 && suffix != null )
+		{
+			// suffix
+		}
+		else if (baserand < 0.36 && prefix != null)
+		{
+			items_string += getItemPrefix(items[i].type) + " ";
+		}
+		
+		items_string += getObjectName(items[i]);
 	}
-	
-	boss_string += "."
+	if (numberofitems > 0)
+	{
+		boss_string += grammarCapitalFirstLetter(monster_pronouns.subject) + " " + monster_pronouns.conjunction + " outfitted with " + monster_pronouns.possessivesubject + " " + items_string + ".";
+	}
 	
 	position = boss_string.indexOf("\[");
 	endposition = -1;

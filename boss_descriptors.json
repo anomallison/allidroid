@@ -124,11 +124,11 @@
 		"lists":["arms"]
 	},
 	{
-		"text":"a tattoo depicting a powerful dragon covers the length of one of [possessivesubject] arm",
+		"text":"a tattoo depicting a powerful dragon covers the length of one of [possessivesubject] arms",
 		"lists":["arms"]
 	},
 	{
-		"text":"a busty pin-up girl tattoo covers the length of one of [possessivesubject] arm",
+		"text":"a busty pin-up girl tattoo covers the length of one of [possessivesubject] arms",
 		"lists":["arms"]
 	},
 	{
@@ -264,7 +264,7 @@
 		"lists":["hindlegs"]
 	},
 	{
-		"text":"one of [possessivesubject] front is gone, severed at the joint",
+		"text":"one of [possessivesubject] front legs is gone, severed at the joint",
 		"lists":["frontlegs"]
 	},
 	{
