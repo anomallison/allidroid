@@ -1,15 +1,23 @@
 [
 	{
-		"text":"a scar that runs down a trail down [possessivesubject] [part] splitting an old faded tattoo",
-		"lists":["arm","leg","chest"]
+		"text":"a scar that runs down a trail down one of [possessivesubject] [part] splitting an old faded tattoo",
+		"lists":["arms","legs"]
 	},
 	{
-		"text":"[possessivesubject] [part] that's been replaced with a mechanical prosthetic of cold steel",
-		"lists":["arm","leg"]
+		"text":"a scar that runs down a trail down [possessivesubject] chest splitting an old faded tattoo",
+		"lists":["chest"]
 	},
 	{
 		"text":"[possessivesubject] [part] scarred and protuding with the parts of forced cybernetic enhancement",
-		"lists":["arm","leg","chest","wing","horn","eye","mouth","head","antenna","ear","tail","fin"]
+		"lists":["arms","legs","chest","wings","horns","eyes","mouth","head","antenna","ears","tail","fins","beak","tentacles"]
+	},
+	{
+		"text":"[possessivesubject] hind legs scarred and protuding with the parts of forced cybernetic enhancement",
+		"lists":["hindlegs"]
+	},
+	{
+		"text":"[possessivesubject] front legs scarred and protuding with the parts of forced cybernetic enhancement",
+		"lists":["frontlegs"]
 	},
 	{
 		"text":"a warped mouth, filled with lined rows of teeth",
@@ -32,11 +40,11 @@
 		"lists":["lips"]
 	},
 	{
-		"text":"[possessivesubject] veins that seem to pull the blood from [possessivesubject] lips",
+		"text":"veins that seem to pull the blood from [possessivesubject] lips",
 		"lists":["lips"]
 	},
 	{
-		"text":"[possessivesubject] face stained purple and blue, [possessivesubject] veins stark against [possessivesubject] skin white as parafin",
+		"text":"[possessivesubject] face that's stained purple and blue, [possessivesubject] veins stark against [possessivesubject] skin white as parafin",
 		"lists":["head"]
 	},
 	{
@@ -52,91 +60,99 @@
 		"lists":["head"]
 	},
 	{
-		"text":"[possessivesubject] horn twisting upwards and around, decorated with studs of gold and gem stones",
-		"lists":["horn"]
+		"text":"[possessivesubject] horns twist upwards and around, decorated with studs of gold and gem stones",
+		"lists":["horns"]
 	},
 	{
-		"text":"[possessivesubject] horn curving inwards, decorated with strings of beads",
-		"lists":["horn"]
+		"text":"[possessivesubject] horns curve inwards, decorated with strings of beads",
+		"lists":["horns"]
 	},
 	{
-		"text":"an eye filled with darkness, [possessivesubject] iris a black circle in an inky void",
-		"lists":["eye"]
+		"text":"one of [possessivesubject] eyes is a milky blackness with the iris a void in its centre",
+		"lists":["eyes"]
 	},
 	{
-		"text":"a sunken, empty eyesocket",
-		"lists":["eye"]
+		"text":"one of [possessivesubject] eyes sock is sunken and empty",
+		"lists":["eyes"]
 	},
 	{
-		"text":"an eye red and bloodshot",
-		"lists":["eye"]
+		"text":"[possessivesubject] eyes are red and bloodshot",
+		"lists":["eyes"]
 	},
 	{
-		"text":"an eye that's a pitch black orb",
-		"lists":["eye"]
+		"text":"one of [possessivesubject] eyes is a black void",
+		"lists":["eyes"]
 	},
 	{
-		"text":"an eye socket filled with a carved, precious gemstone",
-		"lists":["eye"]
+		"text":"one eye socket filled with a carved, precious gemstone",
+		"lists":["eyes"]
 	},
 	{
-		"text":"[possessivesubject] sleek, advanced cybernetic [part]",
-		"lists":["arm","leg","chest","wing","eye","tail","fin"]
+		"text":"[subject] [possessiveconjunction] sleek, advanced cybernetic [part]",
+		"lists":["arms","legs","chest","wings","eyes","fins"]
 	},
 	{
-		"text":"[possessivesubject] arm twisted and ending in clawed hands, stained with gore",
-		"lists":["arm"]
-	},
-	{
-		"text":"a tattoo that covers the length of [possessivesubject] arm",
-		"lists":["arm"]
-	},
-	{
-		"text":"[possessivesubject] antenna that twitches and cracks unsettlingly",
-		"lists":["antenna"]
-	},
-	{
-		"text":"[possessivesubject] antenna that's broken and flops and occasionally twitches",
-		"lists":["antenna"]
-	},
-	{
-		"text":"[possessivesubject] wing covered in scar tissue, a crosshatch of pain written over the membrane",
-		"lists":["wing"]
-	},
-	{
-		"text":"[possessivesubject] wing with patches of leather sewn over what can only be wounds from battle",
-		"lists":["wing"]
-	},
-	{
-		"text":"[possessivesubject] wing that sparkles with veins of gold and silver",
-		"lists":["wing"]
-	},
-	{
-		"text":"[possessivesubject] leg removed just below the knee, with a rather ordinary peg in it's place",
-		"lists":["leg"]
-	},
-	{
-		"text":"[possessivesubject] [part] covered in tightly wrapped bandages",
-		"lists":["leg","arm","head","chest"]
-	},
-	{
-		"text":"[possessivesubject] [part] adorned with many rings and studs, some with gemstones on them",
-		"lists":["ear","fin","horn"]
-	},
-	{
-		"text":"[possessivesubject] [part] notched and worn from combat",
-		"lists":["ear","fin","horn"]
-	},
-	{
-		"text":"[possessivesubject] tail that is heavily tattooed, with some studs pierced into it",
+		"text":"[subject] [possessiveconjunction] a sleek, advanced cybernetic tail",
 		"lists":["tail"]
 	},
 	{
-		"text":"[possessivesubject] engine that is absent, perhaps removed and place into another machine",
+		"text":"[possessivesubject] arms twist and end in clawed hands, stained with gore",
+		"lists":["arms"]
+	},
+	{
+		"text":"a tattoo covers the length of one of [possessivesubject] arm",
+		"lists":["arms"]
+	},
+	{
+		"text":"[possessivesubject] antenna twitch and crack unsettlingly",
+		"lists":["antenna"]
+	},
+	{
+		"text":"one of [possessivesubject] antenna is broken and flops and occasionally twitches",
+		"lists":["antenna"]
+	},
+	{
+		"text":"[possessivesubject] wings are covered in scar tissue, a crosshatch of pain written over the membranes",
+		"lists":["wings"]
+	},
+	{
+		"text":"patches of leather are sewn into [possessivesubject] wings over what can only be wounds from battle",
+		"lists":["wings"]
+	},
+	{
+		"text":"[possessivesubject] wings sparkle with veins of gold and silver",
+		"lists":["wings"]
+	},
+	{
+		"text":"one of [possessivesubject] legs has been removed just below the knee, with a rather ordinary peg in it's place",
+		"lists":["legs"]
+	},
+	{
+		"text":"[possessivesubject] [part] are covered in tightly wrapped bandages",
+		"lists":["legs","arms"]
+	},
+	{
+		"text":"[possessivesubject] [part] is covered in tightly wrapped bandages",
+		"lists":["head","chest","tail"]
+	},
+	{
+		"text":"[possessivesubject] [part] are adorned with many rings and studs, some with gemstones on them",
+		"lists":["ears","fins","horns"]
+	},
+	{
+		"text":"[possessivesubject] [part] are notched and worn from combat",
+		"lists":["ears","fins","horns"]
+	},
+	{
+		"text":"[possessivesubject] tail is heavily tattooed, with some studs pierced into it",
+		"lists":["tail"]
+	},
+	{
+		"text":"[possessivesubject] engine is absent, perhaps removed and place into another machine",
 		"lists":["engine"]
 	},
 	{
-		"text":"[possessivesubject] engine that's been greatly modified, wirring with unusual vigor",
+		"text":"[possessivesubject] engine has been greatly modified, wirring with unusual vigor",
 		"lists":["engine"]
 	},
 	{
@@ -166,5 +182,153 @@
 	{
 		"text":"[possessivesubject] trunk with a face carved into it",
 		"lists":["trunk"]
+	},
+	{
+		"text":"one of [possessivesubject] hind legs is absent, removed at the joint",
+		"lists":["hindlegs"]
+	},
+	{
+		"text":"one of [possessivesubject] front is gone, severed at the joint",
+		"lists":["frontlegs"]
+	},
+	{
+		"text":"a branding is scorched into [possessivesubject] hind leg",
+		"lists":["hindlegs"]
+	},
+	{
+		"text":"a branding is scorched into [possessivesubject] hind leg",
+		"lists":["fontlegs"]
+	},
+	{
+		"text":"[possessivesubject] hind legs are strong and powerful",
+		"lists":["hindlegs"]
+	},
+	{
+		"text":"[possessivesubject] front legs are strong and powerful",
+		"lists":["frontlegs"]
+	},
+	{
+		"text":"[possessivesubject] tentacles are thick and strong, lined with suckers with tiny barbs",
+		"lists":["tentacles"]
+	},
+	{
+		"text":"[possessivesubject] tentacles are wiry, windy, and coil with preternatual strength",
+		"lists":["tentacles"]
+	},
+	{
+		"text":"[possessivesubject] legs are mismatched, repaired numerous times with scrap parts",
+		"lists":["mechlegs"]
+	},
+	{
+		"text":"[possessivesubject] arms are exposed, the chassis opened somehow at some point",
+		"lists":["mecharms"]
+	},
+	{
+		"text":"[possessivesubject] chest is shiny and well maintained",
+		"lists":["mechchest"]
+	},
+	{
+		"text":"[possessivesubject] head is smooth and featureless",
+		"lists":["mechhead"]
+	},
+	{
+		"text":"[possessivesubject] legs are noisy, with mechanical clicks and hydraulic hisses with every motion",
+		"lists":["mechlegs"]
+	},
+	{
+		"text":"[possessivesubject] arms are covered in nicks and marks of battle",
+		"lists":["mecharms"]
+	},
+	{
+		"text":"[possessivesubject] chest is decorated with engravings and glued on shells and beads",
+		"lists":["mechchest"]
+	},
+	{
+		"text":"[possessivesubject] head is painted with a face with an inscrutible expression",
+		"lists":["mechhead"]
+	},
+	{
+		"text":"one of [possessivesubject] hind legs is covered in a winding tattoo, broken by the occasional scar",
+		"lists":["hindlegs"]
+	},
+	{
+		"text":"one of [possessivesubject] front legs has a long crosshatch of scars down it's length",
+		"lists":["frontlegs"]
+	},
+	{
+		"text":"[possessivesubject] are oddly flat in shape with many thin suckers on the underside",
+		"lists":["tentacles"]
+	},
+	{
+		"text":"one of [possessivesubject] legs is missing below the knee, a makeshift peg leg in its place",
+		"lists":["mechlegs"]
+	},
+	{
+		"text":"one of [possessivesubject] arms has been replaced with an actuated cannon",
+		"lists":["mecharms"]
+	},
+	{
+		"text":"[possessivesubject] chest chassis is a motley of plates and tiny rivets",
+		"lists":["mechchest"]
+	},
+	{
+		"text":"[possessivesubject] head is missing, a small speaker poking from the connector at the neck",
+		"lists":["mechhead"]
+	},
+	{
+		"text":"a single leg is missing from [possessivesubject] legs, the others covered in scars of battle",
+		"lists":["spiderlegs"]
+	},
+	{
+		"text":"[possessivesubject] are thin yet covered in a super fine fur",
+		"lists":["spiderlegs"]
+	},
+	{
+		"text":"[possessivesubject] beak is long and crooked, with colourful markings",
+		"lists":["beak"]
+	},
+	{
+		"text":"[possessivesubject] shell is decorated with tattoos and gemstones studded into it, joined with ribbons",
+		"lists":["shell"]
+	},
+	{
+		"text":"[possessivesubject] beak is short and sharp",
+		"lists":["beak"]
+	},
+	{
+		"text":"a studded metal place covers parts of [possessivesubject] shell where it has been split open",
+		"lists":["shell"]
+	},
+	{
+		"text":"[possessivesubject] legs are cracked and wrapped with leather and twine for support",
+		"lists":["bonelegs"]
+	},
+	{
+		"text":"[possessivesubject] arms are covered in a fuzzy mold",
+		"lists":["bonearms"]
+	},
+	{
+		"text":"inside [possessivesubject] ribcage is strewn with ribbons and twine, holding a precious stone",
+		"lists":["bonechest"]
+	},
+	{
+		"text":"[possessivesubject] jawbone is missing and [possessivesubject] eye sockets glow faintly",
+		"lists":["bonehead"]
+	},
+	{
+		"text":"[possessivesubject] legs are shattered in parts, with metal rods put in their place",
+		"lists":["bonelegs"]
+	},
+	{
+		"text":"[possessivesubject] arms are covered in dirt and grit caught in generations of spiderwebs",
+		"lists":["bonearms"]
+	},
+	{
+		"text":"withered roots and vines trail and weave from [possessivesubject] pelvis up to the base of [possessivesubject] spine",
+		"lists":["bonechest"]
+	},
+	{
+		"text":"[possessivesubject] skull has been replaced with a withered pumpkin with a crude face carved into it",
+		"lists":["bonehead"]
 	}
 ]

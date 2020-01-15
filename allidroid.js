@@ -1553,8 +1553,8 @@ function generateBoss()
 	}
 	
 	
-	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/4+(Math.random()*monster_base.parts.length)/4);
-	let numberofitems = Math.floor((boss_item_slots.length/10) + (Math.random()*(boss_item_slots.length + 1))/5);
+	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3);
+	let numberofitems = Math.floor((boss_item_slots.length/9) + (Math.random()*(boss_item_slots.length + 2))/6);
 	
 	let items = [];
 	let tempitem;
