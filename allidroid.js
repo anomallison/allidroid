@@ -1663,6 +1663,14 @@ function generateBoss()
 			{
 				boss_string = boss_string.substr(0,position) + monster_pronouns.objectself + boss_string.substr(endposition+1);
 			}
+			else if (bosssubstr == "conjunction")
+			{
+				boss_string = boss_string.substr(0,position) + monster_pronouns.conjunction + boss_string.substr(endposition+1);
+			}
+			else if (bosssubstr == "possessiveconjunction")
+			{
+				boss_string = boss_string.substr(0,position) + monster_pronouns.possessiveconjunction + boss_string.substr(endposition+1);
+			}
 			else if (bosssubstr == "part")
 			{
 				boss_string = boss_string.substr(0,position) + boss_parts[temppart] + boss_string.substr(endposition+1);
@@ -1745,6 +1753,14 @@ function generateBoss()
 		else if (bosssubstr == "objectself")
 		{
 			boss_string = boss_string.substr(0,position) + monster_pronouns.objectself + boss_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "conjunction")
+		{
+			boss_string = boss_string.substr(0,position) + monster_pronouns.conjunction + boss_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "possessiveconjunction")
+		{
+			boss_string = boss_string.substr(0,position) + monster_pronouns.possessiveconjunction + boss_string.substr(endposition+1);
 		}
 		else if (bosssubstr == "species")
 		{
