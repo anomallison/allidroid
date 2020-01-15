@@ -8,6 +8,18 @@
 		"lists":["chest"]
 	},
 	{
+		"text":"a scar marks an X on [possessivesubject] chest near their heart",
+		"lists":["chest"]
+	},
+	{
+		"text":"an elaborate dragon tattoo covers [possessivesubject] back",
+		"lists":["chest"]
+	},
+	{
+		"text":"[possessivesubject] spine glows with fancy neural implants",
+		"lists":["chest"]
+	},
+	{
 		"text":"[possessivesubject] [part] are scarred and protuding with the parts of forced cybernetic enhancement",
 		"lists":["arms","legs","wings","horns","eyes","antenna","ears","fins","tentacles"]
 	},
@@ -32,7 +44,7 @@
 		"lists":["mouth"]
 	},
 	{
-		"text":"[subject] flick a forked tongue between [possessivesubject] teeth",
+		"text":"[possessivesubject] tongue is forked",
 		"lists":["mouth"]
 	},
 	{
@@ -100,6 +112,14 @@
 		"lists":["tail"]
 	},
 	{
+		"text":"[subject] [possessiveconjunction] sleek, advanced cybernetic hind legs",
+		"lists":["hindlegs"]
+	},
+	{
+		"text":"[subject] [possessiveconjunction] sleek, advanced cybernetic front legs",
+		"lists":["frontlegs"]
+	},
+	{
 		"text":"[possessivesubject] arms twist and end in clawed hands, stained with gore",
 		"lists":["arms"]
 	},
@@ -149,6 +169,10 @@
 	},
 	{
 		"text":"[possessivesubject] [part] are adorned with many rings and studs, some with gemstones on them",
+		"lists":["ears","fins","horns"]
+	},
+	{
+		"text":"[possessivesubject] [part] are oddly pristine looking",
 		"lists":["ears","fins","horns"]
 	},
 	{
@@ -308,7 +332,23 @@
 		"lists":["frontlegs"]
 	},
 	{
+		"text":"one of [possessivesubject] hind legs has a knife blade stuck in it",
+		"lists":["hindlegs"]
+	},
+	{
+		"text":"one of [possessivesubject] front legs has large skull shaped scar carved into it",
+		"lists":["frontlegs"]
+	},
+	{
 		"text":"[possessivesubject] are oddly flat in shape with many thin suckers on the underside",
+		"lists":["tentacles"]
+	},
+	{
+		"text":"[possessivesubject] are brightly coloured with decorative flashing rings",
+		"lists":["tentacles"]
+	},
+	{
+		"text":"[possessivesubject] are squishy and oozing with sticky mucus",
 		"lists":["tentacles"]
 	},
 	{
@@ -328,11 +368,35 @@
 		"lists":["mechhead"]
 	},
 	{
+		"text":"[possessivesubject] legs are covered in oil stains",
+		"lists":["mechlegs"]
+	},
+	{
+		"text":"one of [possessivesubject] arms has been torn off, wiring and hydraulics twitching at the tear",
+		"lists":["mecharms"]
+	},
+	{
+		"text":"[possessivesubject] chest has been blown open from inside at some point",
+		"lists":["mechchest"]
+	},
+	{
+		"text":"[possessivesubject] head has been replaced with an electric kettle",
+		"lists":["mechhead"]
+	},
+	{
 		"text":"a single leg is missing from [possessivesubject] legs, the others covered in scars of battle",
 		"lists":["spiderlegs"]
 	},
 	{
-		"text":"[possessivesubject] are thin yet covered in a super fine fur",
+		"text":"[possessivesubject] legs are thin yet covered in a super fine fur",
+		"lists":["spiderlegs"]
+	},
+	{
+		"text":"[possessivesubject] legs are strangely chitinous and segmented",
+		"lists":["spiderlegs"]
+	},
+	{
+		"text":"[possessivesubject] legs are thick and unnaturally fast",
 		"lists":["spiderlegs"]
 	},
 	{
@@ -340,15 +404,27 @@
 		"lists":["beak"]
 	},
 	{
-		"text":"[possessivesubject] shell is decorated with tattoos and gemstones studded into it, joined with ribbons",
-		"lists":["shell"]
-	},
-	{
 		"text":"[possessivesubject] beak is short and sharp",
 		"lists":["beak"]
 	},
 	{
-		"text":"a studded metal place covers parts of [possessivesubject] shell where it has been split open",
+		"text":"[possessivesubject] beak is strangely toothy",
+		"lists":["beak"]
+	},
+	{
+		"text":"[possessivesubject] shell is decorated with tattoos and gemstones studded into it, joined with ribbons",
+		"lists":["shell"]
+	},
+	{
+		"text":"studded metal plates cover parts of [possessivesubject] shell where it has been split open",
+		"lists":["shell"]
+	},
+	{
+		"text":"[possessivesubject] is painted in bright colours and symbols",
+		"lists":["shell"]
+	},
+	{
+		"text":"flowers grow from small cracks in [possessivesubject] shell",
 		"lists":["shell"]
 	},
 	{
@@ -381,6 +457,26 @@
 	},
 	{
 		"text":"[possessivesubject] skull has been replaced with a withered pumpkin with a crude face carved into it",
+		"lists":["bonehead"]
+	},
+	{
+		"text":"[possessivesubject] legs are entwined with withered weeds and roots",
+		"lists":["bonelegs"]
+	},
+	{
+		"text":"[possessivesubject] arms are scorched and wrapped in leather straps for support",
+		"lists":["bonearms"]
+	},
+	{
+		"text":"a large spider resides inside [possessivesubject] ribcage",
+		"lists":["bonechest"]
+	},
+	{
+		"text":"in place of [possessivesubject] skull is a jar of water holding a sinister looking goldfish",
+		"lists":["bonehead"]
+	},
+	{
+		"text":"in place of [possessivesubject] skull is a jar of water holding a tiny fish skeleton",
 		"lists":["bonehead"]
 	}
 ]

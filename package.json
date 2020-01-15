@@ -1,7 +1,7 @@
 {
   "name": "allidroid",
   "version": "1.0.0",
-  "description": "a bot by allison galloway for discord",
+  "description": "a bot for discord by allison galloway",
   "main": "allidroid.js",
   "dependencies": {
     "discord.js": "^11.4.2"

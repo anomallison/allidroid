@@ -302,10 +302,10 @@ function processCommand(receivedMessage)
 	{
 		if (arguments[0].toLowerCase() == "in")
 		{
-			output = setReminder(arguments[1], arguments[2], argumentsbacktostring(arguments,3), receivedMessage.channel, receivedMessage.author);
+			output = setReminder(arguments[1], arguments[2], argumentsbacktostring(arguments,3), receivedMessage.channel.id, receivedMessage.author);
 		} else
 		{
-			output = setReminder(arguments[0], arguments[1], argumentsbacktostring(arguments,2), receivedMessage.channel, receivedMessage.author);
+			output = setReminder(arguments[0], arguments[1], argumentsbacktostring(arguments,2), receivedMessage.channel.id, receivedMessage.author);
 		}
 		
 		if (output == null)
@@ -439,6 +439,7 @@ function setReminder(delay, units, message, target_channel, sender)
 	
 	reminder_array.push({
 		id: newid,
+		when: Date.now()+parsedDelay*millisecondstounit,
 		timer: setTimeout(sendReminder.bind(this,message,target_channel,newid),parsedDelay*millisecondstounit)
 	});
 	return "Reminder set! The reminderid for this reminder is " + newid;
@@ -452,9 +453,13 @@ function sendReminder(message, target_channel, reminderid)
 		console.log("sendReminder failure: target_channel is null")
 		return;
 	}
-	target_channel.send(message);
-	console.log("Reminder \"" + reminderid + "\" sent");
-	removeReminder(reminderid);
+	client.channels.get(target_channel).send(message);
+	//target_channel.send(message);
+	if (reminderid != null) //remove reminder only if its an actual reminder
+	{
+		console.log("Reminder \"" + reminderid + "\" sent");
+		removeReminder(reminderid);
+	}
 }
 
 function removeReminder(reminderid)
@@ -1965,6 +1970,7 @@ function nani()
 // handle errors??? no
 
 client.on('error', console.error);
+
 
 //
 // engage ALLIDROID
