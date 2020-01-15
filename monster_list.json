@@ -149,7 +149,7 @@
 	{
 		"single": "train",
 		"plural": "trains",
-		"parts": ["engine","caboose","caboose","caboose","caboose","caboose"],
+		"parts": ["engine","carriage","carriage","carriage","freight","freight"],
 		"slots": [],
 		"lists": ["monster","boss","friend","sexy"]
 	},
@@ -310,7 +310,7 @@
 	{
 		"single": "[species] vampire",
 		"plural": "[species] vampires",
-		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
+		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
 		"lists": ["monster","boss","friend","sexy","gacha"]
 	},
@@ -373,7 +373,7 @@
 	{
 		"single": "awakened tree",
 		"plural": "awakened trees",
-		"parts": ["branch","branch","branch","branch","branch","trunk"],
+		"parts": ["branches","trunk"],
 		"slots": [],
 		"lists": ["monster","boss","friend"]
 	},

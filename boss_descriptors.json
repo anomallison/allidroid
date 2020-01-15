@@ -1,15 +1,19 @@
 [
 	{
-		"text":"a scar that runs down a trail down one of [possessivesubject] [part] splitting an old faded tattoo",
+		"text":"a scar runs a trail down one of [possessivesubject] [part] splitting an old faded tattoo",
 		"lists":["arms","legs"]
 	},
 	{
-		"text":"a scar that runs down a trail down [possessivesubject] chest splitting an old faded tattoo",
+		"text":"a scar runs a trail down [possessivesubject] chest splitting an old faded tattoo",
 		"lists":["chest"]
 	},
 	{
-		"text":"[possessivesubject] [part] scarred and protuding with the parts of forced cybernetic enhancement",
-		"lists":["arms","legs","chest","wings","horns","eyes","mouth","head","antenna","ears","tail","fins","beak","tentacles"]
+		"text":"[possessivesubject] [part] are scarred and protuding with the parts of forced cybernetic enhancement",
+		"lists":["arms","legs","wings","horns","eyes","antenna","ears","fins","tentacles"]
+	},
+	{
+		"text":"[possessivesubject] [part] is scarred and protuding with the parts of forced cybernetic enhancement",
+		"lists":["head","tail"]
 	},
 	{
 		"text":"[possessivesubject] hind legs scarred and protuding with the parts of forced cybernetic enhancement",
@@ -20,43 +24,43 @@
 		"lists":["frontlegs"]
 	},
 	{
-		"text":"a warped mouth, filled with lined rows of teeth",
+		"text":"[possessivesubject] mouth is warped, filled with lined rows of teeth",
 		"lists":["mouth"]
 	},
 	{
-		"text":"a snaggletooth poking from [possessivesubject] mouth",
+		"text":"a snaggletooth pokes from [possessivesubject] mouth",
 		"lists":["mouth"]
 	},
 	{
-		"text":"flicking a forked tongue between [possessivesubject] lips",
+		"text":"[subject] flick a forked tongue between [possessivesubject] teeth",
 		"lists":["mouth"]
 	},
 	{
-		"text":"teeth jagged and stained red",
+		"text":"[possessivesubject] teeth are jagged and stained red",
 		"lists":["mouth"]
 	},
 	{
-		"text":"lips a deep, unnatural vermillion",
+		"text":"[possessivesubject] lips are a deep, unnatural vermillion",
 		"lists":["lips"]
 	},
 	{
-		"text":"veins that seem to pull the blood from [possessivesubject] lips",
+		"text":"the veins of [possessivesubject] face seem to pull the blood from [possessivesubject] lips",
 		"lists":["lips"]
 	},
 	{
-		"text":"[possessivesubject] face that's stained purple and blue, [possessivesubject] veins stark against [possessivesubject] skin white as parafin",
+		"text":"[possessivesubject] face is stained purple and blue, [possessivesubject] veins stark against [possessivesubject] skin pale like parafin",
 		"lists":["head"]
 	},
 	{
-		"text":"a scar running down [possessivesubject] face like a trophy of fighting a blade and winning",
+		"text":"a scar runs down [possessivesubject] face like a trophy from fighting a blade and winning",
 		"lists":["head"]
 	},
 	{
-		"text":"stitches that nearly crosshatch [possessivesubject] face",
+		"text":"stitches nearly crosshatch [possessivesubject] face",
 		"lists":["head"]
 	},
 	{
-		"text":"faint scars from the installation of facial cybernetic mods",
+		"text":"faint scars can be seen on [possessivesubject] face from the installation of cybernetic mods",
 		"lists":["head"]
 	},
 	{
@@ -84,12 +88,12 @@
 		"lists":["eyes"]
 	},
 	{
-		"text":"one eye socket filled with a carved, precious gemstone",
+		"text":"one of [possessivesubject] eye sockets holds a carved, precious gemstone",
 		"lists":["eyes"]
 	},
 	{
 		"text":"[subject] [possessiveconjunction] sleek, advanced cybernetic [part]",
-		"lists":["arms","legs","chest","wings","eyes","fins"]
+		"lists":["arms","legs","wings","eyes","fins"]
 	},
 	{
 		"text":"[subject] [possessiveconjunction] a sleek, advanced cybernetic tail",
@@ -100,7 +104,11 @@
 		"lists":["arms"]
 	},
 	{
-		"text":"a tattoo covers the length of one of [possessivesubject] arm",
+		"text":"a tattoo depicting a powerful dragon covers the length of one of [possessivesubject] arm",
+		"lists":["arms"]
+	},
+	{
+		"text":"a busty pin-up girl tattoo covers the length of one of [possessivesubject] arm",
 		"lists":["arms"]
 	},
 	{
@@ -109,6 +117,10 @@
 	},
 	{
 		"text":"one of [possessivesubject] antenna is broken and flops and occasionally twitches",
+		"lists":["antenna"]
+	},
+	{
+		"text":"[possessivesubject] antenna is windy and ticks in the air constantly",
 		"lists":["antenna"]
 	},
 	{
@@ -156,20 +168,60 @@
 		"lists":["engine"]
 	},
 	{
-		"text":"[possessivesubject] branch broken and twisted, hanging languidly",
-		"lists":["branch"]
+		"text":"[possessivesubject] engine has an angry face painted on it",
+		"lists":["engine"]
 	},
 	{
-		"text":"[possessivesubject] branch that rhythmically waves with the groove",
-		"lists":["branch"]
+		"text":"[subject] [possessiveconjunction] a restaurant carriage",
+		"lists":["carriage"]
 	},
 	{
-		"text":"[possessivesubject] branch broken and fallen",
-		"lists":["branch"]
+		"text":"one of [possessivesubject] carriages is on fire",
+		"lists":["carriage"]
 	},
 	{
-		"text":"[possessivesubject] branch that seems like it is making rude gestures",
-		"lists":["branch"]
+		"text":"[subject] [possessiveconjunction] a carriage that looks haunted and ghostly",
+		"lists":["carriage"]
+	},
+	{
+		"text":"[subject] [possessiveconjunction] a carriage with private rooms for travellers",
+		"lists":["carriage"]
+	},
+	{
+		"text":"one of [possessivesubject] carriages appears to be overrun with stowaways riding on the exterior",
+		"lists":["carriage"]
+	},
+	{
+		"text":"one of [possessivesubject] carriages looks awfully suspicious",
+		"lists":["carriage"]
+	},
+	{
+		"text":"one of [possessivesubject] carriages has been blown up, the debris just sitting on the base",
+		"lists":["carriage"]
+	},
+	{
+		"text":"[subject] [conjunction] carrying a load of magical weapons",
+		"lists":["freight"]
+	},
+	{
+		"text":"[subject] [conjunction] hauling a shipment of ore",
+		"lists":["freight"]
+	},
+	{
+		"text":"[subject] [conjunction] hauling a big dragon in a cage",
+		"lists":["freight"]
+	},
+	{
+		"text":"one of [possessivesubject] branches is broken and twisted, hanging languidly",
+		"lists":["branches"]
+	},
+	{
+		"text":"one of [possessivesubject] branches that rhythmically waves with the groove",
+		"lists":["branches"]
+	},
+	{
+		"text":"one of [possessivesubject] branches seems to be making rude gestures",
+		"lists":["branches"]
 	},
 	{
 		"text":"[possessivesubject] trunk carved with generations of messages",

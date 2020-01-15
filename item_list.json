@@ -25,7 +25,7 @@
 		"number": 1,
 		"slots": ["weapon","offhand","tool"],
 		"lists": ["magical","dark"],
-		"synonyms": ["twisted doll"]
+		"synonyms": ["twisted doll","twisted bone wand","obsidian tipped wand","twisted ritual dagger"]
 	},
 	{
 		"name": "shotgun",
@@ -39,7 +39,7 @@
 		"number": 1,
 		"slots": ["tool"],
 		"lists": ["advanced"],
-		"synonyms": ["walkie talkie","laptop"]
+		"synonyms": ["walkie talkie","laptop","cyberdeck"]
 	},
 	{
 		"name": "decanter",
@@ -53,7 +53,14 @@
 		"number": 1,
 		"slots": ["tool"],
 		"lists": ["magical","dark"],
-		"synonyms": ["engraved dragon skull","engraved cat skull","talking dinosaur skull","talking bird skull","talking lizard skull"]
+		"synonyms": ["engraved dragon skull","engraved cat skull"]
+	},
+	{
+		"name": "talking dinosaur skull",
+		"number": 1,
+		"slots": ["tool","friend"],
+		"lists": ["magical","dark"],
+		"synonyms": ["talking bird skull","talking lizard skull"]
 	},
 	{
 		"name": "slime friend",
@@ -88,7 +95,7 @@
 		"number": 1,
 		"slots": ["hat"],
 		"lists": ["mundane","aggressive"],
-		"synonyms": ["mithril helm","steel helm","fancy skullcap","wide brim travellers hat"]
+		"synonyms": ["mithril helm","steel helm","fancy skullcap"]
 	},
 	{
 		"name": "wide brim travellers hat",
@@ -256,7 +263,7 @@
 		"number": 1,
 		"slots": ["tool"],
 		"lists": ["mundane","magical"],
-		"synonyms": ["lump of ore"]
+		"synonyms": ["lump of ore","box of alchemical ingredients"]
 	},
 	{
 		"name": "short sword and scimitar",
@@ -269,7 +276,7 @@
 		"name": "short sword",
 		"number": 1,
 		"slots": ["weapon","offhand"],
-		"lists": ["mundane","aggressive"],
+		"lists": ["mundane","aggressive","thief"],
 		"synonyms": ["dagger","light axe","light hammer","scimitar","punching dagger", "ninja claw"]
 	},
 	{
@@ -283,8 +290,8 @@
 		"name": "crossbow",
 		"number": 1,
 		"slots": ["weapon"],
-		"lists": ["ranged","mundane"],
-		"synonyms": ["longbow","sling","hand-held catapult"]
+		"lists": ["ranged","mundane","aggressive"],
+		"synonyms": ["longbow","shortbow","sling","hand-held catapult"]
 	},
 	{
 		"name": "pokéball",
@@ -308,18 +315,18 @@
 		"synonyms": ["cheese grater","ladle","whisk"]
 	},
 	{
-		"name": "magikarp",
+		"name": "level [2-28] Magikarp",
 		"number": 1,
 		"slots": ["friend"],
 		"lists": ["pokemon"],
-		"synonyms": ["zigzagoon","pikachu","psyduck","slowpoke","eevee","ratata","yungoos"]
+		"synonyms": ["level [5-18] Zigzagoon","level [5-36] Pikachu","level [5-31] Psyduck","level [6-35] Slowpoke","level [5-24] Eevee","level [4-18] Rattata","level [4-18] Yungoos"]
 	},
 	{
-		"name": "sobble",
+		"name": "level [4-14] Sobble",
 		"number": 1,
 		"slots": ["friend"],
 		"lists": ["pokemon"],
-		"synonyms": ["piplup","rowlet","popplio","litten","charizard","bulbasaur","squirtle","grookey","scorbunny"]
+		"synonyms": ["level [4-14] Piplup","level [4-14] Rowlet","level [4-14] Popplio","level [4-14] Litten","level [4-14] Charizard","level [4-14] Bulbasaur","level [4-14] Squirtle","level [4-14] Grookey","level [4-14] Scorbunny"]
 	},
 	{
 		"name": "healing potion",
@@ -347,6 +354,6 @@
 		"number": 1,
 		"slots": ["shirt"],
 		"lists": ["advanced"],
-		"synonyms": ["nanobot armour shirt","ELECTRONICA BAND t-shirt","carbon nanotube shirt","self repairing shirt"]
+		"synonyms": ["nanobot armour shirt","carbon nanotube shirt","self repairing shirt"]
 	}
 ]

@@ -1556,6 +1556,12 @@ function generateBoss()
 	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3);
 	let numberofitems = Math.floor((boss_item_slots.length/9) + (Math.random()*(boss_item_slots.length + 2))/6);
 	
+	while ((numberofitems + numberofuniqueparts) < 1) // never have 0 of both
+	{
+		numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3);
+		numberofitems = Math.floor((boss_item_slots.length/9) + (Math.random()*(boss_item_slots.length + 2))/6);
+	}
+	
 	let items = [];
 	let tempitem;
 	let tempslot = "";
@@ -1607,7 +1613,7 @@ function generateBoss()
 	
 	if (numberofuniqueparts > 0)
 	{
-		boss_string += " with";
+		boss_string += ",";
 	}
 	
 	for (let i = 0; i < numberofuniqueparts; i++)
@@ -1634,74 +1640,20 @@ function generateBoss()
 			console.log("failed to generate item for slot: " + temppart)
 		}
 		
-		position = boss_string.indexOf("\[");
-		endposition = -1;
-		bosssubstr = "";
-		
-		while (position != -1)
+		while (boss_string.includes("[part]"))
 		{
-			endposition = boss_string.indexOf("\]");
-			bosssubstr = boss_string.substring(position+1,endposition);
-			substr_number = randomNumberForText(bosssubstr);
-			if (bosssubstr == "subject")
-			{
-				boss_string = boss_string.substr(0,position) + monster_pronouns.subject + boss_string.substr(endposition+1);
-			}
-			else if (bosssubstr == "object")
-			{
-				boss_string = boss_string.substr(0,position) + monster_pronouns.object + boss_string.substr(endposition+1);
-			}
-			else if (bosssubstr == "possessivesubject")
-			{
-				boss_string = boss_string.substr(0,position) + monster_pronouns.possessivesubject + boss_string.substr(endposition+1);
-			}
-			else if (bosssubstr == "possessiveobject")
-			{
-				boss_string = boss_string.substr(0,position) + monster_pronouns.possessiveobject + boss_string.substr(endposition+1);
-			}
-			else if (bosssubstr == "objectself")
-			{
-				boss_string = boss_string.substr(0,position) + monster_pronouns.objectself + boss_string.substr(endposition+1);
-			}
-			else if (bosssubstr == "conjunction")
-			{
-				boss_string = boss_string.substr(0,position) + monster_pronouns.conjunction + boss_string.substr(endposition+1);
-			}
-			else if (bosssubstr == "possessiveconjunction")
-			{
-				boss_string = boss_string.substr(0,position) + monster_pronouns.possessiveconjunction + boss_string.substr(endposition+1);
-			}
-			else if (bosssubstr == "part")
-			{
-				boss_string = boss_string.substr(0,position) + boss_parts[temppart] + boss_string.substr(endposition+1);
-			}
-			else if (bosssubstr == "species")
-			{
-				boss_string = boss_string.substr(0,position) + getRandomMonster("species").single + boss_string.substr(endposition+1);
-			}
-			else if (substr_number != false)
-			{
-				boss_string = boss_string.substr(0,position) + substr_number.toString() + boss_string.substr(endposition+1);
-			}
-			else
-			{
-				boss_string = boss_string.substr(0,position) + boss_string.substr(endposition+1);
-			}
-			position = boss_string.indexOf("\[");
+			boss_string = boss_string.replace("[part]", boss_parts[temppart]);
 		}
-		
 		boss_parts.splice(temppart,1);
 	}
+	
+	boss_string += ".\n";
 	
 	items = sortItemArray(items);
 	
 	if (numberofitems > 0)
 	{
-		if (numberofuniqueparts > 0)
-		{
-			boss_string += ", and";
-		}
-		boss_string += " outfitted with " + monster_pronouns.possessivesubject + " " + getItemNoun(items[0]);
+		boss_string += grammarCapitalFirstLetter(monster_pronouns.subject) + " " + monster_pronouns.conjunction + " outfitted with " + monster_pronouns.possessivesubject + " " + getItemNoun(items[0]);
 	}
 	for (let i = 1; i < numberofitems; i++)
 	{
