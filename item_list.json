@@ -34,15 +34,15 @@
 	{
 		"name": "light hammer",
 		"number": 1,
-		"type": "largehammer",
+		"type": "smallhammer",
 		"slots": ["weapon"],
 		"lists": ["aggressive","mundane"],
-		"synonyms": ["warhammer","demon skull cudgel"]
+		"synonyms": ["warhammer","cudgel"]
 	},
 	{
 		"name": "really really big hammer",
 		"number": 1,
-		"type": "smallhammer",
+		"type": "largehammer",
 		"slots": ["weapon"],
 		"lists": ["aggressive","mundane"],
 		"synonyms": ["maul","tetsubo"]
@@ -50,10 +50,34 @@
 	{
 		"name": "short sword and scimitar",
 		"number": 2,
-		"type": "dualweapons",
+		"type": "dualblades",
 		"slots": ["weapon"],
 		"lists": ["mundane","aggressive"],
-		"synonyms": ["dual daggers","axe and hammer","dual pistols","punching daggers","ninja claws"]
+		"synonyms": ["dual daggers","dual axes","punching daggers","ninja claws"]
+	},
+	{
+		"name": "dual warhammers",
+		"number": 2,
+		"type": "dualhammers",
+		"slots": ["weapon"],
+		"lists": ["mundane","aggressive"],
+		"synonyms": ["dual hammers","warhammer and mace"]
+	},
+	{
+		"name": "axe and hammer",
+		"number": 2,
+		"type": "dualmixed",
+		"slots": ["weapon"],
+		"lists": ["mundane","aggressive"],
+		"synonyms": ["sword and mace","axe and warhammer"]
+	},
+	{
+		"name": "dual revolvers",
+		"number": 2,
+		"type": "dualranged",
+		"slots": ["weapon"],
+		"lists": ["mundane","aggressive","ranged"],
+		"synonyms": ["dual handcrossbows","dual pistols"]
 	},
 	{
 		"name": "scepter of finely carved wood",
@@ -117,7 +141,7 @@
 		"type": "longarms",
 		"slots": ["weapon"],
 		"lists": ["advanced","ranged","aggressive"],
-		"synonyms": ["sniper rifle","gauss cannon","rocket launcher","plasma rifle","minigun","light machine gun"]
+		"synonyms": ["sniper rifle","gauss cannon","rocket launcher","plasma rifle","minigun","machine gun"]
 	},
 	{
 		"name": "laser sword",
@@ -266,6 +290,7 @@
 	{
 		"name": "ornate robe",
 		"number": 1,
+		"type": "clothing",
 		"slots": ["coat"],
 		"lists": ["mundane","magical"],
 		"synonyms": ["spider silk robe","cloak"]

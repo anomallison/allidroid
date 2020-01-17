@@ -1,13 +1,8 @@
 [
 	{
 		"name": "keen",
-		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","dualweapons","ropeweapon","bow","sling","smallarms","longarms"],
-		"synonyms": ["vicious","bloody","awesome","weird","cruel","fiery","icy","shocking","relentless","antimatter powered","nanobot swarm"]
-	},
-	{
-		"name": "cyberpunk",
-		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","dualweapons","ropeweapon","bow","sling","smallarms"],
-		"synonyms": ["arcanepunk","steampunk","bronzepunk"]
+		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","dualblades","dualhammers","dualmixed","dualranged","ropeweapon","bow","sling","smallarms","longarms"],
+		"synonyms": ["vicious","bloody","awesome","weird","cruel","fiery","icy","shocking","relentless","antimatter powered","nanobot swarm","indestructible","cyberpunk","arcanepunk","steampunk","bronzepunk"]
 	},
 	{
 		"name": "extra large",
@@ -16,12 +11,12 @@
 	},
 	{
 		"name": "razor sharp",
-		"lists": ["smallblade","largeblade"],
+		"lists": ["smallblade","largeblade","dualblades"],
 		"synonyms": ["bloodletting","valiant","magnificent","vampiric"]
 	},
 	{
 		"name": "hardy",
-		"lists": ["smallhammer","largehammer"],
+		"lists": ["smallhammer","largehammer","dualhammers"],
 		"synonyms": ["smashing"]
 	},
 	{
@@ -31,7 +26,7 @@
 	},
 	{
 		"name": "synchronized",
-		"lists": ["dualweapons"],
+		"lists": ["dualblades","dualhammers","dualmixed","dualranged"],
 		"synonyms": ["paired"]
 	},
 	{
@@ -42,7 +37,7 @@
 	{
 		"name": "piercing",
 		"lists": ["bow"],
-		"synonyms": [""]
+		"synonyms": ["penetrating"]
 	},
 	{
 		"name": "energized",
@@ -57,7 +52,7 @@
 	{
 		"name": "light",
 		"lists": ["longarms"],
-		"synonyms": []
+		"synonyms": ["heavy"]
 	},
 	{
 		"name": "entangling",
@@ -87,7 +82,7 @@
 	{
 		"name": "reinforced",
 		"lists": ["armour"],
-		"synonyms": [""]
+		"synonyms": ["ancient","indestructible"]
 	},
 	{
 		"name": "warm",

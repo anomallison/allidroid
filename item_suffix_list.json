@@ -1,127 +1,107 @@
 [
 	{
-		"base": "glowing with malign light",
-		"synonyms": ["glowing with blessed light","that glows in the dark"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "glowing with malign light",
+		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","dualblades","dualhammers","dualmixed","dualranged","ropeweapon","bow","sling","smallarms","longarms","armour","wands","magicoffhand"],
+		"synonyms": ["glowing with blessed light","tingling with eldritch energy","crackling with lightning","humming with arcane power"]
 	},
 	{
-		"base": "humming with arcane power",
-		"synonyms": ["tingling with arcane power","pulsing with arcane power"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "that weeps blood endlessly",
+		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","ropeweapon"],
+		"synonyms": ["that hungers","that never dulls"]
 	},
 	{
-		"base": "studded with iron",
-		"synonyms": ["studded with platinum","studded with mithril","studded with uranium","studded with cardboard"],
-		"lists": ["weapon","armour","accessory"]
+		"name": "dripping with deadly venom",
+		"lists": ["smallblade","largeblade","dualblades"],
+		"synonyms": []
 	},
 	{
-		"base": "filled with candy",
-		"synonyms": ["filled with blood","filled with tears","filled with regret"],
-		"lists": ["accessory"]
+		"name": "decorated with runes along the blade",
+		"lists": ["smallblade","largeblade"],
+		"synonyms": ["with a blade of obsidian","with a blade of meteoric iron"]
 	},
 	{
-		"base": "that can't stop singing showtunes",
-		"synonyms": ["that cant stop laughing","that cant stop singing lullabies"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "decorated with runes along the blades",
+		"lists": ["dualblades"],
+		"synonyms": ["with blades of obsidian","with blades of meteoric iron"]
 	},
 	{
-		"base": "that can talk",
-		"synonyms": ["that can talk and won't shut up"],
-		"lists": ["weapon","armour","accessory"]
+		"name": "with a demon skull for a head",
+		"lists": ["smallhammer","largehammer"],
+		"synonyms": ["with a reinforced ram's skull for a head","with a head of adamantine"]
 	},
 	{
-		"base": "in its original packaging",
-		"synonyms": ["in mint condition"],
-		"lists": ["weapon","armour","accessory"]
+		"name": "decorated with runes down the haft",
+		"lists": ["polearm"],
+		"synonyms": []
 	},
 	{
-		"base": "powered by an antimatter reactor",
-		"synonyms": ["powered by antimatter power cells","powered by a fusion reaction","powered by fusion power cells","powered by a dragon's heart","powered by the souls of the dead","powered by arcane sigils","powered by eldritch sigils","powered by dark rituals"],
-		"lists": ["weapon","armour","accessory"]
+		"name": "that weep blood endlessly",
+		"lists": ["dualblades","dualhammers","dualmixed","dualranged"],
+		"synonyms": ["that hunger"]
 	},
 	{
-		"base": "covered in mystic seals",
-		"synonyms": ["covered in eldritch sigils"],
-		"lists": ["weapon","armour","accessory"]
+		"name": "with seeking bullets",
+		"lists": ["sling"],
+		"synonyms": ["with bullets of fire","with bullets of ice","with bullets of lightning"]
 	},
 	{
-		"base": "dripping with deadly venom",
-		"synonyms": [],
-		"lists": ["weapon"]
+		"name": "with arrows of fire",
+		"lists": ["bow"],
+		"synonyms": ["with arrows of ice","with arrows of lightning","with seeking arrows"]
 	},
 	{
-		"base": "blessed by the gods",
-		"synonyms": ["blessed by dark powers","blessed by nature"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "filled with blood",
+		"lists": ["magicoffhand"],
+		"synonyms": ["filled with candy","filled with tears","filled with regret"]
 	},
 	{
-		"base": "cursed by dark powers",
-		"synonyms": ["cursed by the gods","cursed by nature"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "with armour piercing rounds",
+		"lists": ["smallarms","longarms"],
+		"synonyms": ["with depleted uranium rounds","with rubber head rounds"]
 	},
 	{
-		"base": "with the soul of a dragon",
-		"synonyms": [],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "that's animated like a snake",
+		"lists": ["ropeweapon"],
+		"synonyms": []
 	},
 	{
-		"base": "tempered by the breath of a dragon",
-		"synonyms": ["tempered by the fires of hell","tempered by the freezing cold of the void"],
-		"lists": ["weapon","armour","accessory"]
+		"name": "that never dulls",
+		"lists": ["tool"],
+		"synonyms": ["that bestows great skill","that seal of the guild of artisans"]
 	},
 	{
-		"base": "humming with necromantic power",
-		"synonyms": ["dripping with necromantic power","seething with necromantic power"],
-		"lists": ["weapon","armour","accessory"]
+		"name": "that can talk",
+		"lists": ["friend","pokemon"],
+		"synonyms": ["that sings"]
 	},
 	{
-		"base": "seething with eldritch magic",
-		"synonyms": ["dripping with eldritch magic","brimming with eldritch magic"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "etched with runes of power",
+		"lists": ["accessory","armour","clothing"],
+		"synonyms": ["that bestows unnatural youth","that seems to darken one's countenace"]
 	},
 	{
-		"base": "infused with gay energy",
-		"synonyms": ["pulsing with gay energy","humming with gay energy","blessed with gay energy","dripping with gay energy","glowing with gay energy","burning with gay energy","tingling with gay energy","powered by gay energy"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "decorated with gemstones",
+		"lists": ["accessory"],
+		"synonyms": ["etched with decorative runes"]
 	},
 	{
-		"base": "burning with violent anger",
-		"synonyms": ["burning with dark powers"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "that's covered in holy seals",
+		"lists": ["armour"],
+		"synonyms": ["that's covered in unholy runes","that's covered in vicious barbs"]
 	},
 	{
-		"base": "with an aura of magical ice",
-		"synonyms": ["with an aura of magical fire","with an aura of eldritch energy","with an aura of arcane energy","with an aura of magical lightning"],
-		"lists": ["weapon","armour","accessory","friend"]
+		"name": "with endless pockets",
+		"lists": ["clothing"],
+		"synonyms": ["that is magically clean",""]
 	},
 	{
-		"base": "engulf in eldritch flame",
-		"synonyms": ["engulfed in arcane lightning","engulfed in necromantic ice"],
-		"lists": ["weapon","armour","accessory"]
+		"name": "that tastes of brandy",
+		"lists": ["consumable"],
+		"synonyms": ["that tastes of chocolate","that tastes of oranges","that tastes of berries"]
 	},
 	{
-		"base": "infused with elemental ice",
-		"synonyms": ["infused with elemental fire","infused with elemental lightning"],
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"base": "brimming with elemental ice",
-		"synonyms": ["brimming with elemental fire","brimming with elemental lightning"],
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"base": "energized by storms",
-		"synonyms": ["tingling with the power of storms"],
-		"lists": ["weapon","armour","accessory","friend"]
-	},
-	{
-		"base": "wearing a crown of flowers",
-		"synonyms": ["wearing chic armour","wearing a damn nice cape","wearing a fancy tie"],
-		"lists": ["friend"]
-	},
-	{
-		"base": "holding a berry",
-		"synonyms": ["holding some leftovers","holding a bag of soft sand","holding a hard stone"],
-		"lists": ["friend"]
+		"name": "holding leftovers",
+		"lists": ["pokemon"],
+		"synonyms": ["holding a jar of dirt","holding a berry","holding an egg"]
 	}
 ]

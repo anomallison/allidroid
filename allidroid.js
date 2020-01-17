@@ -41,7 +41,7 @@ var monster_descriptors = JSON.parse(fs.readFileSync('boss_descriptors.json'));
 var item_nouns = JSON.parse(fs.readFileSync('item_list.json'));
 var item_suffixes = JSON.parse(fs.readFileSync('item_suffix_list.json'));
 var item_prefixes = JSON.parse(fs.readFileSync('item_prefix_list.json'));
-var item_slots = JSON.parse(fs.readFileSync('item_slots.json'));
+var item_sorting = JSON.parse(fs.readFileSync('item_sorting.json'));
 
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
@@ -1564,25 +1564,6 @@ function playGacha(amount)
 }
 
 //
-// Generate an artifact, an item
-
-function generateArtifact(slot,favoureditems)
-{
-	let itempool = item_nouns.slice();
-	
-	if (favoureditems != null && favoureditems.length > 0)
-	{
-		for (let i = 0; i < favoureditems.length; i++)
-		{
-			itempool = itempool.concat(item_nouns.filter(filterByList,favoureditems[i]));
-		}
-	}
-	itempool = itempool.filter(filterBySlot,slot);
-	
-	return itempool[Math.floor((Math.random()*itempool.length))];
-}
-
-//
 // Generate boss name
 
 function generateBossName(with_title = true, short_title = false)
@@ -1618,6 +1599,75 @@ function generateBossName(with_title = true, short_title = false)
 }
 
 //
+// Gets the full list of items from an item, ie the name and the synonyms
+//
+
+function getActualList(object)
+{
+	if (object == null)
+	{
+		return null;
+	}
+	let temparr = [];
+	
+	for (let i = 0; i < object.synonyms.length; i++)
+	{
+		temparr.push(object.synonyms[i]);
+	}
+	
+	temparr.push(object.name);
+	
+	return temparr;
+}
+
+//
+// Gets the full list of items from an item, ie the name and the synonyms
+//
+
+function getItemList(object)
+{
+	if (object == null)
+	{
+		return null;
+	}
+	let temparr = [];
+	
+	for (let i = 0; i < object.synonyms.length; i++)
+	{
+		temparr.push({item:object.synonyms[i], type:object.type});
+	}
+	
+	temparr.push({item:object.name, type:object.type});
+	
+	return temparr;
+}
+
+//
+// Generate an artifact, an item
+
+function generateArtifact(slot,favoureditems)
+{
+	let itempool = item_nouns.slice();
+	let fullpool = [];
+	
+	if (favoureditems != null && favoureditems.length > 0)
+	{
+		for (let i = 0; i < favoureditems.length; i++)
+		{
+			itempool = itempool.concat(item_nouns.filter(filterByList,favoureditems[i]));
+		}
+	}
+	itempool = itempool.filter(filterBySlot,slot);
+	
+	for (let i = 0; i < itempool.length; i++)
+	{
+		fullpool = fullpool.concat(getItemList(itempool[i]));
+	}
+	
+	return fullpool[Math.floor((Math.random()*fullpool.length))];
+}
+
+//
 // get a random part description for a part
 //
 
@@ -1634,24 +1684,45 @@ function getPartDesciptor(part)
 }
 
 //
-// takes a type and finds a prefix that fits it
+// takes a type and an affix and finds an appropriate affixture
 //
 
-function getItemPrefix(itemtype)
+var AFFIX_PREFIX = 0;
+var AFFIX_SUFFIX = 1;
+
+function getItemAffix(itemtype,affix = AFFIX_PREFIX)
 {
-	tempprefixlist = item_prefixes.filter(filterByList,itemtype);
-	if (tempprefixlist.length < 1)
+	if (itemtype == null)
 	{
-		console.log("no prefixes for itemtype: " + itemtype);
 		return null;
 	}
-	let prefix = tempprefixlist[Math.floor(Math.random()*(tempprefixlist.length))];
+	let tempaffixlist = [];
 	
-	return getObjectName(prefix);
+	if (affix == AFFIX_PREFIX)
+	{
+		tempaffixlist = item_prefixes.filter(filterByList,itemtype);
+	} 
+	else if (affix == AFFIX_SUFFIX)
+	{
+		tempaffixlist = item_suffixes.filter(filterByList,itemtype);
+	} 
+	
+	if (tempaffixlist.length < 1)
+	{
+		console.log("no " + affix + " for itemtype: " + itemtype);
+		return null;
+	}
+	let fullaffixlist = [];
+	for (let i = 0; i < tempaffixlist.length; i++)
+	{
+		fullaffixlist = fullaffixlist.concat(getActualList(tempaffixlist[i]));
+	}
+	
+	return fullaffixlist[Math.floor(Math.random()*(fullaffixlist.length))];
 }
 
 //
-// sort an array of items by slot
+// sort an array of items by type
 //
 
 function sortItemArray(arr)
@@ -1659,17 +1730,28 @@ function sortItemArray(arr)
 	let temparr = arr.slice();
 	let sortedarr = [];
 	
-	for (let slot in item_slots)
+	for (let itemtype in item_sorting)
 	{
 		for (let i = 0; i < temparr.length; i++)
 		{
-			if (temparr[i].slots.includes(item_slots[slot]))
+			if (temparr[i].type == item_sorting[itemtype])
 			{
 				sortedarr.push(temparr[i]);
 				temparr.splice(i,1);
 				i--;
 			}
 		}
+	}
+	
+	if (temparr.length > 0)
+	{
+		let debugstring = "";
+		for (let i = 0; i < temparr.length; i++)
+		{
+			debugstring += temparr[i].type + ", ";
+		}
+		console.log("WARNING: remaining types after sorting: " + debugstring)
+		sortedarr = sortedarr.concat(temparr);
 	}
 	
 	return sortedarr;
@@ -1712,14 +1794,18 @@ function generateBoss()
 	}
 	
 	let items = [];
-	let tempitem;
+	let tempitem = "";
 	let tempslot = "";
 	let tempint = -1;
+	let tempprefix = "";
+	let tempsuffix = "";
 	
 	for (let i = 0; i < numberofitems; i++)
 	{
 		tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)]
 		tempitem = generateArtifact(tempslot,boss_class.favitems);
+		tempprefix = getItemAffix(tempitem.type,AFFIX_PREFIX);
+		tempsuffix = getItemAffix(tempitem.type,AFFIX_SUFFIX);
 		if (tempitem == null)
 		{
 			console.log("failed to generate item for slot: " + tempslot);
@@ -1729,7 +1815,12 @@ function generateBoss()
 		}
 		else
 		{
-			items.push(tempitem);
+			items.push({
+				item:tempitem.item,
+				prefix:tempprefix,
+				suffix:tempsuffix,
+				type:tempitem.type
+			});
 		}
 		tempint = boss_item_slots.findIndex(hasString,tempslot);
 		boss_item_slots.splice(tempint,1);
@@ -1822,23 +1913,22 @@ function generateBoss()
 		}
 		baserand = Math.random();
 		
-		prefix = getItemPrefix(items[i].type);
-		//suffix;
-		
-		if (baserand < 0.08 && suffix != null && prefix != null)
+		if (baserand < 0.08 && items[i].suffix != null && items[i].prefix != null) // 0.08
 		{
-			// prefix + suffix
+			items_string += items[i].prefix + " " + items[i].item + " " + items[i].suffix;
 		}
-		else if (baserand < 0.22 && suffix != null )
+		else if (baserand < 0.22 && items[i].suffix != null ) // 0.22
 		{
-			// suffix
+			items_string += items[i].item + " " + items[i].suffix;
 		}
-		else if (baserand < 0.36 && prefix != null)
+		else if (baserand < 0.36 && items[i].prefix != null) // 0.36
 		{
-			items_string += getItemPrefix(items[i].type) + " ";
+			items_string += items[i].prefix + " " + items[i].item;
 		}
-		
-		items_string += getObjectName(items[i]);
+		else
+		{
+			items_string += items[i].item;
+		}
 	}
 	if (numberofitems > 0)
 	{
