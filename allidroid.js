@@ -72,6 +72,9 @@ var how_levels = JSON.parse(fs.readFileSync('how_levels.json'));
 var how_prefixes = JSON.parse(fs.readFileSync('how_prefixes.json'));
 var how_suffixes = JSON.parse(fs.readFileSync('how_suffixes.json'));
 
+//yellatpeople fileSize
+var yell_at_messages = JSON.parse(fs.readFileSync('yellat_messages.json'));
+
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
@@ -79,6 +82,11 @@ var logintoken = fs.readFileSync('token.txt').toString();
 //
 // the array of reminders, to allow reminders to be removed/destroyed (just in case)
 var reminder_array = [];
+
+//
+//
+var yell_at_people_ids = [];
+var yell_at_people_timers = [];
 
 //
 //
@@ -109,10 +117,15 @@ client.on('message', (receivedMessage) => {
 			return
 		}
     }
-    
+	
     if (receivedMessage.content.startsWith("!")) {
         processCommand(receivedMessage)
     }
+	
+	if (yell_at_people_ids.includes(receivedMessage.author.id)) // yell at the people who asked for it
+	{
+		goawayscram(receivedMessage)
+	}
 })
 
 //
@@ -334,7 +347,44 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send("No reminder with that id was found");
 			return;
 		}
-    } 
+    } else if (normalizedCommand == "yellatme") 
+	{
+		if (arguments[0].toLowerCase() == "for")
+		{
+			output = yellatperson(receivedMessage.author.id, arguments[1]);
+		} else
+		{
+			output = yellatperson(receivedMessage.author.id, arguments[0]);
+		}
+		
+		if (output == null)
+		{
+			console.log("failed command: yellatme");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
+    } else if (normalizedCommand == "plznoyell") 
+	{
+		output = stopyellingatperson(receivedMessage.author.id);
+		
+		if (output == null)
+		{
+			console.log("failed command: plznoyell");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		if (output == true)
+		{
+			receivedMessage.channel.send("okay, I no yell at you now");
+		} 
+		else
+		{
+			receivedMessage.channel.send("but I was no yell at you ;_;");
+		}
+		return;
+    }
 	else
 	{
 		let possibleString = nani();
@@ -369,6 +419,82 @@ function howgay()
 	}
 	gayresult += currentgay + " gay";
 	return gayresult;
+}
+
+//
+// yell at person
+//
+
+function goawayscram(message)
+{
+	let goawaymessage = yell_at_messages[Math.floor(Math.random()*yell_at_messages.length)];
+	while (goawaymessage.includes("[user]"))
+	{
+		goawaymessage = goawaymessage.replace("[user]", "<@" + message.author.id + ">");
+	}
+	
+	message.channel.send(goawaymessage);
+}
+
+//
+// add person to yell at
+//
+
+function yellatperson(personid,delay)
+{
+	if (yell_at_people_ids.includes(personid))
+	{
+		return "You\'re already being yelled at. Rah! Why you talking! Bad!";
+	}
+	
+	if (yell_at_people_ids.length > 9999)
+	{
+		return "I CAN\'T YELL AT ANY MORE PEOPLE, AAAHH!";
+	}
+	
+	let millisecondstounit = 60000; // it only uses minutes to Minutes
+	
+	if (delay == null)
+	{
+		//console.log("Set Reminder error, delay or message are null");
+		return "Invalid arguments, I need a delay (in minutes) and a message";
+	}
+	
+	let parsedDelay = parseInt(delay);
+	
+	if ( isNaN(parsedDelay) )
+	{
+		return "Invalid arguments, the delay must be a number";
+	}
+	
+	if (parsedDelay < 1 || parsedDelay > 1440)
+	{
+		//console.log("Set Reminder error, delay too short or too long");
+		return "Invalid delay, it must be between 1 and 1440 (24 hours)";
+	}
+	
+	yell_at_people_ids.push(personid);
+	yell_at_people_timers.push(setTimeout(stopyellingatperson.bind(this,personid),parsedDelay*millisecondstounit));
+	return "You will now be yelled at when I see you message in discord in the next " + delay + " minutes.";
+}
+
+//
+// remove person to yell at
+//
+
+function stopyellingatperson(personid)
+{
+	for (let i = 0; i < yell_at_people_ids.length; i++)
+	{
+		if (yell_at_people_ids[i] == personid)
+		{
+			clearTimeout(yell_at_people_timers[i]);
+			yell_at_people_ids.splice(i,1);
+			yell_at_people_timers.splice(i,1);
+			return true; //yelling at stopped
+		}
+	}
+	return false; //yelling will continue
 }
 
 //
@@ -419,6 +545,7 @@ function setReminder(delay, units, message, target_channel, sender)
 		//console.log("Set Reminder error, delay too short or too long");
 		return "Invalid delay, it must be more than 0, and 7 days";
 	}
+	
 	if (message.length < 1)
 	{
 		//console.log("Set Reminder error, message empty");
