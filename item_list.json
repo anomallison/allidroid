@@ -77,7 +77,7 @@
 		"type": "dualranged",
 		"slots": ["weapon"],
 		"lists": ["mundane","aggressive","ranged"],
-		"synonyms": ["dual handcrossbows","dual pistols"]
+		"synonyms": ["dual handcrossbows","dual pistols","dual uzis"]
 	},
 	{
 		"name": "scepter of finely carved wood",
@@ -109,7 +109,7 @@
 		"type": "magicoffhand",
 		"slots": ["weapon","offhand","tool"],
 		"lists": ["magical","holy"],
-		"synonyms": []
+		"synonyms": ["orb of blessings"]
 	},
 	{
 		"name": "twisted bone wand",
@@ -189,7 +189,7 @@
 		"type": "friend",
 		"slots": ["tool","friend"],
 		"lists": ["magical","dark"],
-		"synonyms": ["talking bird skull","talking lizard skull"]
+		"synonyms": ["talking bird skull","talking lizard skull","talking crystal skull"]
 	},
 	{
 		"name": "slime friend",
@@ -405,7 +405,7 @@
 		"type": "friend",
 		"slots": ["friend"],
 		"lists": ["magical","mundane"],
-		"synonyms": ["pet dog","pet lizard","pet rat","pet chicken","pet crow"]
+		"synonyms": ["pet dog","pet lizard","pet rat","pet chicken","pet crow","pet cow"]
 	},
 	{
 		"name": "crossbow",
@@ -413,7 +413,7 @@
 		"type": "bow",
 		"slots": ["weapon"],
 		"lists": ["ranged","mundane","aggressive"],
-		"synonyms": ["longbow","shortbow"]
+		"synonyms": ["longbow","shortbow","handcrossbow"]
 	},
 	{
 		"name": "slingshot",
@@ -429,7 +429,7 @@
 		"type": "tool",
 		"slots": ["tool"],
 		"lists": ["pokemon"],
-		"synonyms": ["great ball","ultra ball","masterball","park ball","beast ball"]
+		"synonyms": ["great ball","ultra ball","masterball","park ball","beast ball","love ball"]
 	},
 	{
 		"name": "coffee maker",
@@ -498,7 +498,7 @@
 	{
 		"name": "lute",
 		"number": 1,
-		"type": "tool",
+		"type": "musicinstrument",
 		"slots": ["tool"],
 		"lists": ["musical"],
 		"synonyms": ["bass guitar","mandolin","drums","flute","violin","viola","harp","saxophone","cymbals","oboe","steel drum","bagpipes","oud","waterphone","accordian"]

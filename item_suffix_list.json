@@ -1,7 +1,7 @@
 [
 	{
 		"name": "glowing with malign light",
-		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","dualblades","dualhammers","dualmixed","dualranged","ropeweapon","bow","sling","smallarms","longarms","armour","wands","magicoffhand"],
+		"lists": ["smallblade","largeblade","smallhammer","largehammer","polearm","dualblades","dualhammers","dualmixed","dualranged","ropeweapon","bow","sling","smallarms","longarms","armour","wand","magicoffhand"],
 		"synonyms": ["glowing with blessed light","tingling with eldritch energy","crackling with lightning","humming with arcane power"]
 	},
 	{
@@ -32,7 +32,7 @@
 	{
 		"name": "decorated with runes down the haft",
 		"lists": ["polearm"],
-		"synonyms": []
+		"synonyms": ["with cursed mummy bandages wrapping the haft"]
 	},
 	{
 		"name": "that weep blood endlessly",

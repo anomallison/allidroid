@@ -42,6 +42,7 @@ var item_nouns = JSON.parse(fs.readFileSync('item_list.json'));
 var item_suffixes = JSON.parse(fs.readFileSync('item_suffix_list.json'));
 var item_prefixes = JSON.parse(fs.readFileSync('item_prefix_list.json'));
 var item_sorting = JSON.parse(fs.readFileSync('item_sorting.json'));
+var item_slotlimits = JSON.parse(fs.readFileSync('item_slotlimits.json'));
 
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
@@ -313,7 +314,7 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "remindme") 
 	{
-		if (arguments[0].toLowerCase() == "in")
+		if (arguments[0] != null && arguments[0].toLowerCase() == "in")
 		{
 			output = setReminder(arguments[1], arguments[2], argumentsbacktostring(arguments,3), receivedMessage.channel.id, receivedMessage.author);
 		} else
@@ -349,7 +350,7 @@ function processCommand(receivedMessage)
 		}
     } else if (normalizedCommand == "yellatme") 
 	{
-		if (arguments[0].toLowerCase() == "for")
+		if (arguments[0] != null && arguments[0].toLowerCase() == "for")
 		{
 			output = yellatperson(receivedMessage.author.id, arguments[1]);
 		} else
@@ -503,6 +504,19 @@ function stopyellingatperson(personid)
 
 function setReminder(delay, units, message, target_channel, sender)
 {
+	if (delay == null)
+	{
+		return "I require a delay to do that";
+	}
+	if (units == null)
+	{
+		return "I require a unit of measurement for the delay to do that";
+	}
+	if (message == null)
+	{
+		message = "<@" + sender.id + ">";
+	}
+	
 	if (reminder_array.length > 50000)
 	{
 		return "Sorry, I am at capacity for reminders";
@@ -844,6 +858,14 @@ function filterByManyList(object)
 function removeAntonyms(object)
 {
 	return object.word != this;
+}
+
+//
+// filter remove strings, where 'this' is the string
+//
+function removeAllStringFromArray(object)
+{
+	return object != this;
 }
 
 //
@@ -1770,6 +1792,7 @@ function generateBoss()
 	let boss_parts = monster_base.parts.slice();
 	let is_animal = monster_base.lists.includes("animal");
 	let boss_item_slots = monster_base.slots.slice();
+	let tempslotcount = item_slotlimits.slice();
 	
 	if (!is_animal)
 	{
@@ -1822,8 +1845,18 @@ function generateBoss()
 				type:tempitem.type
 			});
 		}
-		tempint = boss_item_slots.findIndex(hasString,tempslot);
-		boss_item_slots.splice(tempint,1);
+		for (let i = 0; i < tempslotcount.length; i++)
+		{
+			if (tempslotcount[i].slot == tempslot)
+			{
+				tempslotcount[i].limit--;
+				if (tempslotcount[i].limit == 0)
+				{
+					boss_item_slots = boss_item_slots.filter(removeAllStringFromArray,tempslot);
+				}
+				break;
+			}
+		}
 		tempint = boss_item_slots.findIndex(hasString,tempslot);
 		if (tempint > -1)
 		{
