@@ -1089,7 +1089,7 @@ function slashfic(charlist, pairing = "a/a", sublists = "")
 	let tempcharlist = [];
 	let tempcharacter;
 	
-	if (charlist = "any")
+	if (charlist == "any")
 	{
 		tempcharlist = character_list.slice();
 	}
