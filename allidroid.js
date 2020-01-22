@@ -1061,8 +1061,12 @@ function removeByID(character)
 //
 //
 
-function slashfic(charlist = "", pairing = "a/a", sublists = "")
+function slashfic(charlist, pairing = "a/a", sublists = "")
 {
+	if (charlist == null)
+	{
+		return "I require at least one character list, or 'any' as a keyword"
+	}
 	charlist = charlist.toLowerCase();
 	let listfilter = charlist.split("\,");
 	if (listfilter[0].length < 1)
@@ -1070,7 +1074,7 @@ function slashfic(charlist = "", pairing = "a/a", sublists = "")
 		return "I need at least one character list";
 	}
 	
-	if(pairing.length > 11)
+	if(pairing.length > 20)
 	{
 		return "That is too smutty for me";
 	}
@@ -1082,13 +1086,20 @@ function slashfic(charlist = "", pairing = "a/a", sublists = "")
 	let random_int = 0;
 	let random_int_start = 0;
 	let slashcharacters = pairing.split("\/");
-	let tempcharlist = character_list.filter(filterCharacterList,listfilter[0]);
+	let tempcharlist = [];
 	let tempcharacter;
 	
-	
-	for (let i = 1; i < listfilter.length; i++)
+	if (charlist = "any")
 	{
-		tempcharlist = tempcharlist.concat(character_list.filter(filterCharacterList,listfilter[i]));
+		tempcharlist = character_list.slice();
+	}
+	else
+	{
+		tempcharlist = character_list.filter(filterCharacterList,listfilter[0]);
+		for (let i = 1; i < listfilter.length; i++)
+		{
+			tempcharlist = tempcharlist.concat(character_list.filter(filterCharacterList,listfilter[i]));
+		}
 	}
 
 	if(sublists.length > 0)

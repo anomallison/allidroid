@@ -148,7 +148,14 @@
 	},
 	{
 		"id": "fe3h-15",
-		"name": "Sothis",
+		"name": "Gatekeeper",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["churchofseiros"]
+	},
+	{
+		"id": "fe3h-15",
+		"name": "Anna",
 		"gender": "f",
 		"invalidpairs": ["fe3h-21"],
 		"lists":[]
@@ -234,7 +241,7 @@
 		"id": "fe3h-21",
 		"name": "Rhea",
 		"gender": "f",
-		"invalidpairs": ["fe3h-15"],
+		"invalidpairs": [],
 		"lists":["churchofseiros"]
 	},
 	{
@@ -907,117 +914,446 @@
 		"name": "vampire",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-01",
 		"name": "werewolf",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-02",
 		"name": "mummy",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-03",
 		"name": "Frankenstein's monster",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-04",
 		"name": "dragon",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-05",
 		"name": "zombie",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-06",
 		"name": "ghoul",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-07",
 		"name": "shapeshifter",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-08",
 		"name": "tentacle monster",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-09",
 		"name": "slime",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-0a",
 		"name": "minotaur",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-0b",
 		"name": "succubus",
 		"gender": "f",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-0c",
 		"name": "incubus",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-0d",
 		"name": "satyr",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-0e",
 		"name": "lizardfolk",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-0f",
 		"name": "ratfolk",
 		"gender": "a",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["monsters"]
 	},
 	{
 		"id": "monsters-10",
 		"name": "kappa",
 		"gender": "a",
+		"invalidpairs": [],
+		"lists":["monsters"]
+	},
+	{
+		"id": "ow-00",
+		"name": "D.Va",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-01",
+		"name": "Orisa",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-03",
+		"name": "Reinhardt",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-04",
+		"name": "Roadhog",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ow-05",
+		"name": "Sigma",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["talon"]
+	},
+	{
+		"id": "ow-06",
+		"name": "Zarya",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-07",
+		"name": "Ashe",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ow-08",
+		"name": "Bastion",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-09",
+		"name": "Doomfist",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["talon"]
+	},
+	{
+		"id": "ow-0A",
+		"name": "Genji",
+		"gender": "m",
+		"invalidpairs": ["ow-0B"],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-0B",
+		"name": "Hanzo",
+		"gender": "m",
+		"invalidpairs": ["ow-0A"],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-0C",
+		"name": "Bob",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ow-0D",
+		"name": "Junkrat",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ow-0E",
+		"name": "McCree",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-0F",
+		"name": "Mei",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-10",
+		"name": "Pharah",
+		"gender": "f",
+		"invalidpairs": ["ow-18"],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-11",
+		"name": "Reaper",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["talon"]
+	},
+	{
+		"id": "ow-12",
+		"name": "Soldier: 76",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-13",
+		"name": "Sombra",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["talon"]
+	},
+	{
+		"id": "ow-14",
+		"name": "Symmetra",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ow-15",
+		"name": "Torbjörn",
+		"gender": "m",
+		"invalidpairs": ["ow-1A"],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-16",
+		"name": "Tracer",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-17",
+		"name": "Widowmaker",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["talon"]
+	},
+	{
+		"id": "ow-18",
+		"name": "Ana",
+		"gender": "",
+		"invalidpairs": ["ow-10"],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-19",
+		"name": "Baptiste",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ow-1A",
+		"name": "Brigitte",
+		"gender": "f",
+		"invalidpairs": ["ow-15"],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-1B",
+		"name": "Lúcio",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-1C",
+		"name": "Mercy",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-1D",
+		"name": "Moira",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["talon"]
+	},
+	{
+		"id": "ow-1E",
+		"name": "Zenyatta",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["overwatch"]
+	},
+	{
+		"id": "ow-1F",
+		"name": "Emily",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-00",
+		"name": "Cloud",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["party"]
+	},
+	{
+		"id": "ff7-01",
+		"name": "Barret",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["party"]
+	},
+	{
+		"id": "ff7-02",
+		"name": "Biggs",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-03",
+		"name": "Wedge",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-04",
+		"name": "Jessie",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-05",
+		"name": "Tifa",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["party"]
+	},
+	{
+		"id": "ff7-06",
+		"name": "Aeris",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["party"]
+	},
+	{
+		"id": "ff7-07",
+		"name": "Reno",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["turks"]
+	},
+	{
+		"id": "ff7-08",
+		"name": "Rude",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["turks"]
+	},
+	{
+		"id": "ff7-09",
+		"name": "Elena",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["turks"]
+	},
+	{
+		"id": "ff7-0A",
+		"name": "Rufus",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-0B",
+		"name": "Sephiroth",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-0C",
+		"name": "Reeve",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-0D",
+		"name": "Vincent",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["party","turks"]
+	},
+	{
+		"id": "ff7-0E",
+		"name": "Cid",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["party"]
+	},
+	{
+		"id": "ff7-0F",
+		"name": "Zack",
+		"gender": "m",
 		"invalidpairs": [],
 		"lists":[]
 	}

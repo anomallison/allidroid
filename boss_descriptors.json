@@ -20,6 +20,10 @@
 		"lists":["chest"]
 	},
 	{
+		"text":"[possessivesubject] chest is broad with muscles",
+		"lists":["chest"]
+	},
+	{
 		"text":"[possessivesubject] [part] are scarred and protuding with the parts of forced cybernetic enhancement",
 		"lists":["arms","legs","wings","horns","eyes","antenna","ears","fins","tentacles"]
 	},
@@ -76,11 +80,19 @@
 		"lists":["head"]
 	},
 	{
+		"text":"[possessivesubject] face is sunken and gaunt with unnatural decay",
+		"lists":["head"]
+	},
+	{
 		"text":"[possessivesubject] horns twist upwards and around, decorated with studs of gold and gem stones",
 		"lists":["horns"]
 	},
 	{
 		"text":"[possessivesubject] horns curve inwards, decorated with strings of beads",
+		"lists":["horns"]
+	},
+	{
+		"text":"[possessivesubject] horns curve outwards, and are painted with luminscent paint",
 		"lists":["horns"]
 	},
 	{
@@ -130,6 +142,14 @@
 	{
 		"text":"a busty pin-up girl tattoo covers the length of one of [possessivesubject] arms",
 		"lists":["arms"]
+	},
+	{
+		"text":"[possessivesubject] [part] are withered with unnatural decay",
+		"lists":["arms","legs"]
+	},
+	{
+		"text":"[possessivesubject] [part] are toned and muscular",
+		"lists":["arms","legs"]
 	},
 	{
 		"text":"[possessivesubject] antenna twitch and crack unsettlingly",
@@ -340,15 +360,15 @@
 		"lists":["frontlegs"]
 	},
 	{
-		"text":"[possessivesubject] are oddly flat in shape with many thin suckers on the underside",
+		"text":"[possessivesubject] tentacles are oddly flat in shape with many thin suckers on the underside",
 		"lists":["tentacles"]
 	},
 	{
-		"text":"[possessivesubject] are brightly coloured with decorative flashing rings",
+		"text":"[possessivesubject] tentacles are brightly coloured with decorative flashing rings",
 		"lists":["tentacles"]
 	},
 	{
-		"text":"[possessivesubject] are squishy and oozing with sticky mucus",
+		"text":"[possessivesubject] tentacles are squishy and oozing with sticky mucus",
 		"lists":["tentacles"]
 	},
 	{
