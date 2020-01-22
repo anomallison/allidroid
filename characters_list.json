@@ -734,7 +734,7 @@
 		"invalidpairs": [],
 		"lists":[]
 	},
-		{
+	{
 		"id": "g9-00",
 		"name": "Gideon",
 		"gender": "f",
@@ -757,7 +757,7 @@
 	},
 	{
 		"id": "g9-03",
-		"name": "Primahark",
+		"name": "Priamhark",
 		"gender": "m",
 		"invalidpairs": ["g9-01"],
 		"lists":[]
@@ -785,15 +785,15 @@
 	},
 	{
 		"id": "g9-07",
-		"name": "Lachrimorta",
+		"name": "Cytherea",
 		"gender": "f",
 		"invalidpairs": [],
 		"lists":[]
 	},
 	{
 		"id": "g9-08",
-		"name": "Aisamorta",
-		"gender": "f",
+		"name": "Teacher",
+		"gender": "m",
 		"invalidpairs": [],
 		"lists":[]
 	},
@@ -893,20 +893,6 @@
 		"name": "Colum",
 		"gender": "m",
 		"invalidpairs": ["g9-15"],
-		"lists":[]
-	},
-	{
-		"id": "g9-17",
-		"name": "Teacher",
-		"gender": "m",
-		"invalidpairs": [],
-		"lists":[]
-	},
-	{
-		"id": "g9-18",
-		"name": "Cytherea",
-		"gender": "f",
-		"invalidpairs": [],
 		"lists":[]
 	},
 	{
