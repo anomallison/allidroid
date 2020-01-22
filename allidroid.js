@@ -226,20 +226,14 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "slash") 
 	{
-		if (arguments.length > 2)
+		output = slashfic(arguments[0],arguments[1],arguments[2]);
+		if (output == null)
 		{
-			receivedMessage.channel.send(slashfic(arguments[0],arguments[1],arguments[2]));
-		} else if (arguments.length > 1)
-		{
-			receivedMessage.channel.send(slashfic(arguments[0],arguments[1]));
-		} else if (arguments.length == 1)
-		{
-			receivedMessage.channel.send(slashfic(arguments[0]));
+			console.log("failed command: slash");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
 		}
-		else
-		{
-			receivedMessage.channel.send("I require a character list to do that");
-		}
+		receivedMessage.channel.send(output);
 		return;
     } else if (normalizedCommand == "help")
 	{
@@ -1056,12 +1050,58 @@ function removeByID(character)
 }
 
 //
+// given a character, determine if the character is suitable 
+//
+function isCharacterSuitable(character)
+{
+	desiredcharacter = {
+		gender: this.gender,
+		id: this.id,
+		lists: this.lists };
+		
+	if (this.gender == null)
+	{
+		desiredcharacter.gender = a;
+	}
+	if (this.id == null)
+	{
+		desiredcharacter.id = "any";
+	}
+	if (this.lists == null)
+	{
+		lists = [];
+	}
+	
+	characterlist = character.id.substr(0,character.id.indexOf("\-"));
+	//console.log("compared character [id:" + character.id + "; name: " + character.name + "; gender: " + character.gender);
+	if ((desiredcharacter.gender == character.gender || desiredcharacter.gender == "a" || character.gender == "a") && (desiredcharacter.id == "any" || characterlist == desiredcharacter.id))
+	{
+		
+		if (desiredcharacter.lists.length == 0)
+		{
+			return true;
+		}
+		else
+		{
+			for (let i in desiredcharacter.lists)
+			{
+				if (character.lists.includes(desiredcharacter.lists[i]))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+//
 //
 // SLASHFIC PROMPT
 //
 //
 
-function slashfic(charlist, pairing = "a/a", sublists = "")
+function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 {
 	if (charlist == null)
 	{
@@ -1074,15 +1114,6 @@ function slashfic(charlist, pairing = "a/a", sublists = "")
 		return "I need at least one character list";
 	}
 	
-	if(pairing.length > 20)
-	{
-		return "That is too smutty for me";
-	}
-	
-	if(pairing.length < 3)
-	{
-		return "I approve of self love";
-	}
 	let random_int = 0;
 	let random_int_start = 0;
 	let slashcharacters = pairing.split("\/");
@@ -1115,53 +1146,53 @@ function slashfic(charlist, pairing = "a/a", sublists = "")
 		return "I don't have anyone in that list\/s";
 	}
 	
+	let desiredcharacterlist = "";
+	let desiredcharactersublists = [];
+	let desiredcharactergender = "a";
+	let desiredcharacterdeconstructed = [];
+	
+	let subtemplist;
+	
 	for(let i in slashcharacters) 
 	{
-		random_int = Math.floor(Math.random()*tempcharlist.length);
-		random_int_start = random_int;
-		if (tempcharlist[random_int].gender == slashcharacters[i] || tempcharlist[random_int].gender.toString() == "a" || slashcharacters[i] == "a")
+		desiredcharacterdeconstructed = slashcharacters[i].split(";");
+		if (desiredcharacterdeconstructed.length == 0)
 		{
-			slashcharacters[i] = tempcharlist[random_int].name;
-			tempcharacter = tempcharlist[random_int];
-			tempcharlist.splice(random_int,1);
-			for (let i = 0; i < tempcharacter.invalidpairs.length; i++)
-			{
-				tempcharlist = tempcharlist.filter(removeByID,tempcharacter.invalidpairs[i]);
-			}
+			console.log("slashfic error, invalid character specification");
+			return null;
 		}
 		else
 		{
-			random_int++;
-			if (random_int >= tempcharlist.length)
+			desiredcharactergender = desiredcharacterdeconstructed[0];
+			desiredcharacterlist = desiredcharacterdeconstructed[1];
+			if (desiredcharacterdeconstructed[2] != null)
 			{
-				random_int = 0;
+				desiredcharactersublists = desiredcharacterdeconstructed[2].split(",");
 			}
-			while (random_int != random_int_start)
-			{
-				if (tempcharlist[random_int].gender.toString() == slashcharacters[i] || tempcharlist[random_int].gender.toString() == "a" || slashcharacters[i] == "a")
-				{
-					slashcharacters[i] = tempcharlist[random_int].name;
-					tempcharacter = tempcharlist[random_int];
-					tempcharlist.splice(random_int,1);
-					for (i = 0; i < tempcharacter.invalidpairs.length; i++)
-					{
-						tempcharlist = tempcharlist.filter(removeByID,tempcharacter.invalidpairs[i]);
-					}
-					break;
-				}
-				else
-				{
-					random_int++;
-					if (random_int >= tempcharlist.length)
-					{
-						random_int = 0;
-					}
-				}
-			}
-			if (random_int == random_int_start)
-			{
-				return "Not enough suitable characters within list";
-			}
+		}
+		
+		subtemplist = tempcharlist.filter(isCharacterSuitable,{gender: desiredcharactergender,id: desiredcharacterlist, lists: desiredcharactersublists})
+		
+		if (subtemplist.length == 0)
+		{
+			return "Not enough suitable characters within list";
+		}
+		
+		random_int = Math.floor(Math.random()*subtemplist.length);
+		random_int_start = random_int;
+		if (charlist == "any")
+		{
+			slashcharacters[i] = subtemplist[random_int].name + " (" + subtemplist[random_int].id.substr(0,subtemplist[random_int].id.indexOf("\-")).toUpperCase() + ")";
+		}
+		else
+		{
+			
+		}
+		tempcharacter = subtemplist[random_int];
+		tempcharlist = tempcharlist.filter(removeByID,tempcharacter.id);
+		for (let i = 0; i < tempcharacter.invalidpairs.length; i++)
+		{
+			tempcharlist = tempcharlist.filter(removeByID,tempcharacter.invalidpairs[i]);
 		}
 	}
 	
@@ -1171,7 +1202,19 @@ function slashfic(charlist, pairing = "a/a", sublists = "")
 	let position = twist.indexOf("\[");
 	let endposition = -1;
 	let twistsubstr = "";
+	let twistsubstrsubnumber = -1;
 	let substr_number = 0;
+	let randomcharacternames = [];
+	
+	for (let i in slashcharacters)
+	{
+		random_int = Math.floor(Math.random()*slashcharacters.length);
+		while (randomcharacternames.includes(random_int))
+		{
+			random_int = Math.floor(Math.random()*slashcharacters.length);
+		}
+		randomcharacternames.push(random_int);
+	}
 	
 	while (position != -1)
 	{
@@ -1181,6 +1224,14 @@ function slashfic(charlist, pairing = "a/a", sublists = "")
 		if(twistsubstr == "name")
 		{
 			twist = twist.substr(0,position) + slashcharacters[Math.floor(Math.random()*slashcharacters.length)] + twist.substr(endposition+1);
+		}
+		else if (twistsubstr.substr(0,4) == "name")
+		{
+			twistsubstrsubnumber = parseInt(twistsubstr.substr(4));
+			if (!isNaN(twistsubstrsubnumber) && twistsubstrsubnumber < randomcharacternames.length)
+			{
+				twist = twist.substr(0,position) + slashcharacters[randomcharacternames[twistsubstrsubnumber]] + twist.substr(endposition+1);
+			}
 		}
 		else if (twistsubstr == "both")
 		{
@@ -1212,7 +1263,7 @@ function slashfic(charlist, pairing = "a/a", sublists = "")
 	characterroll = characterroll.slice(0,-1);
 	let universe = Math.floor(Math.random()*au_list.length);
 	
-	return characterroll + " in " + grammarAorAn(au_list[universe].charAt(0)).toLowerCase() + " " + au_list[universe] + " " + twist;
+	return characterroll + " in " + grammarAorAn(au_list[universe].charAt(0)).toLowerCase() + " " + au_list[universe] + twist;
 }
 
 
