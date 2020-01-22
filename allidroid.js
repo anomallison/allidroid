@@ -1186,7 +1186,7 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 		}
 		else
 		{
-			
+			slashcharacters[i] = subtemplist[random_int].name;
 		}
 		tempcharacter = subtemplist[random_int];
 		tempcharlist = tempcharlist.filter(removeByID,tempcharacter.id);
