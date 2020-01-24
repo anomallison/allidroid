@@ -18,8 +18,8 @@
 
 !lesbifriend - Generates a friend lesbian
 
-!slash - Generates a slashfic prompt, requires a character set, such as fe3h or da, an optional pairing format, such as f/f, m/m/m, or a/m/f/a, and an optional sublist such as blackeagles, bluelions, goldendeer, churchofseiros. Can use multiple character sets or sublists by separating with a ,
-example: !slash me,da m/a !slash fe3h f/f/f blackeagles,goldendeer
+!slash - Generates a slashfic prompt, defaults to any two characters from any list; a character have a specified gender, gender and character list, or gender, character list and sublist; the base pool can also be modified the same way
+eg: !slash !slash f/f !slash f/f da !slash f;me/f;fe3h;blackeagles/f;ow !slash f/f/f g9
 
 !generatename - Generates a name, optionally can take a maximum phoneme count, or a maximum and a minimum phoneme count, however maximum cannot be less than minimum, and both must be above 0 and less than 100
 
@@ -30,7 +30,7 @@ example: !slash me,da m/a !slash fe3h f/f/f blackeagles,goldendeer
 !princess - Generates a weird princess. It is a verbose command.
 
 !remindme - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay, followed by the units (minutes, seconds, or hours), and then the message which Allidroid will say
-example: !remindme 2 hours take your meds!
+eg: !remindme 2 hours take your meds!
 
 !removereminder - This removes a reminder from Allidroid, by taking a reminderid (which is given when a reminder is set)
 

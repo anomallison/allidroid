@@ -83,6 +83,7 @@ var logintoken = fs.readFileSync('token.txt').toString();
 //
 // the array of reminders, to allow reminders to be removed/destroyed (just in case)
 var reminder_array = [];
+var reminder_idcounter = 0;
 
 //
 //
@@ -570,7 +571,20 @@ function setReminder(delay, units, message, target_channel, sender)
 		return null;
 	}
 	
-	newid = "" + sender.username + reminder_array.length;
+	let timeridstuff = Date.now().toString();
+	if (reminder_idcounter < 10)
+	{
+		newid = "" + sender.username + timeridstuff.substr(-4) + "0" + reminder_idcounter.toString();
+	}
+	else
+	{
+		newid = "" + sender.username + timeridstuff.substr(-4) + reminder_idcounter.toString();
+	}
+	reminder_idcounter++;
+	if (reminder_idcounter > 99)
+	{
+		reminder_idcounter = 0;
+	}
 	
 	reminder_array.push({
 		id: newid,
@@ -1263,7 +1277,14 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 	characterroll = characterroll.slice(0,-1);
 	let universe = Math.floor(Math.random()*au_list.length);
 	
-	return characterroll + " in " + grammarAorAn(au_list[universe].charAt(0)).toLowerCase() + " " + au_list[universe] + twist;
+	let fullprompt = characterroll + " in " + grammarAorAn(au_list[universe].charAt(0)).toLowerCase() + " " + au_list[universe] + twist;
+	
+	if (fullprompt.length > 2000)
+	{
+		return "that is too smutty for me";
+	}
+	
+	return fullprompt;
 }
 
 

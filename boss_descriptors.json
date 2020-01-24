@@ -24,7 +24,23 @@
 		"lists":["chest"]
 	},
 	{
+		"text":"[possessivesubject] chest is thin and sunken with [possessivesubject] ribs pronouncedly visible",
+		"lists":["chest"]
+	},
+	{
+		"text":"a large intricate tattoo of a warrior in battle covers [possessivesubject] back",
+		"lists":["chest"]
+	},
+	{
+		"text":"a scar of an incision with stitches runs from [possessivesubject] sternum to [possessivesubject] crotch",
+		"lists":["chest"]
+	},
+	{
 		"text":"[possessivesubject] [part] are scarred and protuding with the parts of forced cybernetic enhancement",
+		"lists":["arms","legs","wings","horns","eyes","antenna","ears","fins","tentacles"]
+	},
+	{
+		"text":"[possessivesubject] [part] are patched with bandages and gauze from battled",
 		"lists":["arms","legs","wings","horns","eyes","antenna","ears","fins","tentacles"]
 	},
 	{
@@ -32,11 +48,23 @@
 		"lists":["head","tail"]
 	},
 	{
-		"text":"[possessivesubject] hind legs scarred and protuding with the parts of forced cybernetic enhancement",
+		"text":"[possessivesubject] [part] is patched with bandages and gauze from battled",
+		"lists":["head","tail"]
+	},
+	{
+		"text":"[possessivesubject] hind legs are scarred and protuding with the parts of forced cybernetic enhancement",
 		"lists":["hindlegs"]
 	},
 	{
-		"text":"[possessivesubject] front legs scarred and protuding with the parts of forced cybernetic enhancement",
+		"text":"[possessivesubject] front legs are scarred and protuding with the parts of forced cybernetic enhancement",
+		"lists":["frontlegs"]
+	},
+	{
+		"text":"[possessivesubject] hind legs are patched with bandages and gauze from battle",
+		"lists":["hindlegs"]
+	},
+	{
+		"text":"[possessivesubject] front legs are patched with bandages and gauze from battle",
 		"lists":["frontlegs"]
 	},
 	{
@@ -56,7 +84,19 @@
 		"lists":["mouth"]
 	},
 	{
+		"text":"[possessivesubject] teeth are well kept and clean",
+		"lists":["mouth"]
+	},
+	{
+		"text":"[possessivesubject] teeth viciously sharp",
+		"lists":["mouth"]
+	},
+	{
 		"text":"[possessivesubject] lips are a deep, unnatural vermillion",
+		"lists":["lips"]
+	},
+	{
+		"text":"[possessivesubject] lips are a hypnotizing glossy indigo",
 		"lists":["lips"]
 	},
 	{
@@ -80,6 +120,14 @@
 		"lists":["head"]
 	},
 	{
+		"text":"the features of [possessivesubject] face are sharp and pronounced",
+		"lists":["head"]
+	},
+	{
+		"text":"the features of [possessivesubject] face are chubby and cute",
+		"lists":["head"]
+	},
+	{
 		"text":"[possessivesubject] face is sunken and gaunt with unnatural decay",
 		"lists":["head"]
 	},
@@ -93,6 +141,10 @@
 	},
 	{
 		"text":"[possessivesubject] horns curve outwards, and are painted with luminscent paint",
+		"lists":["horns"]
+	},
+	{
+		"text":"[possessivesubject] horns have leather straps with spiked metal studs poking outward wrapped around them",
 		"lists":["horns"]
 	},
 	{
@@ -113,6 +165,18 @@
 	},
 	{
 		"text":"one of [possessivesubject] eye sockets holds a carved, precious gemstone",
+		"lists":["eyes"]
+	},
+	{
+		"text":"[possessivesubject] eyes are milky white",
+		"lists":["eyes"]
+	},
+	{
+		"text":"one of [possessivesubject] eyes is a brilliant emerald colour",
+		"lists":["eyes"]
+	},
+	{
+		"text":"one of [possessivesubject] eyes is a dull amber colour",
 		"lists":["eyes"]
 	},
 	{
@@ -152,6 +216,10 @@
 		"lists":["arms","legs"]
 	},
 	{
+		"text":"[possessivesubject] [part] are covered in knicks and scratches",
+		"lists":["arms","legs"]
+	},
+	{
 		"text":"[possessivesubject] antenna twitch and crack unsettlingly",
 		"lists":["antenna"]
 	},
@@ -160,7 +228,11 @@
 		"lists":["antenna"]
 	},
 	{
-		"text":"[possessivesubject] antenna is windy and ticks in the air constantly",
+		"text":"[possessivesubject] antenna are windy and ticks in the air constantly",
+		"lists":["antenna"]
+	},
+	{
+		"text":"[possessivesubject] antenna are adorned with rings and beads",
 		"lists":["antenna"]
 	},
 	{
@@ -172,7 +244,15 @@
 		"lists":["wings"]
 	},
 	{
+		"text":"patches of silk are sewn into [possessivesubject] wings over old wounds",
+		"lists":["wings"]
+	},
+	{
 		"text":"[possessivesubject] wings sparkle with veins of gold and silver",
+		"lists":["wings"]
+	},
+	{
+		"text":"[possessivesubject] wings sparkle with streaks of ruby and sapphire",
 		"lists":["wings"]
 	},
 	{
@@ -180,11 +260,15 @@
 		"lists":["legs"]
 	},
 	{
-		"text":"[possessivesubject] [part] are covered in tightly wrapped bandages",
+		"text":"one of [possessivesubject] legs has been removed just below the knee, with a thick albeit squishy tentacle in its place",
+		"lists":["legs"]
+	},
+	{
+		"text":"[possessivesubject] [part] are stained with dark purple and red",
 		"lists":["legs","arms"]
 	},
 	{
-		"text":"[possessivesubject] [part] is covered in tightly wrapped bandages",
+		"text":"[possessivesubject] [part] is covered in knicks and bruises",
 		"lists":["head","chest","tail"]
 	},
 	{
@@ -200,7 +284,23 @@
 		"lists":["ears","fins","horns"]
 	},
 	{
+		"text":"[possessivesubject] [part] have been modified for a goth aesthetic",
+		"lists":["ears","fins","horns"]
+	},
+	{
+		"text":"[possessivesubject] [part] have been modified for a punk aesthetic",
+		"lists":["ears","fins","horns"]
+	},
+	{
+		"text":"[possessivesubject] [part] have been modified for a prep aesthetic",
+		"lists":["ears","fins","horns"]
+	},
+	{
 		"text":"[possessivesubject] tail is heavily tattooed, with some studs pierced into it",
+		"lists":["tail"]
+	},
+	{
+		"text":"[possessivesubject] tail has been decorated with coils of twin and rocks",
 		"lists":["tail"]
 	},
 	{
@@ -216,7 +316,15 @@
 		"lists":["engine"]
 	},
 	{
+		"text":"[possessivesubject] engine has an excited face painted on it",
+		"lists":["engine"]
+	},
+	{
 		"text":"[subject] [possessiveconjunction] a restaurant carriage",
+		"lists":["carriage"]
+	},
+	{
+		"text":"[subject] [possessiveconjunction] a bad food carriage",
 		"lists":["carriage"]
 	},
 	{
@@ -256,15 +364,23 @@
 		"lists":["freight"]
 	},
 	{
+		"text":"[subject] [conjunction] hauling a lot of lewd stuff",
+		"lists":["freight"]
+	},
+	{
 		"text":"one of [possessivesubject] branches is broken and twisted, hanging languidly",
 		"lists":["branches"]
 	},
 	{
-		"text":"one of [possessivesubject] branches that rhythmically waves with the groove",
+		"text":"one of [possessivesubject] branches rhythmically waves with the groove",
 		"lists":["branches"]
 	},
 	{
-		"text":"one of [possessivesubject] branches seems to be making rude gestures",
+		"text":"one of [possessivesubject] branches seems to be making crude gestures",
+		"lists":["branches"]
+	},
+	{
+		"text":"[possessivesubject] branches are writhing unpleasantly",
 		"lists":["branches"]
 	},
 	{
@@ -276,7 +392,11 @@
 		"lists":["trunk"]
 	},
 	{
-		"text":"[possessivesubject] trunk with a face carved into it",
+		"text":"[possessivesubject] trunk with an angry face carved into it",
+		"lists":["trunk"]
+	},
+	{
+		"text":"[possessivesubject] trunk with a happy face carved into it",
 		"lists":["trunk"]
 	},
 	{
@@ -309,6 +429,10 @@
 	},
 	{
 		"text":"[possessivesubject] tentacles are wiry, windy, and coil with preternatual strength",
+		"lists":["tentacles"]
+	},
+	{
+		"text":"[possessivesubject] tentacles are chonky and squishy",
 		"lists":["tentacles"]
 	},
 	{
