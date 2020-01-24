@@ -343,6 +343,11 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send("No reminder with that id was found");
 			return;
 		}
+    } else if (normalizedCommand == "remindercount") 
+	{
+		receivedMessage.channel.send("There are " + reminder_array.length + " reminders currently");
+		return;
+		
     } else if (normalizedCommand == "yellatme") 
 	{
 		if (arguments[0] != null && arguments[0].toLowerCase() == "for")
