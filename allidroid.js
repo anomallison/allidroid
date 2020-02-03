@@ -1224,15 +1224,13 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 	let twistsubstrsubnumber = -1;
 	let substr_number = 0;
 	let randomcharacternames = [];
+	let tempcharnames = slashcharacters.slice();
 	
 	for (let i in slashcharacters)
 	{
-		random_int = Math.floor(Math.random()*slashcharacters.length);
-		while (randomcharacternames.includes(random_int))
-		{
-			random_int = Math.floor(Math.random()*slashcharacters.length);
-		}
-		randomcharacternames.push(random_int);
+		random_int = Math.floor(Math.random()*tempcharnames.length);
+		randomcharacternames.push(tempcharnames[random_int]);
+		tempcharnames.splice(random_int,1);
 	}
 	
 	while (position != -1)
@@ -1249,7 +1247,7 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 			twistsubstrsubnumber = parseInt(twistsubstr.substr(4));
 			if (!isNaN(twistsubstrsubnumber) && twistsubstrsubnumber < randomcharacternames.length)
 			{
-				twist = twist.substr(0,position) + slashcharacters[randomcharacternames[twistsubstrsubnumber]] + twist.substr(endposition+1);
+				twist = twist.substr(0,position) + randomcharacternames[twistsubstrsubnumber%randomcharacternames.length] + twist.substr(endposition+1);
 			}
 		}
 		else if (twistsubstr == "both")

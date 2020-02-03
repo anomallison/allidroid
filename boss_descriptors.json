@@ -44,6 +44,14 @@
 		"lists":["arms","legs","wings","horns","eyes","antenna","ears","fins","tentacles"]
 	},
 	{
+		"text":"one of [possessivesubject] [part] is made of rock, mineral and gemstones",
+		"lists":["arms","legs"]
+	},
+	{
+		"text":"[possessivesubject] [part] are made of rock, mineral and gemstones",
+		"lists":["arms","legs"]
+	},
+	{
 		"text":"[possessivesubject] [part] is scarred and protuding with the parts of forced cybernetic enhancement",
 		"lists":["head","tail"]
 	},
@@ -56,7 +64,15 @@
 		"lists":["hindlegs"]
 	},
 	{
+		"text":"[possessivesubject] hind legs are made of rock, mineral and gemstones",
+		"lists":["hindlegs"]
+	},
+	{
 		"text":"[possessivesubject] front legs are scarred and protuding with the parts of forced cybernetic enhancement",
+		"lists":["frontlegs"]
+	},
+	{
+		"text":"[possessivesubject] front legs are made of rock, mineral and gemstones",
 		"lists":["frontlegs"]
 	},
 	{
@@ -130,6 +146,14 @@
 	{
 		"text":"[possessivesubject] face is sunken and gaunt with unnatural decay",
 		"lists":["head"]
+	},
+	{
+		"text":"[possessivesubject] face and head is embedded with rocks and gemstones sharply pocking from their skull",
+		"lists":["head"]
+	},
+	{
+		"text":"horns of mineral and rock and gemstone magnificently protrude from [possessivesubject] skull",
+		"lists":["horns"]
 	},
 	{
 		"text":"[possessivesubject] horns twist upwards and around, decorated with studs of gold and gem stones",
@@ -301,6 +325,10 @@
 	},
 	{
 		"text":"[possessivesubject] tail has been decorated with coils of twin and rocks",
+		"lists":["tail"]
+	},
+	{
+		"text":"[possessivesubject] tail is made of mineral, rock and gemstones",
 		"lists":["tail"]
 	},
 	{
@@ -528,19 +556,23 @@
 		"lists":["mechhead"]
 	},
 	{
-		"text":"a single leg is missing from [possessivesubject] legs, the others covered in scars of battle",
+		"text":"a single leg is missing from [possessivesubject] many legs, the others covered in scars of battle",
 		"lists":["spiderlegs"]
 	},
 	{
-		"text":"[possessivesubject] legs are thin yet covered in a super fine fur",
+		"text":"[possessivesubject] many legs are thin yet covered in a super fine fur",
 		"lists":["spiderlegs"]
 	},
 	{
-		"text":"[possessivesubject] legs are strangely chitinous and segmented",
+		"text":"[possessivesubject] many legs are strangely chitinous and segmented",
 		"lists":["spiderlegs"]
 	},
 	{
-		"text":"[possessivesubject] legs are thick and unnaturally fast",
+		"text":"[possessivesubject] many legs are thick and unnaturally fast",
+		"lists":["spiderlegs"]
+	},
+	{
+		"text":"[possessivesubject] thick quad legs of rock and mineral and gemstone stand defiant and strong",
 		"lists":["spiderlegs"]
 	},
 	{
@@ -576,7 +608,15 @@
 		"lists":["bonelegs"]
 	},
 	{
+		"text":"one of [possessivesubject] legs is a fabrication of mineral, rock and gemstones",
+		"lists":["bonelegs"]
+	},
+	{
 		"text":"[possessivesubject] arms are covered in a fuzzy mold",
+		"lists":["bonearms"]
+	},
+	{
+		"text":"one of [possessivesubject] arms is a fabrication of mineral, rock and gemstones",
 		"lists":["bonearms"]
 	},
 	{
@@ -585,6 +625,10 @@
 	},
 	{
 		"text":"[possessivesubject] jawbone is missing and [possessivesubject] eye sockets glow faintly",
+		"lists":["bonehead"]
+	},
+	{
+		"text":"rocks and gemstones decorate [possessivesubject] skull",
 		"lists":["bonehead"]
 	},
 	{
