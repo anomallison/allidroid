@@ -1122,16 +1122,8 @@ function isCharacterSuitable(character)
 
 function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 {
-	if (charlist == null)
-	{
-		return "I require at least one character list, or 'any' as a keyword"
-	}
 	charlist = charlist.toLowerCase();
 	let listfilter = charlist.split("\,");
-	if (listfilter[0].length < 1)
-	{
-		return "I need at least one character list";
-	}
 	
 	let random_int = 0;
 	let random_int_start = 0;
@@ -1245,9 +1237,9 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 		else if (twistsubstr.substr(0,4) == "name")
 		{
 			twistsubstrsubnumber = parseInt(twistsubstr.substr(4));
-			if (!isNaN(twistsubstrsubnumber) && twistsubstrsubnumber < randomcharacternames.length)
+			if (!isNaN(twistsubstrsubnumber))
 			{
-				twist = twist.substr(0,position) + randomcharacternames[twistsubstrsubnumber%randomcharacternames.length] + twist.substr(endposition+1);
+				twist = twist.substr(0,position) + randomcharacternames[(twistsubstrsubnumber-1)%randomcharacternames.length] + twist.substr(endposition+1);
 			}
 		}
 		else if (twistsubstr == "both")
