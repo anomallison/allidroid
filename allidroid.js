@@ -73,8 +73,10 @@ var how_levels = JSON.parse(fs.readFileSync('how_levels.json'));
 var how_prefixes = JSON.parse(fs.readFileSync('how_prefixes.json'));
 var how_suffixes = JSON.parse(fs.readFileSync('how_suffixes.json'));
 
-//yellatpeople fileSize
-var yell_at_messages = JSON.parse(fs.readFileSync('yellat_messages.json'));
+//tarot files
+var tarot_deck = JSON.parse(fs.readFileSync('tarot_deck.json'));
+var tarot_readings = JSON.parse(fs.readFileSync('tarot_readings.json'));
+
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -87,18 +89,15 @@ var reminder_idcounter = 0;
 
 //
 //
-var yell_at_people_ids = [];
-var yell_at_people_timers = [];
-
-//
-//
 // extremely important Gay variable
 //
 
 var currentgay = 0;
 
 const MAX_DICE_ROLL = 999999999;
-
+const KEYSMASH_DEFAULT_STRING = "qwertyuiopasdfghjklzxcvbnmewradjtrykf,ghjg,hjkmgxdfhxgfxnmxfgfhd,sgfn325te.usgtfjtrlk980;u8ewrtiubhjsgdzdkjfhjgzjtykuliilopytz";
+const KEYSMASH_DEFAULT_MAX = 32;
+const KEYSMASH_DEFAULT_MIN = 18;
 
 
 //
@@ -123,11 +122,6 @@ client.on('message', (receivedMessage) => {
     if (receivedMessage.content.startsWith("!")) {
         processCommand(receivedMessage)
     }
-	
-	if (yell_at_people_ids.includes(receivedMessage.author.id)) // yell at the people who asked for it
-	{
-		goawayscram(receivedMessage)
-	}
 })
 
 //
@@ -347,44 +341,38 @@ function processCommand(receivedMessage)
 	{
 		receivedMessage.channel.send("There are " + reminder_array.length + " reminders currently");
 		return;
-		
-    } else if (normalizedCommand == "yellatme") 
-	{
-		if (arguments[0] != null && arguments[0].toLowerCase() == "for")
-		{
-			output = yellatperson(receivedMessage.author.id, arguments[1]);
-		} else
-		{
-			output = yellatperson(receivedMessage.author.id, arguments[0]);
-		}
-		
-		if (output == null)
-		{
-			console.log("failed command: yellatme");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		}
-		receivedMessage.channel.send(output);
-		return;
     } else if (normalizedCommand == "plznoyell") 
 	{
-		output = stopyellingatperson(receivedMessage.author.id);
+		receivedMessage.channel.send("but I was no yell at you ;_;");
+		return;
+    } else if (normalizedCommand == "keysmash" || normalizedCommand == "ks") 
+	{
+		output = generateKeysmash(arguments[0]);
 		
 		if (output == null)
 		{
-			console.log("failed command: plznoyell");
+			console.log("failed command: keysmash");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
-		}
-		if (output == true)
+		} else
 		{
-			receivedMessage.channel.send("okay, I no yell at you now");
-		} 
-		else
-		{
-			receivedMessage.channel.send("but I was no yell at you ;_;");
+			receivedMessage.channel.send(output);
+			return;
 		}
-		return;
+    } else if (normalizedCommand == "tarot") 
+	{
+		output = tarotdraw("major arcana", arguments[0]);
+		
+		if (output == null)
+		{
+			console.log("failed command: tarot");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
     }
 	else
 	{
@@ -420,82 +408,6 @@ function howgay()
 	}
 	gayresult += currentgay + " gay";
 	return gayresult;
-}
-
-//
-// yell at person
-//
-
-function goawayscram(message)
-{
-	let goawaymessage = yell_at_messages[Math.floor(Math.random()*yell_at_messages.length)];
-	while (goawaymessage.includes("[user]"))
-	{
-		goawaymessage = goawaymessage.replace("[user]", "<@" + message.author.id + ">");
-	}
-	
-	message.channel.send(goawaymessage);
-}
-
-//
-// add person to yell at
-//
-
-function yellatperson(personid,delay)
-{
-	if (yell_at_people_ids.includes(personid))
-	{
-		return "You\'re already being yelled at. Rah! Why you talking! Bad!";
-	}
-	
-	if (yell_at_people_ids.length > 9999)
-	{
-		return "I CAN\'T YELL AT ANY MORE PEOPLE, AAAHH!";
-	}
-	
-	let millisecondstounit = 60000; // it only uses minutes to Minutes
-	
-	if (delay == null)
-	{
-		//console.log("Set Reminder error, delay or message are null");
-		return "Invalid arguments, I need a delay (in minutes) and a message";
-	}
-	
-	let parsedDelay = parseInt(delay);
-	
-	if ( isNaN(parsedDelay) )
-	{
-		return "Invalid arguments, the delay must be a number";
-	}
-	
-	if (parsedDelay < 1 || parsedDelay > 1440)
-	{
-		//console.log("Set Reminder error, delay too short or too long");
-		return "Invalid delay, it must be between 1 and 1440 (24 hours)";
-	}
-	
-	yell_at_people_ids.push(personid);
-	yell_at_people_timers.push(setTimeout(stopyellingatperson.bind(this,personid),parsedDelay*millisecondstounit));
-	return "You will now be yelled at when I see you message in discord in the next " + delay + " minutes.";
-}
-
-//
-// remove person to yell at
-//
-
-function stopyellingatperson(personid)
-{
-	for (let i = 0; i < yell_at_people_ids.length; i++)
-	{
-		if (yell_at_people_ids[i] == personid)
-		{
-			clearTimeout(yell_at_people_timers[i]);
-			yell_at_people_ids.splice(i,1);
-			yell_at_people_timers.splice(i,1);
-			return true; //yelling at stopped
-		}
-	}
-	return false; //yelling will continue
 }
 
 //
@@ -1052,7 +964,7 @@ function randomNumberForText(r)
 
 //
 // filter function for the character list
-//
+////because I keep forgetting: 'character' is the taken part from the array being filtered, while 'this' is what its being checked against in the argument
 
 function filterCharacterList(character)
 {
@@ -1062,7 +974,7 @@ function filterCharacterList(character)
 
 //
 // filter remove by id
-//
+////because I keep forgetting: 'character' is the taken part from the array being filtered, while 'this' is what its being checked against in the argument
 function removeByID(character)
 {
 	return character.id != this;
@@ -1071,7 +983,7 @@ function removeByID(character)
 //
 // given a character, determine if the character is suitable 
 //
-function isCharacterSuitable(character)
+function isCharacterSuitable(character) //because I keep forgetting: 'character' is the taken part from the array being filtered, while 'this' is what its being checked against in the argument
 {
 	desiredcharacter = {
 		gender: this.gender,
@@ -1280,6 +1192,23 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 	}
 	
 	return fullprompt;
+}
+
+
+
+//
+//
+// KEYSMASH
+//
+//
+
+function generateKeysmash(length = -1)
+{
+	if (length < 0)
+		length = (Math.random()*(KEYSMASH_DEFAULT_MAX-KEYSMASH_DEFAULT_MIN))+KEYSMASH_DEFAULT_MIN;
+	
+	let keysmashstring = length + "d" + KEYSMASH_DEFAULT_STRING;
+	return dieRoll(keysmashstring);
 }
 
 
@@ -2308,6 +2237,114 @@ function generatePhonemeName(maxsyllables = 9, minimumsyllables = 1)
 	return "\[" + pronounciation + "\] " + grammarCapitalFirstLetter(spelling); 
 }
 
+
+//
+//
+//
+// allidroid "tarot"
+//
+//
+//
+
+//
+// filters
+
+function filterBySuite(card)
+{
+	return card.suite == this;
+} // card is the array entry, this is the argument from filterArray
+
+//
+// 
+
+function readingIsValid(reading)
+{
+	for (let i in reading.cards)
+	{
+		if (this.includes(reading.cards[i]) == false)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+//
+// remove cards
+
+function removeCardsByReading(card)
+{
+	for (let i in this.cards)
+	{
+		if (card.card == this.cards[i])
+		{
+			return false;
+		}
+	}
+	return true;
+} // card is the array entry, this is the argument from filterArray
+
+
+function simplifytarothand(hand)
+{
+	let simplehand = []
+	
+	for (let i in hand)
+	{
+		simplehand.push(hand[i].card);
+	}
+	
+	return simplehand;
+}
+
+//
+// allidroid tarot draw
+//
+
+function tarotdraw(suitefilter = null, drawcount = 2)
+{
+	let temptarotdeck;
+	let hand = [];
+	let validreadings;
+	let readings = [];
+	let reading_string = "";
+	
+	if (suitefilter == null)
+		temptarotdeck = tarot_deck.slice();
+	else
+		temptarotdeck = tarot_deck.filter(filterBySuite,suitefilter);
+	let random_int = Math.floor(Math.random()*(temptarotdeck.length));
+	for (let i = 0; i < drawcount; i++)
+	{
+		hand.push(temptarotdeck[random_int]);
+		temptarotdeck.splice(random_int,1);
+		
+		random_int = Math.floor(Math.random()*(temptarotdeck.length));
+	}
+	
+	validreadings = tarot_readings.filter(readingIsValid,simplifytarothand(hand));
+	
+	
+	random_int = Math.floor(Math.random()*(validreadings.length));
+	for (let i = 0; i < drawcount; i++)
+	{
+		readings.push(validreadings[random_int]);
+		hand = hand.filter(removeCardsByReading,validreadings[random_int])
+		validreadings = tarot_readings.filter(readingIsValid,simplifytarothand(hand));
+		
+		random_int = Math.floor(Math.random()*(validreadings.length));
+		if (hand.length == 0)
+			i += drawcount;
+	}
+	
+	
+	for (let i in readings)
+	{
+		reading_string += readings[i].reading + "\n";
+	}
+	
+	return reading_string;
+}
 
 //
 //

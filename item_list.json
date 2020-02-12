@@ -304,14 +304,6 @@
 		"synonyms": ["bunny ears","fox ears"]
 	},
 	{
-		"name": "arm of gemstones",
-		"number": 1,
-		"type": "accessory",
-		"slots": ["weapon","offhand","tool"],
-		"lists": ["magical"],
-		"synonyms": ["arm of mineral","arm of rock","arm of gemstones and mineral","arm of mineral and rock","arm of gemstones, mineral and rock"]
-	},
-	{
 		"name": "featureless mask",
 		"number": 1,
 		"type": "accessory",

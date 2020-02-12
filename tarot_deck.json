@@ -1,0 +1,392 @@
+[
+	{
+		"card": "The Fool",
+		"number": 0,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Magician",
+		"number": 1,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The High Priestess",
+		"number": 2,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Empress",
+		"number": 3,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Emperor",
+		"number": 4,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Hierophant",
+		"number": 5,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Lovers",
+		"number": 6,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Chariot",
+		"number": 7,
+		"suite": "major arcana"
+	},
+	{
+		"card": "Justice",
+		"number": 8,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Hermit",
+		"number": 9,
+		"suite": "major arcana"
+	},
+	{
+		"card": "Wheel of Fortune",
+		"number": 10,
+		"suite": "major arcana"
+	},
+	{
+		"card": "Strength",
+		"number": 11,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Hanged Man",
+		"number": 12,
+		"suite": "major arcana"
+	},
+	{
+		"card": "Death",
+		"number": 13,
+		"suite": "major arcana"
+	},
+	{
+		"card": "Temperance",
+		"number": 14,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Devil",
+		"number": 15,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Tower",
+		"number": 16,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Star",
+		"number": 17,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Moon",
+		"number": 18,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The Sun",
+		"number": 19,
+		"suite": "major arcana"
+	},
+	{
+		"card": "Judgement",
+		"number": 20,
+		"suite": "major arcana"
+	},
+	{
+		"card": "The World",
+		"number": 21,
+		"suite": "major arcana"
+	},
+	{
+		"card": "Ace of Wands",
+		"number": 1,
+		"suite": "wands"
+	},
+	{
+		"card": "Two of Wands",
+		"number": 2,
+		"suite": "wands"
+	},
+	{
+		"card": "Three of Wands",
+		"number": 3,
+		"suite": "wands"
+	},
+	{
+		"card": "Four of Wands",
+		"number": 4,
+		"suite": "wands"
+	},
+	{
+		"card": "Five of Wands",
+		"number": 5,
+		"suite": "wands"
+	},
+	{
+		"card": "Six of Wands",
+		"number": 6,
+		"suite": "wands"
+	},
+	{
+		"card": "Seven of Wands",
+		"number": 7,
+		"suite": "wands"
+	},
+	{
+		"card": "Eight of Wands",
+		"number": 8,
+		"suite": "wands"
+	},
+	{
+		"card": "Nine of Wands",
+		"number": 9,
+		"suite": "wands"
+	},
+	{
+		"card": "Ten of Wands",
+		"number": 10,
+		"suite": "wands"
+	},
+	{
+		"card": "Page of Wands",
+		"number": 11,
+		"suite": "wands"
+	},
+	{
+		"card": "Knight of Wands",
+		"number": 12,
+		"suite": "wands"
+	},
+	{
+		"card": "Queen of Wands",
+		"number": 13,
+		"suite": "wands"
+	},
+	{
+		"card": "King of Wands",
+		"number": 14,
+		"suite": "wands"
+	},
+	{
+		"card": "Ace of Pentacles",
+		"number": 1,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Two of Pentacles",
+		"number": 2,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Three of Pentacles",
+		"number": 3,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Four of Pentacles",
+		"number": 4,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Five of Pentacles",
+		"number": 5,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Six of Pentacles",
+		"number": 6,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Seven of Pentacles",
+		"number": 7,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Eight of Pentacles",
+		"number": 8,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Nine of Pentacles",
+		"number": 9,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Ten of Pentacles",
+		"number": 10,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Page of Pentacles",
+		"number": 11,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Knight of Pentacles",
+		"number": 12,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Queen of Pentacles",
+		"number": 13,
+		"suite": "pentacles"
+	},
+	{
+		"card": "King of Pentacles",
+		"number": 14,
+		"suite": "pentacles"
+	},
+	{
+		"card": "Ace of Cups",
+		"number": 1,
+		"suite": "cups"
+	},
+	{
+		"card": "Two of Cups",
+		"number": 2,
+		"suite": "cups"
+	},
+	{
+		"card": "Three of Cups",
+		"number": 3,
+		"suite": "cups"
+	},
+	{
+		"card": "Four of Cups",
+		"number": 4,
+		"suite": "cups"
+	},
+	{
+		"card": "Five of Cups",
+		"number": 5,
+		"suite": "cups"
+	},
+	{
+		"card": "Six of Cups",
+		"number": 6,
+		"suite": "cups"
+	},
+	{
+		"card": "Seven of Cups",
+		"number": 7,
+		"suite": "cups"
+	},
+	{
+		"card": "Eight of Cups",
+		"number": 8,
+		"suite": "cups"
+	},
+	{
+		"card": "Nine of Cups",
+		"number": 9,
+		"suite": "cups"
+	},
+	{
+		"card": "Ten of Cups",
+		"number": 10,
+		"suite": "cups"
+	},
+	{
+		"card": "Page of Cups",
+		"number": 11,
+		"suite": "cups"
+	},
+	{
+		"card": "Knight of Cups",
+		"number": 12,
+		"suite": "cups"
+	},
+	{
+		"card": "Queen of Cups",
+		"number": 13,
+		"suite": "cups"
+	},
+	{
+		"card": "King of Cups",
+		"number": 14,
+		"suite": "cups"
+	},
+	{
+		"card": "Ace of Swords",
+		"number": 1,
+		"suite": "swords"
+	},
+	{
+		"card": "Two of Swords",
+		"number": 2,
+		"suite": "swords"
+	},
+	{
+		"card": "Three of Swords",
+		"number": 3,
+		"suite": "swords"
+	},
+	{
+		"card": "Four of Swords",
+		"number": 4,
+		"suite": "swords"
+	},
+	{
+		"card": "Five of Swords",
+		"number": 5,
+		"suite": "swords"
+	},
+	{
+		"card": "Six of Swords",
+		"number": 6,
+		"suite": "swords"
+	},
+	{
+		"card": "Seven of Swords",
+		"number": 7,
+		"suite": "swords"
+	},
+	{
+		"card": "Eight of Swords",
+		"number": 8,
+		"suite": "swords"
+	},
+	{
+		"card": "Nine of Swords",
+		"number": 9,
+		"suite": "swords"
+	},
+	{
+		"card": "Ten of Swords",
+		"number": 10,
+		"suite": "swords"
+	},
+	{
+		"card": "Page of Swords",
+		"number": 11,
+		"suite": "swords"
+	},
+	{
+		"card": "Knight of Swords",
+		"number": 12,
+		"suite": "swords"
+	},
+	{
+		"card": "Queen of Swords",
+		"number": 13,
+		"suite": "swords"
+	},
+	{
+		"card": "King of Swords",
+		"number": 14,
+		"suite": "swords"
+	}
+]
