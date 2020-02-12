@@ -2309,6 +2309,11 @@ function tarotdraw(suitefilter = null, drawcount = 2)
 	let readings = [];
 	let reading_string = "";
 	
+	if (drawcount > 21)
+	{
+		drawcount = 21;
+	}
+	
 	if (suitefilter == null)
 		temptarotdeck = tarot_deck.slice();
 	else
