@@ -333,7 +333,7 @@
 		"type": "accessory",
 		"slots": ["ring","tool"],
 		"lists": ["mundane"],
-		"synonyms": ["copper bracelet","silver bracelet","braclet of precious stones","beaded bracelet"]
+		"synonyms": ["copper bracelet","silver bracelet","braclet of precious stones","beaded bracelet","tin bangle"]
 	},
 	{
 		"name": "copper ring",

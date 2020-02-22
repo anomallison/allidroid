@@ -280,6 +280,34 @@
 		"lists":["goldendeer"]
 	},
 	{
+		"id": "fe3h-26",
+		"name": "Yuri",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["ashenwolves"]
+	},
+	{
+		"id": "fe3h-27",
+		"name": "Balthus",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["ashenwolves"]
+	},
+	{
+		"id": "fe3h-28",
+		"name": "Constance",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["ashenwolves"]
+	},
+	{
+		"id": "fe3h-29",
+		"name": "Hapi",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["ashenwolves"]
+	},
+	{
 		"id": "da-00",
 		"name": "The Warden",
 		"gender": "a",

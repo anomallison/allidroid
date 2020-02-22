@@ -1008,7 +1008,7 @@ function isCharacterSuitable(character) //because I keep forgetting: 'character'
 	if ((desiredcharacter.gender == character.gender || desiredcharacter.gender == "a" || character.gender == "a") && (desiredcharacter.id == "any" || characterlist == desiredcharacter.id))
 	{
 		
-		if (desiredcharacter.lists.length == 0)
+		if (desiredcharacter.lists == null || desiredcharacter.lists.length == 0)
 		{
 			return true;
 		}
@@ -1091,6 +1091,9 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 			if (desiredcharacterdeconstructed[2] != null)
 			{
 				desiredcharactersublists = desiredcharacterdeconstructed[2].split(",");
+			} else
+			{
+				desiredcharactersublists = null;
 			}
 		}
 		
@@ -1569,7 +1572,7 @@ function playGacha(amount)
 	{
 		amount = 12;
 	}
-	let baserand = Math.random();
+	let baserand = Math.random() - ((amount-1)/100);
 	let rarity = getGachaRarity(baserand);
 	let hero_base = generateMonster("gacha",2,1,1);
 	let hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single; 
@@ -1581,7 +1584,7 @@ function playGacha(amount)
 	
 	for (let i = 1; i < amount; i++)
 	{
-		baserand = Math.random();
+		baserand = Math.random() - ((amount-1)/100);
 		rarity = getGachaRarity(baserand);
 		hero_base = generateMonster("gacha",2,1,1);
 		hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single;

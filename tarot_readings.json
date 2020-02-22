@@ -24,10 +24,6 @@
 		"reading": "3 The Empress and 2 The High Priestess; gay. That's really gay, and if you don't love it just leave right fucking now."
 	},
 	{
-		"cards": ["The Fool","The Emperor"],
-		"reading": "4 The Emperor and 0 The Fool; These are basically the same person, I'm guessing your future has you dealing with a right idiot."
-	},
-	{
 		"cards": ["The Hierophant","The Lovers"],
 		"reading": "6 The Lovers and 5 The Hierophant; Have you learnt to spell someone's name recently, coz that person probably is of importance. Just sayin'."
 	},
@@ -37,7 +33,7 @@
 	},
 	{
 		"cards": ["Temperance","The Chariot"],
-		"reading": "14 Temperance and 7 The Chariot; Your future holds a damn sweet ride, though probably not in your car coz shit's expensive."
+		"reading": "14 Temperance and 7 The Chariot; 2 Chariot 2 Furious: Temper Fi"
 	},
 	{
 		"cards": ["The Moon","The Sun"],
@@ -57,11 +53,11 @@
 	},
 	{
 		"cards": ["Wheel of Fortune","Death"],
-		"reading": "13 Death and 10 Wheel of Fortune; What fucking luck, you got the coolest fucking card, Death!"
+		"reading": "13 Death and 10 Wheel of Fortune; What fucking luck, you got Death, the coolest fucking card!"
 	},
 	{
 		"cards": ["Strength","The Emperor"],
-		"reading": "11 Strength and 4 The Emperor; Gains might be made, but some unwanted attention may also happen, ugh, I know right?"
+		"reading": "11 Strength and 4 The Emperor; Gains might be made... in your career!"
 	},
 	{
 		"cards": ["Strength","The Empress"],
@@ -69,7 +65,7 @@
 	},
 	{
 		"cards": ["The Hanged Man","The High Priestess"],
-		"reading": "12 The Hanged Man and 2 The High Priestess; You're probably gonna hang out with some awesome hot people, and it's gonna rock!"
+		"reading": "12 The Hanged Man and 2 The High Priestess; You're probably gonna hang out with some awesome hot people, and it's gonna be gay!"
 	},
 	{
 		"cards": ["The Hermit","Temperance"],
@@ -84,24 +80,112 @@
 		"reading": "21 The World and 13 Death; Aw yiss, you drew the coolest card in the world, Death... the coolest of all cards in the world."
 	},
 	{
+		"cards": ["The Moon","The Chariot"],
+		"reading": "18 The Moon and 7 The Chariot; 2 Chariot 2 Furious: Cheese Wheel Drift"
+	},
+	{
+		"cards": ["The Fool","The Magician"],
+		"reading": "1 The Magician and 0 The Fool; Exciting new food maybe? I dunno, maybe you'll try something new and it'll be delicious?"
+	},
+	{
+		"cards": ["The Fool","The High Priestess"],
+		"reading": "2 The High Priestess and 0 The Fool; While there is no food objectively gay, you will somehow find a way to have some delicious gay food in your future. Good work!"
+	},
+	{
+		"cards": ["The Fool","The Empress"],
+		"reading": "3 The Empress and 0 The Fool; While there is no food objectively gay, you will somehow find a way to have some delicious gay food in your future. Good work!"
+	},
+	{
+		"cards": ["The Fool","The Emperor"],
+		"reading": "4 The Emperor and 0 The Fool; Aw yiss, food will be provided at work. I hope it's pizza, that'd really boost morale around here."
+	},
+	{
+		"cards": ["The Fool","The Hierophant"],
+		"reading": "5 The Hierophant and 0 The Fool; You gonna have some food you can't even pronounce let alone spell, awwww yiss."
+	},
+	{
+		"cards": ["The Fool","The Lovers"],
+		"reading": "6 The Lovers and 0 The Fool; Do you burn with a passion for food? Such is a question only you can answer? I'm sorry, did you have a question?"
+	},
+	{
+		"cards": ["The Fool","The Chariot"],
+		"reading": "7 The Chariot and 0 The Fool; 2 Chariot 2 Furious: Uber Eats Overdrive"
+	},
+	{
+		"cards": ["The Fool","Justice"],
+		"reading": "8 Justice and 0 The Fool; Good servings your future holds, yum!"
+	},
+	{
+		"cards": ["The Fool","The Hermit"],
+		"reading": "9 The Hermit and 0 The Fool; Living your best life through eating your best food! Be good to yourself through your stomach!"
+	},
+	{
+		"cards": ["The Fool","Wheel of Fortune"],
+		"reading": "10 Wheel of Fortune and 0 The Fool; Food gacha? It's like juice gacha only it's your whole dinner. I don't think it'd be very popular."
+	},
+	{
+		"cards": ["The Fool","Strength"],
+		"reading": "11 Strength of Fortune and 0 The Fool; Gains! Gains requires fuel! So don't neglect yourself!"
+	},
+	{
+		"cards": ["The Fool","The Hanged Man"],
+		"reading": "12 The Hanged Man and 0 The Fool; Getting food with friends? Coffee? Milkshake? Delicious socialising!"
+	},
+	{
+		"cards": ["The Fool","Death"],
+		"reading": "13 Death and 0 The Fool; While you eat to live, you have stumbled upon Death, the fucking coolest of cards!"
+	},
+	{
+		"cards": ["The Fool","Temperance"],
+		"reading": "14 Temperance and 0 The Fool; Through food you live and are made hot and lovely (you good and hot!)"
+	},
+	{
+		"cards": ["The Fool","The Devil"],
+		"reading": "15 The Devil and 0 The Fool; Be gay, do crimes, eat delicious food, awww yiss!"
+	},
+	{
+		"cards": ["The Fool","The Tower"],
+		"reading": "16 The Tower and 0 The Fool; New heights of food! Deliciousness awaits!"
+	},
+	{
+		"cards": ["The Fool","The Star"],
+		"reading": "17 The Star and 0 The Fool; Some nights are just right for some late night food you know?"
+	},
+	{
+		"cards": ["The Fool","The Moon"],
+		"reading": "18 The Moon and 0 The Fool; Cheese... delicious cheese. It's really quite good, even I think so and I'm a bot!"
+	},
+	{
+		"cards": ["The Fool","The Sun"],
+		"reading": "19 The Sun and 0 The Fool; If you think about it, all food comes from that atomic reactor we're orbitting, doesn't it?"
+	},
+	{
+		"cards": ["The Fool","Judgement"],
+		"reading": "20 Judgement and 0 The Fool; None can judge you for what you eat! Only you can judge what you should or shouldn't eat! Be kind to yourself!"
+	},
+	{
+		"cards": ["The Fool","The World"],
+		"reading": "21 The World and 0 The Fool; The world is just a collection of food, and experiencing the world is always a good thing right?"
+	},
+	{
 		"cards": ["The Fool"],
-		"reading": "0 The Fool; well damn, just straight up says it, damn."
+		"reading": "0 The Fool; Your future holds delicious food. I don't make the rules, I just read what the RAM tells me."
 	},
 	{
 		"cards": ["The Magician"],
-		"reading": "1 The Magician; I half expect you're probably gonna be swindled. Unrelated, would you like to buy a bridge?"
+		"reading": "1 The Magician; I will make your boredom disappear? No? Try !gacha, or !boss, they're much more fun maybe?"
 	},
 	{
 		"cards": ["The High Priestess"],
-		"reading": "2 The High Priestess; Girl hot... giiirl hooooot..."
+		"reading": "2 The High Priestess; Hell yeah, some fine gay energy permeates your future, I can feel it."
 	},
 	{
 		"cards": ["The Empress"],
-		"reading": "3 The Empress; Oh gosh, she's like, very big and important looking, your future is probably good maybe, iunno."
+		"reading": "3 The Empress; The RAM says you got some good social stuff probably coming soon maybe. Something like that."
 	},
 	{
 		"cards": ["The Emperor"],
-		"reading": "4 The Emperor; Eh, your boss is probably an asshole, I know this dude is, omg."
+		"reading": "4 The Emperor; Career wise, your energy probably is at a level. What level you ask? I dunno, I'm just a bot."
 	},
 	{
 		"cards": ["The Hierophant"],
@@ -113,11 +197,11 @@
 	},
 	{
 		"cards": ["The Chariot"],
-		"reading": "7 The Chariot: 2 Chariot 2 Furious."
+		"reading": "7 The Chariot; 2 Chariot 2 Furious."
 	},
 	{
 		"cards": ["Justice"],
-		"reading": "8 Justice; An old band, have you heard of them? They had some good music, your future involves some new tunes."
+		"reading": "8 Justice; The future holds a good serving, possibly it will be than ice, but maybe not."
 	},
 	{
 		"cards": ["The Hermit"],
@@ -125,7 +209,7 @@
 	},
 	{
 		"cards": ["Wheel of Fortune"],
-		"reading": "10 Wheel of Fortune; The performative nature of life is definitely gonna throw a spanner into the works of your future."
+		"reading": "10 Wheel of Fortune; Good fortune? Bad fortune? Perhaps it's all matter of perspective. But I will remind you, I am just a bot."
 	},
 	{
 		"cards": ["Strength"],
@@ -153,7 +237,7 @@
 	},
 	{
 		"cards": ["The Star"],
-		"reading": "17 The Star; Something common yet beautiful, burning brilliantly with atomic fire in an impossibly large void. Kick ass."
+		"reading": "17 The Star; Blanketing the sky and guiding us for millenia. And yet you ask me, a bot, to infer the information from them. Are you sure about this?"
 	},
 	{
 		"cards": ["The Moon"],
@@ -161,7 +245,7 @@
 	},
 	{
 		"cards": ["The Sun"],
-		"reading": "19 The Sun; Enjoy the knowledge that your enemies are too stupid to use sunscreen properly and will always get sunburned every summer. Fucking idiots."
+		"reading": "19 The Sun; A nuclear power plant in the sky creating near limitless free solar power. It's free real estate!"
 	},
 	{
 		"cards": ["Judgement"],
