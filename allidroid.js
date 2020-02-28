@@ -1572,7 +1572,7 @@ function playGacha(amount)
 	{
 		amount = 12;
 	}
-	let baserand = Math.random() - ((amount-1)/100);
+	let baserand = Math.random() - ((amount-1)/160);
 	let rarity = getGachaRarity(baserand);
 	let hero_base = generateMonster("gacha",2,1,1);
 	let hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single; 
@@ -1584,7 +1584,7 @@ function playGacha(amount)
 	
 	for (let i = 1; i < amount; i++)
 	{
-		baserand = Math.random() - ((amount-1)/100);
+		baserand = Math.random() - ((amount-1)/160);
 		rarity = getGachaRarity(baserand);
 		hero_base = generateMonster("gacha",2,1,1);
 		hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single;
@@ -1722,7 +1722,7 @@ function getPartDesciptor(part)
 var AFFIX_PREFIX = 0;
 var AFFIX_SUFFIX = 1;
 
-function getItemAffix(itemtype,affix = AFFIX_PREFIX)
+function getItemAffix(itemtype,affix = AFFIX_PREFIX,number = null)
 {
 	if (itemtype == null)
 	{
@@ -1741,13 +1741,27 @@ function getItemAffix(itemtype,affix = AFFIX_PREFIX)
 	
 	if (tempaffixlist.length < 1)
 	{
-		console.log("no " + affix + " for itemtype: " + itemtype);
+		if (affix == AFFIX_PREFIX)
+		{
+			console.log("no prefixes for itemtype: " + itemtype);
+		}
+		else
+		{
+			console.log("no suffixes for itemtype: " + itemtype);
+		}
 		return null;
 	}
 	let fullaffixlist = [];
 	for (let i = 0; i < tempaffixlist.length; i++)
 	{
-		fullaffixlist = fullaffixlist.concat(getActualList(tempaffixlist[i]));
+		if (number == 2) //ie if an item is a pural format, like pantaloons, pauldrons, glasses, etc
+		{
+			fullaffixlist = fullaffixlist.concat(tempaffixlist[i].synonyms2);
+		}
+		else
+		{
+			fullaffixlist = fullaffixlist.concat(getActualList(tempaffixlist[i]));
+		}
 	}
 	
 	return fullaffixlist[Math.floor(Math.random()*(fullaffixlist.length))];
@@ -1789,8 +1803,11 @@ function sortItemArray(arr)
 	return sortedarr;
 }
 
+
 //
 // Generate a special boss monster
+
+var ANIMAL_REROLL_LIMIT = 4;
 
 function generateBoss() 
 {
@@ -1803,6 +1820,14 @@ function generateBoss()
 	let is_animal = monster_base.lists.includes("animal");
 	let boss_item_slots = monster_base.slots.slice();
 	let tempslotcount = item_slotlimits.slice();
+	let animalrerolls = 0;
+	
+	while(is_animal && animalrerolls < ANIMAL_REROLL_LIMIT) // basically, animals coming up a lot, reroll the thing so animals come up less hopefully
+	{
+		boss_class = monster_classes[Math.floor(Math.random()*monster_classes.length)];
+		is_animal = monster_base.lists.includes("animal");
+		animalrerolls++;
+	}
 	
 	if (!is_animal)
 	{
@@ -1838,7 +1863,7 @@ function generateBoss()
 		tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)]
 		tempitem = generateArtifact(tempslot,boss_class.favitems);
 		tempprefix = getItemAffix(tempitem.type,AFFIX_PREFIX);
-		tempsuffix = getItemAffix(tempitem.type,AFFIX_SUFFIX);
+		tempsuffix = getItemAffix(tempitem.type,AFFIX_SUFFIX,tempitem.number);
 		if (tempitem == null)
 		{
 			console.log("failed to generate item for slot: " + tempslot);
