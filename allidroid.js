@@ -305,10 +305,10 @@ function processCommand(receivedMessage)
 	{
 		if (arguments[0] != null && arguments[0].toLowerCase() == "in")
 		{
-			output = setReminder(arguments[1], arguments[2], argumentsbacktostring(arguments,3), receivedMessage.channel.id, receivedMessage.author);
+			output = setReminder(arguments[1], argumentsbacktostring(arguments,2), receivedMessage.channel.id, receivedMessage.author);
 		} else
 		{
-			output = setReminder(arguments[0], arguments[1], argumentsbacktostring(arguments,2), receivedMessage.channel.id, receivedMessage.author);
+			output = setReminder(arguments[0], argumentsbacktostring(arguments,1), receivedMessage.channel.id, receivedMessage.author);
 		}
 		
 		if (output == null)
@@ -411,18 +411,74 @@ function howgay()
 }
 
 //
+// string to time
+//
+
+function stringToTime(inputstring)
+{
+	if (inputstring == null || inputstring.length == 0)
+		return 0;
+	
+	let front = parseInt(inputstring);
+	let isFrontNaN = isNaN(front);
+	let amount = 0;
+	let units = 0;
+	let totalTime = 0;
+	
+	while (inputstring.length > 0)
+	{
+		if (isFrontNaN)
+		{
+			if (inputstring.charAt(0) == 'd')
+			{
+				units = 86400000;
+			} 
+			else if (inputstring.charAt(0) == 'h')
+			{
+				units = 3600000;
+			} 
+			else if (inputstring.charAt(0) == 'm')
+			{
+				units = 60000;
+			} 
+			else if (inputstring.charAt(0) == 's')
+			{
+				units = 1000;
+			} 
+			else
+			{
+				units = 0; //invalid characters given
+			}
+			
+			if (amount > 0)
+			{
+				totalTime += amount * units;
+				amount = 0;
+			}
+			
+			inputstring = inputstring.substr(1);
+		} 
+		else
+		{
+			amount = front;
+			inputstring = inputstring.substr(amount.toString().length);
+		}
+		front = parseInt(inputstring);
+		isFrontNaN = isNaN(front);
+	}
+	
+	return totalTime;
+}
+
+//
 // Reminder
 //
 
-function setReminder(delay, units, message, target_channel, sender)
+function setReminder(delay, message, target_channel, sender)
 {
 	if (delay == null)
 	{
 		return "I require a delay to do that";
-	}
-	if (units == null)
-	{
-		return "I require a unit of measurement for the delay to do that";
 	}
 	if (message == null)
 	{
@@ -434,36 +490,18 @@ function setReminder(delay, units, message, target_channel, sender)
 		return "Sorry, I am at capacity for reminders";
 	}
 	
-	units = units.toLowerCase();
-	let millisecondstounit = 60000; // default to Minutes
-	
-	if (units.charAt(0) == 'h')
-	{
-		millisecondstounit = 3600000;
-	} else if (units.charAt(0) == 'm')
-	{
-		millisecondstounit = 60000;
-	} else if (units.charAt(0) == 's')
-	{
-		millisecondstounit = 1000;
-		
-	} else
-	{
-		//console.log("Set Reminder error, units invalid");
-		return "Invalid arguments, the units must be seconds, minutes, or hours, or acceptable shorthand for those";
-	}
-	
 	if (delay == null || message == null)
 	{
 		//console.log("Set Reminder error, delay or message are null");
 		return "Invalid arguments, I need a delay (in minutes) and a message";
 	}
 	
-	let parsedDelay = parseInt(delay);
+	let parsedDelay = stringToTime(delay)
 	
-	if ( isNaN(parsedDelay) )
+	if (parsedDelay == null)
 	{
-		return "Invalid arguments, the delay must be a number";
+		//console.log("Invalid delay input given");
+		return "Invalid delay input given, you must only give units in the form of d for days, h for hours, m for minutes, and s for seconds, in a format such as 1d3h15m";
 	}
 	
 	if (parsedDelay < 1 || parsedDelay > 2,520,000)
@@ -505,8 +543,8 @@ function setReminder(delay, units, message, target_channel, sender)
 	
 	reminder_array.push({
 		id: newid,
-		when: Date.now()+parsedDelay*millisecondstounit,
-		timer: setTimeout(sendReminder.bind(this,message,target_channel,newid),parsedDelay*millisecondstounit)
+		when: Date.now()+parsedDelay,
+		timer: setTimeout(sendReminder.bind(this,message,target_channel,newid),parsedDelay)
 	});
 	return "Reminder set! The reminderid for this reminder is " + newid;
 }

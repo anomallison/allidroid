@@ -25,12 +25,12 @@ eg: !slash !slash f/f !slash f/f da !slash f;me/f;fe3h;blackeagles/f;ow !slash f
 
 !how - type in a thing like "how delicious is gravy" or "how good are cats" and it will respond, echoing your sentiments
 
-!gacha - Take your chances and receive... heroes? with rarity! It means just as much as any other gacha game! You can also give it a number, and it'll pull that many, between 1 and 12
+!gacha - Take your chances and receive... heroes? with rarity! It means just as much as any other gacha game! You can also give it a number, and it'll pull that many, up to 12
 
 !princess - Generates a weird princess. It is a verbose command.
 
-!remindme - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay, followed by the units (minutes, seconds, or hours), and then the message which Allidroid will say
-eg: !remindme 2 hours take your meds!
+!remindme - This sets a reminder in allidroid to be sent to the channel which the command is used. It has a delay (formated like 1d2h3m4s), and then the message which Allidroid will say
+eg: !remindme 2h take your meds! !remindme in 4h30m do your assignment!
 
 !removereminder - This removes a reminder from Allidroid, by taking a reminderid (which is given when a reminder is set)
 
