@@ -1666,10 +1666,10 @@ function getItemList(object)
 	
 	for (let i = 0; i < object.synonyms.length; i++)
 	{
-		temparr.push({item:object.synonyms[i], type:object.type});
+		temparr.push({item:object.synonyms[i], type:object.type, number: object.number});
 	}
 	
-	temparr.push({item:object.name, type:object.type});
+	temparr.push({item:object.name, type:object.type, number: object.number});
 	
 	return temparr;
 }

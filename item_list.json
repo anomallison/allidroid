@@ -82,7 +82,7 @@
 	{
 		"name": "scepter of finely carved wood",
 		"number": 1,
-		"type": "wands",
+		"type": "wand",
 		"slots": ["weapon","offhand","tool"],
 		"lists": ["magical"],
 		"synonyms": ["mithril wand","scepter of fine ivory","jewel encrusted wand"]
@@ -269,7 +269,15 @@
 		"type": "clothing",
 		"slots": ["pants"],
 		"lists": ["mundane"],
-		"synonyms": ["breeches","board shorts","skirt"]
+		"synonyms": ["breeches","board shorts"]
+	},
+	{
+		"name": "skirt",
+		"number": 1,
+		"type": "clothing",
+		"slots": ["pants"],
+		"lists": ["mundane"],
+		"synonyms": []
 	},
 	{
 		"name": "steel pauldrons",
