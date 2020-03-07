@@ -1786,29 +1786,32 @@ function generateArtifact(slot = null, favoureditems = null)
 		}
 	}
 	
-	let propertycount = Math.floor((Math.random()*3.45)+1.6);
+	let propertycount = Math.floor((Math.random()*1.25)+(Math.random()*1.25)+(Math.random()*0.75)+1);
 	
 	let properties = [];
 	let cursecount = 0;
-	//let cursed = false;
 	let baserand  = Math.random();
 	let random_int = 0;
+	let cursechance = 0.20;
+	let quirkchance = 0.26;
+	
 	
 	for (let i  = 0; i < propertycount; i++)
 	{
-		if (baserand < 0.22 && cursepool.length > 0) // curses
+		if (baserand < cursechance && cursepool.length > 0) // curses
 		{
 			random_int [Math.floor((Math.random()*cursepool.length))]
 			properties.splice(0,0,cursepool[random_int])
 			cursepool.splice(random_int,1);
 			cursecount++;
-			//cursed = true;
+			cursechance = cursechance/2;
 		} 
-		else if (baserand < 0.54 && quirkpool.length > 0) // quirks
+		else if (baserand < (cursechance + quirkchance) && quirkpool.length > 0) // quirks
 		{
 			random_int [Math.floor((Math.random()*quirkpool.length))]
 			properties.push(quirkpool[random_int])
 			quirkpool.splice(random_int,1);
+			quirkchance = quirkchance/2;
 		}
 		else if (enchantpool.length > 0) // enchantments
 		{

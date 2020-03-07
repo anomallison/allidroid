@@ -190,9 +190,9 @@
 	{
 		"lists": ["clothing"],
 		"curse": [
-			"this clothing is restrictive, and seems to always be confining movement or even constricting like a boa",
 			"wearing these clothes fills the wearer with visions of their own body decaying",
-			"these clothes very slowly decay unless fed fresh blood"
+			"these clothes very slowly decay unless fed fresh blood",
+			"blood weeps from seemingly nowhere into these clothes"
 		],
 		"enchantment": [
 			"the wearer of these clothes is made magically more alluring and enticing",
@@ -200,9 +200,9 @@
 			"a faint protective barrier surrounds the wearer of these clothes"
 		],
 		"quirk": [
-			"blood weeps from seemingly nowhere into these clothes",
-			"wearing these clothes seems to drain the blood from the wearer's face",
-			"these clothes roll themselves up to stay at the right length on their wearer"
+			"wearing these clothes seems to make the wearer pale as if drained of blood",
+			"these clothes roll themselves up to stay at the right length on their wearer",
+			"wearing these clothes seems to attract birds and other small woodland critters"
 		]
 	},
 	{
@@ -246,7 +246,8 @@
 		"curse": [
 			"this item fills its owner with a sense of dread",
 			"this item fills its owner with a sense of impending doom",
-			"the item beats as if it has its own heart"
+			"the item beats as if it has its own heart",
+			"the item burns with the torment of a trapped soul"
 		],
 		"enchantment": [
 			"this item fills its owner with vim",
