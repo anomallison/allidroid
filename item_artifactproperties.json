@@ -216,8 +216,8 @@
 			"this item fills its owner with a sense of impending doom"
 		],
 		"enchantment": [
-			"this item fills its owner vim",
-			"this item fills its owner energy",
+			"this item fills its owner with vim",
+			"this item fills its owner with energy",
 			"this item vibrates when it senses it's owner is in danger"
 		],
 		"quirk": [
