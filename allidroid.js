@@ -1851,6 +1851,11 @@ function generateArtifact(slot = null, favoureditems = null)
 function artifactToString(artifact, full = false)
 {
 	let output_string = artifact.name + ", the ";
+	if (full)
+	{
+		output_string = grammarCapitalFirstLetter(artifact.name) + ", the ";
+	}
+	
 	if (artifact.cursed)
 	{
 		output_string +=  item_artifactnames.cursed[Math.floor((Math.random()*item_artifactnames.cursed.length))] + " ";
@@ -1880,7 +1885,7 @@ function artifactToString(artifact, full = false)
 			magical_properties += artifact.properties[i] + ", ";
 			}
 		}
-	output_string += "\n" + magical_properties;
+	output_string += "\n" + grammarCapitalFirstLetter(magical_properties);
 	}
 	
 	return output_string
