@@ -43,6 +43,8 @@ var item_suffixes = JSON.parse(fs.readFileSync('item_suffix_list.json'));
 var item_prefixes = JSON.parse(fs.readFileSync('item_prefix_list.json'));
 var item_sorting = JSON.parse(fs.readFileSync('item_sorting.json'));
 var item_slotlimits = JSON.parse(fs.readFileSync('item_slotlimits.json'));
+var item_artifactproperties = JSON.parse(fs.readFileSync('item_artifactproperties.json'));
+var item_artifactnames = JSON.parse(fs.readFileSync('item_artifactnames.json'));
 
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
@@ -313,7 +315,7 @@ function processCommand(receivedMessage)
 		
 		if (output == null)
 		{
-			console.log("failed command: setreminder");
+			console.log("failed command: remindme");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		}
@@ -366,6 +368,20 @@ function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: tarot");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "generateartifact") 
+	{
+		output = artifactToString(generateArtifact(), true);
+		
+		if (output == null)
+		{
+			console.log("failed command: generateartifact");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -796,6 +812,24 @@ function filterBySlot(object)
 			return true;
 	}
 	return false;
+}
+
+//
+// filter the objects by removing all where the type of object is equal to the passed type
+//
+
+function filterByType(object)
+{
+	if (object.type == this)
+			return true;
+	return false;
+}
+
+function removeByType(object)
+{
+	if (object.type == this)
+			return false;
+	return true;
 }
 
 //
@@ -1712,10 +1746,150 @@ function getItemList(object)
 	return temparr;
 }
 
-//
-// Generate an artifact, an item
 
-function generateArtifact(slot,favoureditems)
+//
+// Generate an artifact
+//
+
+
+var GENERATE_ARTIFACT_DISALLOWEDTYPES = ["pokemon","friend","dualmixed","ropeweapon","dualranged","smallarms","longarms","musicinstrument","consumable"];
+
+function generateArtifact(slot = null, favoureditems = null)
+{
+	while (slot == null || slot == "friend")
+	{
+		slot = item_slotlimits[Math.floor((Math.random()*item_slotlimits.length))].slot;
+	}
+
+	let baseitem = generateBasicItem(slot,favoureditems,GENERATE_ARTIFACT_DISALLOWEDTYPES);
+	
+	let propertypool = item_artifactproperties.filter(filterByList,baseitem.type);
+	propertypool = propertypool.concat(item_artifactproperties.filter(filterByList,"any"));
+	
+	let cursepool = [];
+	let enchantpool = [];
+	let quirkpool = [];
+	
+	for (let i = 0; i < propertypool.length; i++)
+	{
+		for (let x = 0; x < propertypool[i].curse.length; x++)
+		{
+			cursepool.push(propertypool[i].curse[x]);
+		}
+		for (let y = 0; y < propertypool[i].enchantment.length; y++)
+		{
+			enchantpool.push(propertypool[i].enchantment[y]);
+		}
+		for (let z = 0; z < propertypool[i].quirk.length; z++)
+		{
+			quirkpool.push(propertypool[i].quirk[z]);
+		}
+	}
+	
+	let propertycount = Math.floor((Math.random()*4))+2;
+	
+	let properties = [];
+	let cursecount = 0;
+	let cursed = false;
+	let baserand  = Math.random();
+	let random_int = 0;
+	
+	for (let i  = 0; i < propertycount; i++)
+	{
+		if (baserand < 0.22 && cursepool.length > 0) // curses
+		{
+			random_int [Math.floor((Math.random()*cursepool.length))]
+			properties.splice(0,0,cursepool[random_int])
+			cursepool.splice(random_int,1);
+			cursed = true;
+		} 
+		else if (baserand < 0.54 && quirkpool.length > 0) // quirks
+		{
+			random_int [Math.floor((Math.random()*quirkpool.length))]
+			properties.push(quirkpool[random_int])
+			quirkpool.splice(random_int,1);
+		}
+		else if (enchantpool.length > 0) // enchantments
+		{
+			random_int [Math.floor((Math.random()*enchantpool.length))]
+			properties.splice(cursecount,0,enchantpool[random_int])
+			enchantpool.splice(random_int,1);
+		}
+		else
+		{
+			console.log("Unable to generate artifact property?")
+		}
+		baserand  = Math.random();
+	}
+	let name = ""
+	
+	if (baserand < 0.13) // single first word name
+	{
+		name = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))]
+	}
+	else if (baserand < 0.26) // single last word name
+	{
+		name = "the " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))]
+	}
+	else
+	{
+		name = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))] + " " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))]
+	}
+	
+	return {
+				name:name,
+				baseitem:baseitem, //item.item, .type, .number
+				properties:properties,
+				cursed:cursed
+			};
+}
+
+
+//
+//
+
+function artifactToString(artifact, full = false)
+{
+	let output_string = artifact.name + ", the ";
+	if (artifact.cursed)
+	{
+		output_string +=  item_artifactnames.cursed[Math.floor((Math.random()*item_artifactnames.cursed.length))] + " ";
+	}
+	else
+	{
+		output_string += item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " ";
+	}
+	output_string += artifact.baseitem.item;
+	
+	if (full)
+	{
+	let magical_properties = ""
+	
+		for (let i = 0; i < artifact.properties.length; i++)
+		{
+			if ((i+2) == artifact.properties.length)
+			{
+			magical_properties += artifact.properties[i] + ", and ";
+			} 
+			else if ((i+1) == artifact.properties.length)
+			{
+			magical_properties += artifact.properties[i] + ".";
+			} 
+			else
+			{
+			magical_properties += artifact.properties[i] + ", ";
+			}
+		}
+	output_string += "\n" + magical_properties;
+	}
+	
+	return output_string
+}
+
+//
+// Generate a basic item
+
+function generateBasicItem(slot,favoureditems,disallowedtypes = null)
 {
 	let itempool = item_nouns.slice();
 	let fullpool = [];
@@ -1729,12 +1903,35 @@ function generateArtifact(slot,favoureditems)
 	}
 	itempool = itempool.filter(filterBySlot,slot);
 	
+	if (disallowedtypes != null)
+	{
+			for (let i = 0; i < disallowedtypes.length; i++)
+			{
+				itempool = itempool.filter(removeByType,disallowedtypes[i]);
+			}
+	}
+	
 	for (let i = 0; i < itempool.length; i++)
 	{
 		fullpool = fullpool.concat(getItemList(itempool[i]));
 	}
 	
 	return fullpool[Math.floor((Math.random()*fullpool.length))];
+}
+
+
+function generateMagicItem(slot,favoureditems)
+{
+	let baseitem = generateBasicItem(slot,favoureditems);
+	let tempprefix = getItemAffix(baseitem.type,AFFIX_PREFIX);
+	let tempsuffix = getItemAffix(baseitem.type,AFFIX_SUFFIX,baseitem.number);
+	
+	return {
+				item:tempitem.item,
+				prefix:tempprefix,
+				suffix:tempsuffix,
+				type:tempitem.type
+			};
 }
 
 //
@@ -1880,15 +2077,43 @@ function generateBoss()
 	}
 	
 	
-	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3);
-	let numberofitems = Math.floor((boss_item_slots.length/9) + (Math.random()*(boss_item_slots.length + 2))/6);
+	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3)+1;
+	// let numberofitems = Math.floor((boss_item_slots.length/9) + (Math.random()*(boss_item_slots.length + 2))/6);
 	
-	while ((numberofitems + numberofuniqueparts) < 1) // never have 0 of both
+	let numberofitems = Math.floor((Math.random()*((boss_item_slots.length/5)+1))+0.5);
+	
+	while (numberofuniqueparts < 1) // never have 0 unique parts
 	{
-		numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3);
-		numberofitems = Math.floor((boss_item_slots.length/9) + (Math.random()*(boss_item_slots.length + 2))/6);
+		numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3)+1;
 	}
 	
+	
+	let items = []
+	let tempslot = "";
+	
+	for (let i = 0; i < numberofitems; i++)
+	{
+		tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)];
+		while (tempslot == "" || tempslot == "friend")
+		{
+			tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)];
+		}
+		items.push(generateArtifact(tempslot,boss_class.favitems))
+		for (let i = 0; i < tempslotcount.length; i++)
+		{
+			if (tempslotcount[i].slot == tempslot)
+			{
+				tempslotcount[i].limit--;
+				if (tempslotcount[i].limit == 0)
+				{
+					boss_item_slots = boss_item_slots.filter(removeAllStringFromArray,tempslot);
+				}
+				break;
+			}
+		}
+	}
+	
+	/*
 	let items = [];
 	let tempitem = "";
 	let tempslot = "";
@@ -1899,9 +2124,7 @@ function generateBoss()
 	for (let i = 0; i < numberofitems; i++)
 	{
 		tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)]
-		tempitem = generateArtifact(tempslot,boss_class.favitems);
-		tempprefix = getItemAffix(tempitem.type,AFFIX_PREFIX);
-		tempsuffix = getItemAffix(tempitem.type,AFFIX_SUFFIX,tempitem.number);
+		tempitem = generateMagicItem(tempslot,boss_class.favitems);
 		if (tempitem == null)
 		{
 			console.log("failed to generate item for slot: " + tempslot);
@@ -1911,12 +2134,7 @@ function generateBoss()
 		}
 		else
 		{
-			items.push({
-				item:tempitem.item,
-				prefix:tempprefix,
-				suffix:tempsuffix,
-				type:tempitem.type
-			});
+			items.push(tempitem);
 		}
 		for (let i = 0; i < tempslotcount.length; i++)
 		{
@@ -1948,7 +2166,7 @@ function generateBoss()
 		boss_string += generateBossName(false,false) + ", the " + boss_class.single 
 			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
 	}
-	
+	*/
 	
 	let position = -1;
 	let endposition = -1;
@@ -1995,6 +2213,7 @@ function generateBoss()
 	
 	boss_string += ".\n";
 	
+	/*
 	items = sortItemArray(items);
 	let prefix = null;
 	let suffix = null;
@@ -2040,6 +2259,36 @@ function generateBoss()
 	{
 		boss_string += grammarCapitalFirstLetter(monster_pronouns.subject) + " " + monster_pronouns.conjunction + " outfitted with " + monster_pronouns.possessivesubject + " " + items_string + ".";
 	}
+	*/
+	
+	let items_string = "";
+	for (let i = 0; i < numberofitems; i++)
+	{
+		if (numberofitems > 1 && (i+1) == numberofitems)
+		{
+			if (numberofitems == 2)
+			{
+				items_string += " and "; //+  monster_pronouns.possessivesubject + " ";
+			}
+			else
+			{
+				items_string += ", and "; //+  monster_pronouns.possessivesubject + " ";
+			}
+		}
+		else if (i > 0)
+		{
+			items_string += ", "; //+  monster_pronouns.possessivesubject + " ";
+		}
+		
+		items_string += artifactToString(items[i],false);
+	}
+	if (numberofitems > 0)
+	{
+		boss_string += grammarCapitalFirstLetter(monster_pronouns.subject) + " " + monster_pronouns.conjunction + " outfitted with " + items_string + ".";
+	}
+	
+	
+	
 	
 	position = boss_string.indexOf("\[");
 	endposition = -1;
@@ -2228,7 +2477,7 @@ function getPhonemeSpelling(object)
 //
 // garbage name generator
 
-function generatePhonemeName(maxsyllables = 9, minimumsyllables = 1)
+function generatePhonemeName(maxsyllables = 8, minimumsyllables = 1)
 {
 	if (maxsyllables < minimumsyllables)
 	{
@@ -2273,17 +2522,19 @@ function generatePhonemeName(maxsyllables = 9, minimumsyllables = 1)
 				tempphonemelist = tempphonemelist.filter(filterByManyList,tempmultilist);
 			}
 			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants"));
-			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants")); //double weight for consonsants
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants"));
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants")); //triple weight for consonsants
 			if (last.lists.includes("diphthongs"))
 			{
-				tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants")); //triple weight for consonsants in this case
+				tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants")); //quadrouple weight for consonsants in this case
 			}
 		}
 		else
 		{
 			tempphonemelist = phonemes_english.slice();
 			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"vowels"));
-			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"vowels")); //triple weight for vowels
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"vowels"));
+			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"vowels")); //quadrouple weight for vowels
 		}
 	
 		random_int = Math.floor(Math.random()*(tempphonemelist.length));
