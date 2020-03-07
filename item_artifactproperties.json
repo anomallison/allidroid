@@ -50,7 +50,8 @@
 		],
 		"quirk": [
 			"when spun this weapon sings a elaborate ballad",
-			"when held at attention this polearm is practically weightless"
+			"when held at attention this polearm is practically weightless",
+			"the head of this weapon is always magically clean"
 		]
 	},
 	{
@@ -63,10 +64,13 @@
 		"enchantment": [
 			"when these blade are drawn, they glow red hot and drip with liquid fire that singe the ground",
 			"when one parries with these blades they crack with thunder, disorienting their opponent",
-			"these blades hold magical edges which never dull"
+			"these blades hold magical edges which never dull",
+			"these blades gravitate toward each other, especially if one is thrown away from the other"
 		],
 		"quirk": [
-			"these blades argue whenever they are brought near one another"
+			"these blades argue whenever they are brought near one another",
+			"magic maintains these blades, keeping them in peak condition",
+			"these blades gravitate towards their owners hand when reached for"
 		]
 	},
 	{
@@ -74,7 +78,8 @@
 		"curse": [
 			"as one uses these hammers they drains their life force in compensation of the life that they would be taking from others",
 			"glowing fissures along in the hafts of these hammer spurt hot steam that burns the wielder",
-			"holding these hammers fills its wielder's eyes with darkness, almost blinding them"
+			"holding these hammers fills its wielder's eyes with darkness, almost blinding them",
+			"these hammers gravitate toward each other, especially if one is thrown away from the other"
 		],
 		"enchantment": [
 			"as these hammers moves through the air their heads super cool and freezes the air around them",
@@ -83,14 +88,16 @@
 		],
 		"quirk": [
 			"one makes the sound of a goat when swung while the other makes the sound of a ram",
-			"these hammers argue whenever they are brought near one another"
+			"these hammers argue whenever they are brought near one another",
+			"magic maintains these hammers, keeping them in peak condition"
 		]
 	},
 	{
 		"lists": ["bow"],
 		"curse": [
 			"the bow string feels fine and cuts into fingers like razors even when wearing gloves",
-			"the arrows fired from this bow are bathed in a sickly green glow"
+			"the arrows fired from this bow are bathed in a sickly green glow",
+			"a mist fills the eyes of those who wield this bow, making them farsighted"
 		],
 		"enchantment": [
 			"the arrows fired from this bow fire true and preternatually fast",
@@ -99,22 +106,26 @@
 		],
 		"quirk": [
 			"this bow lets out a faint howl with every arrow it launches",
-			"those who wield this bow appear to have eyes resembling that of a cat, at least in appearance"
+			"those who wield this bow appear to have eyes resembling that of a cat, at least in appearance",
+			"the arrows fired from this bow leave a trail of feathers that slowly turn to dust over several minutes"
 		]
 	},
 	{
 		"lists": ["sling"],
 		"curse": [
 			"the bullets shot from this sling turn into sleet in the air",
-			"the wielder of this sling finds themselves unable to focus on nearby objects well"
+			"the wielder of this sling finds themselves unable to focus on nearby objects well",
+			"this sling is steeped in a dark aura"
 		],
 		"enchantment": [
 			"the bullets shot from this sling fire true and preternatually fast",
-			"while spinning this sling to fire a bullet, the bullet becomes super charged with lightning"
+			"while spinning this sling to fire a bullet, the bullet becomes super charged with lightning",
+			"spinning this sling causes the bullet to glow red and ignite into fire"
 		],
 		"quirk": [
 			"this sling sings an old ballad whenever it is spun",
-			"this sling yells excitedly whenever it is spun"
+			"this sling yells excitedly whenever it is spun",
+			"spinning this sling imbues the wielder of this sling with a booming voice"
 		]
 	},
 	{
@@ -131,41 +142,57 @@
 		],
 		"quirk": [
 			"the wand is covered in glowing runes that change which is glowing, though seemingly at random",
-			"the wand sighs whenever it is used"
+			"the wand sighs whenever it is used",
+			"the wand curls and twists in some way whenever used, staying mostly straight and pointed yet managing to twist itself still"
 		]
 	},
 	{
 		"lists": ["magicoffhand"],
 		"curse": [
 			"a trapped soul sends out a horrific screams out whenever someone tries to use this item",
-			"an aura of darkness permeates this item and its wielder, tainting their mana"
+			"an aura of darkness permeates this item and its wielder, tainting their mana",
+			"this item feeds off it's wielder's aura when used, draining them"
 		],
 		"enchantment": [
 			"a powerful focusing enchantment resides in this item, magnifying the abilities of those that wield it",
-			"this item imbues its wielder with the power to breathe flame"
+			"this item imbues its wielder with the power to breathe flame",
+			"this item imbues its wielder with the power to breathe acid",
+			"this item imbues its wielder with the power to breathe ice",
+			"this item imbues its wielder with the power to breathe lightning",
+			"a protective field encircles whomever wields this item",
+			"whomever carries this item feels their body knit and renewed rapidly before them",
+			"this item carries a large charge of mana that its wielder can easily tap into"
 		],
 		"quirk": [
-			"this item talks, albeit in song lyrics from ancient songs and is rather upset people do not recognize its songs"
+			"this item talks, albeit in song lyrics from ancient songs and is rather upset people do not recognize its songs",
+			"this item seems suck the colour from nearby surroundings",
+			"this item is always cool to the touch, billowing with a slight fog from its surface at all times"
 		]
 	},
 	{
 		"lists": ["armour"],
 		"curse": [
 			"this armour is covered in frost and ice and is cold and hard to move at the joints",
-			"it feels as if there are tiny barbs on the inside of this armour, worse should anything actually strike it"
+			"it feels as if there are tiny barbs on the inside of this armour, worse should anything actually strike it",
+			"wearing this armour seems to darken the countenance of the wearer"
 		],
 		"enchantment": [
 			"this armour seems to collect itself and protect at the point of impact",
-			"this armour warns its wearer of dangers around it"
+			"this armour warns its wearer of dangers around it",
+			"a protective barrior forms where strikes would hit the wearer of this armour"
 		],
 		"quirk": [
-			"when not worn this armour uses sign language to talk"
+			"when not worn this armour uses sign language to talk",
+			"this armour hums a familiar yet never quite identifiable tune when on a march",
+			"this armour changes colour with the temperature of the wearer and also how hungry they are"
 		]
 	},
 	{
 		"lists": ["clothing"],
 		"curse": [
-			"this clothing is restrictive, and seems to always be confining movement or even constricting like a boa"
+			"this clothing is restrictive, and seems to always be confining movement or even constricting like a boa",
+			"wearing these clothes fills the wearer with visions of their own body decaying",
+			"these clothes very slowly decay unless fed fresh blood"
 		],
 		"enchantment": [
 			"the wearer of these clothes is made magically more alluring and enticing",
@@ -174,39 +201,44 @@
 		],
 		"quirk": [
 			"blood weeps from seemingly nowhere into these clothes",
-			"wearing these clothes seems to drain the blood from the wearer's face"
+			"wearing these clothes seems to drain the blood from the wearer's face",
+			"these clothes roll themselves up to stay at the right length on their wearer"
 		]
 	},
 	{
 		"lists": ["accessory"],
 		"curse": [
-			"this item is tight to a point of drawing blood, and the pain distracts it's wielder",
-			"this item feeds on its wielder's vitality"
+			"this item is tight to a point of drawing blood, the pain distracting it's wielder",
+			"this item feeds on its wielder's life force",
+			"this item corrupts the wielder's mana aura"
 		],
 		"enchantment": [
 			"this item makes its wielder preternatually younger and more full of vigor",
 			"a faint protective barrier surrounds the wielder of this item",
-			"this item makes its wielder more alert and observant of their surroundings",
-			"the wielder of this item is made magically more alluring and enticing",
-			"the wielder of this item is magically stronger",
-			"the wielder of this item is magically faster",
-			"the wielder of this item is magically more cunning"
+			"this item makes its wielder more alert and observant of their surroundings"
 		],
 		"quirk": [
-			"a signet on the item shifts whenever it is used"
+			"a signet on the item shifts whenever it is used",
+			"the item shifts colour whenever it is used",
+			"a gem on the item changes whenever it is used"
 		]
 	},
 	{
 		"lists": ["tool"],
 		"curse": [
-			"this tool fills it's wielder will dull noise as they work"
+			"this tool fills it's wielder will dull noise as they work",
+			"this tool bleeds as it works",
+			"this tool fills the items it creates with the screams of damned souls"
 		],
 		"enchantment": [
 			"this tool is magically maintained, and always in peak condition",
-			"magic guides this tool as it works, creating supernaturally better work"
+			"magic guides this tool as it works, creating supernaturally better work",
+			"the wielder of this tool is imbused with magic and tires far slower working with it"
 		],
 		"quirk": [
-			"this tool sings as it works"
+			"this tool sings as it works",
+			"this tool grumbles as it works",
+			"this tool is excitedly enthusiastic as it works"
 		]	
 	},
 	{
@@ -220,14 +252,10 @@
 			"this item fills its owner with vim",
 			"this item fills its owner with energy",
 			"this item vibrates when it senses it's owner is in danger",
-			"the wielder of this item is magically stronger",
-			"the wielder of this item is magically faster",
-			"the wielder of this item is magically more cunning",
-			"the wielder of this item is magically more alluring",
-			"the wielder of this item magically has more vitality",
-			"the wielder of this item magically has more awareness",
 			"the wielder of this item can turn invisible at will",
-			"the wielder of this item can turn into fog at will"
+			"the wielder of this item can turn into fog at will",
+			"this item can be used to summon globules of burning liquid into its owner's hand",
+			"with a pointed finger the wielder of this item can fire a bolt of lightning at-will"
 		],
 		"quirk": [
 			"this item changes colour over time",
