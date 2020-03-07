@@ -324,12 +324,6 @@
 		"favitems": ["cooking"]
 	},
 	{
-		"single": "pokémon trainer",
-		"plural": "pokémon trainers",
-		"slots": ["friend","friend","friend","friend","tool","tool","tool","tool"],
-		"favitems": ["pokemon","pokemon","pokemon"]
-	},
-	{
 		"single": "himbo",
 		"plural": "himbos",
 		"slots": ["pants","shirt","hat","tool","friend"],

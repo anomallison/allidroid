@@ -2160,6 +2160,7 @@ function generateBoss()
 		}
 		tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)]
 	}
+	*/
 	
 	if (is_animal)
 	{
@@ -2171,7 +2172,6 @@ function generateBoss()
 		boss_string += generateBossName(false,false) + ", the " + boss_class.single 
 			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
 	}
-	*/
 	
 	let position = -1;
 	let endposition = -1;
