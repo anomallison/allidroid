@@ -1786,11 +1786,11 @@ function generateArtifact(slot = null, favoureditems = null)
 		}
 	}
 	
-	let propertycount = Math.floor((Math.random()*4))+2;
+	let propertycount = Math.floor((Math.random()*3.45)+1.6);
 	
 	let properties = [];
 	let cursecount = 0;
-	let cursed = false;
+	//let cursed = false;
 	let baserand  = Math.random();
 	let random_int = 0;
 	
@@ -1801,7 +1801,8 @@ function generateArtifact(slot = null, favoureditems = null)
 			random_int [Math.floor((Math.random()*cursepool.length))]
 			properties.splice(0,0,cursepool[random_int])
 			cursepool.splice(random_int,1);
-			cursed = true;
+			cursecount++;
+			//cursed = true;
 		} 
 		else if (baserand < 0.54 && quirkpool.length > 0) // quirks
 		{
@@ -1823,11 +1824,11 @@ function generateArtifact(slot = null, favoureditems = null)
 	}
 	let name = ""
 	
-	if (baserand < 0.13) // single first word name
+	if (baserand < 0.125) // single first word name
 	{
 		name = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))]
 	}
-	else if (baserand < 0.26) // single last word name
+	else if (baserand < 0.25) // single last word name
 	{
 		name = "the " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))]
 	}
@@ -1840,7 +1841,7 @@ function generateArtifact(slot = null, favoureditems = null)
 				name:name,
 				baseitem:baseitem, //item.item, .type, .number
 				properties:properties,
-				cursed:cursed
+				cursed:(cursecount > 0)
 			};
 }
 

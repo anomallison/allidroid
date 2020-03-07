@@ -173,7 +173,7 @@
 			"a faint protective barrier surrounds the wearer of these clothes"
 		],
 		"quirk": [
-			"blood weeps from other worldly wounds into these clothes",
+			"blood weeps from seemingly nowhere into these clothes",
 			"wearing these clothes seems to drain the blood from the wearer's face"
 		]
 	},
@@ -193,8 +193,7 @@
 			"the wielder of this item is magically more cunning"
 		],
 		"quirk": [
-			"the item glows whenever the wielder uses the powers of the item",
-			"the item hums and crackles with lightning whenever the wielder uses the powers of the item"
+			"a signet on the item shifts whenever it is used"
 		]
 	},
 	{
@@ -203,7 +202,8 @@
 			"this tool fills it's wielder will dull noise as they work"
 		],
 		"enchantment": [
-			"this tool is magically maintained, and always in peak condition"
+			"this tool is magically maintained, and always in peak condition",
+			"magic guides this tool as it works, creating supernaturally better work"
 		],
 		"quirk": [
 			"this tool sings as it works"
@@ -213,15 +213,26 @@
 		"lists": ["any"],
 		"curse": [
 			"this item fills its owner with a sense of dread",
-			"this item fills its owner with a sense of impending doom"
+			"this item fills its owner with a sense of impending doom",
+			"the item beats as if it has its own heart"
 		],
 		"enchantment": [
 			"this item fills its owner with vim",
 			"this item fills its owner with energy",
-			"this item vibrates when it senses it's owner is in danger"
+			"this item vibrates when it senses it's owner is in danger",
+			"the wielder of this item is magically stronger",
+			"the wielder of this item is magically faster",
+			"the wielder of this item is magically more cunning",
+			"the wielder of this item is magically more alluring",
+			"the wielder of this item magically has more vitality",
+			"the wielder of this item magically has more awareness",
+			"the wielder of this item can turn invisible at will",
+			"the wielder of this item can turn into fog at will"
 		],
 		"quirk": [
-			"this item changes colour over time"
+			"this item changes colour over time",
+			"the item glows whenever the wielder uses the powers of the item",
+			"the item hums and crackles with lightning whenever the wielder uses the powers of the item"
 		]
 	}
 ]
