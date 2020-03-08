@@ -231,7 +231,9 @@
 		"enchantment": [
 			"the wand is imbued with an set of minor magical functions, charged simply by the wielder's words",
 			"the wand is imbued with a powerful amplifying enchantment, magnifying the powers of it's wielder",
-			"the wand is imbued with am array of spells and functions, charged by a powerful recharging enchantment"
+			"the wand is imbued with am array of spells and functions, charged by a powerful recharging enchantment",
+			"with a command the wand can summon balls of fire, lightning, or ice",
+			"with a command the wand can summon bolts of arcane, divine, or necromantic energy"
 		],
 		"quirk": [
 			"the wand is covered in glowing runes that change which is glowing, though seemingly at random",
@@ -253,7 +255,7 @@
 			"this item imbues its wielder with the power to breathe ice",
 			"this item imbues its wielder with the power to breathe lightning",
 			"a protective field encircles whomever wields this item",
-			"whomever carries this item feels their body knit and renewed rapidly before them",
+			"whomever carries this item feels their body knit and renewed rapidly",
 			"this item carries a large charge of mana that its wielder can easily tap into"
 		],
 		"quirk": [
@@ -308,7 +310,9 @@
 		"enchantment": [
 			"this item slows the wearer's aging",
 			"a faint protective barrier surrounds the wearer of this item",
-			"this item makes the wearer more alert and observant of their surroundings"
+			"this item makes the wearer more alert and observant of their surroundings",
+			"when this item senses danger it warns its wearer by trembling or somesuch",
+			"whomever wears this item feels their body knit and renewed rapidly"
 		],
 		"quirk": [
 			"a signet on the item shifts whenever it is used",
@@ -345,7 +349,7 @@
 		"enchantment": [
 			"this item fills its owner with vitality",
 			"this item fills its owner with magical energy",
-			"this item vibrates when it senses it's owner is in danger",
+			"with a command word the wielder of this item can summon a ball of swirling frost to their hand",
 			"the wielder of this item can turn invisible at will",
 			"the wielder of this item can turn into fog at will",
 			"this item can be used to summon globules of burning liquid into its owner's hand",

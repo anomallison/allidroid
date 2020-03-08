@@ -210,7 +210,7 @@
 	{
 		"name": "silk scarf",
 		"number": 1,
-		"type": "accessory",
+		"type": "clothing",
 		"slots": ["neck"],
 		"lists": ["mundane"],
 		"synonyms": ["wooly scarf"]
