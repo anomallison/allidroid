@@ -77,7 +77,7 @@
 		"type": "dualranged",
 		"slots": ["weapon"],
 		"lists": ["mundane","aggressive","ranged"],
-		"synonyms": ["dual handcrossbows","dual pistols","dual uzis"]
+		"synonyms": ["dual pistols","dual uzis"]
 	},
 	{
 		"name": "scepter of finely carved wood",
@@ -141,7 +141,15 @@
 		"type": "longarms",
 		"slots": ["weapon"],
 		"lists": ["advanced","ranged","aggressive"],
-		"synonyms": ["sniper rifle","gauss cannon","rocket launcher","plasma rifle","minigun","machine gun"]
+		"synonyms": ["sniper rifle","gauss cannon","plasma rifle","minigun","machine gun"]
+	},
+	{
+		"name": "rocket launcher",
+		"number": 1,
+		"type": "launchergun",
+		"slots": ["weapon"],
+		"lists": ["advanced","ranged","aggressive"],
+		"synonyms": ["grenade launcher","flamethrower","lightning gun"]
 	},
 	{
 		"name": "laser sword",

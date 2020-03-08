@@ -1752,7 +1752,7 @@ function getItemList(object)
 //
 
 
-var GENERATE_ARTIFACT_DISALLOWEDTYPES = ["pokemon","friend","dualmixed","ropeweapon","dualranged","smallarms","longarms","musicinstrument","consumable"];
+var GENERATE_ARTIFACT_DISALLOWEDTYPES = ["pokemon","friend","musicinstrument","consumable"];
 
 function generateArtifact(slot = null, favoureditems = null)
 {
@@ -1787,36 +1787,33 @@ function generateArtifact(slot = null, favoureditems = null)
 		}
 	}
 	
-	console.log("cursepool length: " + cursepool.length);
-	console.log("enchantpool length: " + enchantpool.length);
-	console.log("quirkpool length: " + quirkpool.length);
-	
 	let propertycount = Math.floor((Math.random()*1.25)+(Math.random()*1.25)+(Math.random()*0.75)+1);
 	
 	let properties = [];
 	let cursecount = 0;
 	let baserand  = Math.random();
 	let random_int = 0;
-	let cursechance = 0.20;
-	let quirkchance = 0.26;
+	let cursechance = 0.16 + (0.03*propertycount);
+	let quirkchance = 0.20 + (0.04*propertycount);
 	
 	
 	for (let i  = 0; i < propertycount; i++)
 	{
+		baserand  = Math.random();
 		if (baserand < cursechance && cursepool.length > 0) // curses
 		{
 			random_int = [Math.floor((Math.random()*cursepool.length))]
 			properties.splice(0,0,cursepool[random_int])
 			cursepool.splice(random_int,1);
 			cursecount++;
-			cursechance = cursechance/2;
+			cursechance = cursechance/3;
 		} 
 		else if (baserand < (cursechance + quirkchance) && quirkpool.length > 0) // quirks
 		{
 			random_int = [Math.floor((Math.random()*quirkpool.length))]
 			properties.push(quirkpool[random_int])
 			quirkpool.splice(random_int,1);
-			quirkchance = quirkchance/2;
+			quirkchance = quirkchance/3;
 		}
 		else if (enchantpool.length > 0) // enchantments
 		{
@@ -1828,15 +1825,15 @@ function generateArtifact(slot = null, favoureditems = null)
 		{
 			console.log("Unable to generate artifact property?")
 		}
-		baserand  = Math.random();
 	}
 	let name = ""
 	
-	if (baserand < 0.125) // single first word name
+	baserand  = Math.random();
+	if (baserand < 0.1) // single first word name
 	{
 		name = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))]
 	}
-	else if (baserand < 0.25) // single last word name
+	else if (baserand < 0.2) // single last word name
 	{
 		name = "the " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))]
 	}

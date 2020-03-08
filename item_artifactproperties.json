@@ -55,6 +55,24 @@
 		]
 	},
 	{
+		"lists": ["ropeweapon"],
+		"curse": [
+			"the chain of this weapon has a preference for coiling around it's wielder",
+			"the spirit of a snake demon inhabits this weapon",
+			"this weapon bubbles with a transparent gooey and bloody viscera that burns and evaporates on contact anything else"
+		],
+		"enchantment": [
+			"when this weapon is drawn it perfectly coils into position with it's wielder",
+			"this weapon coils around the weapons of those it parries and attempts to pry them from it's opponents",
+			"this weapon magically never tangles with itself, being unfurled with a single flick"
+		],
+		"quirk": [
+			"when kept on one's person this weapon behaves like a pet snake",
+			"this weapon is always magically clean",
+			"the wielder of this weapon feels a faint breeze at all times"
+		]
+	},
+	{
 		"lists": ["dualblades"],
 		"curse": [
 			"the blades drip with black brackish water that sizzle on contact with anything living",
@@ -62,14 +80,14 @@
 			"as one uses these blades they drain their life force in compensation for the life that they would be taking from others"
 		],
 		"enchantment": [
-			"when these blade are drawn, they glow red hot and drip with liquid fire that singe the ground",
+			"when these blades are drawn, they glow red hot and drip with liquid fire that singes the ground",
 			"when one parries with these blades they crack with thunder, disorienting their opponent",
 			"these blades hold magical edges which never dull",
 			"these blades gravitate toward each other, especially if one is thrown away from the other"
 		],
 		"quirk": [
 			"these blades argue whenever they are brought near one another",
-			"magic maintains these blades, keeping them in peak condition",
+			"one makes the sound of a cheetah when swung while the other makes the sound of a leopard",
 			"these blades gravitate towards their owners hand when reached for"
 		]
 	},
@@ -78,18 +96,39 @@
 		"curse": [
 			"as one uses these hammers they drains their life force in compensation of the life that they would be taking from others",
 			"glowing fissures along in the hafts of these hammer spurt hot steam that burns the wielder",
-			"holding these hammers fills its wielder's eyes with darkness, almost blinding them",
-			"these hammers gravitate toward each other, especially if one is thrown away from the other"
+			"holding these hammers fills its wielder's eyes with darkness, almost blinding them"
 		],
 		"enchantment": [
-			"as these hammers moves through the air their heads super cool and freezes the air around them",
-			"these hammers swing lighter than it feels, yet hit as if it were heavier than it feels to swing them",
+			"as these hammers move through the air their heads super cool and freeze the air around them",
+			"these hammers swing lighter than they feel, yet hit as if they were heavier than they feel to swing them",
+			"these hammers gravitate toward each other, especially if one is thrown away from the other",
 			"magic maintains these hammers, keeping them in peak form"
 		],
 		"quirk": [
 			"one makes the sound of a goat when swung while the other makes the sound of a ram",
 			"these hammers argue whenever they are brought near one another",
-			"magic maintains these hammers, keeping them in peak condition"
+			"these hammers gravitate towards their owners hand when reached for"
+		]
+	},
+	{
+		"lists": ["dualmixed"],
+		"curse": [
+			"the weapons drip with black brackish water that sizzle on contact with anything living",
+			"as one uses these weapons they drains their life force in compensation of the life that they would be taking from others",
+			"holding these weapons fills its wielder's eyes with darkness, almost blinding them",
+			"these weapons gravitate toward each other, especially if one is thrown away from the other"
+		],
+		"enchantment": [
+			"when these weapons are drawn, they glow red hot and drip with liquid fire that singes the ground",
+			"when one parries with these weapons they crack with thunder, disorienting their opponent",
+			"as these weapons move through the air their heads super cool and freeze the air around them",
+			"these weapons swing lighter than they feel, yet hit as if they were heavier than they feel to swing them",
+			"magic maintains these weapons, keeping them in peak form"
+		],
+		"quirk": [
+			"these weapons argue whenever they are brought near one another",
+			"these weapons gravitate towards their owners hand when reached for",
+			"one makes the sound of a goat when swung while the other makes the sound of a leopard"
 		]
 	},
 	{
@@ -127,6 +166,60 @@
 			"this sling yells excitedly whenever it is spun",
 			"spinning this sling imbues the wielder of this sling with a booming voice"
 		]
+	},
+	{
+		"lists": ["smallarms","longarms"],
+		"curse": [
+			"sickly transparent gunk oozes in the mechanisms of this gun, making it jam frequently",
+			"those who wield this gun see the world in a haze of debris and dust",
+			"a demon haunts this gun and any who wield it"
+		],
+		"enchantment": [
+			"this gun is magically maintained, and is always in peak condition",
+			"rounds fired from this gun are charged with arcane power and explode with aetheric force on impact",
+			"when drawn this gun's magazine and barrel permeates with frost, and its rounds explode in shards of vicious ice"
+		],
+		"quirk": [
+			"when fired, the gun roars with the spirit of a mighty dragon",
+			"when drawn this gun's magazine is magically reloaded and full",
+			"this gun never fires against its wielder, whether accidentally or intentionally"
+		]	
+	},
+	{
+		"lists": ["launchergun"],
+		"curse": [
+			"this weapon is heavy with the souls of those it has slain",
+			"the munitions fired from this weapon explode with shrapnel of burning ashen, screaming bones",
+			"wielding this weapon makes the wielder progressively more overheated, until they suspect they may ignite in hellfire"
+		],
+		"enchantment": [
+			"the munitions fired from this weapon explode in shaped ways that avoid all but their intended targets",
+			"this weapon is filled with intense energy and its munitions explode with disintegrating force",
+			"this weapon is unexpectedly lighter and easy to carry and aim, even its munitions when loaded are made lighter"
+		],
+		"quirk": [
+			"the munitions of this weapon explode with flare and harmless follow up pyrotechnics",
+			"wielding this weapon makes the wielder appear burlier than they actually are",
+			"this gun yells excitedly whenever explosions are going on around it"
+		]	
+	},
+	{
+		"lists": ["dualranged"],
+		"curse": [
+			"sickly transparent gunk oozes in the mechanisms of these guns, making them jam frequently",
+			"those who wield these guns see the world in a haze of debris and dust",
+			"rounds fired from these guns are lethargic, travel just slightly slower, are glow a sickly yellow and gelatinous on impact"
+		],
+		"enchantment": [
+			"these guns are magically maintained, and are always in peak condition",
+			"rounds fired from these guns are charged with arcane power and explode with aetheric force on impact",
+			"when drawn these guns magazines and barrels permeate with frost, and their rounds explode in shards of vicious ice"
+		],
+		"quirk": [
+			"when fired, these guns roar with the spirits of cheetahs",
+			"when drawn these guns magazines are magically reloaded and full",
+			"these guns argue whenever they're brought close to each other"
+		]	
 	},
 	{
 		"lists": ["wand"],
@@ -208,14 +301,14 @@
 	{
 		"lists": ["accessory"],
 		"curse": [
-			"this item is tight to a point of drawing blood, the pain distracting it's wielder",
-			"this item feeds on its wielder's life force",
-			"this item corrupts the wielder's mana aura"
+			"this item is tight to a point of drawing blood, the pain distracting the wearer",
+			"this item feeds on the wearer's life force",
+			"this item corrupts the wearer's mana aura"
 		],
 		"enchantment": [
-			"this item makes its wielder preternatually younger and more full of vigor",
-			"a faint protective barrier surrounds the wielder of this item",
-			"this item makes its wielder more alert and observant of their surroundings"
+			"this item slows the wearer's aging",
+			"a faint protective barrier surrounds the wearer of this item",
+			"this item makes the wearer more alert and observant of their surroundings"
 		],
 		"quirk": [
 			"a signet on the item shifts whenever it is used",
@@ -250,8 +343,8 @@
 			"the item burns with the torment of a trapped soul"
 		],
 		"enchantment": [
-			"this item fills its owner with vim",
-			"this item fills its owner with energy",
+			"this item fills its owner with vitality",
+			"this item fills its owner with magical energy",
 			"this item vibrates when it senses it's owner is in danger",
 			"the wielder of this item can turn invisible at will",
 			"the wielder of this item can turn into fog at will",
