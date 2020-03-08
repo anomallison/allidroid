@@ -1766,6 +1766,7 @@ function generateArtifact(slot = null, favoureditems = null)
 	let propertypool = item_artifactproperties.filter(filterByList,baseitem.type);
 	propertypool = propertypool.concat(item_artifactproperties.filter(filterByList,"any"));
 	
+	
 	let cursepool = [];
 	let enchantpool = [];
 	let quirkpool = [];
@@ -1786,6 +1787,10 @@ function generateArtifact(slot = null, favoureditems = null)
 		}
 	}
 	
+	console.log("cursepool length: " + cursepool.length);
+	console.log("enchantpool length: " + enchantpool.length);
+	console.log("quirkpool length: " + quirkpool.length);
+	
 	let propertycount = Math.floor((Math.random()*1.25)+(Math.random()*1.25)+(Math.random()*0.75)+1);
 	
 	let properties = [];
@@ -1800,7 +1805,7 @@ function generateArtifact(slot = null, favoureditems = null)
 	{
 		if (baserand < cursechance && cursepool.length > 0) // curses
 		{
-			random_int [Math.floor((Math.random()*cursepool.length))]
+			random_int = [Math.floor((Math.random()*cursepool.length))]
 			properties.splice(0,0,cursepool[random_int])
 			cursepool.splice(random_int,1);
 			cursecount++;
@@ -1808,14 +1813,14 @@ function generateArtifact(slot = null, favoureditems = null)
 		} 
 		else if (baserand < (cursechance + quirkchance) && quirkpool.length > 0) // quirks
 		{
-			random_int [Math.floor((Math.random()*quirkpool.length))]
+			random_int = [Math.floor((Math.random()*quirkpool.length))]
 			properties.push(quirkpool[random_int])
 			quirkpool.splice(random_int,1);
 			quirkchance = quirkchance/2;
 		}
 		else if (enchantpool.length > 0) // enchantments
 		{
-			random_int [Math.floor((Math.random()*enchantpool.length))]
+			random_int = [Math.floor((Math.random()*enchantpool.length))]
 			properties.splice(cursecount,0,enchantpool[random_int])
 			enchantpool.splice(random_int,1);
 		}
