@@ -145,7 +145,7 @@ function processCommand(receivedMessage)
     console.log("Command received: " + primaryCommand)
     console.log("Arguments: " + arguments) // There may not be any arguments
 	
-	currentgay += Math.floor((Math.random() * 100) + 1);
+	//currentgay += Math.floor((Math.random() * 100) + 1);
 
     if (normalizedCommand == "monster") 
 	{
@@ -408,21 +408,17 @@ function processCommand(receivedMessage)
 
 function howgay()
 {
-	let randomRoll = Math.floor((Math.random() * 475) + 26);
-	let gayresult = "";
-	currentgay += randomRoll;
-	if (randomRoll > 421)
+	currentgay++;
+	let gayresult = "You put a coin in the gay jar. There are currently " + currentgay + " coins in the gay jar.";
+	if (currentgay == 1)
 	{
-		gayresult += "critical gay! "
-		randomRoll = Math.floor((Math.random() * 4000) + 1001);
-		currentgay += randomRoll;
+		gayresult = "You put a coin in the gay jar. There is currently 1 coin in the gay jar.";
 	}
-	if (currentgay > 1000000000)
-	{
-		gayresult += "gay overflow! ";
-		currentgay -= 1000000000;
-	}
-	gayresult += currentgay + " gay";
+	let baserand = Math.random()+(currentgay*0.01)
+	
+	if (baserand > 0.98)
+		gayresult = " :tada:";
+	
 	return gayresult;
 }
 

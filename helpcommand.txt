@@ -12,7 +12,7 @@
 
 !roll - Rolls a dice, or a string. XdY format, with X being the number of dice and Y being the sides per dice. Alternatively Y can be a string of characters
 
-!gay - Adds to the current total gay level of the bot as a whole
+!gay - Puts a coin in the gay jar
 
 !lesbian - Generates a lesbian
 
