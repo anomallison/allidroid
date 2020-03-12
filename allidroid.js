@@ -94,7 +94,7 @@ var reminder_idcounter = 0;
 // extremely important Gay variable
 //
 
-var currentgay = 200;
+var currentgay = 0;
 
 const MAX_DICE_ROLL = 999999999;
 const KEYSMASH_DEFAULT_STRING = "qwertyuiopasdfghjklzxcvbnmewradjtrykf,ghjg,hjkmgxdfhxgfxnmxfgfhd,sgfn325te.usgtfjtrlk980;u8ewrtiubhjsgdzdkjfhjgzjtykuliilopytz";
