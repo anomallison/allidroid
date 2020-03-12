@@ -576,7 +576,7 @@ function shakethejar()
 	}
 	
 	if (randomcoins > currentgay)
-		randomcoins = curretngay;
+		randomcoins = currentgay;
 	
 	if (randomcoins > MAX_COINS)
 		randomcoins = MAX_COINS;
