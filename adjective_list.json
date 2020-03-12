@@ -474,5 +474,12 @@
 		"lists": ["monster","friend","sexy"],
 		"antonyms": ["domineering"],
 		"synonyms": []
+	},
+	{
+		"word": "gay",
+		"priority": 7,
+		"lists": ["gaycha"],
+		"antonyms": [],
+		"synonyms": ["bi","lesbian","asexual","pan"]
 	}
 ]

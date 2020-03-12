@@ -2,6 +2,8 @@
 	{
 		"first":
 		[
+			"Rainbow",
+			"Irridescent",
 			"Golden",
 			"Silver",
 			"Bronze",
@@ -77,6 +79,7 @@
 			"Mind",
 			"Nexus",
 			"Marrow",
+			"Gemstone",
 			"Fist"
 		],
 		"magic":
@@ -97,5 +100,22 @@
 			"blackened",
 			"defiled",
 			"darkened"
+		],
+		"gaychafirst":
+		[
+			"Rainbow",
+			"Irridescent",
+			"Crystal",
+			"Precious",
+			"Jeweled",
+			"Dazzling"
+		],
+		"gaychalast":
+		[
+			"Gemstone",
+			"Secret",
+			"Quest",
+			"Aurora",
+			"Marque"
 		]
 	}

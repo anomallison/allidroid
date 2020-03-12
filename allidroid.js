@@ -94,7 +94,7 @@ var reminder_idcounter = 0;
 // extremely important Gay variable
 //
 
-var currentgay = 0;
+var currentgay = 200;
 
 const MAX_DICE_ROLL = 999999999;
 const KEYSMASH_DEFAULT_STRING = "qwertyuiopasdfghjklzxcvbnmewradjtrykf,ghjg,hjkmgxdfhxgfxnmxfgfhd,sgfn325te.usgtfjtrlk980;u8ewrtiubhjsgdzdkjfhjgzjtykuliilopytz";
@@ -197,7 +197,25 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "gay") 
 	{
-		receivedMessage.channel.send(howgay());
+		output = howgay();
+		if (output == null)
+		{
+			console.log("failed command: howgay");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
+    } else if (normalizedCommand == "shake") 
+	{
+		output = shakethejar();
+		if (output == null)
+		{
+			console.log("failed command: shake");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
 		return;
     } else if (normalizedCommand == "lesbian") 
 	{
@@ -417,10 +435,194 @@ function howgay()
 	let baserand = Math.random()+(currentgay*0.01)
 	
 	if (baserand > 0.98)
-		gayresult = " :tada:";
+		gayresult += " :tada:";
 	
 	return gayresult;
 }
+
+//
+//
+//
+
+function gaygacha(coins)
+{
+	let baserand = Math.random() - coins*0.1;
+
+	let rarity = getGachaRarity(baserand);
+	let hero_base = generateMonster("gaycha",0,0,1);
+	let hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single; 
+	
+	let hero_name = generateBossName(false);
+	//let hero_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
+	
+	let fullreturnstring = "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
+	
+	return fullreturnstring;
+}
+
+//
+//
+//
+
+function gayartifact(coins, slot = null, favoureditems = null)
+{
+	while (slot == null || slot == "friend")
+	{
+		slot = item_slotlimits[Math.floor((Math.random()*item_slotlimits.length))].slot;
+	}
+
+	let baseitem = generateBasicItem(slot,favoureditems,["largehammer","polearm","ropeweapon","dualhammers","dualmixed","dualranged","smallhammer","bow","sling","smallarms","longarms","launchergun","musicinstrument","pokemon","friend","consumable"]);
+	
+	let propertypool = item_artifactproperties.filter(filterByList,baseitem.type);
+	propertypool = propertypool.concat(item_artifactproperties.filter(filterByList,"any"));
+	
+	
+	let enchantpool = [];
+	let quirkpool = [];
+	
+	for (let i = 0; i < propertypool.length; i++)
+	{
+		for (let y = 0; y < propertypool[i].enchantment.length; y++)
+		{
+			enchantpool.push(propertypool[i].enchantment[y]);
+		}
+		for (let z = 0; z < propertypool[i].quirk.length; z++)
+		{
+			quirkpool.push(propertypool[i].quirk[z]);
+		}
+	}
+	
+	let propertycount = Math.floor((Math.random()*(1.25+coins*0.01))+(Math.random()*1.25+coins*0.01)+(Math.random()*0.75+coins*0.01)+1+coins*0.01);
+	
+	let properties = [];
+	let baserand  = Math.random();
+	let random_int = 0;
+	let quirkchance = 0.22 + (0.05*propertycount);
+	
+	
+	for (let i  = 0; i < propertycount; i++)
+	{
+		baserand  = Math.random();
+		if (baserand < (quirkchance) && quirkpool.length > 0) // quirks
+		{
+			random_int = [Math.floor((Math.random()*quirkpool.length))]
+			properties.push(quirkpool[random_int])
+			quirkpool.splice(random_int,1);
+			quirkchance = quirkchance/3;
+		}
+		else if (enchantpool.length > 0) // enchantments
+		{
+			random_int = [Math.floor((Math.random()*enchantpool.length))]
+			properties.splice(0,0,enchantpool[random_int])
+			enchantpool.splice(random_int,1);
+		}
+		else
+		{
+			console.log("Unable to generate artifact property?")
+		}
+	}
+	let name = ""
+	
+	baserand  = Math.random();
+	if (baserand < 0.06) // single first word name
+	{
+		name = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))]
+	}
+	else if (baserand < 0.12) // single last word name
+	{
+		name = "the " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))]
+	}
+	else
+	{
+		name = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))] + " " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))]
+	}
+	
+	return {
+				name:name,
+				baseitem:baseitem, //item.item, .type, .number
+				properties:properties,
+				cursed:false,
+			};
+}
+
+var MAX_COIN_PERCENTAGE = 0.20;
+var MAX_COINS = 100;
+
+//
+//
+//
+
+function shakethejar()
+{
+	if (currentgay == 0)
+	{
+		return "the gay jar is empty";
+	}
+	
+	let randomcoins = 0
+	let shaketime = 0
+	
+	if (currentgay > 5)
+	{
+		while (randomcoins == 0)
+		{
+			randomcoins = Math.floor((Math.random()+Math.random()/2)*MAX_COIN_PERCENTAGE*currentgay);
+			shaketime++;
+		}
+	} 
+	else
+	{
+		randomcoins = 1 + Math.floor(Math.random()*2);
+	}
+	
+	if (randomcoins > currentgay)
+		randomcoins = curretngay;
+	
+	if (randomcoins > MAX_COINS)
+		randomcoins = MAX_COINS;
+	
+	currentgay -= randomcoins;
+	
+	let hero = gaygacha(randomcoins);
+	let artifact = gayartifact(randomcoins);
+	
+	let fullstring = hero + " and their artifact " + artifact.name + ", the " + item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + artifact.baseitem.item;
+	
+	/*
+	let magical_properties = ""
+	
+	for (let i = 0; i < artifact.properties.length; i++)
+	{
+		if ((i+2) == artifact.properties.length)
+		{
+		magical_properties += artifact.properties[i] + ", and ";
+		} 
+		else if ((i+1) == artifact.properties.length)
+		{
+		magical_properties += artifact.properties[i] + ".";
+		} 
+		else
+		{
+		magical_properties += artifact.properties[i] + ", ";
+		}
+	}
+	fullstring = "\n" + grammarCapitalFirstLetter(magical_properties);
+	*/
+	let shakestring = ""
+	if (shaketime > 2)
+	{
+		shakestring = "You give the jar a good shake, getting ";
+	}
+	else
+	{
+		shakestring = "You shake ";
+	}
+		
+	fullstring = shakestring + randomcoins + " coins from the jar and spend them on the gaycha! You get: \n" + fullstring;
+	
+	return fullstring;
+}
+
 
 //
 // string to time
@@ -1870,7 +2072,7 @@ function artifactToString(artifact, full = false)
 	
 	if (full)
 	{
-	let magical_properties = ""
+		let magical_properties = ""
 	
 		for (let i = 0; i < artifact.properties.length; i++)
 		{
@@ -1887,7 +2089,7 @@ function artifactToString(artifact, full = false)
 			magical_properties += artifact.properties[i] + ", ";
 			}
 		}
-	output_string += "\n" + grammarCapitalFirstLetter(magical_properties);
+		output_string += "\n" + grammarCapitalFirstLetter(magical_properties);
 	}
 	
 	return output_string
