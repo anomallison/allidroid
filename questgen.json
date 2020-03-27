@@ -1,0 +1,1091 @@
+{
+	"alchemicalingredients":
+	[
+		"healfern",
+		"king's moss",
+		"simmonia bark",
+		"queen's petals",
+		"beardleaves",
+		"tokken's bark",
+		"king's herb"
+	],
+	"masterworkitems":
+	[
+		"a masterwork bow",
+		"a masterwork crossbow",
+		"a masterwork staff",
+		"a masterwork dagger",
+		"a masterwork sword",
+		"a masterwork axe",
+		"a masterwork halberd",
+		"a masterwork spear",
+		"a masterwork shield",
+		"a masterwork warhammer",
+		"a masterwork maul",
+		"a masterwork brigadine",
+		"a masterwork chain shirt",
+		"a masterwork half plate"
+	],
+	"magicitems":
+	[
+		"an enchanted bow",
+		"a elderwood bow",
+		"an enchanted crossbow",
+		"a mithril crossbow",
+		"an adamantine crossbow",
+		"an enchanted staff",
+		"a mithril staff",
+		"an adamantine staff",
+		"an enchanted dagger",
+		"a mithril dagger",
+		"an adamantine dagger",
+		"an enchanted sword",
+		"a mithril sword",
+		"an adamantine sword",
+		"an enchanted axe",
+		"a mithril axe",
+		"an adamantine axe",
+		"an enchanted halberd",
+		"a mithril halberd",
+		"an adamantine halberd",
+		"an enchanted spear",
+		"a mithril spear",
+		"an adamantine spear",
+		"an enchanted shield",
+		"a mithril shield",
+		"an adamantine shield",
+		"an enchanted warhammer",
+		"a milthril warhammer",
+		"an adamantine warhammer",
+		"an enchanted maul",
+		"a milthril maul",
+		"an adamantine maul",
+		"an enchanted brigadine",
+		"a mithril chain shirt",
+		"an adamantine half plate"
+	],
+	"questgivers":
+	[
+	    {
+			"name":"the king",
+			"reward":
+			[
+				"a heavy bag of gold",
+				"a bag of jewels",
+				"a title",
+				"a small fief",
+				"[magicitem]",
+				"[artifact]"
+			],
+			"level": 4
+	    },
+		{
+			"name":"the queen",
+			"reward":
+			[
+				"a heavy bag of gold",
+				"a bag of jewels",
+				"a title",
+				"a small fief",
+				"[magicitem]",
+				"[artifact]"
+			],
+			"level": 4
+	    },
+		{
+			"name":"the king's chancellor",
+			"reward":
+			[
+				"a heavy bag of gold",
+				"a bag of jewels",
+				"a title",
+				"a small fief",
+				"[magicitem]"
+			],
+			"level": 4
+	    },
+		{
+			"name":"the queen's chancellor",
+			"reward":
+			[
+				"a heavy bag of gold",
+				"a bag of jewels",
+				"a title",
+				"a small fief",
+				"[magicitem]"
+			],
+			"level": 4
+	    },
+		{
+			"name":"the king's marshall",
+			"reward":
+			[
+				"a heavy bag of gold",
+				"a bag of jewels",
+				"a title",
+				"a small fief",
+				"[magicitem]"
+			],
+			"level": 4
+	    },
+		{
+			"name":"the queen's marshall",
+			"reward":
+			[
+				"a heavy bag of gold",
+				"a bag of jewels",
+				"a title",
+				"a small fief",
+				"[magicitem]"
+			],
+			"level": 4
+	    },
+		{
+			"name":"the mayor",
+			"reward":
+			[
+				"a bag of gold",
+				"a large uncut jewel",
+				"an unowned building in town",
+				"[magicitem]"
+			],
+			"level": 3
+	    },
+		{
+			"name":"the town elder",
+			"reward":
+			[
+				"a bag of gold",
+				"an uncut jewel",
+				"[magicitem]",
+				"[masterworkitem]"
+			],
+			"level": 3
+	    },
+		{
+			"name":"the sheriff",
+			"reward":
+			[
+				"a bag of gold",
+				"an uncut jewel",
+				"[magicitem]",
+				"[masterworkitem]"
+			],
+			"level": 3
+	    },
+		{
+			"name":"the local hunter",
+			"reward":
+			[
+				"a small bag of gold",
+				"a small uncut jewel",
+				"various pelts and furs",
+				"[masterworkitem]"
+			],
+			"level": 2
+	    },
+		{
+			"name":"the blacksmith",
+			"reward":
+			[
+				"a small bag of gold",
+				"a small uncut jewel",
+				"to repair and improve your weapons",
+				"[masterworkitem]"
+			],
+			"level": 2
+	    },
+		{
+			"name":"the local witch",
+			"reward":
+			[
+				"a small bag of gold",
+				"a small uncut jewel",
+				"potions of healing"
+			],
+			"level": 1
+	    },
+		{
+			"name":"the local priest",
+			"reward":
+			[
+				"a small bag of gold",
+				"a small uncut jewel",
+				"potions of healing"
+			],
+			"level": 1
+	    },
+		{
+			"name":"the town drunk",
+			"reward":
+			[
+				"a bottle of beer",
+				"a half empty bottle of spirits",
+				"a glass from the secret stash"
+			],
+			"level": 0
+	    },
+		{
+			"name":"the local cat",
+			"reward":
+			[
+				"a fish",
+				"a bird carcass",
+				"a sprig of catnip"
+			],
+			"level": 0
+	    },
+		{
+			"name":"the local dog",
+			"reward":
+			[
+				"a bone",
+				"an old steak",
+				"a squeaky ball"
+			],
+			"level": 0
+	    }
+	],
+	"quests":
+	[
+		[
+			{
+				"objective":"fight the rats",
+				"location":
+				[
+					"the cellar",
+					"the pantry",
+					"the basement",
+					"the attic",
+					"the town fountain"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] is really the local witch!",
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out they're not rats, but giant mice!",
+					"it turns out they're not rats, but featherless bird things!",
+					"it turns out its a trap and [questgiver] is going to betray the adventurers!"
+				]
+			},
+			{
+				"objective":"fight the pidgeons",
+				"location":
+				[
+					"the pantry",
+					"the attic",
+					"the town fountain"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] is really the local witch!",
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out they're not pigeons, but giant sparrows!",
+					"it turns out they're not pigeons, but rats that'd been tarred and feathered!",
+					"it turns out its a trap and [questgiver] is going to betray the adventurers!"
+				]
+			},
+			{
+				"objective":"fight the feral cats",
+				"location":
+				[
+					"the park",
+					"the cellar",
+					"the pantry",
+					"the basement",
+					"the attic",
+					"the town fountain"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] is really the local witch!",
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out they're not cats, but dogs in cat disguises!",
+					"it turns out its a trap and [questgiver] is going to betray the adventurers!"
+				]
+			},
+			{
+				"objective":"fight the feral dogs",
+				"location":
+				[
+					"the park",
+					"the cellar",
+					"the pantry",
+					"the basement",
+					"the attic",
+					"the town fountain"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] is really the local witch!",
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out they're not dogs, but cats in dog disguises!",
+					"it turns out its a trap and [questgiver] is going to betray the adventurers!"
+				]
+			},
+			{
+				"objective":"find the dropped bottle of booze",
+				"location":
+				[
+					"the park",
+					"the cellar",
+					"the pantry",
+					"the basement",
+					"the attic",
+					"the town fountain"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out the bottle is empty and [questgiver] is disappointed and doesn't pay the adventurers!",
+					"it turns out its a trap and [questgiver] is going to betray the adventurers!"
+				]
+			}
+		],
+		[
+			{
+				"objective":"bring back a few handfuls of [alchemicalingredient]",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap and [questgiver] is going to betray the adventurers!",
+					"it turns out the ingredients are to help the local children!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that some gnolls have taken up residence in [location]!",
+					"it turns out that an ogre has taken up residence in [location]!",
+					"it turns out that some skeletons are wandering [location]!"
+				]
+			},
+			{
+				"objective":"bring back the important relic",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap and [questgiver] is going to betray the adventurers!",
+					"it turns out the ingredients are to help the local children!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that some gnolls have taken up residence in [location]!",
+					"it turns out that an ogre has taken up residence in [location]!",
+					"it turns out that some skeletons are wandering [location]!"
+				]
+			},
+			{
+				"objective":"fight the goblins that have taken up residence",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that some gnolls are also in [location] and they don't like the goblins!",
+					"it turns out that an ogre also lives in [location] and doesn't like the goblins!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the goblins multiple times!"
+				]
+			},
+			{
+				"objective":"fight the gnolls that have taken up residence",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a gnoll and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the gnolls!",
+					"it turns out that an ogre also lives in [location] and doesn't like the gnolls!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the gnolls multiple times!"
+				]
+			},
+			{
+				"objective":"fight the ogre that has taken up residence",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
+					"it turns out its a trap, [questgiver] is secretly a gnoll and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the ogre!",
+					"it turns out that some gnolls are also in [location] and they don't like the ogre!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the ogre multiple times!"
+				]
+			},
+			{
+				"objective":"fight the skeletons that wander",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the skeletons!",
+					"it turns out that some gnolls are also in [location] and they don't like the skeletons!",
+					"it turns out that an ogre also lives in [location] and doesn't like the skeletons!"
+				]
+			}
+		],
+		[
+			{
+				"objective":"fight the goblins that have taken up residence",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that some gnolls are also in [location] and they don't like the goblins!",
+					"it turns out that an ogre also lives in [location] and doesn't like the goblins!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the goblins multiple times!"
+				]
+			},
+			{
+				"objective":"fight the gnolls that have taken up residence",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a gnoll and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] but they have a true with the gnolls!",
+					"it turns out that an ogre also lives in [location] and doesn't like the gnolls!"
+				]
+			},
+			{
+				"objective":"fight the hobgoblin and their goblin minions that have taken up residence",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that other goblins have taken up residence in [location] and they don't like the hobgoblin!",
+					"it turns out that some gnolls are also in [location], but they have a truce with the hobgoblin!",
+					"it turns out that an ogre also lives in [location] and doesn't like the hobgoblin!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the goblins multiple times!"
+				]
+			},
+			{
+				"objective":"fight the skeletons that are wandering",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the skeletons!",
+					"it turns out that some gnolls are also in [location] and they don't like the skeletons!",
+					"it turns out that an ogre also lives in [location] and doesn't like the skeletons!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the skeletons!"
+				]
+			},
+			{
+				"objective":"fight the giant spiders that haved gathered",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a spider and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the spiders!",
+					"it turns out that some gnolls are also in [location] and they don't like the spiders!",
+					"it turns out that an ogre also lives in [location] and doesn't like the spiders!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the spiders!",
+					"it turns out that some skeletons are also wandering [location] and have gotten caught in the spiders webs many times already!"
+				]
+			},
+			{
+				"objective":"fight the wolves that haved gathered",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out [questgiver] isn't from around here!",
+					"it turns out its a trap, [questgiver] is secretly a werewolf and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the wolves!",
+					"it turns out that some gnolls are also in [location] and they don't like the wolves!",
+					"it turns out that an ogre also lives in [location] and doesn't like the wolves!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the wolves!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the wolves multiple times!"
+				]
+			},
+			{
+				"objective":"find a rare ore",
+				"location":
+				[
+					"the forest",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that some gnolls have taken up residence in [location]!",
+					"it turns out that an ogre lives in [location]!",
+					"it turns out that a hobgoblin with a gang of goblin minions lives in [location]!",
+					"it turns out that some skeletons are wandering [location]!",
+					"it turns out that some giant spiders have taken up residence in [location]!"
+				]
+			},
+			{
+				"objective":"bring back an important relic",
+				"location":
+				[
+					"the forest",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that some gnolls have taken up residence in [location]!",
+					"it turns out that an ogre lives in [location]!",
+					"it turns out that a hobgoblin with a gang of goblin minions lives in [location]!",
+					"it turns out that some skeletons are wandering [location]!",
+					"it turns out that some giant spiders have taken up residence in [location]!"
+				]
+			}
+		],
+		[
+			{
+				"objective":"fight the giant spiders that haved gathered",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a spider and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the spiders!",
+					"it turns out that some gnolls are also in [location] and they don't like the spiders!",
+					"it turns out that an ogre also lives in [location] and doesn't like the spiders!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the spiders!",
+					"it turns out that some skeletons are also wandering [location] and have gotten caught in the spiders webs many times already!"
+				]
+			},
+			{
+				"objective":"fight the wolves that haved gathered",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a werewolf and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the wolves!",
+					"it turns out that some gnolls are also in [location] and they don't like the wolves!",
+					"it turns out that an ogre also lives in [location] and doesn't like the wolves!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the wolves!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the wolves multiple times!"
+				]
+			},
+			{
+				"objective":"fight the hobgoblins that haved gathered",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a hobgoblin and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location], but they have a truce with the hobgoblins!",
+					"it turns out that some gnolls are also in [location] and they don't like the hobgoblins!",
+					"it turns out that an ogre also lives in [location] and doesn't like the hobgoblins!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the other hobgoblins!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the hobgoblins multiple times!",
+					"it turns out that giant spiders have taken up residence in [location] and they don't like the hobgoblins!"
+				]
+			},
+			{
+				"objective":"fight the ogres that haved gathered",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location], but they have a truce with the ogres!",
+					"it turns out that some gnolls are also in [location] and they don't like the ogres!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the ogres!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the ogres multiple times!",
+					"it turns out that giant spiders have taken up residence in [location] and they don't like the ogres!"
+				]
+			},
+			{
+				"objective":"fight the wight and it's skeleton minions that haved gathered",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the wight!",
+					"it turns out that some gnolls are also in [location] and they don't like the wight!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the wight!",
+					"it turns out that giant spiders have taken up residence in [location] and they don't like the wight!"
+				]
+			},
+			{
+				"objective":"fight the gnolls that haved taken up resitence",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a gnoll and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location], but they have a truce with the gnolls!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the gnolls!",
+					"it turns out that giant spiders have taken up residence in [location] and they don't like the gnolls!",
+					"it turns out that some skeletons are also wandering [location] and have attacked the gnolls multiple times!"
+				]
+			},
+			{
+				"objective":"find the missing townsfolk",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
+					"it turns out that giant spiders have taken up residence in [location]!",
+					"it turns out that skeletons are wandering [location]!",
+					"it turns out that ogres have taken up residence in [location]!"
+				]
+			},
+			{
+				"objective":"find a rare alchemical reagent",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
+					"it turns out that giant spiders have taken up residence in [location]!",
+					"it turns out that skeletons are wandering [location]!",
+					"it turns out that ogres have taken up residence in [location]!"
+				]
+			},
+			{
+				"objective":"find the missing relic",
+				"location":
+				[
+					"the graveyard",
+					"the forest",
+					"the plains",
+					"the outskirts",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
+					"it turns out that giant spiders have taken up residence in [location]!",
+					"it turns out that skeletons are wandering [location]!",
+					"it turns out that ogres have taken up residence in [location]!"
+				]
+			}
+		],
+		[
+			{
+				"objective":"fight the shade and its wight lieutenant and skeleton minions that haved amassed",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep",
+					"the abandoned castle",
+					"the abandoned tower"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] and they don't like the undead!",
+					"it turns out that gnolls are also in [location] and they don't like the undead!",
+					"it turns out that ogres are also in [location] and they don't like the undead!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the undead!"
+				]
+			},
+			{
+				"objective":"fight the bugbears and hobgoblins that have amassed",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep",
+					"the abandoned castle",
+					"the abandoned tower"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a bugbear and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location], but they have a truce with the bugbears and hobgoblins!",
+					"it turns out that gnolls are also in [location] and they don't like the bugbears and hobgoblins!",
+					"it turns out that ogres are also in [location], but they have a truce with the bugbears and hobgoblins!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the bugbears and other hobgoblins!",
+					"it turns out that a wight with some skeleton minions are also wandering [location] and have attacked the bugbears and other hobgoblins multiple times!"
+				]
+			},
+			{
+				"objective":"fight the wargs threatening travellers that lair",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned keep",
+					"the abandoned castle"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a werewolf and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location], but they have a truce with the bugbears and hobgoblins!",
+					"it turns out that gnolls are also in [location] and they don't like the bugbears and hobgoblins!",
+					"it turns out that ogres are also in [location], but they have a truce with the bugbears and hobgoblins!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the bugbears and other hobgoblins!",
+					"it turns out that a wight with some skeleton minions are also wandering [location] and have attacked the bugbears and other hobgoblins multiple times!"
+				]
+			},
+			{
+				"objective":"stop the necromancer from building an army in their lair",
+				"location":
+				[
+					"the abandoned manor",
+					"the abandoned keep",
+					"the abandoned castle",
+					"the abandoned tower"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a necromancer too and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] too, but they have an agreement with the necromancer!",
+					"it turns out that gnolls are also in [location] too, but they have an agreement with the necromancer!",
+					"it turns out that ogres are also in [location] too, but they have an agreement with the necromancer!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] too, but they have an agreement with the necromancer!",
+					"it turns out that giant spiders have nested in [location] but seem to avoid the necromancer and their minions!"
+				]
+			},
+			{
+				"objective":"stop the cultists from summoning a greater demon in their lair",
+				"location":
+				[
+					"the abandoned manor",
+					"the abandoned keep",
+					"the abandoned castle",
+					"the abandoned tower"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a cultist too and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location] too, but they have an agreement with the cultists!",
+					"it turns out that gnolls are also in [location] too, but they have an agreement with the cultists!",
+					"it turns out that ogres are also in [location] too, but they have an agreement with the cultists!",
+					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] too, but they have an agreement with the cultists!",
+					"it turns out that giant spiders have nested in [location] but seem to avoid the cultists and their minions!"
+				]
+			},
+			{
+				"objective":"rescue the prince trapped",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep",
+					"the abandoned castle",
+					"the abandoned tower"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a traitor and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
+					"it turns out that giant spiders have taken up residence in [location]!",
+					"it turns out that a wight with some skeleton minions are wandering [location]!",
+					"it turns out that ogres have taken up residence in [location]!",
+					"it turns out that bugbears and goblins have taken up residence in [location]!"
+				]
+			},
+			{
+				"objective":"rescue the princess trapped",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep",
+					"the abandoned castle",
+					"the abandoned tower"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a traitor and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
+					"it turns out that giant spiders have taken up residence in [location]!",
+					"it turns out that a wight with some skeleton minions are wandering [location]!",
+					"it turns out that ogres have taken up residence in [location]!",
+					"it turns out that bugbears and goblins have taken up residence in [location]!"
+				]
+			},
+			{
+				"objective":"rescue the missing courtiers",
+				"location":
+				[
+					"the forest",
+					"the plains",
+					"the woods",
+					"the mines",
+					"the caves",
+					"the abandoned warehouse",
+					"the abandoned manor",
+					"the abandoned keep",
+					"the abandoned castle",
+					"the abandoned tower"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a traitor and is going to betray the adventurers!",
+					"it turns out [location] [locationisare] haunted!",
+					"it turns out that goblins have taken up residence in [location]!",
+					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
+					"it turns out that giant spiders have taken up residence in [location]!",
+					"it turns out that a wight with some skeleton minions are wandering [location]!",
+					"it turns out that ogres have taken up residence in [location]!",
+					"it turns out that bugbears and goblins have taken up residence in [location]!"
+				]
+			},
+			{
+				"objective":"deliver a message to the court",
+				"location":
+				[
+					"the neighbouring kingdom"
+				],
+				"twists":
+				[
+					"it turns out its a trap, [questgiver] is secretly a traitor and is going to betray the adventurers!",
+					"it turns out that the neighbouring kingdom is overrun with goblins and hobgoblins!",
+					"it turns out that the neighbouring kingdom is overrun with skeletons and zombies!",
+					"it turns out that the neighbouring kingdom is overrun with giant spiders and wolves!",
+					"it turns out that the neighbouring kingdom is overrun with ogres and orcs!",
+					"it turns out that the neighbouring kingdom is overrun with gnolls!",
+					"it turns out that the neighbouring kingdom is at war!"
+				]
+			}
+		]
+	]
+}

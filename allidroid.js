@@ -79,6 +79,9 @@ var how_suffixes = JSON.parse(fs.readFileSync('how_suffixes.json'));
 var tarot_deck = JSON.parse(fs.readFileSync('tarot_deck.json'));
 var tarot_readings = JSON.parse(fs.readFileSync('tarot_readings.json'));
 
+//questgen file
+var quest_gen = JSON.parse(fs.readFileSync('questgen.json'));
+var QUEST_GEN_MAX_LEVEL = 4;
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -97,7 +100,7 @@ var reminder_idcounter = 0;
 var currentgay = 0;
 
 const MAX_DICE_ROLL = 999999999;
-const KEYSMASH_DEFAULT_STRING = "qwertyuiopasdfghjklzxcvbnmewradjtrykf,ghjg,hjkmgxdfhxgfxnmxfgfhd,sgfn325te.usgtfjtrlk980;u8ewrtiubhjsgdzdkjfhjgzjtykuliilopytz";
+const KEYSMASH_DEFAULT_STRING = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnmewradjtrykf,ghjg,hjkmgx1234567890dfhxgfxnmxfgfhd,sgfn325te.;,!.usgtfjtrlk980;u8ewrtiubhjsgdzdkjfhjgzjtykuliilopytz";
 const KEYSMASH_DEFAULT_MAX = 32;
 const KEYSMASH_DEFAULT_MIN = 18;
 
@@ -407,6 +410,20 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
+    } else if (normalizedCommand == "quest") 
+	{
+		output = generateQuest(arguments[0]);
+		
+		if (output == null)
+		{
+			console.log("failed command: quest");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
     }
 	else
 	{
@@ -505,20 +522,20 @@ function gayartifact(coins, slot = null, favoureditems = null)
 		baserand  = Math.random();
 		if (baserand < (quirkchance) && quirkpool.length > 0) // quirks
 		{
-			random_int = [Math.floor((Math.random()*quirkpool.length))]
-			properties.push(quirkpool[random_int])
+			random_int = Math.floor((Math.random()*quirkpool.length));
+			properties.push(quirkpool[random_int]);
 			quirkpool.splice(random_int,1);
 			quirkchance = quirkchance/3;
 		}
 		else if (enchantpool.length > 0) // enchantments
 		{
-			random_int = [Math.floor((Math.random()*enchantpool.length))]
-			properties.splice(0,0,enchantpool[random_int])
+			random_int = Math.floor((Math.random()*enchantpool.length));
+			properties.splice(0,0,enchantpool[random_int]);
 			enchantpool.splice(random_int,1);
 		}
 		else
 		{
-			console.log("Unable to generate artifact property?")
+			console.log("Unable to generate artifact property?");
 		}
 	}
 	let name = ""
@@ -526,15 +543,15 @@ function gayartifact(coins, slot = null, favoureditems = null)
 	baserand  = Math.random();
 	if (baserand < 0.06) // single first word name
 	{
-		name = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))]
+		name = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))];
 	}
 	else if (baserand < 0.12) // single last word name
 	{
-		name = "the " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))]
+		name = "the " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
 	}
 	else
 	{
-		name = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))] + " " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))]
+		name = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))] + " " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
 	}
 	
 	return {
@@ -1386,7 +1403,7 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 		}
 		tempcharacter = subtemplist[random_int];
 		tempcharlist = tempcharlist.filter(removeByID,tempcharacter.id);
-		for (let i = 0; i < tempcharacter.invalidpairs.length; i++)
+		for (let i = 0; i < tempcharacter.invalidpairs.length; i++) // remove all invalid pairs
 		{
 			tempcharlist = tempcharlist.filter(removeByID,tempcharacter.invalidpairs[i]);
 		}
@@ -2876,6 +2893,95 @@ function tarotdraw(suitefilter = null, drawcount = 2)
 	
 	return reading_string;
 }
+
+
+//
+// filter the objects by whether 'this' is the level of the object
+//
+
+function filterByLevel(object)
+{
+	return object.level == this;
+}
+
+//
+// generate quest
+
+function generateQuest(level = -1)
+{
+	if (level == -1 || level > QUEST_GEN_MAX_LEVEL)
+		level = Math.floor(Math.random()*(QUEST_GEN_MAX_LEVEL+1));
+	
+	let tempquestgivers = quest_gen.questgivers.filter(filterByLevel,level);
+	
+	let quest_giver = tempquestgivers[Math.floor(Math.random()*tempquestgivers.length)];
+	let quest_given = quest_gen.quests[level][Math.floor(Math.random()*quest_gen.quests[level].length)];
+	
+	let quest_reward = Math.floor(Math.random()*quest_giver.reward.length);
+	let quest_location = Math.floor(Math.random()*quest_given.location.length);
+	let quest_twist = Math.floor(Math.random()*quest_given.twists.length);
+	
+	let quest_string = grammarCapitalFirstLetter(quest_giver.name) + " is asking for adventurers to " + quest_given.objective + " in " + quest_given.location[quest_location] 
+		+ ".\nThey are offering " + quest_giver.reward[quest_reward] + " for completing their quest, but " + quest_given.twists[quest_twist];
+	
+	
+	let position = quest_string.indexOf("\[");
+	let endposition = -1;
+	let quest_substring = "";
+	let substr_number = "";
+	
+	while (position != -1)
+	{
+		endposition = quest_string.indexOf("\]");
+		quest_substring = quest_string.substring(position+1,endposition);
+		substr_number = randomNumberForText(quest_substring);
+		if (quest_substring == "masterworkitem")
+		{
+			quest_string = quest_string.substr(0,position) + quest_gen.masterworkitems[Math.floor(Math.random()*quest_gen.masterworkitems.length)] + quest_string.substr(endposition+1);
+		}
+		else if (quest_substring == "magicitem")
+		{
+			quest_string = quest_string.substr(0,position) + quest_gen.magicitems[Math.floor(Math.random()*quest_gen.magicitems.length)] + quest_string.substr(endposition+1);
+		}
+		else if (quest_substring == "artifact")
+		{
+			quest_string = quest_string.substr(0,position) + grammarCapitalFirstLetter(artifactToString(generateArtifact(), false)) + quest_string.substr(endposition+1);
+		}
+		else if (quest_substring == "alchemicalingredient")
+		{
+			quest_string = quest_string.substr(0,position) + quest_gen.alchemicalingredients[Math.floor(Math.random()*quest_gen.alchemicalingredients.length)] + quest_string.substr(endposition+1);
+		}
+		else if (quest_substring == "questgiver")
+		{
+			quest_string = quest_string.substr(0,position) + quest_giver.name + quest_string.substr(endposition+1);
+		}
+		else if (quest_substring == "location")
+		{
+			quest_string = quest_string.substr(0,position) + quest_given.location[quest_location] + quest_string.substr(endposition+1);
+		}
+		else if (quest_substring == "locationisare" && quest_given.location[quest_location].substr(-1).toLowerCase() == "s")
+		{
+			quest_string = quest_string.substr(0,position) + "are" + quest_string.substr(endposition+1);
+		}
+		else if (quest_substring == "locationisare")
+		{
+			quest_string = quest_string.substr(0,position) + "is" + quest_string.substr(endposition+1);
+		}
+		else if (substr_number != false)
+		{
+			quest_string = quest_string.substr(0,position) + substr_number.toString() + quest_string.substr(endposition+1);
+		}
+		else
+		{
+			quest_string = quest_string.substr(0,position) + quest_string.substr(endposition+1);
+		}
+		position = quest_string.indexOf("\[");
+	}
+	
+	return quest_string;
+}
+
+
 
 //
 //
