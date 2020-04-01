@@ -2921,8 +2921,39 @@ function generateQuest(level = -1)
 	let quest_location = Math.floor(Math.random()*quest_given.location.length);
 	let quest_twist = Math.floor(Math.random()*quest_given.twists.length);
 	
-	let quest_string = grammarCapitalFirstLetter(quest_giver.name) + " is asking for adventurers to " + quest_given.objective + " in " + quest_given.location[quest_location] 
-		+ ".\nThey are offering " + quest_giver.reward[quest_reward] + " for completing their quest, but " + quest_given.twists[quest_twist];
+	let quest_string
+	if (quest_given.details.length > 0)
+	{
+		let quest_detail1 = Math.floor(Math.random()*quest_given.details.length);
+		let quest_detail2 = Math.floor(Math.random()*quest_given.details.length);
+		while (quest_detail2 == quest_detail1)
+		{
+			quest_detail2 = Math.floor(Math.random()*quest_given.details.length);
+		}
+		
+		
+		if(Math.random() < 0.6) //one quest detail
+		{
+			quest_string = grammarCapitalFirstLetter(quest_giver.name) + " is asking for adventurers to " + quest_given.objective + " in " + quest_given.location[quest_location] 
+			+ "\n" + grammarCapitalFirstLetter(quest_given.details[quest_detail1])
+			+ ".\nThey are offering " + quest_giver.reward[quest_reward] + " for completing their quest, but " + quest_given.twists[quest_twist];
+		}
+		else //two quest details
+		{
+			quest_string = grammarCapitalFirstLetter(quest_giver.name) + " is asking for adventurers to " + quest_given.objective + " in " + quest_given.location[quest_location] 
+			+ "\n" + grammarCapitalFirstLetter(quest_given.details[quest_detail1]) + " and " + quest_given.details[quest_detail2] 
+			+ ".\nThey are offering " + quest_giver.reward[quest_reward] + " for completing their quest, but " + quest_given.twists[quest_twist];
+		}
+		
+	}
+	else
+	{
+		quest_string = grammarCapitalFirstLetter(quest_giver.name) + " is asking for adventurers to " + quest_given.objective + " in " + quest_given.location[quest_location] 
+			+ ".\nThey are offering " + quest_giver.reward[quest_reward] + " for completing their quest, but " + quest_given.twists[quest_twist];
+	}
+	
+	
+	
 	
 	
 	let position = quest_string.indexOf("\[");

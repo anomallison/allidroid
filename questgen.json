@@ -259,6 +259,7 @@
 					"the attic",
 					"the town fountain"
 				],
+				"details": [],
 				"twists":
 				[
 					"it turns out [questgiver] is really the local witch!",
@@ -276,6 +277,7 @@
 					"the attic",
 					"the town fountain"
 				],
+				"details": [],
 				"twists":
 				[
 					"it turns out [questgiver] is really the local witch!",
@@ -296,6 +298,7 @@
 					"the attic",
 					"the town fountain"
 				],
+				"details": [],
 				"twists":
 				[
 					"it turns out [questgiver] is really the local witch!",
@@ -315,6 +318,7 @@
 					"the attic",
 					"the town fountain"
 				],
+				"details": [],
 				"twists":
 				[
 					"it turns out [questgiver] is really the local witch!",
@@ -334,6 +338,7 @@
 					"the attic",
 					"the town fountain"
 				],
+				"details": [],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
@@ -352,16 +357,19 @@
 					"the outskirts",
 					"the woods"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"some gnolls have taken up residence in [location]",
+					"an ogre has taken up residence in [location]",
+					"skeletons are wandering [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap and [questgiver] is going to betray the adventurers!",
-					"it turns out the ingredients are to help the local children!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that some gnolls have taken up residence in [location]!",
-					"it turns out that an ogre has taken up residence in [location]!",
-					"it turns out that some skeletons are wandering [location]!"
+					"it turns out the ingredients are to make potions to help the local children!",
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -373,16 +381,19 @@
 					"the outskirts",
 					"the woods"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"some gnolls have taken up residence in [location]",
+					"an ogre has taken up residence in [location]",
+					"skeletons are wandering [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap and [questgiver] is going to betray the adventurers!",
-					"it turns out the ingredients are to help the local children!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that some gnolls have taken up residence in [location]!",
-					"it turns out that an ogre has taken up residence in [location]!",
-					"it turns out that some skeletons are wandering [location]!"
+					"it turns out the relic is a fake!",
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -394,14 +405,17 @@
 					"the outskirts",
 					"the woods"
 				],
+				"details": 
+				[
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"skeletons are also wandering [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that some gnolls are also in [location] and they don't like the goblins!",
-					"it turns out that an ogre also lives in [location] and doesn't like the goblins!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the goblins multiple times!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -413,14 +427,17 @@
 					"the outskirts",
 					"the woods"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"skeletons are also wandering [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a gnoll and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the gnolls!",
-					"it turns out that an ogre also lives in [location] and doesn't like the gnolls!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the gnolls multiple times!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -432,15 +449,18 @@
 					"the outskirts",
 					"the woods"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"skeletons are also wandering [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
 					"it turns out its a trap, [questgiver] is secretly a gnoll and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the ogre!",
-					"it turns out that some gnolls are also in [location] and they don't like the ogre!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the ogre multiple times!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -452,14 +472,17 @@
 					"the outskirts",
 					"the woods"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"some gnolls have taken up residence in [location]",
+					"an ogre has taken up residence in [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the skeletons!",
-					"it turns out that some gnolls are also in [location] and they don't like the skeletons!",
-					"it turns out that an ogre also lives in [location] and doesn't like the skeletons!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			}
 		],
@@ -476,14 +499,19 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that some gnolls are also in [location] and they don't like the goblins!",
-					"it turns out that an ogre also lives in [location] and doesn't like the goblins!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the goblins multiple times!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -498,13 +526,19 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a gnoll and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] but they have a true with the gnolls!",
-					"it turns out that an ogre also lives in [location] and doesn't like the gnolls!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -519,15 +553,20 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"a rival band goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that other goblins have taken up residence in [location] and they don't like the hobgoblin!",
-					"it turns out that some gnolls are also in [location], but they have a truce with the hobgoblin!",
-					"it turns out that an ogre also lives in [location] and doesn't like the hobgoblin!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the goblins multiple times!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -542,15 +581,20 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the skeletons!",
-					"it turns out that some gnolls are also in [location] and they don't like the skeletons!",
-					"it turns out that an ogre also lives in [location] and doesn't like the skeletons!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the skeletons!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -565,16 +609,20 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a spider and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the spiders!",
-					"it turns out that some gnolls are also in [location] and they don't like the spiders!",
-					"it turns out that an ogre also lives in [location] and doesn't like the spiders!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the spiders!",
-					"it turns out that some skeletons are also wandering [location] and have gotten caught in the spiders webs many times already!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -589,16 +637,20 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out [questgiver] isn't from around here!",
 					"it turns out its a trap, [questgiver] is secretly a werewolf and is going to betray the adventurers!",
-					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the wolves!",
-					"it turns out that some gnolls are also in [location] and they don't like the wolves!",
-					"it turns out that an ogre also lives in [location] and doesn't like the wolves!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the wolves!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the wolves multiple times!"
+					"it turns out [location] [locationisare] haunted!"
 				]
 			},
 			{
@@ -610,15 +662,21 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that some gnolls have taken up residence in [location]!",
-					"it turns out that an ogre lives in [location]!",
-					"it turns out that a hobgoblin with a gang of goblin minions lives in [location]!",
-					"it turns out that some skeletons are wandering [location]!",
-					"it turns out that some giant spiders have taken up residence in [location]!"
+					"it turns out [questgiver] is a traitor and is going to betray the adventurers!",
+					"it turns out the rare ore is too difficult to work with and a different ore will be needed!"
 				]
 			},
 			{
@@ -630,15 +688,21 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that some gnolls have taken up residence in [location]!",
-					"it turns out that an ogre lives in [location]!",
-					"it turns out that a hobgoblin with a gang of goblin minions lives in [location]!",
-					"it turns out that some skeletons are wandering [location]!",
-					"it turns out that some giant spiders have taken up residence in [location]!"
+					"it turns out the relic is cursed!",
+					"it turns out the relic is a fake!"
 				]
 			}
 		],
@@ -658,15 +722,21 @@
 					"the abandoned manor",
 					"the abandoned keep"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a spider and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the spiders!",
-					"it turns out that some gnolls are also in [location] and they don't like the spiders!",
-					"it turns out that an ogre also lives in [location] and doesn't like the spiders!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the spiders!",
-					"it turns out that some skeletons are also wandering [location] and have gotten caught in the spiders webs many times already!"
+					"it turns out the spiders are being lead by an evil druid!",
+					"it turns out the wolves are being lead by an evil ranger!"
 				]
 			},
 			{
@@ -684,15 +754,21 @@
 					"the abandoned manor",
 					"the abandoned keep"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a werewolf and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the wolves!",
-					"it turns out that some gnolls are also in [location] and they don't like the wolves!",
-					"it turns out that an ogre also lives in [location] and doesn't like the wolves!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the wolves!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the wolves multiple times!"
+					"it turns out the wolves are being lead by an evil druid!",
+					"it turns out the wolves are being lead by an evil ranger!"
 				]
 			},
 			{
@@ -710,16 +786,21 @@
 					"the abandoned manor",
 					"the abandoned keep"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a rival hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a hobgoblin and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location], but they have a truce with the hobgoblins!",
-					"it turns out that some gnolls are also in [location] and they don't like the hobgoblins!",
-					"it turns out that an ogre also lives in [location] and doesn't like the hobgoblins!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the other hobgoblins!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the hobgoblins multiple times!",
-					"it turns out that giant spiders have taken up residence in [location] and they don't like the hobgoblins!"
+					"it turns out the hobgoblins are being lead by a lesser devil!"
 				]
 			},
 			{
@@ -737,15 +818,20 @@
 					"the abandoned manor",
 					"the abandoned keep"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a goblin and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location], but they have a truce with the ogres!",
-					"it turns out that some gnolls are also in [location] and they don't like the ogres!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the ogres!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the ogres multiple times!",
-					"it turns out that giant spiders have taken up residence in [location] and they don't like the ogres!"
+					"it turns out the ogres are working for an evil wizard!"
 				]
 			},
 			{
@@ -763,14 +849,20 @@
 					"the abandoned manor",
 					"the abandoned keep"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the wight!",
-					"it turns out that some gnolls are also in [location] and they don't like the wight!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the wight!",
-					"it turns out that giant spiders have taken up residence in [location] and they don't like the wight!"
+					"it turns out the wight is protecting a shrine to the god of the undead!"
 				]
 			},
 			{
@@ -788,14 +880,20 @@
 					"the abandoned manor",
 					"the abandoned keep"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"an ogre has also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"skeletons are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a gnoll and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location], but they have a truce with the gnolls!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the gnolls!",
-					"it turns out that giant spiders have taken up residence in [location] and they don't like the gnolls!",
-					"it turns out that some skeletons are also wandering [location] and have attacked the gnolls multiple times!"
+					"it turns out the gnolls are being lead by a cleric of the god of monsters!"
 				]
 			},
 			{
@@ -813,15 +911,22 @@
 					"the abandoned manor",
 					"the abandoned keep"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"some gnolls have taken up residence in [location]",
+					"ogres have taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have taken up residence in [location]",
+					"skeletons are wandering [location]",
+					"giant spiders have gathered in [location]",
+					"a pack of wolves have gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
-					"it turns out that giant spiders have taken up residence in [location]!",
-					"it turns out that skeletons are wandering [location]!",
-					"it turns out that ogres have taken up residence in [location]!"
+					"it turns out the missing townsfolk are cultists!"
+					
 				]
 			},
 			{
@@ -835,15 +940,21 @@
 					"the mines",
 					"the caves"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"some gnolls have taken up residence in [location]",
+					"ogres have taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have taken up residence in [location]",
+					"skeletons are wandering [location]",
+					"giant spiders have gathered in [location]",
+					"a pack of wolves have gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
-					"it turns out that giant spiders have taken up residence in [location]!",
-					"it turns out that skeletons are wandering [location]!",
-					"it turns out that ogres have taken up residence in [location]!"
+					"it turns out the rare alchemical reagent is not quite what is needed!"
 				]
 			},
 			{
@@ -861,15 +972,22 @@
 					"the abandoned manor",
 					"the abandoned keep"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"some gnolls have taken up residence in [location]",
+					"ogres have taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have taken up residence in [location]",
+					"skeletons are wandering [location]",
+					"giant spiders have gathered in [location]",
+					"a pack of wolves have gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
-					"it turns out that giant spiders have taken up residence in [location]!",
-					"it turns out that skeletons are wandering [location]!",
-					"it turns out that ogres have taken up residence in [location]!"
+					"it turns out the relic is a fake!",
+					"it turns out the relic is cursed!"
 				]
 			}
 		],
@@ -889,14 +1007,21 @@
 					"the abandoned castle",
 					"the abandoned tower"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"some gnolls have taken up residence in [location]",
+					"ogres have taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have taken up residence in [location]",
+					"giant spiders have gathered in [location]",
+					"a pack of wolves have gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a necromancer and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] and they don't like the undead!",
-					"it turns out that gnolls are also in [location] and they don't like the undead!",
-					"it turns out that ogres are also in [location] and they don't like the undead!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the undead!"
+					"it turns out a necromancer is behind the shade!",
+					"it turns out the shade can only be defeated by fulfilling an old prophecy!"
 				]
 			},
 			{
@@ -914,15 +1039,22 @@
 					"the abandoned castle",
 					"the abandoned tower"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some rival gnolls have also taken up residence in [location]",
+					"rival ogres have also taken up residence in [location]",
+					"a rival hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"a wight with some skeleton minions are also wandering [location]",
+					"giant spiders have also gathered in [location]",
+					"a pack of wolves have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a bugbear and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location], but they have a truce with the bugbears and hobgoblins!",
-					"it turns out that gnolls are also in [location] and they don't like the bugbears and hobgoblins!",
-					"it turns out that ogres are also in [location], but they have a truce with the bugbears and hobgoblins!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the bugbears and other hobgoblins!",
-					"it turns out that a wight with some skeleton minions are also wandering [location] and have attacked the bugbears and other hobgoblins multiple times!"
+					"it turns out a mysterious general is leading the bugbears and hobgoblins!",
+					"it turns out a cleric of the war god is leading the bugbears and hobgoblins!"
 				]
 			},
 			{
@@ -937,15 +1069,21 @@
 					"the abandoned keep",
 					"the abandoned castle"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some rival gnolls have also taken up residence in [location]",
+					"some ogres have also taken up residence in [location]",
+					"a rival hobgoblin with a gang of goblin minions have taken up residence in [location]",
+					"a wight with some skeleton minions are also wandering [location]",
+					"giant spiders have gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a werewolf and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location], but they have a truce with the bugbears and hobgoblins!",
-					"it turns out that gnolls are also in [location] and they don't like the bugbears and hobgoblins!",
-					"it turns out that ogres are also in [location], but they have a truce with the bugbears and hobgoblins!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] and they don't like the bugbears and other hobgoblins!",
-					"it turns out that a wight with some skeleton minions are also wandering [location] and have attacked the bugbears and other hobgoblins multiple times!"
+					"it turns out an evil druid is leading these wargs!",
+					"it turns out these wargs are being lead by an evil ranger!"
 				]
 			},
 			{
@@ -957,15 +1095,19 @@
 					"the abandoned castle",
 					"the abandoned tower"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"ogres have also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"giant spiders have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a necromancer too and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] too, but they have an agreement with the necromancer!",
-					"it turns out that gnolls are also in [location] too, but they have an agreement with the necromancer!",
-					"it turns out that ogres are also in [location] too, but they have an agreement with the necromancer!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] too, but they have an agreement with the necromancer!",
-					"it turns out that giant spiders have nested in [location] but seem to avoid the necromancer and their minions!"
+					"it turns out this necromancer seeks to become a liche and is almost prepared for the ritual!"
 				]
 			},
 			{
@@ -977,15 +1119,19 @@
 					"the abandoned castle",
 					"the abandoned tower"
 				],
+				"details": 
+				[
+					"goblins have also taken up residence in [location]",
+					"some gnolls have also taken up residence in [location]",
+					"ogres have also taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have also taken up residence in [location]",
+					"giant spiders have also gathered in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a cultist too and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location] too, but they have an agreement with the cultists!",
-					"it turns out that gnolls are also in [location] too, but they have an agreement with the cultists!",
-					"it turns out that ogres are also in [location] too, but they have an agreement with the cultists!",
-					"it turns out that a hobgoblin with a gang of goblin minions also lives in [location] too, but they have an agreement with the cultists!",
-					"it turns out that giant spiders have nested in [location] but seem to avoid the cultists and their minions!"
+					"it turns out the cultists are lead by a lesser demon!"
 				]
 			},
 			{
@@ -1003,16 +1149,22 @@
 					"the abandoned castle",
 					"the abandoned tower"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"gnolls have taken up residence in [location]",
+					"ogres have taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have taken up residence in [location]",
+					"a wight with some skeleton minions are wandering [location]",
+					"giant spiders have gathered in [location]",
+					"bugbears and goblins have taken up residence in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a traitor and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
-					"it turns out that giant spiders have taken up residence in [location]!",
-					"it turns out that a wight with some skeleton minions are wandering [location]!",
-					"it turns out that ogres have taken up residence in [location]!",
-					"it turns out that bugbears and goblins have taken up residence in [location]!"
+					"it turns out the prince is an evil warlock and is trying to summon a great abberation!",
+					"it turns out the prince is a good warlock and was trying to stop an evil cult!"
 				]
 			},
 			{
@@ -1030,16 +1182,22 @@
 					"the abandoned castle",
 					"the abandoned tower"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"gnolls have taken up residence in [location]",
+					"ogres have taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have taken up residence in [location]",
+					"a wight with some skeleton minions are wandering [location]",
+					"giant spiders have gathered in [location]",
+					"bugbears and goblins have taken up residence in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a traitor and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
-					"it turns out that giant spiders have taken up residence in [location]!",
-					"it turns out that a wight with some skeleton minions are wandering [location]!",
-					"it turns out that ogres have taken up residence in [location]!",
-					"it turns out that bugbears and goblins have taken up residence in [location]!"
+					"it turns out the princess is an evil witch and is trying to summon a great abberation!",
+					"it turns out the princess is a good witch and was trying to stop an evil cult!"
 				]
 			},
 			{
@@ -1057,16 +1215,23 @@
 					"the abandoned castle",
 					"the abandoned tower"
 				],
+				"details": 
+				[
+					"goblins have taken up residence in [location]",
+					"gnolls have taken up residence in [location]",
+					"ogres have taken up residence in [location]",
+					"a hobgoblin with a gang of goblin minions have taken up residence in [location]",
+					"a wight with some skeleton minions are wandering [location]",
+					"giant spiders have gathered in [location]",
+					"bugbears and goblins have taken up residence in [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a traitor and is going to betray the adventurers!",
 					"it turns out [location] [locationisare] haunted!",
-					"it turns out that goblins have taken up residence in [location]!",
-					"it turns out that a hobgoblin with a gang of goblin minions have taken up residence in [location]!",
-					"it turns out that giant spiders have taken up residence in [location]!",
-					"it turns out that a wight with some skeleton minions are wandering [location]!",
-					"it turns out that ogres have taken up residence in [location]!",
-					"it turns out that bugbears and goblins have taken up residence in [location]!"
+					"it turns out the missing courtiers were plotting against the crown!",
+					"it turns out the missing courtiers were evil cultists!",
+					"it turns out it's a trap, [questgiver] is using the adventurers to find the missing courtiers who are trying to stop them from starting a war!"
 				]
 			},
 			{
@@ -1075,14 +1240,18 @@
 				[
 					"the neighbouring kingdom"
 				],
+				"details": 
+				[
+					"goblins and hobgoblins have overrun [location]",
+					"gnolls have overrun [location]",
+					"ogres and orcs have overrun [location]",
+					"skeletons and zombies have overrun [location]",
+					"spiders and wolves have overrun [location]",
+					"bandits and thieves have overrun [location]"
+				],
 				"twists":
 				[
 					"it turns out its a trap, [questgiver] is secretly a traitor and is going to betray the adventurers!",
-					"it turns out that the neighbouring kingdom is overrun with goblins and hobgoblins!",
-					"it turns out that the neighbouring kingdom is overrun with skeletons and zombies!",
-					"it turns out that the neighbouring kingdom is overrun with giant spiders and wolves!",
-					"it turns out that the neighbouring kingdom is overrun with ogres and orcs!",
-					"it turns out that the neighbouring kingdom is overrun with gnolls!",
 					"it turns out that the neighbouring kingdom is at war!"
 				]
 			}
