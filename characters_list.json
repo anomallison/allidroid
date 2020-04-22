@@ -1184,7 +1184,7 @@
 	},
 	{
 		"id": "ff7-06",
-		"name": "Aeris",
+		"name": "Aerith",
 		"gender": "f",
 		"invalidpairs": [],
 		"lists":["party"]
@@ -1248,6 +1248,48 @@
 	{
 		"id": "ff7-0F",
 		"name": "Zack",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-10",
+		"name": "Jenova",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-11",
+		"name": "Shera",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-12",
+		"name": "Roche",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-13",
+		"name": "Leslie",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-14",
+		"name": "Scotch",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "ff7-15",
+		"name": "Kotch",
 		"gender": "m",
 		"invalidpairs": [],
 		"lists":[]
