@@ -1293,5 +1293,89 @@
 		"gender": "m",
 		"invalidpairs": [],
 		"lists":[]
+	},
+	{
+		"id": "xcom-00",
+		"name": "Axiom",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-01",
+		"name": "Shelter",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-02",
+		"name": "Zephyr",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-03",
+		"name": "Patchwork",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-04",
+		"name": "Blueblood",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-05",
+		"name": "Torque",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-06",
+		"name": "Cherub",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-07",
+		"name": "Terminal",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-08",
+		"name": "Claymore",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-09",
+		"name": "Verge",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-0A",
+		"name": "Godmother",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-0B",
+		"name": "Whisper",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
 	}
 ]
