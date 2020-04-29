@@ -1,0 +1,196 @@
+{
+	"thingstobe":
+	[
+		{
+			"name": "astronaut",
+			"priority": 0,
+			"stats": 
+			[
+				"oxygen",
+				"science",
+				"gravity",
+				"tech"
+			]
+		},
+		{
+			"name": "bandit",
+			"priority": 2,
+			"stats": 
+			[
+				"thievery",
+				"ambush",
+				"panache",
+				"banditry"
+			]
+		},
+		{
+			"name": "bear",
+			"priority": 1,
+			"stats": 
+			[
+				"furry",
+				"sleepy",
+				"chonk",
+				"claws"
+			]
+		},
+		{
+			"name": "snake",
+			"priority": 1,
+			"stats": 
+			[
+				"slither",
+				"fangs",
+				"noodle"
+			]
+		},
+		{
+			"name": "necromancer",
+			"priority": 2,
+			"stats": 
+			[
+				"skulls",
+				"creepy",
+				"bones"
+			]
+		},
+		{
+			"name": "baker",
+			"priority": 2,
+			"stats": 
+			[
+				"flour",
+				"bread",
+				"yeast"
+			]
+		},
+		{
+			"name": "slime",
+			"priority": 1,
+			"stats": 
+			[
+				"fluidity",
+				"acidity",
+				"viscocity",
+				"slime"
+			]
+		},
+		{
+			"name": "shopkeeper",
+			"priority": 2,
+			"stats": 
+			[
+				"shop",
+				"stock",
+				"commerce",
+				"economy"
+			]
+		},
+		{
+			"name": "elf",
+			"priority": -1,
+			"stats": 
+			[
+				"elf"
+			]
+		},
+		{
+			"name": "blacksmith",
+			"priority": 2,
+			"stats": 
+			[
+				"smith",
+				"anvil",
+				"quench"
+			]
+		},
+		{
+			"name": "hacker",
+			"priority": 0,
+			"stats": 
+			[
+				"cool",
+				"hack",
+				"get in"
+			]
+		},
+		{
+			"name": "street samurai",
+			"priority": 2,
+			"stats": 
+			[
+				"katana",
+				"swords",
+				"weapons",
+				"kickass"
+			]
+		},
+		{
+			"name": "cat",
+			"priority": 1,
+			"stats": 
+			[
+				"cat",
+				"cute",
+				"good",
+				"whiskers"
+			]
+		},
+		{
+			"name": "dog",
+			"priority": 1,
+			"stats": 
+			[
+				"dog",
+				"woof",
+				"ruff",
+				"dig"
+			]
+		},
+		{
+			"name": "banker",
+			"priority": 2,
+			"stats": 
+			[
+				"banker",
+				"interest",
+				"credit"
+			]
+		},
+		{
+			"name": "ghost finder",
+			"priority": 0,
+			"stats": 
+			[
+				"ghost finding",
+				"ghost friend",
+				"ghost enemy",
+				"exorcism"
+			]
+		}
+	],
+	"mechanics":
+	[
+		" is a pool of [die] which you refresh whenever you succeed by rolling a [diemaxnumber]",
+		" is a single [die] which must beat [beatnumber] to succeed",
+		" is a [die] which counts down every time you choose to succeed and rolls to a new number whenever you choose to fail",
+		" is a stat which you must roll lower than every time you need to succeed",
+		" is a target number you must roll equal to or greater than to succeed",
+		" is a resource you bid on actions against the difficulty of succeeding"
+	],
+	"twists":
+	[
+		"whenever you roll maximum on a die, replace that die with a smaller die. When a d2 would become a d1, instead it becomes a d12",
+		"whenever you roll minimum on a die, replace that die with a smaller die. When a d2 would become a d1, instead it becomes a d12",
+		"whenever you roll maximum on a die, gain a token. You can spend this token to reroll when you roll minimum on a die",
+		"whenever you roll minimum on a die, gain a token. You can spend this token to reroll when you roll maximum on a die"
+	],
+	"dice":
+	[
+		"d12",
+		"d10",
+		"d8",
+		"d6",
+		"d4"
+	]
+}

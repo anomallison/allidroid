@@ -83,6 +83,9 @@ var tarot_readings = JSON.parse(fs.readFileSync('tarot_readings.json'));
 var quest_gen = JSON.parse(fs.readFileSync('questgen.json'));
 var QUEST_GEN_MAX_LEVEL = 4;
 
+//questgen file
+var oneshotrpg_gen = JSON.parse(fs.readFileSync('oneshotrpggenerator.json'));
+
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
@@ -417,6 +420,20 @@ function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: quest");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "oneshotrpg") 
+	{
+		output = generateOneShotRPG(arguments[0]);
+		
+		if (output == null)
+		{
+			console.log("failed command: oneshotrpg");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -3010,6 +3027,82 @@ function generateQuest(level = -1)
 	}
 	
 	return quest_string;
+}
+
+
+function generateOneShotRPG(length)
+{
+	let tempthingstobe = oneshotrpg_gen.thingstobe.slice();
+	let random_int = Math.floor(Math.random()*tempthingstobe.length);
+	let thing1 = tempthingstobe[random_int];
+	tempthingstobe.splice(random_int,1);
+	random_int = Math.floor(Math.random()*tempthingstobe.length);
+	let thing2 = tempthingstobe[random_int];
+	
+	let thingthing = "";
+	
+	if (thing1.priority < thing2.priority)
+	{
+		thingthing = thing1.name + " " + thing2.name + "s";
+	}
+	else
+	{
+		thingthing = thing2.name + " " + thing1.name + "s";
+	}
+	
+	let thing1stat = thing1.stats[Math.floor(Math.random()*thing1.stats.length)]
+	let thing2stat = thing2.stats[Math.floor(Math.random()*thing2.stats.length)]
+	
+	let thing1mechanic = oneshotrpg_gen.mechanics[Math.floor(Math.random()*oneshotrpg_gen.mechanics.length)]
+	let thing2mechanic = oneshotrpg_gen.mechanics[Math.floor(Math.random()*oneshotrpg_gen.mechanics.length)]
+	let twist = oneshotrpg_gen.twists[Math.floor(Math.random()*oneshotrpg_gen.twists.length)]
+	
+	let output = "You are " + thingthing + ".\nYou have two stats: " + thing1stat + " and " + thing2stat + ".";
+		
+		
+	if (length != null)
+	{
+		output += "\n" + grammarCapitalFirstLetter(thing1stat) + thing1mechanic + ".\n" +
+			grammarCapitalFirstLetter(thing2stat) + thing2mechanic + ".\n" +
+			grammarCapitalFirstLetter(twist) + ".";
+	}
+	
+	
+	let diesize = oneshotrpg_gen.dice[Math.floor(Math.random()*oneshotrpg_gen.dice.length)];
+	let diemax = parseInt(diesize.substring(1));
+	let beatnum = Math.floor(Math.random()*(diemax-1))+1;
+	
+	let position = output.indexOf("\[");
+	let endposition = -1;
+	let output_substring = "";
+	let substr_number = "";
+	
+	while (position != -1)
+	{
+		endposition = output.indexOf("\]");
+		output_substring = output.substring(position+1,endposition);
+		substr_number = randomNumberForText(output_substring);
+		if (output_substring == "die")
+		{
+			output = output.substr(0,position) + diesize + output.substr(endposition+1);
+		}
+		else if (output_substring == "diemaxnumber")
+		{
+			output = output.substr(0,position) + diemax + output.substr(endposition+1);
+		}
+		else if (output_substring == "beatnumber")
+		{
+			output = output.substr(0,position) + beatnum + output.substr(endposition+1);
+		}
+		else
+		{
+			output = output.substr(0,position) + output.substr(endposition+1);
+		}
+		position = output.indexOf("\[");
+	}
+	
+	
+	return output;
 }
 
 
