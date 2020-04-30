@@ -3032,6 +3032,9 @@ function generateQuest(level = -1)
 
 function generateOneShotRPG(length)
 {
+	let randomRoll = Math.random();
+	let tempadjectivelist = monster_adjectives.filter(filterByList,"monster")
+	
 	let tempthingstobe = oneshotrpg_gen.thingstobe.slice();
 	let random_int = Math.floor(Math.random()*tempthingstobe.length);
 	let thing1 = tempthingstobe[random_int];
@@ -3048,6 +3051,12 @@ function generateOneShotRPG(length)
 	else
 	{
 		thingthing = thing2.name + " " + thing1.name + "s";
+	}
+	
+	if (randomRoll < 0.45)
+	{
+		random_int = Math.floor((Math.random()*tempadjectivelist.length));
+		thingthing = getAdjectiveString(tempadjectivelist[random_int]) + " " + thingthing;
 	}
 	
 	let thing1stat = thing1.stats[Math.floor(Math.random()*thing1.stats.length)]

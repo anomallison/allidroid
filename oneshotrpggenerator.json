@@ -167,6 +167,103 @@
 				"ghost enemy",
 				"exorcism"
 			]
+		},
+		{
+			"name": "ghost",
+			"priority": 0,
+			"stats": 
+			[
+				"ghost",
+				"ectoplasm",
+				"spooky"
+			]
+		},
+		{
+			"name": "student",
+			"priority": 0,
+			"stats": 
+			[
+				"learning",
+				"drama",
+				"tired"
+			]
+		},
+		{
+			"name": "capybara",
+			"priority": 0,
+			"stats": 
+			[
+				"capybara",
+				"rodent",
+				"water"
+			]
+		},
+		{
+			"name": "writer",
+			"priority": 0,
+			"stats": 
+			[
+				"writing",
+				"thirst",
+				"ennui"
+			]
+		},
+		{
+			"name": "cosplayer",
+			"priority": 0,
+			"stats": 
+			[
+				"costume",
+				"photography"
+			]
+		},
+		{
+			"name": "chef",
+			"priority": 1,
+			"stats": 
+			[
+				"delicious",
+				"noms",
+				"foods"
+			]
+		},
+		{
+			"name": "orc",
+			"priority": 0,
+			"stats": 
+			[
+				"orc"
+			]
+		},
+		{
+			"name": "wizard",
+			"priority": 2,
+			"stats": 
+			[
+				"wizardry",
+				"witchcraft",
+				"spells"
+			]
+		},
+		{
+			"name": "rebel",
+			"priority": 1,
+			"stats": 
+			[
+				"guerilla",
+				"resistance",
+				"rebellion"
+			]
+		},
+		{
+			"name": "adventurer",
+			"priority": 2,
+			"stats": 
+			[
+				"adventure",
+				"explore",
+				"exploit"
+			]
 		}
 	],
 	"mechanics":

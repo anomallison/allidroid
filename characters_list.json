@@ -1299,89 +1299,166 @@
 		"name": "Axiom",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-01",
 		"name": "Shelter",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-02",
 		"name": "Zephyr",
 		"gender": "f",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-03",
 		"name": "Patchwork",
 		"gender": "f",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-04",
 		"name": "Blueblood",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-05",
 		"name": "Torque",
 		"gender": "f",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-06",
 		"name": "Cherub",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-07",
 		"name": "Terminal",
 		"gender": "f",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-08",
 		"name": "Claymore",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-09",
 		"name": "Verge",
 		"gender": "x",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-0A",
 		"name": "Godmother",
 		"gender": "f",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-0B",
 		"name": "Whisper",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":[]
+		"lists":["chimerasquad"]
 	},
 	{
 		"id": "xcom-0C",
 		"name": "Jane Kelly",
 		"gender": "f",
+		"invalidpairs": [],
+		"lists":["chimerasquad"]
+	},
+	{
+		"id": "xcom-0D",
+		"name": "The Assassin",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-0E",
+		"name": "The Hunter",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-0F",
+		"name": "The Warlock",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-10",
+		"name": "Lily Shen",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-11",
+		"name": "Richard Tygan",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-12",
+		"name": "John Bradford",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-13",
+		"name": "Volk",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-14",
+		"name": "Outrider",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-15",
+		"name": "Betos",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-16",
+		"name": "Pratal Mox",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "xcom-17",
+		"name": "Geist",
+		"gender": "m",
 		"invalidpairs": [],
 		"lists":[]
 	}
