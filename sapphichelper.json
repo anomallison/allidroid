@@ -1,0 +1,37 @@
+{
+	"initiatetarget":
+	[
+		{
+		"word": "neck",
+		"lists": ["bite","lick","stroke","suck","kiss"]
+		},
+		{
+		"word": "fingers",
+		"lists": ["stroke","suck","kiss"]
+		},
+		{
+		"word": "ear",
+		"lists": ["stroke","bite","suck","kiss"]
+		},
+		{
+		"word": "arm",
+		"lists": ["stroke","kiss"]
+		},
+		{
+		"word": "thigh",
+		"lists": ["stroke","kiss","bite"]
+		},
+		{
+		"word": "arm",
+		"lists": ["stroke","kiss"]
+		}
+	],
+	"initiateaction":
+	[
+		"bite",
+		"lick",
+		"stroke",
+		"suck",
+		"kiss"
+	]
+}

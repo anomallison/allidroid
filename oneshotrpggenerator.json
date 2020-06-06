@@ -264,6 +264,38 @@
 				"explore",
 				"exploit"
 			]
+		},
+		{
+			"name": "gorilla",
+			"priority": 2,
+			"stats": 
+			[
+				"gorilla"
+			]
+		},
+		{
+			"name": "dragon",
+			"priority": 1,
+			"stats": 
+			[
+				"dragon"
+			]
+		},
+		{
+			"name": "godzilla",
+			"priority": 1,
+			"stats": 
+			[
+				"godzilla"
+			]
+		},
+		{
+			"name": "therapist",
+			"priority": 2,
+			"stats": 
+			[
+				"therapy"
+			]
 		}
 	],
 	"mechanics":

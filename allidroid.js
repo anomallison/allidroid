@@ -86,6 +86,9 @@ var QUEST_GEN_MAX_LEVEL = 4;
 //questgen file
 var oneshotrpg_gen = JSON.parse(fs.readFileSync('oneshotrpggenerator.json'));
 
+//sapphichelper file
+var sapphichelper = JSON.parse(fs.readFileSync('sapphichelper.json'));
+
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
@@ -434,6 +437,20 @@ function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: oneshotrpg");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "howtoinitiate") 
+	{
+		output = helpsapphicinitiate(arguments[0]);
+		
+		if (output == null)
+		{
+			console.log("failed command: howtoinitiate");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -3115,6 +3132,20 @@ function generateOneShotRPG(length)
 }
 
 
+//
+//
+// sapphic initiating help function
+//
+//
+
+function helpsapphicinitiate()
+{
+	let verb = sapphichelper.initiateaction[Math.floor(Math.random()*sapphichelper.initiateaction.length)]; // is a string
+	let tempnouns = sapphichelper.initiatetarget.filter(filterByList,verb);
+	let noun = tempnouns[Math.floor(Math.random()*tempnouns.length)]; // is an object, not a string
+	
+	return grammarCapitalFirstLetter(verb) + " their " + noun.word + "!";
+}
 
 //
 //
