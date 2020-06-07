@@ -18,20 +18,32 @@
 		"lists": ["stroke","kiss"]
 		},
 		{
-		"word": "thigh",
-		"lists": ["stroke","kiss","bite"]
+		"word": "thighs",
+		"lists": ["stroke","kiss","bite","straddle"]
 		},
 		{
-		"word": "arm",
-		"lists": ["stroke","kiss"]
+		"word": "butt",
+		"lists": ["grab","touch"]
+		},
+		{
+		"word": "collar",
+		"lists": ["pull"]
+		},
+		{
+		"word": "lip",
+		"lists": ["bite","suck"]
+		},
+		{
+		"word": "hands",
+		"lists": ["hold","bind","tie"]
 		}
 	],
-	"initiateaction":
+	"initiatedirect":
 	[
+		"kiss",
+		"collar",
+		"straddle",
 		"bite",
-		"lick",
-		"stroke",
-		"suck",
-		"kiss"
+		"tie"
 	]
 }

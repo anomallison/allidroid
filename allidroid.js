@@ -446,7 +446,7 @@ function processCommand(receivedMessage)
 		}
     } else if (normalizedCommand == "howtoinitiate") 
 	{
-		output = helpsapphicinitiate(arguments[0]);
+		output = helpsapphicinitiate(true);
 		
 		if (output == null)
 		{
@@ -3138,13 +3138,32 @@ function generateOneShotRPG(length)
 //
 //
 
-function helpsapphicinitiate()
+function helpsapphicinitiate(multi)
 {
-	let verb = sapphichelper.initiateaction[Math.floor(Math.random()*sapphichelper.initiateaction.length)]; // is a string
-	let tempnouns = sapphichelper.initiatetarget.filter(filterByList,verb);
-	let noun = tempnouns[Math.floor(Math.random()*tempnouns.length)]; // is an object, not a string
+	let random_int = Math.floor(Math.random()*(sapphichelper.initiatetarget.length+1));
+	let noun = "";
+	let verb = "";
+	let output = "";
+	let randval = Math.random();
+	if (random_int < sapphichelper.initiatetarget.length)
+	{
+		noun = sapphichelper.initiatetarget[Math.floor(Math.random()*sapphichelper.initiatetarget.length)]; // is an object, not a string
+		verb = noun.lists[Math.floor(Math.random()*noun.lists.length)];
+		output = grammarCapitalFirstLetter(verb) + " their " + noun.word;
+	}
+	else
+	{
+		verb = sapphichelper.initiatedirect[Math.floor(Math.random()*sapphichelper.initiatedirect.length)];
+		randval = randval*0.5;
+		output = grammarCapitalFirstLetter(verb) + " them";
+	}
 	
-	return grammarCapitalFirstLetter(verb) + " their " + noun.word + "!";
+	if (multi && (randval < 0.14))
+	{
+		output += " and " + helpsapphicinitiate(false).toLowerCase();
+	}
+	
+	return output + "!";
 }
 
 //
