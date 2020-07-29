@@ -1,0 +1,25 @@
+{
+	"desert":
+	[
+		["cat","commoner","hyena","jackal","scorpion","vulture"],
+		["bandit","camel","flying snake","guard","kobold","mule","poisonous snake","stirge","tribal warrior"],
+		["constrictor snake","giant lizard","giant poisonous snake","giant wolf spider","pseudodragon","winged kobold"],
+		["dust mephit","gnoll","hobgoblin","jackalwere","scout","swarm of insects"],
+		["death dog","giant hyena","giant spider","giant toad","giant vulture","half-ogre","lion","thri-kreen","yuan-ti pureblood"],
+		["bandit captain","berserker","druid","giant constrictor snake", "gnoll pack lord", "ogre"],
+		["giant scorpion","hobgoblin captain","mummy","phase spider","wight","yuan-ti malison"],
+		["couatl","gnoll fang of yeenoghu","lamia","weretiger"],
+		["air elemental","fire elemental","revenant"],
+		["cyclops","medusa","young brass dragon"],
+		["yuan-ti abomination"],
+		["young blue dragon"],
+		["guardian naga"],
+		["efreeti","gynosphinx","roc"],
+		["adult brass dragon"],
+		["mummy lord","purple worm"],
+		["adult blue dragon"],
+		["adult blue dracolich","androsphinx"],
+		["ancient brass dragon"],
+		["ancient blue dragon"]
+	]
+}

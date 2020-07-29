@@ -458,7 +458,13 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
-    }
+    } else if (normalizedCommand.substr(0,2) == "!!")
+	{
+		let possibleString = excited();
+		if (possibleString.length > 0)
+			receivedMessage.channel.send(possibleString);
+		return;
+	}
 	else
 	{
 		let possibleString = nani();
@@ -3164,6 +3170,23 @@ function helpsapphicinitiate(multi)
 	}
 	
 	return output + "!";
+}
+
+//
+// excited allidroid
+//
+
+function excited()
+{
+	let baserand = Math.random();
+	if (baserand < 0.89)
+		return "";
+	else if (baserand < 0.93)
+		return "!!";
+	else if (baserand < 0.97)
+		return "!!!!";
+	else
+		return "!!!!!!!!";
 }
 
 //
