@@ -2800,7 +2800,8 @@ function removeKeywordsByDescriptor(keyword)
 function generateBoss(extrakeywords = null)
 {
 	let boss_string = "";
-	let basemonster = boss_generator.bases[Math.floor(Math.random()*(boss_generator.bases.length))];
+	//let basemonster = boss_generator.bases[Math.floor(Math.random()*(boss_generator.bases.length))];
+	let basemonster = generateBossBase();
 	let bossclass = boss_generator.classes[Math.floor(Math.random()*(boss_generator.classes.length))];
 	let keywords = basemonster.keywords.slice();
 	if (extrakeywords != null && extrakeywords.length > 0)
@@ -2838,7 +2839,7 @@ function generateBoss(extrakeywords = null)
 			i += descriptorattemptcount;
 	}
 	
-	boss_string += generateBossName(false,false) + ", the " + bossclass.class 
+	boss_string += generateBossName(false,false) + ", the " + basemonster.base + " " + bossclass.class 
 			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
 			
 	let tempdescriptors = descriptors.slice()
@@ -2966,7 +2967,23 @@ function generateItemOfType(type, musthavelists = null, disallowedlists = null)
 	return fullpool[Math.floor((Math.random()*fullpool.length))];
 }
 
-
+function generateBossBase()
+{
+	let boss_base;
+	let random_int = Math.floor(Math.random()*(boss_generator.bases.length + boss_generator.specialbases.length));
+	if (random_int < boss_generator.bases.length)
+	{
+		boss_base = boss_generator.bases[random_int];
+	} else
+	{
+		random_int = random_int % boss_generator.bases.length;
+		let special_base = boss_generator.specialbases[random_int];
+		let temp_base = special_base.variations[Math.floor(Math.random()*special_base.variations.length)] + " " + special_base.base;
+		boss_base = {base: temp_base, keywords:special_base.keywords};
+	}
+	
+	return boss_base;
+}
 
 
 

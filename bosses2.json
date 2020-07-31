@@ -2,14 +2,13 @@
 	"keywords":
 	[
 		"arcane",
+		"alchemy",
 		"holy",
 		"martial",
 		"cyberpunk",
 		"necromantic",
 		"gothic",
 		"clothes",
-		"feminine",
-		"masculine",
 		"anthromorphic",
 		"loadout",
 		"item",
@@ -20,15 +19,13 @@
 	"randomkeywords":
 	[
 		"arcane",
+		"alchemy",
 		"holy",
 		"martial",
 		"cyberpunk",
 		"necromantic",
 		"gothic",
 		"clothes",
-		"feminine",
-		"masculine",
-		"anthromorphic",
 		"item",
 		"friend"
 	],
@@ -143,6 +140,19 @@
 			"keywords": []
 		}
 	],
+	"specialbases":
+	[
+		{
+			"base": "skeleton",
+			"keywords": ["skeleton"],
+			"variations": ["demon","android","cyclops","dragon","drider","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk"]
+		},
+		{
+			"base": "vampire",
+			"keywords": ["vampire"],
+			"variations": ["elf","dwarf","halfling","orc","gnome","human"]
+		}
+	],
 	"classes":
 	[
 		{
@@ -163,7 +173,27 @@
 		},
 		{
 			"class": "druid",
-			"keywords": ["natural","arcane","clothes","loadout","item","friend"]
+			"keywords": ["natural","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "cleric",
+			"keywords": ["holy","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "berserker",
+			"keywords": ["martial","clothes","loadout","item"]
+		},
+		{
+			"class": "alchemist",
+			"keywords": ["alchemist","clothes","loadout","item"]
+		},
+		{
+			"class": "warlock",
+			"keywords": ["arcane","clothes","loadout","item"]
+		},
+		{
+			"class": "hypnotist",
+			"keywords": ["arcane","clothes","loadout","item"]
 		}
 	],
 	"descriptors":
@@ -177,11 +207,11 @@
 			"description": "[subject] [conjunction] outfitted with magical fetishes, magical glowing tattoos and a sleek glowing high collar bomber jacket"
 		},
 		{
-			"keywords": ["gothic","arcane","clothes","feminine"],
+			"keywords": ["gothic","arcane","clothes"],
 			"description": "[subject] wears a steel corset etched with glowing runes, long black gloves and a short black skirt"
 		},
 		{
-			"keywords": ["gothic","arcane","clothes","masculine"],
+			"keywords": ["gothic","arcane","clothes"],
 			"description": "[subject] wears a vest etched with glowing runes, black gloves, and a formal jacket"
 		},
 		{
@@ -211,6 +241,18 @@
 		{
 			"keywords": ["arcane","loadout"],
 			"description": "[subject] uses [item magestaff +magical], [item magicoffhand +magical] and [item dagger] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["natural","loadout"],
+			"description": "[subject] uses [item magestaff], [item magicoffhand] and [item dagger] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["cleric","loadout"],
+			"description": "[subject] uses [item largehammer], [item bow +crossbow] and [item magicoffhand +holy] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["cleric","loadout"],
+			"description": "[subject] uses [item smallhammer], [item shield] and [item magicoffhand +holy] as [possessivesubject] primary loadout"
 		},
 		{
 			"keywords": ["arcane","loadout"],
@@ -247,6 +289,10 @@
 		{
 			"keywords": ["anthromorphic"],
 			"description": "a scar that runs a trail down [possessivesubject] eye to [possessivesubject] cheek"
+		},
+		{
+			"keywords": ["anthromorphic"],
+			"description": "one of [possessivesubject] legs has been removed just below the knee, with [item legreplacement] in its place"
 		},
 		{
 			"keywords": ["wings"],
@@ -293,9 +339,47 @@
 			"description": "[subject] wears [item armour +heavyarmour]"
 		},
 		{
+			"keywords": ["nartual","clothes"],
+			"description": "[subject] wears [item armour +druid]"
+		},
+		{
+			"keywords": ["holy","clothes"],
+			"description": "[subject] wears [item armour +mediumarmour]"
+		},
+		{
+			"keywords": ["alchemy","clothes"],
+			"description": "[subject] wears [item armour +alchemy] with [item jewelery]"
+		},
+		{
 			"keywords": ["clothes"],
 			"description": "[subject] wears [item armour +lightarmour]"
+		},
+		{
+			"keywords": ["natural"],
+			"description": "roots and little vines grow from various parts of [object]"
+		},
+		{
+			"keywords": ["holy"],
+			"description": "a faint halo rings [possessivesubject] head"
+		},
+		{
+			"keywords": ["alchemy"],
+			"description": "[possessivesubject] skin is stained with alchemical reagents and chemicals"
+		},
+		{
+			"keywords": ["vampire"],
+			"description": "[possessivesubject] skin is white like parrafin"
+		},
+		{
+			"keywords": ["vampire"],
+			"description": "[possessivesubject] lips are a deep hypnotic vermillion"
+		},
+		{
+			"keywords": ["skeleton"],
+			"description": "[possessivesubject] bones are wrapped in [item bonewraps]"
 		}
+		
+		
 	],
 	"items":
 	[
@@ -468,6 +552,24 @@
 			"synonyms": ["steel plate armour","iron plate armour","adamantine plate armour"]
 		},
 		{
+			"name": "scale mail",
+			"type": "armour",
+			"lists": ["mediumarmour"],
+			"synonyms": ["chain shirt","breast plate","hide armour"]
+		},
+		{
+			"name": "spidersilk robes",
+			"type": "armour",
+			"lists": ["druid"],
+			"synonyms": ["silkweave leather armour","duskleaf weave armour","underbrush cloak"]
+		},
+		{
+			"name": "singed labcoat",
+			"type": "armour",
+			"lists": ["alchemy"],
+			"synonyms": ["stained robes","white labcoat","singed cloak"]
+		},
+		{
 			"name": "monster hide leather armour",
 			"type": "armour",
 			"lists": ["lightarmour"],
@@ -518,7 +620,7 @@
 		{
 			"name": "healing potion",
 			"type": "consumable",
-			"lists": [],
+			"lists": ["alchemy"],
 			"synonyms": ["mana potion","elixir of life","bottle of magic honey","stamina potion"]
 		},
 		{
@@ -526,6 +628,24 @@
 			"type": "shield",
 			"lists": [],
 			"synonyms": ["kite shield","tower shield","buckler","heater shield"]
+		},
+		{
+			"name": "necklace of beads",
+			"type": "jewelery",
+			"lists": [],
+			"synonyms": ["medallion of copper","bracelet of cord and twine"]
+		},
+		{
+			"name": "simple peg",
+			"type": "legreplacement",
+			"lists": [],
+			"synonyms": ["squishy tentacle","bionic leg","monster leg"]
+		},
+		{
+			"name": "rotting rags",
+			"type": "bonewraps",
+			"lists": [],
+			"synonyms": ["fine silken bandages","dusty, musty bandages","soiled rags"]
 		}
 	]
 }
