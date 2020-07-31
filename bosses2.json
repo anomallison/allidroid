@@ -1,0 +1,531 @@
+{
+	"keywords":
+	[
+		"arcane",
+		"holy",
+		"martial",
+		"cyberpunk",
+		"necromantic",
+		"gothic",
+		"clothes",
+		"feminine",
+		"masculine",
+		"anthromorphic",
+		"loadout",
+		"item",
+		"wings",
+		"tail",
+		"friend"
+	],
+	"randomkeywords":
+	[
+		"arcane",
+		"holy",
+		"martial",
+		"cyberpunk",
+		"necromantic",
+		"gothic",
+		"clothes",
+		"feminine",
+		"masculine",
+		"anthromorphic",
+		"item",
+		"friend"
+	],
+	"bases":
+	[
+		{
+			"base": "demon",
+			"keywords": ["wings","tail","anthromorphic"]
+		},
+		{
+			"base": "android",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "cyclops",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "dragon",
+			"keywords": ["wings","tail"]
+		},
+		{
+			"base": "leshy",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "drider",
+			"keywords": []
+		},
+		{
+			"base": "charr",
+			"keywords": ["horns","tail","anthromorphic"]
+		},
+		{
+			"base": "ogre",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "elf",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "dwarf",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "halfling",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "orc",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "gnome",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "tengu",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "goblin",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "human",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "catfolk",
+			"keywords": ["tail","anthromorphic"]
+		},
+		{
+			"base": "kitsune",
+			"keywords": ["tail","anthromorphic"]
+		},
+		{
+			"base": "minotaur",
+			"keywords": ["horns","anthromorphic"]
+		},
+		{
+			"base": "dhampir",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "turtlefolk",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "frogfolk",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "plantfolk",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "rockfolk",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "mermaid",
+			"keywords": ["tail"]
+		},
+		{
+			"base": "sharkfolk",
+			"keywords": ["anthromorphic"]
+		},
+		{
+			"base": "slimefolk",
+			"keywords": []
+		}
+	],
+	"classes":
+	[
+		{
+			"class": "fighter",
+			"keywords": ["martial","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "necromancer",
+			"keywords": ["necromantic","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "wizard",
+			"keywords": ["arcane","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "decker",
+			"keywords": ["cyberpunk","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "druid",
+			"keywords": ["natural","arcane","clothes","loadout","item","friend"]
+		}
+	],
+	"descriptors":
+	[
+		{
+			"keywords": ["necromantic","clothes"],
+			"description": "[subject] [conjunction] outfitted with bone fetishes, black cord braclets of teeth, and a black cloak"
+		},
+		{
+			"keywords": ["arcane","cyberpunk","clothes"],
+			"description": "[subject] [conjunction] outfitted with magical fetishes, magical glowing tattoos and a sleek glowing high collar bomber jacket"
+		},
+		{
+			"keywords": ["gothic","arcane","clothes","feminine"],
+			"description": "[subject] wears a steel corset etched with glowing runes, long black gloves and a short black skirt"
+		},
+		{
+			"keywords": ["gothic","arcane","clothes","masculine"],
+			"description": "[subject] wears a vest etched with glowing runes, black gloves, and a formal jacket"
+		},
+		{
+			"keywords": ["cyberpunk","anthromorphic"],
+			"description": "[subject] [possessiveconjunction] sleek cybernetic arms and legs connected to an augmented spine and nervous system"
+		},
+		{
+			"keywords": ["cyberpunk","wings","anthromorphic"],
+			"description": "[subject] [possessiveconjunction] sleek cybernetic wings, arms and legs connected to an augmented spine and nervous system"
+		},
+		{
+			"keywords": ["cyberpunk","wings","tail","anthromorphic"],
+			"description": "[subject] [possessiveconjunction] sleek cybernetic wings, tail, arms and legs connected to an augmented spine and nervous system"
+		},
+		{
+			"keywords": ["cyberpunk","wings"],
+			"description": "[subject] [possessiveconjunction] sleek cybernetic wings connected to an augmented spine and nervous system"
+		},
+		{
+			"keywords": ["cyberpunk","anthromorphic"],
+			"description": "[possessivesubject] spine glows with fancy neural augmentations"
+		},
+		{
+			"keywords": ["cyberpunk","loadout"],
+			"description": "[subject] uses [item longarms +cyberpunk], [item longarms +cyberpunk] and [item shortblade +cyberpunk] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["arcane","loadout"],
+			"description": "[subject] uses [item magestaff +magical], [item magicoffhand +magical] and [item dagger] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["arcane","loadout"],
+			"description": "[subject] uses [item dagger], [item wand +magical] and a sling as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["necromantic","loadout"],
+			"description": "[subject] uses [item magestaff +dark], [item magicoffhand +dark] and [item dagger +dark] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["necromantic","loadout"],
+			"description": "[subject] uses [item dagger +dark], [item wand +dark] and a fetish as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["martial","loadout"],
+			"description": "[subject] uses [item largeblade] [item bow +handbow] and [item throwingknives] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["martial","loadout"],
+			"description": "[subject] uses [item largehammer], [item bow +crossbow] and [item throwingknives] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["martial","loadout"],
+			"description": "[subject] uses [item polearm], [item ropeweapon] and [item throwingknives] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["martial","loadout"],
+			"description": "[subject] uses [item largeblade], [item shield] and [item bow] as [possessivesubject] primary loadout"
+		},
+		{
+			"keywords": ["anthromorphic"],
+			"description": "a scar that runs a trail down [possessivesubject] chest to [possessivesubject] navel"
+		},
+		{
+			"keywords": ["anthromorphic"],
+			"description": "a scar that runs a trail down [possessivesubject] eye to [possessivesubject] cheek"
+		},
+		{
+			"keywords": ["wings"],
+			"description": "patches of silk are stitched into holes in [possessivesubject] wings"
+		},
+		{
+			"keywords": ["wings"],
+			"description": "patches of leather are stitched into holes in [possessivesubject] wings"
+		},
+		{
+			"keywords": ["necromantic","wings"],
+			"description": "[subject] [possessiveconjunction] wings of bone and black sinew"
+		},
+		{
+			"keywords": ["necromantic","anthromorphic"],
+			"description": "[possessivesubject] body is gaunt and withered and ribs visibly pronounced"
+		},
+		{
+			"keywords": ["necromantic","anthromorphic"],
+			"description": "an incision scar with remaining stitches trails from [possessivesubject] sternum to [possessivesubject] crotch"
+		},
+		{
+			"keywords": ["anthromorphic"],
+			"description": "a scar marks X near [possessivesubject] heart"
+		},
+		{
+			"keywords": ["item"],
+			"description": "[subject] [possessiveconjunction] [item consumable]"
+		},
+		{
+			"keywords": ["friend"],
+			"description": "[item friend -dark] loyally follows [object]"
+		},
+		{
+			"keywords": ["necromantic","friend"],
+			"description": "[item friend +dark] loyally follows [object]"
+		},
+		{
+			"keywords": ["cyberpunk","clothes"],
+			"description": "[subject] wears fingerless leather gloves with glowing orange strips, mirror shades and a sleek glowing high collar bomber jacket"
+		},
+		{
+			"keywords": ["martial","clothes"],
+			"description": "[subject] wears [item armour +heavyarmour]"
+		},
+		{
+			"keywords": ["clothes"],
+			"description": "[subject] wears [item armour +lightarmour]"
+		}
+	],
+	"items":
+	[
+		{
+			"name": "long curved dagger",
+			"type": "dagger",
+			"lists": [],
+			"synonyms": ["short dagger","tiny knife","oversized knife"]
+		},
+		{
+			"name": "kukri",
+			"type": "shortblade",
+			"lists": [],
+			"synonyms": ["short sword","scimitar","light axe","punching dagger"]
+		},
+		{
+			"name": "two handed curved blade",
+			"type": "largeblade",
+			"lists": [],
+			"synonyms": ["katana","giant axe","scythe","steel long sword","wakizashi","bronze gladius","obsidian toothed sword"]
+		},
+		{
+			"name": "set of throwing knives",
+			"type": "throwingknives",
+			"lists": [],
+			"synonyms": ["set of shuriken","pair of throwing axes","set of kunai","a thong of javelins"]
+		},
+		{
+			"name": "spike chain whip",
+			"type": "ropeweapon",
+			"lists": [],
+			"synonyms": ["cat o' nine tails","kusarigama","meteor hammer","flail"]
+		},
+		{
+			"name": "bronze headed spear",
+			"type": "polearm",
+			"lists": [],
+			"synonyms": ["glaive","halberd","pike"]
+		},
+		{
+			"name": "wooden staff",
+			"type": "magestaff",
+			"lists": ["magical"],
+			"synonyms": ["metal staff","crystal topped staff"]
+		},
+		{
+			"name": "bone staff",
+			"type": "magestaff",
+			"lists": ["dark"],
+			"synonyms": ["skull topped staff"]
+		},
+		{
+			"name": "light hammer",
+			"type": "smallhammer",
+			"lists": [],
+			"synonyms": ["warhammer","cudgel"]
+		},
+		{
+			"name": "really really big hammer",
+			"type": "largehammer",
+			"lists": [],
+			"synonyms": ["maul","tetsubo"]
+		},
+		{
+			"name": "short sword and scimitar",
+			"type": "dualblades",
+			"lists": [],
+			"synonyms": ["dual daggers","dual axes","punching daggers","ninja claws"]
+		},
+		{
+			"name": "dual warhammers",
+			"type": "dualhammers",
+			"lists": [],
+			"synonyms": ["dual hammers","warhammer and mace"]
+		},
+		{
+			"name": "axe and hammer",
+			"type": "dualmixed",
+			"lists": [],
+			"synonyms": ["sword and mace","axe and warhammer"]
+		},
+		{
+			"name": "dual revolvers",
+			"type": "dualranged",
+			"lists": [],
+			"synonyms": ["dual pistols","dual uzis"]
+		},
+		{
+			"name": "scepter of finely carved wood",
+			"type": "wand",
+			"lists": ["magical"],
+			"synonyms": ["mithril wand","scepter of fine ivory","jewel encrusted wand"]
+		},
+		{
+			"name": "adorable plushie voodoo doll",
+			"type": "magicoffhand",
+			"lists": ["dark"],
+			"synonyms": ["twisted doll","orb of blood","orb of darkness"]
+		},
+		{
+			"name": "orb of storms",
+			"type": "magicoffhand",
+			"lists": ["magical"],
+			"synonyms": ["orb of fire","orb of ice","orb of wind","orb of earth","orb of water"]
+		},
+		{
+			"name": "orb of light",
+			"type": "magicoffhand",
+			"lists": ["magical","holy"],
+			"synonyms": ["orb of blessings"]
+		},
+		{
+			"name": "twisted bone wand",
+			"type": "wand",
+			"lists": ["dark"],
+			"synonyms": ["obsidian tipped wand"]
+		},
+		{
+			"name": "twisted ritual dagger",
+			"type": "dagger",
+			"lists": ["dark"],
+			"synonyms": ["sickle"]
+		},
+		{
+			"name": "revolver",
+			"type": "smallarms",
+			"lists": ["cyberpunk"],
+			"synonyms": ["machine pistol","handgun"]
+		},
+		{
+			"name": "shotgun",
+			"type": "longarms",
+			"lists": ["cyberpunk"],
+			"synonyms": ["sniper rifle","gauss cannon","flechette rifle","minigun","machine gun"]
+		},
+		{
+			"name": "laser sword",
+			"type": "largeblade",
+			"lists": ["cyberpunk"],
+			"synonyms": ["light saber","monofilament sword"]
+		},
+		{
+			"name": "laser knife",
+			"type": "shortblade",
+			"lists": ["cyberpunk"],
+			"synonyms": ["vibro knife","monofilament knife"]
+		},
+		{
+			"name": "impact hammer",
+			"type": "largehammer",
+			"lists": ["cyberpunk"],
+			"synonyms": ["power hammer","power fist","gravity fist"]
+		},
+		{
+			"name": "engraved human skull",
+			"type": "friend",
+			"lists": ["dark"],
+			"synonyms": ["engraved dragon skull","engraved cat skull","talking bird skull","talking lizard skull","talking crystal skull","talking dinosaur skull"]
+		},
+		{
+			"name": "slime friend",
+			"type": "friend",
+			"lists": ["magical"],
+			"synonyms": ["bird friend","tiny dragon friend","smol lizard friend","pixie friend","talking cat friend","miniature dinosaur friend","aggressive rock friend"]
+		},
+		{
+			"name": "mithril plate armour",
+			"type": "armour",
+			"lists": ["heavyarmour"],
+			"synonyms": ["steel plate armour","iron plate armour","adamantine plate armour"]
+		},
+		{
+			"name": "monster hide leather armour",
+			"type": "armour",
+			"lists": ["lightarmour"],
+			"synonyms": ["brigadine","silk robe","spidersilk bandage outfit"]
+		},
+		{
+			"name": "heavy crossbow",
+			"type": "bow",
+			"lists": ["crossbow"],
+			"synonyms": ["light crossbow", "handcrossbow"]
+		},
+		{
+			"name": "longbow",
+			"type": "bow",
+			"lists": ["handbow"],
+			"synonyms": ["shortbow"]
+		},
+		{
+			"name": "slingshot",
+			"type": "sling",
+			"lists": [],
+			"synonyms": ["sling","hand-held catapult"]
+		},
+		{
+			"name": "pokéball",
+			"type": "tool",
+			"lists": ["pokemon"],
+			"synonyms": ["great ball","ultra ball","masterball","park ball","beast ball","love ball"]
+		},
+		{
+			"name": "spatula",
+			"type": "cookingutensil",
+			"lists": [],
+			"synonyms": ["cheese grater","ladle","whisk"]
+		},
+		{
+			"name": "level [2-28] Magikarp",
+			"type": "pokemon",
+			"lists": ["pokemon"],
+			"synonyms": ["level [5-18] Zigzagoon","level [5-36] Pikachu","level [5-31] Psyduck","level [6-35] Slowpoke","level [5-24] Eevee","level [4-18] Rattata","level [4-18] Yungoos"]
+		},
+		{
+			"name": "level [4-14] Sobble",
+			"type": "pokemon",
+			"lists": ["pokemon","starters"],
+			"synonyms": ["level [4-14] Piplup","level [4-14] Rowlet","level [4-14] Popplio","level [4-14] Litten","level [4-14] Charizard","level [4-14] Bulbasaur","level [4-14] Squirtle","level [4-14] Grookey","level [4-14] Scorbunny"]
+		},
+		{
+			"name": "healing potion",
+			"type": "consumable",
+			"lists": [],
+			"synonyms": ["mana potion","elixir of life","bottle of magic honey","stamina potion"]
+		},
+		{
+			"name": "round shield",
+			"type": "shield",
+			"lists": [],
+			"synonyms": ["kite shield","tower shield","buckler","heater shield"]
+		}
+	]
+}

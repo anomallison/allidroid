@@ -32,6 +32,22 @@
 		"synonyms": ["glaive","halberd","pike"]
 	},
 	{
+		"name": "wooden staff",
+		"number": 1,
+		"type": "polearm",
+		"slots": ["weapon"],
+		"lists": ["magical"],
+		"synonyms": ["metal staff","crystal topped staff"]
+	},
+	{
+		"name": "bone staff",
+		"number": 1,
+		"type": "polearm",
+		"slots": ["weapon"],
+		"lists": ["magical","dark"],
+		"synonyms": ["skull topped staff"]
+	},
+	{
 		"name": "light hammer",
 		"number": 1,
 		"type": "smallhammer",
