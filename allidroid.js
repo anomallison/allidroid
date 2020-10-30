@@ -123,6 +123,7 @@ client.on('message', (receivedMessage) => {
         return
     }
 	
+	/*
 	if (receivedMessage.guild != null) { // Don't respond to banned users in channels
         let tempmember = receivedMessage.guild.members.get(receivedMessage.author.id);
 		if (tempmember == null || hasName(tempmember.roles,'Bot Banned'))
@@ -130,7 +131,7 @@ client.on('message', (receivedMessage) => {
 			return
 		}
     }
-	
+	*/
     if (receivedMessage.content.startsWith("!")) {
         processCommand(receivedMessage)
     }
