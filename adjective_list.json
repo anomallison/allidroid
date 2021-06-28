@@ -86,7 +86,7 @@
 	{
 		"word": "dummy thicc",
 		"priority": 6,
-		"lists": ["monster","boss","friend","sexy","gacha"],
+		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
 		"synonyms": []
 	},
@@ -443,7 +443,7 @@
 	{
 		"word": "busty",
 		"priority": 6,
-		"lists": ["sexy","gacha"],
+		"lists": ["sexy"],
 		"antonyms": [],
 		"synonyms": ["well endowed"]
 	},

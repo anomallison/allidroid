@@ -132,6 +132,7 @@ client.on('message', (receivedMessage) => {
 		}
     }
 	*/
+	
     if (receivedMessage.content.startsWith("!")) {
         processCommand(receivedMessage)
     }
