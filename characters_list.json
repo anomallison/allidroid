@@ -1461,5 +1461,285 @@
 		"gender": "m",
 		"invalidpairs": [],
 		"lists":[]
+	},
+		{
+		"id": "blaseball-00",
+		"name": "Liquid Friend",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","jazz-hands"]
+	},
+	{
+		"id": "blaseball-01",
+		"name": "Liquid Friend IV",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers"]
+    	},
+	{
+		"id": "blaseball-02",
+		"name": "Ortiz Lopez",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","georgias"]
+	},	
+	{
+		"id": "blaseball-03",
+		"name": "Kichiro Guerra",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","worms","millenials"]
+	},
+	{
+		"id": "blaseball-04",
+		"name": "Percival Wheeler",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","fridays"]
+	},
+	{
+		"id": "blaseball-05",
+		"name": "Silvia Winner",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers"]
+	},
+	{
+		"id": "blaseball-06",
+		"name": "Don Mitchell",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","fridays"]
+	},
+	{
+		"id": "blaseball-07",
+		"name": "Knight Triumphant",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["lovers","spies","steaks","georgias"]
+	},
+	{
+		"id": "blaseball-08",
+		"name": "Theo King",
+		"gender": "m",
+ 		"invalidpairs": [],
+		"lists":["lovers"]
+	},
+	{
+		"id": "blaseball-09",
+		"name": "King Roland",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","fridays"]
+	},
+	{
+		"id": "blaseball-10",
+		"name": "Milo Brown",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers"]
+	},
+	{
+		"id": "blaseball-11",
+		"name": "Helga Burton",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers"]
+	},
+	{
+		"id": "blaseball-12",
+		"name": "Helga Moreno",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers"]
+	},
+	{
+		"id": "blaseball-13",
+		"name": "Helga Washington",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["breath-mints"]
+	},
+	{
+		"id": "blaseball-14",
+		"name": "Jaylen Hotdogfingers",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","flowers","moist-talkers","magic","pods","fridays","mechanics","shoe-thieves","garages"]
+	},
+	{
+		"id": "blaseball-15",
+		"name": "Yosh Carpenter",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","fridays"]
+	},
+	{
+		"id": "blaseball-16",
+		"name": "Kennedy Meh",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","wild-wings"]
+	},
+	{
+		"id": "blaseball-17",
+		"name": "Karato Bean",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["lovers","fridays","spies"]
+	},
+	{
+		"id": "blaseball-18",
+		"name": "Miguel Javier",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers"]
+	},
+	{
+		"id": "blaseball-19",
+		"name": "Cannonball Sports",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","dale","mechanics"]
+	},
+	{
+		"id": "blaseball-20",
+		"name": "Mindy Salad",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers"]
+	},
+	{
+		"id": "blaseball-21",
+		"name": "Sandford Garner",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers"]
+	},
+	{
+		"id": "blaseball-22",
+		"name": "Parker Meng",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","worms","crabs","dale"]
+	},
+	{
+		"id": "blaseball-23",
+		"name": "Sigmund Castillo",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","sunbeams"]
+	},
+	{
+		"id": "blaseball-24",
+		"name": "Conner Haley",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","steaks","crabs"]
+	},
+	{
+		"id": "blaseball-25",
+		"name": "Bates Bentley",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","fridays","millenials"]
+	},
+	{
+		"id": "blaseball-26",
+		"name": "Fitzgerald Blackburn",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["lovers","spies"]
+	},
+	{
+		"id": "blaseball-27",
+		"name": "Bontgomery Mullock",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","crabs"]
+	},
+	{
+		"id": "blaseball-28",
+		"name": "Juice Collins",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["lovers","fridays"]
+	},
+	{
+		"id": "blaseball-29",
+		"name": "Jacob Winner",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","fridays"]
+	},
+	{
+		"id": "blaseball-30",
+		"name": "Mint Shupe",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["lovers","georgias"]
+	},
+	{
+		"id": "blaseball-31",
+		"name": "Tot Fox",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["lovers","crabs","jazz-hands"]
+	},
+	{
+		"id": "blaseball-32",
+		"name": "Kurt Crueller",
+		"gender": "x",
+		"invalidpairs": ["blaseball-37"],
+		"lists":["lovers","magic"]
+	},
+	{
+		"id": "blaseball-33",
+		"name": "Gabriel Griffith",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["lovers","fridays","steaks"]
+	},
+	{
+		"id": "blaseball-34",
+		"name": "Yeong-Ho Garcia",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["lovers","magic","spies"]
+	},
+	{
+		"id": "blaseball-35",
+		"name": "Jessica Telephone",
+		"gender": "f",
+		"invalidpairs": ["blaseball-36"],
+		"lists":["steaks","crabs","pods","pies","tigers","breath-mints","wild-wings","lift"]
+	},
+	{
+		"id": "blaseball-36",
+		"name": "Sebstian Telephone",
+		"gender": "m",
+		"invalidpairs": ["blaseball-35"],
+		"lists":["steaks"]
+	},
+	{
+		"id": "blaseball-37",
+		"name": "Gallup Crueller",
+		"gender": "f",
+		"invalidpairs": ["blaseball-32"],
+		"lists":["steaks"]
+	},
+	{
+		"id": "blaseball-38",
+		"name": "Sam Scandal",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["steaks"]
+	},
+	{
+		"id": "blaseball-39",
+		"name": "Ren Hunter",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["shoe-thieves","millenials"]
 	}
 ]
