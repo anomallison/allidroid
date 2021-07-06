@@ -1929,7 +1929,7 @@
 		"name": "Jacob Haynes",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":["flowers", "breath mints"]
+		"lists":["flowers", "breath-mints"]
 	},
 	{
 		"id": "blaseball-68",
@@ -2097,7 +2097,7 @@
 		"name": "Nagomi Mcdaniel",
 		"gender": "x",
 		"invalidpairs": [],
-		"lists":["tigers", "fridays", "jazz hands", "crabs", "garages", "flowers", "dale", "wild wings"]
+		"lists":["tigers", "fridays", "jazz-hands", "crabs", "garages", "flowers", "dale", "wild-wings"]
 	},
 	{
 		"id": "blaseball-92",
@@ -2111,14 +2111,14 @@
 		"name": "Sutton Picklestein",
 		"gender": "x",
 		"invalidpairs": ["blaseball-74"],
-		"lists":["magic", "flowers", "breath mints"]
+		"lists":["magic", "flowers", "breath-mints"]
 	},
 	{
 		"id": "blaseball-94",
 		"name": "Lenny Spruce",
 		"gender": "m",
 		"invalidpairs": [],
-		"lists":["breath mints", "flowers"]
+		"lists":["breath-mints", "flowers"]
 	},
 	{
 		"id": "blaseball-95",
@@ -2174,7 +2174,7 @@
 		"name": "Hierophantic Foible",
 		"gender": "x",
 		"invalidpairs": [],
-		"lists":["breath mints", "flowers"]
+		"lists":["breath-mints", "flowers"]
 },
     {
 		"id": "blaseball-103",
@@ -2223,6 +2223,6 @@
 		"name": "Kathy Mathews",
 		"gender": "x",
 		"invalidpairs": [],
-		"lists":["jazz hands", "flowers", "garages"]
+		"lists":["jazz-hands", "flowers", "garages"]
 }
 ]
