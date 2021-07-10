@@ -2147,82 +2147,467 @@
 		"gender": "m",
 		"invalidpairs": [],
 		"lists":["crabs", "flowers"]
-},
+	},
     {
 		"id": "blaseball-99",
 		"name": "Salih Ultrabass",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["flowers"]
-},
+	},
     {
 		"id": "blaseball-100",
 		"name": "Allan Kranch",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["flowers", "mechanics"]
-},
+	},
     {
 		"id": "blaseball-101",
 		"name": "Chorby Short",
 		"gender": "f",
 		"invalidpairs": [],
 		"lists":["magic", "millenials", "flowers"]
-},
+	},
     {
 		"id": "blaseball-102",
 		"name": "Hierophantic Foible",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["breath-mints", "flowers"]
-},
+	},
     {
 		"id": "blaseball-103",
 		"name": "Silvaire Roadhouse",
 		"gender": "f",
 		"invalidpairs": [],
 		"lists":["crabs", "flowers"]
-},
+	},
     {
 		"id": "blaseball-104",
 		"name": "Adalberto Tosser",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["crabs", "flowers"]
-},
+	},
     {
 		"id": "blaseball-105",
 		"name": "Zeboriah Whiskey",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["flowers"]
-},
+	},
     {
 		"id": "blaseball-106",
 		"name": "Backpatch Rolsenthal",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["flowers"]
-},
+	},
     {
 		"id": "blaseball-107",
 		"name": "Jenkins Ingram",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["flowers"]
-},
+	},
     {
 		"id": "blaseball-108",
 		"name": "Chambers Kennedy",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["flowers"]
-},
+	},
     {
 		"id": "blaseball-108",
 		"name": "Kathy Mathews",
 		"gender": "x",
 		"invalidpairs": [],
 		"lists":["jazz-hands", "flowers", "garages"]
-}
+	},
+		{
+		"id": "blaseball-109",
+		"name": "Avila Guzman",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "dale", "spies", "crabs", "sunbeams"]
+	},
+	{
+		"id": "blaseball-110",
+		"name": "Mike Townsend",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-111",
+		"name": "Malik Destiny",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-112",
+		"name": "Theodore Duende",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-113",
+		"name": "Arturo Huerta",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-114",
+		"name": "Bennett Browning",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-115",
+		"name": "Ron Monstera",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-116",
+		"name": "Tot Clark",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-117",
+		"name": "Luis Acevedo",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages", "crabs", "worms"]
+	},
+	{
+		"id": "blaseball-118",
+		"name": "Shaquille Torres",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-119",
+		"name": "Lang Richardson",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "pies"]
+	},
+	{
+		"id": "blaseball-120",
+		"name": "Oliver Mueller",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-121",
+		"name": "Derrick Krueger",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-122",
+		"name": "Tiana Cash",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-123",
+		"name": "Greer Gwiffin",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "fridays", "spies", "millenials", "tacos"]
+	},
+	{
+		"id": "blaseball-124",
+		"name": "Cedric Spliff",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-125",
+		"name": "Henry Marshallow",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "pies"]
+	},
+	{
+		"id": "blaseball-126",
+		"name": "Farrell Seagull",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "dale", "pies", "worms"]
+	},
+	{
+		"id": "blaseball-127",
+		"name": "Oliver Notarobot",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "crabs", "moist-talkers"]
+	},
+	{
+		"id": "blaseball-128",
+		"name": "Nolanestophia Patterson",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "friday", "pies", "tigers"]
+	},
+	{
+		"id": "blaseball-129",
+		"name": "Quack Enjoyable",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "jazz-hands", "moist-talkers", "spies", "sunbeams"]
+	},
+	{
+		"id": "blaseball-130",
+		"name": "Paula Turnip",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "tigers"]
+	},
+	{
+		"id": "blaseball-131",
+		"name": "Terrell Bradley",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "fridays", "lift", "shoe-thieves", "magic"]
+	},
+	{
+		"id": "blaseball-132",
+		"name": "Durham Spaceman",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-133",
+		"name": "Lori Boston",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-134",
+		"name": "betsy trombone",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages", "pies"]
+	},
+	{
+		"id": "blaseball-135",
+		"name": "Ortiz Morse",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "moist-talkers"]
+	},
+	{
+		"id": "blaseball-136",
+		"name": "Mcdowell Karim",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-137",
+		"name": "Sparks Beans",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-138",
+		"name": "Lenny Marijuana",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "tigers"]
+	},
+	{
+		"id": "blaseball-139",
+		"name": "Goodwin Morin",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "lift", "shoe-thieves"]
+	},
+	{
+		"id": "blaseball-140",
+		"name": "Pitching Machine",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages", "tacos", "lovers", "worms", "georgias","pods"]
+	},
+	{
+		"id": "blaseball-141",
+		"name": "Mindy Kugel",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "mechanics", "worms"]
+	},
+	{
+		"id": "blaseball-142",
+		"name": "Carmelo Plums",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages", "moist-talkers", "firefighters", "tigers"]
+	},
+	{
+		"id": "blaseball-143",
+		"name": "Lotus Mango",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages", "lift", "pies"]
+	},
+	{
+		"id": "blaseball-144",
+		"name": "Magi Ruiz",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-145",
+		"name": "Wyatt Mason X",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-146",
+		"name": "Chorby Soul",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages", "millenials", "crabs"]
+	},
+	{
+		"id": "blaseball-147",
+		"name": "Penelope Mathews",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "magic", "millenials"]
+	},
+	{
+		"id": "blaseball-148",
+		"name": "Hiroto Wilcox",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "tigers"]
+	},
+	{
+		"id": "blaseball-149",
+		"name": "York Silk",
+		"gender": "m",
+		"invalidpairs": ["blaseball-91"],
+		"lists":["garages", "fridays", "moist-talkers", "crabs", "pods"]
+	},
+	{
+		"id": "blaseball-150",
+		"name": "Oliver Loofah",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["garages", "shoe-thieves"]
+	},
+	{
+		"id": "blaseball-151",
+		"name": "Howell Franklin",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "shoe-thieves", "spies", "sunbeams"]
+	},
+	{
+		"id": "blaseball-152",
+		"name": "Brisket Friendo",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["garages", "breath-mints", "crabs", "sunbeams"]
+	},
+	{
+		"id": "blaseball-153",
+		"name": "fitzgerald wanderlust",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["garages", "tacos", "shoe-thieves"]
+	},
+	{
+		"id": "blaseball-154",
+		"name": "Lenjamin Zhuge",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-155",
+		"name": "Emblem Warhorse",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-156",
+		"name": "Fairwood Patchwork",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["garages","crabs"]
+	},
+	{
+		"id": "blaseball-157",
+		"name": "Liquid Friend VI",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-158",
+		"name": "Uncle Plasma VI",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages"]
+	},
+	{
+		"id": "blaseball-159",
+		"name": "Michelle Sportsman",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "tacos", "breath-mints", "crabs"]
+	},
+	{
+		"id": "blaseball-160",
+		"name": "Conrad Twelve",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "firefighters"]
+	},
+	{
+		"id": "blaseball-161",
+		"name": "Torus McGhee",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["garages", "mechanics"]
+	},
+	{
+		"id": "blaseball-162",
+		"name": "Axel Cardenas",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["garages", "wild-wings", "magic", "firefighters"]
+	},
+	{
+		"id": "blaseball-163",
+		"name": "Fynn Doyle",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["garages", "breath-mints", "millenials"]
+	}
 ]
