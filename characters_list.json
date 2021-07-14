@@ -1488,7 +1488,7 @@
 		"name": "Kichiro Guerra",
 		"gender": "f",
 		"invalidpairs": [],
-		"lists":["lovers","worms","millenials"]
+		"lists":["lovers","worms","millennials"]
 	},
 	{
 		"id": "blaseball-04",
@@ -2609,5 +2609,110 @@
 		"gender": "f",
 		"invalidpairs": [],
 		"lists":["garages", "breath-mints", "millenials"]
+	},
+	{
+		"id": "blaseball-537",
+		"name": "Nandy Fantastic",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-539",
+		"name": "Thomas Dracaena",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-540",
+		"name": "Conrad Vaughan",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["jazz-hands","millennials"]
+	},
+	{
+		"id": "blaseball-541",
+		"name": "Patty Fox",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-542",
+		"name": "Mullen Peterson",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["firefighters","wild-wings","millennials"]
+	},
+	{
+		"id": "blaseball-544",
+		"name": "Munro Tumblehome",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-545",
+		"name": "Andrew Solis",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["spies","millennials","worms"]
+	},
+	{
+		"id": "blaseball-546",
+		"name": "Evelton McBlase II",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["crabs","firefighters","mechanics","fridays","spies","wild-wings","millennials","lift","magic"]
+	},
+	{
+		"id": "blaseball-547",
+		"name": "Anathema Elemefayo",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-548",
+		"name": "Sandie Carver",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["breath-mints","millennials"]
+	},
+	{
+		"id": "blaseball-549",
+		"name": "Theodore Cervantes",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-556",
+		"name": "Oscar Vaughan",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":["breath-mints","millennials"]
+	},
+	{
+		"id": "blaseball-560",
+		"name": "Albert Stink",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-562",
+		"name": "Charlatan Seabright",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-568",
+		"name": "Sandie Turner",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":["millennials"]
 	}
 ]
