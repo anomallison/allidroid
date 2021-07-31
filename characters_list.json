@@ -2847,5 +2847,124 @@
 		"gender": "f",
 		"invalidpairs": [],
 		"lists":["millennials"]
+	},
+	{
+		"id": "blaseball-755",
+		"name": "Ziwa Mueller",
+		"gender": "a",
+		"invalidpairs": [ ],
+		"lists":["moist-talkers","magic"]
+	},
+	{
+		"id": "blaseball-756",
+		"name": "Washer Barajas",
+		"gender": "x",
+		"invalidpairs": [ ],
+		"lists":["magic"]
+	},
+	{
+		"id": "blaseball-757",
+		"name": "Francisco Preston",
+		"gender": "m",
+		"invalidpairs": [ ],
+		"lists":["magic"]
+	},
+	{
+		"id": "blaseball-758",
+		"name": "Eizabeth Elliott",
+		"gender": "f",
+		"invalidpairs": [ ],
+		"lists":["magic"]
+	},
+	{
+		"id": "blaseball-759",
+		"name": "Logan Rodriguez",
+		"gender": "m",
+		"invalidpairs": [ ],
+		"lists":["jazz-hands","magic"]
+	},
+	{
+		"id": "blaseball-760",
+		"name": "Bonk Jokes",
+		"gender": "x",
+		"invalidpairs": [ ],
+		"lists":["magic"]
+	},
+	{
+			"id": "blaseball-761",
+			"name": "Rey Wooten",
+			"gender": "f",
+			"invalidpairs": [ ],
+			"lists":["magic"]
+	},
+	{
+			"id": "blaseball-762",
+			"name": "Jesús Koch",
+			"gender": "m",
+			"invalidpairs": [ ],
+			"lists":["moist-talkers","magic"]
+	},
+	{
+			"id": "blaseball-764",
+			"name": "Cravel Gesundheit",
+			"gender": "x",
+			"invalidpairs": [ ],
+			"lists":["mechanics","magic"]
+	},
+	{
+			"id": "blaseball-765",
+			"name": "Curry Aliciakeyes",
+			"gender": "f",
+			"invalidpairs": [ ],
+			"lists":["magic"]
+	},
+	{
+			"id": "blaseball-766",
+			"name": "Bevan Wise",
+			"gender": "m",
+			"invalidpairs": [ ],
+			"lists":["tacos","magic"]
+	},
+	{
+			"id": "blaseball-769",
+			"name": "Halexandrey Walton",
+			"gender": "f",
+			"invalidpairs": [ ],
+			"lists":["shoe-thieves","tacos","magic"]
+	},
+	{
+			"id": "blaseball-770",
+			"name": "Melton Telephone",
+			"gender": "x",
+			"invalidpairs": [ ],
+			"lists":["magic"]
+	},
+	{
+			"id": "blaseball-772",
+			"name": "Buck Latenight",
+			"gender": "m",
+			"invalidpairs": [ ],
+			"lists":["magic"]
+	},
+	{
+			"id": "blaseball-773",
+			"name": "Bones Piazza",
+			"gender": "x",
+			"invalidpairs": [ ],
+			"lists":["magic"]
+	},
+	{
+			"id": "blaseball-782",
+			"name": "Ronan Combs",
+			"gender": "m",
+			"invalidpairs": [ ],
+			"lists":["magic","wild-wings"]
+	},
+	{
+			"id": "blaseball-784",
+			"name": "Alx Keming",
+			"gender": "x",
+			"invalidpairs": [ ],
+			"lists":["magic"]
 	}
 ]
