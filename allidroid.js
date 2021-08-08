@@ -1263,6 +1263,7 @@ function lesbianfriend()
 	{
 		endposition = lesbian.indexOf("\]");
 		monstersubstr = lesbian.substring(position+1,endposition);
+		substr_number = randomNumberForText(monstersubstr);
 		if (monstersubstr == "possessivesubject")
 		{
 			lesbian = lesbian.substr(0,position) + lesbianpronouns.possessivesubject + lesbian.substr(endposition+1);
@@ -1282,6 +1283,10 @@ function lesbianfriend()
 		else if (monstersubstr == "possessiveobject")
 		{
 			lesbian = lesbian.substr(0,position) + lesbianpronouns.possessiveobject + lesbian.substr(endposition+1);
+		}
+		else if (substr_number != false)
+		{
+			lesbian = lesbian.substr(0,position) + substr_number.toString() + lesbian.substr(endposition+1);
 		}
 		else
 		{
@@ -1314,7 +1319,7 @@ function randomNumberForText(r)
 	
 	if (isNaN(maximumNumber) || isNaN(minimumNumber) || maximumNumber == -1)
 	{
-		return false;omNum
+		return false;
 	}
 	return Math.floor(Math.random()*(maximumNumber-minimumNumber)+minimumNumber);
 }
