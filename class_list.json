@@ -326,7 +326,13 @@
 	{
 		"single": "himbo",
 		"plural": "himbos",
-		"slots": ["pants","shirt","hat","tool","friend"],
+		"slots": ["pants","shirt","hat","tool","friend","friend"],
+		"favitems": []
+	},
+	{
+		"single": "twink",
+		"plural": "twinks",
+		"slots": ["pants","shirt","hat","tool","friend","friend"],
 		"favitems": []
 	}
 ]
