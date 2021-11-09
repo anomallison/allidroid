@@ -192,17 +192,6 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    } else if (normalizedCommand == "legacyboss") 
-	{
-		output = generateLegacyBoss();
-		if (output == null)
-		{
-			console.log("failed command: legacyboss");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		}
-		receivedMessage.channel.send(output);
-		return;
     } else if (normalizedCommand == "boss") 
 	{
 		output = generateBoss(arguments);
@@ -2339,221 +2328,6 @@ function sortItemArray(arr)
 }
 
 
-//
-// Generate a special boss monster
-
-var ANIMAL_REROLL_LIMIT = 4;
-
-function generateLegacyBoss() 
-{
-	let boss_string = "";
-    let monster_base = getRandomMonster("boss");
-	let boss_class = monster_classes[Math.floor(Math.random()*monster_classes.length)];
-	let baserand = Math.random();
-	let monster_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
-	let boss_parts = monster_base.parts.slice();
-	let is_animal = monster_base.lists.includes("animal");
-	let boss_item_slots = monster_base.slots.slice();
-	let tempslotcount = item_slotlimits.slice();
-	let animalrerolls = 0;
-	
-	while(is_animal && animalrerolls < ANIMAL_REROLL_LIMIT) // basically, animals coming up a lot, reroll the thing so animals come up less hopefully
-	{
-		boss_class = monster_classes[Math.floor(Math.random()*monster_classes.length)];
-		is_animal = monster_base.lists.includes("animal");
-		animalrerolls++;
-	}
-	
-	if (!is_animal)
-	{
-		boss_item_slots = boss_item_slots.concat(boss_class.slots);
-	}
-
-	
-	let randomfriendpotential = Math.floor(Math.random()*5); // EVERYONE CAN HAVE FRIENDS
-	for (let i = 0; i < randomfriendpotential; i++)
-	{
-		boss_item_slots.push("friend");
-	}
-	
-	
-	let numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3)+1;
-	// let numberofitems = Math.floor((boss_item_slots.length/9) + (Math.random()*(boss_item_slots.length + 2))/6);
-	
-	let numberofitems = Math.floor((Math.random()*((boss_item_slots.length/5)+1))+0.5);
-	
-	while (numberofuniqueparts < 1) // never have 0 unique parts
-	{
-		numberofuniqueparts = Math.floor((Math.random()*monster_base.parts.length)/3+(Math.random()*monster_base.parts.length)/3)+1;
-	}
-	
-	
-	let items = []
-	let tempslot = "";
-	
-	for (let i = 0; i < numberofitems; i++)
-	{
-		tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)];
-		while (tempslot == "" || tempslot == "friend")
-		{
-			tempslot = boss_item_slots[Math.floor(Math.random()*boss_item_slots.length)];
-		}
-		items.push(generateArtifact(tempslot,boss_class.favitems))
-		for (let i = 0; i < tempslotcount.length; i++)
-		{
-			if (tempslotcount[i].slot == tempslot)
-			{
-				tempslotcount[i].limit--;
-				if (tempslotcount[i].limit == 0)
-				{
-					boss_item_slots = boss_item_slots.filter(removeAllStringFromArray,tempslot);
-				}
-				break;
-			}
-		}
-	}
-	
-	
-	if (is_animal)
-	{
-		boss_string += generateBossName(false,false) + ", the " + monster_base.single 
-			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
-	}
-	else
-	{
-		boss_string += generateBossName(false,false) + ", the " + boss_class.single 
-			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
-	}
-	
-	let position = -1;
-	let endposition = -1;
-	let bosssubstr = "";
-	
-	boss_string += grammarCapitalFirstLetter(monster_pronouns.subject) + " " + monster_pronouns.conjunction
-		+ " " + grammarAorAn(monster_base.single.charAt(0)).toLowerCase() + " " + monster_base.single;
-	
-	if (numberofuniqueparts > 0)
-	{
-		boss_string += ",";
-	}
-	
-	for (let i = 0; i < numberofuniqueparts; i++)
-	{
-		
-		if (numberofuniqueparts > 1 && (i+1) == numberofuniqueparts)
-		{
-			boss_string += " and ";
-		}
-		else if (i > 0)
-		{
-			boss_string += ", ";
-		}
-		else
-		{
-			boss_string += " ";
-		}
-		
-		temppart = Math.floor(Math.random()*boss_parts.length);
-		boss_string += getPartDesciptor(boss_parts[temppart]);
-		
-		if (boss_string == null)
-		{
-			console.log("failed to generate item for slot: " + temppart)
-		}
-		
-		while (boss_string.includes("[part]"))
-		{
-			boss_string = boss_string.replace("[part]", boss_parts[temppart]);
-		}
-		boss_parts.splice(temppart,1);
-	}
-	
-	boss_string += ".\n";
-	
-	
-	let items_string = "";
-	for (let i = 0; i < numberofitems; i++)
-	{
-		if (numberofitems > 1 && (i+1) == numberofitems)
-		{
-			if (numberofitems == 2)
-			{
-				items_string += " and "; //+  monster_pronouns.possessivesubject + " ";
-			}
-			else
-			{
-				items_string += ", and "; //+  monster_pronouns.possessivesubject + " ";
-			}
-		}
-		else if (i > 0)
-		{
-			items_string += ", "; //+  monster_pronouns.possessivesubject + " ";
-		}
-		
-		items_string += artifactToString(items[i],false);
-	}
-	if (numberofitems > 0)
-	{
-		boss_string += grammarCapitalFirstLetter(monster_pronouns.subject) + " " + monster_pronouns.conjunction + " outfitted with " + items_string + ".";
-	}
-	
-	
-	
-	
-	position = boss_string.indexOf("\[");
-	endposition = -1;
-	bosssubstr = "";
-	
-	while (position != -1)
-	{
-		endposition = boss_string.indexOf("\]");
-		bosssubstr = boss_string.substring(position+1,endposition);
-		substr_number = randomNumberForText(bosssubstr);
-		if (bosssubstr == "subject")
-		{
-			boss_string = boss_string.substr(0,position) + monster_pronouns.subject + boss_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "object")
-		{
-			boss_string = boss_string.substr(0,position) + monster_pronouns.object + boss_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "possessivesubject")
-		{
-			boss_string = boss_string.substr(0,position) + monster_pronouns.possessivesubject + boss_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "possessiveobject")
-		{
-			boss_string = boss_string.substr(0,position) + monster_pronouns.possessiveobject + boss_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "objectself")
-		{
-			boss_string = boss_string.substr(0,position) + monster_pronouns.objectself + boss_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "conjunction")
-		{
-			boss_string = boss_string.substr(0,position) + monster_pronouns.conjunction + boss_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "possessiveconjunction")
-		{
-			boss_string = boss_string.substr(0,position) + monster_pronouns.possessiveconjunction + boss_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "species")
-		{
-			boss_string = boss_string.substr(0,position) + getRandomMonster("species").single + boss_string.substr(endposition+1);
-		}
-		else if (substr_number != false)
-		{
-			boss_string = boss_string.substr(0,position) + substr_number.toString() + boss_string.substr(endposition+1);
-		}
-		else
-		{
-			boss_string = boss_string.substr(0,position) + boss_string.substr(endposition+1);
-		}
-		position = boss_string.indexOf("\[");
-	}
-
-	return grammarCapitalFirstLetter(boss_string);
-}
 
 
 function getPrincessObjectString(object)
@@ -2827,6 +2601,7 @@ function generateBoss(extrakeywords = null)
 		random_int = Math.floor(Math.random()*(temprandomkeywords.length));
 	}
 	
+	console.log("boss keywords: " + keywords);
 	
 	validdescriptors = boss_generator.descriptors.filter(descriptorIsValid,keywords);
 	
@@ -2835,7 +2610,7 @@ function generateBoss(extrakeywords = null)
 	let descriptorattemptcount = 12;
 	for (let i = 0; i < descriptorattemptcount; i++)
 	{
-		descriptors.push(validdescriptors[random_int].description);
+		descriptors.push(validdescriptors[random_int]);
 		keywords = keywords.filter(removeKeywordsByDescriptor,validdescriptors[random_int]);
 		validdescriptors = boss_generator.descriptors.filter(descriptorIsValid,keywords);
 		
@@ -2846,20 +2621,31 @@ function generateBoss(extrakeywords = null)
 			i += descriptorattemptcount;
 	}
 	
+	let sorted_descriptors = []
+	
+	for (i = 0; i < 10 && sorted_descriptors.length < descriptors.length; i++)
+	{
+		sorted_descriptors = sorted_descriptors.concat(descriptors.filter(filterByPriority,i));
+	}
+	
+	let descriptors_strings = "";
+	
+	for (i = 0; i < sorted_descriptors.length; i++)
+	{
+		descriptors_strings += sorted_descriptors[i].description;
+		if (i < sorted_descriptors.length-2)
+		{
+			descriptors_strings += ", ";
+		}
+		else if (i == sorted_descriptors.length-2)
+		{
+			descriptors_strings += " and ";
+		}
+	}
+	
+	
 	boss_string += generateBossName(false,false) + ", the " + basemonster.base + " " + bossclass.class 
 			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
-			
-	let tempdescriptors = descriptors.slice()
-	
-	random_int = Math.floor(Math.random()*(tempdescriptors.length));
-	let descriptors_strings = tempdescriptors[random_int] + ", ";
-	tempdescriptors.splice(random_int,1);
-	while (tempdescriptors.length > 0)
-	{
-		random_int = Math.floor(Math.random()*(tempdescriptors.length));
-		descriptors_strings += tempdescriptors[random_int] + ", ";
-		tempdescriptors.splice(random_int,1);
-	}
 	
 	let position = descriptors_strings.indexOf("\[");
 	let endposition = -1;
@@ -2902,6 +2688,14 @@ function generateBoss(extrakeywords = null)
 		{
 			descriptors_strings = descriptors_strings.substr(0,position) + getRandomMonster("species").single + descriptors_strings.substr(endposition+1);
 		}
+		else if (bosssubstr.substr(0,10) == "pluralnoun")
+		{
+			let words = bosssubstr.split(" ");
+			if (bosspronouns.pluralar)
+				descriptors_strings = descriptors_strings.substr(0,position) + words[1] + descriptors_strings.substr(endposition+1);
+			else
+				descriptors_strings = descriptors_strings.substr(0,position) + words[2] + descriptors_strings.substr(endposition+1);
+		}
 		else if (bosssubstr.substr(0,4) == "item")
 		{
 			let lists = bosssubstr.split(" ");
@@ -2914,13 +2708,19 @@ function generateBoss(extrakeywords = null)
 				{
 					neededlists.push(lists[i].substr(1));
 				}
-				else (lists[i].substr(0,1) == "-")
+				else if (lists[i].substr(0,1) == "-")
 				{
-					neededlists.push(lists[i].substr(1));
+					disallowedlists.push(lists[i].substr(1));
 				}
 			}
 			let tempitem = generateItemOfType(type,neededlists,disallowedlists);
-			descriptors_strings = descriptors_strings.substr(0,position) + grammarAorAn(tempitem.item.charAt(0)) + " " + tempitem.item + descriptors_strings.substr(endposition+1);
+			if (tempitem != null)
+				descriptors_strings = descriptors_strings.substr(0,position) + grammarAorAn(tempitem.item.charAt(0)) + " " + tempitem.item + descriptors_strings.substr(endposition+1);
+			else
+			{
+				console.log("warning: null item found using substring: " + bosssubstr);
+				descriptors_strings = descriptors_strings.substr(0,position) + descriptors_strings.substr(endposition+1);
+			}
 		}
 		else if (substr_number != false)
 		{
@@ -2933,7 +2733,7 @@ function generateBoss(extrakeywords = null)
 		position = descriptors_strings.indexOf("\[");
 	}
 	
-	descriptors_strings = descriptors_strings.substr(0,descriptors_strings.length-2) + ".";
+	descriptors_strings += ".";
 	
 	return boss_string + grammarCapitalFirstLetter(descriptors_strings);
 	
@@ -2960,7 +2760,7 @@ function generateItemOfType(type, musthavelists = null, disallowedlists = null)
 	
 	if (disallowedlists != null && disallowedlists.length > 0)
 	{
-		for (let i = 0; i < musthavelists.length; i++)
+		for (let i = 0; i < disallowedlists.length; i++)
 		{
 			itempool = itempool.filter(removeByList,disallowedlists[i]);
 		}

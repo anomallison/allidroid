@@ -306,6 +306,12 @@
 		"favitems": ["mundane","thief","thief","ranged"]
 	},
 	{
+		"single": "pirate",
+		"plural": "pirates",
+		"slots": ["weapon","coat","pants","shirt","hat","tool"],
+		"favitems": ["mundane","aggressive","thief"]
+	},
+	{
 		"single": "bigboi",
 		"plural": "bigbois",
 		"slots": ["weapon","coat","pants","shirt","hat"],

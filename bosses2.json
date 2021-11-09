@@ -5,6 +5,7 @@
 		"alchemy",
 		"holy",
 		"martial",
+		"roguish",
 		"cyberpunk",
 		"necromantic",
 		"gothic",
@@ -14,7 +15,8 @@
 		"item",
 		"wings",
 		"tail",
-		"friend"
+		"friend",
+		"twink"
 	],
 	"randomkeywords":
 	[
@@ -22,12 +24,14 @@
 		"alchemy",
 		"holy",
 		"martial",
+		"roguish",
 		"cyberpunk",
 		"necromantic",
 		"gothic",
 		"clothes",
 		"item",
-		"friend"
+		"friend",
+		"twink"
 	],
 	"bases":
 	[
@@ -109,7 +113,7 @@
 		},
 		{
 			"base": "dhampir",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","vampire"]
 		},
 		{
 			"base": "turtlefolk",
@@ -137,7 +141,7 @@
 		},
 		{
 			"base": "slimefolk",
-			"keywords": []
+			"keywords": ["slime"]
 		}
 	],
 	"specialbases":
@@ -168,6 +172,38 @@
 			"keywords": ["arcane","clothes","loadout","item","friend"]
 		},
 		{
+			"class": "rogue",
+			"keywords": ["roguish","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "thief",
+			"keywords": ["roguish","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "summoner",
+			"keywords": ["arcane","clothes","loadout","friend","friend"]
+		},
+		{
+			"class": "psychic warrior",
+			"keywords": ["martial","clothes","loadout","item"]
+		},
+		{
+			"class": "blackguard",
+			"keywords": ["martial","clothes","loadout","necromantic","item"]
+		},
+		{
+			"class": "bounty hunter",
+			"keywords": ["martial","clothes","loadout","item"]
+		},
+		{
+			"class": "vampire slayer",
+			"keywords": ["martial","holy","clothes","loadout","item"]
+		},
+		{
+			"class": "witch",
+			"keywords": ["arcane","gothic","loadout","item","friend"]
+		},
+		{
 			"class": "decker",
 			"keywords": ["cyberpunk","clothes","loadout","item","friend"]
 		},
@@ -178,6 +214,10 @@
 		{
 			"class": "cleric",
 			"keywords": ["holy","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "paladin",
+			"keywords": ["martial","holy","clothes","loadout","item"]
 		},
 		{
 			"class": "berserker",
@@ -194,189 +234,290 @@
 		{
 			"class": "hypnotist",
 			"keywords": ["arcane","clothes","loadout","item"]
+		},
+		{
+			"class": "pirate",
+			"keywords": ["roguish","clothes","loadout","item","friend"]
+		},
+		{
+			"class": "pokemon trainer",
+			"keywords": ["pokemon","clothes","item","friend"]
+		},
+		{
+			"class": "twink",
+			"keywords": ["twink","clothes","item","friend"]
+		},
+		{
+			"class": "himbo",
+			"keywords": ["himbo","loadout","clothes","item","friend"]
 		}
 	],
 	"descriptors":
 	[
 		{
+			"keywords": ["himbo","clothes"],
+			"description": "[subject] [pluralnoun wear wears] ripped skinny jeans, no shirt and a beret",
+			"priority": 0
+		},
+		{
+			"keywords": ["twink","clothes"],
+			"description": "[subject] [pluralnoun wear wears] skinny jeans and a croptop with fingerless gloves",
+			"priority": 0
+		},
+		{
 			"keywords": ["necromantic","clothes"],
-			"description": "[subject] [conjunction] outfitted with bone fetishes, black cord braclets of teeth, and a black cloak"
+			"description": "[subject] [conjunction] outfitted with bone fetishes, black cord braclets of teeth, and a black cloak",
+			"priority": 0
 		},
 		{
 			"keywords": ["arcane","cyberpunk","clothes"],
-			"description": "[subject] [conjunction] outfitted with magical fetishes, magical glowing tattoos and a sleek glowing high collar bomber jacket"
+			"description": "[subject] [conjunction] outfitted with magical fetishes, magical glowing tattoos and a sleek glowing high collar bomber jacket",
+			"priority": 0
 		},
 		{
 			"keywords": ["gothic","arcane","clothes"],
-			"description": "[subject] wears a steel corset etched with glowing runes, long black gloves and a short black skirt"
+			"description": "[subject] [pluralnoun wear wears] a steel corset etched with glowing runes, long black gloves and a short black skirt",
+			"priority": 0
 		},
 		{
 			"keywords": ["gothic","arcane","clothes"],
-			"description": "[subject] wears a vest etched with glowing runes, black gloves, and a formal jacket"
+			"description": "[subject] [pluralnoun wear wears] a vest etched with glowing runes, black gloves, and a formal jacket",
+			"priority": 0
 		},
 		{
 			"keywords": ["cyberpunk","anthromorphic"],
-			"description": "[subject] [possessiveconjunction] sleek cybernetic arms and legs connected to an augmented spine and nervous system"
+			"description": "[subject] [possessiveconjunction] sleek cybernetic arms and legs connected to an augmented spine and nervous system",
+			"priority": 2
 		},
 		{
 			"keywords": ["cyberpunk","wings","anthromorphic"],
-			"description": "[subject] [possessiveconjunction] sleek cybernetic wings, arms and legs connected to an augmented spine and nervous system"
+			"description": "[subject] [possessiveconjunction] sleek cybernetic wings, arms and legs connected to an augmented spine and nervous system",
+			"priority": 2
 		},
 		{
 			"keywords": ["cyberpunk","wings","tail","anthromorphic"],
-			"description": "[subject] [possessiveconjunction] sleek cybernetic wings, tail, arms and legs connected to an augmented spine and nervous system"
+			"description": "[subject] [possessiveconjunction] sleek cybernetic wings, tail, arms and legs connected to an augmented spine and nervous system",
+			"priority": 2
 		},
 		{
 			"keywords": ["cyberpunk","wings"],
-			"description": "[subject] [possessiveconjunction] sleek cybernetic wings connected to an augmented spine and nervous system"
+			"description": "[subject] [possessiveconjunction] sleek cybernetic wings connected to an augmented spine and nervous system",
+			"priority": 2
 		},
 		{
 			"keywords": ["cyberpunk","anthromorphic"],
-			"description": "[possessivesubject] spine glows with fancy neural augmentations"
+			"description": "[possessivesubject] spine glows with fancy neural augmentations",
+			"priority": 2
 		},
 		{
 			"keywords": ["cyberpunk","loadout"],
-			"description": "[subject] uses [item longarms +cyberpunk], [item longarms +cyberpunk] and [item shortblade +cyberpunk] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item longarms +cyberpunk], [item longarms +cyberpunk] and [item shortblade +cyberpunk] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["arcane","loadout"],
-			"description": "[subject] uses [item magestaff +magical], [item magicoffhand +magical] and [item dagger] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item magestaff +magical], [item magicoffhand +magical] and [item dagger] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["natural","loadout"],
-			"description": "[subject] uses [item magestaff], [item magicoffhand] and [item dagger] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item magestaff], [item magicoffhand] and [item dagger] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["cleric","loadout"],
-			"description": "[subject] uses [item largehammer], [item bow +crossbow] and [item magicoffhand +holy] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item largehammer], [item bow +crossbow] and [item magicoffhand +holy] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["cleric","loadout"],
-			"description": "[subject] uses [item smallhammer], [item shield] and [item magicoffhand +holy] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item smallhammer], [item shield] and [item magicoffhand +holy] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["arcane","loadout"],
-			"description": "[subject] uses [item dagger], [item wand +magical] and a sling as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item dagger], [item wand +magical] and a sling as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["necromantic","loadout"],
-			"description": "[subject] uses [item magestaff +dark], [item magicoffhand +dark] and [item dagger +dark] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item magestaff +dark], [item magicoffhand +dark] and [item dagger +dark] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["necromantic","loadout"],
-			"description": "[subject] uses [item dagger +dark], [item wand +dark] and a fetish as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item dagger +dark], [item wand +dark] and a fetish as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["roguish","loadout"],
+			"description": "[subject] [pluralnoun use uses] [item shortblade], [item dagger] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["roguish","loadout"],
+			"description": "[subject] [pluralnoun use uses] [item shortblade], [item bow] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["martial","loadout"],
-			"description": "[subject] uses [item largeblade] [item bow +handbow] and [item throwingknives] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item largeblade] [item bow +handbow] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["martial","loadout"],
-			"description": "[subject] uses [item largehammer], [item bow +crossbow] and [item throwingknives] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item largehammer], [item bow +crossbow] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["martial","loadout"],
-			"description": "[subject] uses [item polearm], [item ropeweapon] and [item throwingknives] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item polearm], [item ropeweapon] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["martial","loadout"],
-			"description": "[subject] uses [item largeblade], [item shield] and [item bow] as [possessivesubject] primary loadout"
+			"description": "[subject] [pluralnoun use uses] [item largeblade], [item shield] and [item bow] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["loadout"],
+			"description": "[subject] [pluralnoun use uses] [item shortblade] and [item dagger] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["loadout"],
+			"description": "[subject] [pluralnoun use uses] [item smallhammer] and [item dagger] as [possessivesubject] primary loadout",
+			"priority": 1
 		},
 		{
 			"keywords": ["anthromorphic"],
-			"description": "a scar runs a trail down [possessivesubject] chest to [possessivesubject] navel"
+			"description": "a scar runs a trail down [possessivesubject] chest to [possessivesubject] navel",
+			"priority": 4
 		},
 		{
 			"keywords": ["anthromorphic"],
-			"description": "a scar runs a trail down [possessivesubject] eye to [possessivesubject] cheek"
+			"description": "a scar runs a trail down [possessivesubject] eye to [possessivesubject] cheek",
+			"priority": 4
 		},
 		{
 			"keywords": ["anthromorphic"],
-			"description": "one of [possessivesubject] legs has been removed just below the knee, with [item legreplacement] in its place"
+			"description": "one of [possessivesubject] legs has been removed just below the knee, with [item legreplacement] in its place",
+			"priority": 4
 		},
 		{
 			"keywords": ["wings"],
-			"description": "patches of silk are stitched into holes in [possessivesubject] wings"
+			"description": "patches of silk are stitched into holes in [possessivesubject] wings",
+			"priority": 4
 		},
 		{
 			"keywords": ["wings"],
-			"description": "patches of leather are stitched into holes in [possessivesubject] wings"
+			"description": "patches of leather are stitched into holes in [possessivesubject] wings",
+			"priority": 4
 		},
 		{
 			"keywords": ["necromantic","wings"],
-			"description": "[subject] [possessiveconjunction] wings of bone and black sinew"
+			"description": "[subject] [possessiveconjunction] wings of bone and black sinew",
+			"priority": 4
 		},
 		{
 			"keywords": ["necromantic","anthromorphic"],
-			"description": "[possessivesubject] body is gaunt and withered and ribs visibly pronounced"
+			"description": "[possessivesubject] body is gaunt and withered and ribs visibly pronounced",
+			"priority": 4
 		},
 		{
 			"keywords": ["necromantic","anthromorphic"],
-			"description": "an incision scar with remaining stitches trails from [possessivesubject] sternum to [possessivesubject] crotch"
+			"description": "an incision scar with remaining stitches trails from [possessivesubject] sternum to [possessivesubject] crotch",
+			"priority": 4
 		},
 		{
 			"keywords": ["anthromorphic"],
-			"description": "a scar marks X near [possessivesubject] heart"
+			"description": "a scar marks X near [possessivesubject] heart",
+			"priority": 4
 		},
 		{
 			"keywords": ["item"],
-			"description": "[subject] [possessiveconjunction] [item consumable]"
+			"description": "[subject] [possessiveconjunction] [item consumable]",
+			"priority": 1
+		},
+		{
+			"keywords": ["pokemon","item"],
+			"description": "[subject] [possessiveconjunction] [item pokemon +starters], [item pokemon], [item pokemon] and [item pokemon]",
+			"priority": 1
+		},
+		{
+			"keywords": ["pokemon"],
+			"description": "[item pokemon +starters] loyally follows [object]",
+			"priority": 1
 		},
 		{
 			"keywords": ["friend"],
-			"description": "[item friend -dark] loyally follows [object]"
+			"description": "[item friend -dark] loyally follows [object]",
+			"priority": 5
 		},
 		{
 			"keywords": ["necromantic","friend"],
-			"description": "[item friend +dark] loyally follows [object]"
+			"description": "[item friend +dark] loyally follows [object]",
+			"priority": 5
 		},
 		{
 			"keywords": ["cyberpunk","clothes"],
-			"description": "[subject] wears fingerless leather gloves with glowing orange strips, mirror shades and a sleek glowing high collar bomber jacket"
+			"description": "[subject] [pluralnoun wear wears] fingerless leather gloves with glowing orange strips, mirror shades and a sleek glowing high collar bomber jacket",
+			"priority": 0
 		},
 		{
 			"keywords": ["martial","clothes"],
-			"description": "[subject] wears [item armour +heavyarmour]"
+			"description": "[subject] [pluralnoun wear wears] [item armour +heavyarmour]",
+			"priority": 0
 		},
 		{
 			"keywords": ["nartual","clothes"],
-			"description": "[subject] wears [item armour +druid]"
+			"description": "[subject] [pluralnoun wear wears] [item armour +druid]",
+			"priority": 0
 		},
 		{
 			"keywords": ["holy","clothes"],
-			"description": "[subject] wears [item armour +mediumarmour]"
+			"description": "[subject] [pluralnoun wear wears] [item armour +mediumarmour]",
+			"priority": 0
 		},
 		{
 			"keywords": ["alchemy","clothes"],
-			"description": "[subject] wears [item armour +alchemy] with [item jewelery]"
+			"description": "[subject] [pluralnoun wear wears] [item armour +alchemy] with [item jewelery]",
+			"priority": 0
 		},
 		{
 			"keywords": ["clothes"],
-			"description": "[subject] wears [item armour +lightarmour]"
+			"description": "[subject] [pluralnoun wear wears] [item armour +lightarmour]",
+			"priority": 0
 		},
 		{
 			"keywords": ["natural"],
-			"description": "roots and little vines grow from various parts of [object]"
+			"description": "roots and little vines grow from various parts of [object]",
+			"priority": 4
 		},
 		{
 			"keywords": ["holy"],
-			"description": "a faint halo rings [possessivesubject] head"
+			"description": "a faint halo rings [possessivesubject] head",
+			"priority": 4
 		},
 		{
 			"keywords": ["alchemy"],
-			"description": "[possessivesubject] skin is stained with alchemical reagents and chemicals"
+			"description": "[possessivesubject] skin is stained with alchemical reagents and chemicals",
+			"priority": 4
 		},
 		{
 			"keywords": ["vampire"],
-			"description": "[possessivesubject] skin is white like parrafin"
+			"description": "[possessivesubject] skin is white like parrafin",
+			"priority": 4
 		},
 		{
 			"keywords": ["vampire"],
-			"description": "[possessivesubject] lips are a deep hypnotic vermillion"
+			"description": "[possessivesubject] lips are a deep hypnotic vermillion",
+			"priority": 4
 		},
 		{
 			"keywords": ["skeleton"],
-			"description": "[possessivesubject] bones are wrapped in [item bonewraps]"
+			"description": "[possessivesubject] bones are wrapped in [item bonewraps]",
+			"priority": 4
 		}
 		
 		

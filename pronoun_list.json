@@ -6,7 +6,8 @@
 		"possessiveobject": "his",
 		"objectself": "himself",
 		"conjunction": "is",
-		"possessiveconjunction":"has"
+		"possessiveconjunction":"has",
+		"pluralar": false
 	},
 	{
 		"subject": "she",
@@ -15,7 +16,8 @@
 		"possessiveobject": "hers",
 		"objectself": "herself",
 		"conjunction": "is",
-		"possessiveconjunction":"has"
+		"possessiveconjunction":"has",
+		"pluralar": false
 	},
 	{
 		"subject": "they",
@@ -24,7 +26,38 @@
 		"possessiveobject": "theirs",
 		"objectself": "themself",
 		"conjunction": "are",
-		"possessiveconjunction":"have"
+		"possessiveconjunction":"have",
+		"pluralar": true
+	},
+	{
+		"subject": "he",
+		"object": "him",
+		"possessivesubject": "his",
+		"possessiveobject": "his",
+		"objectself": "himself",
+		"conjunction": "is",
+		"possessiveconjunction":"has",
+		"pluralar": false
+	},
+	{
+		"subject": "she",
+		"object": "her",
+		"possessivesubject": "her",
+		"possessiveobject": "hers",
+		"objectself": "herself",
+		"conjunction": "is",
+		"possessiveconjunction":"has",
+		"pluralar": false
+	},
+	{
+		"subject": "they",
+		"object": "them",
+		"possessivesubject": "their",
+		"possessiveobject": "theirs",
+		"objectself": "themself",
+		"conjunction": "are",
+		"possessiveconjunction":"have",
+		"pluralar": true
 	},
 	{
 		"subject": "xey",
@@ -33,7 +66,8 @@
 		"possessiveobject": "xirs",
 		"objectself": "ximself",
 		"conjunction": "are",
-		"possessiveconjunction":"have"
+		"possessiveconjunction":"have",
+		"pluralar": true
 	},
 	{
 		"subject": "xey",
@@ -42,7 +76,8 @@
 		"possessiveobject": "xers",
 		"objectself": "xemself",
 		"conjunction": "are",
-		"possessiveconjunction":"have"
+		"possessiveconjunction":"have",
+		"pluralar": true
 	},
 	{
 		"subject": "zey",
@@ -51,7 +86,8 @@
 		"possessiveobject": "zis",
 		"objectself": "zimself",
 		"conjunction": "are",
-		"possessiveconjunction":"have"
+		"possessiveconjunction":"have",
+		"pluralar": true
 	},
 	{
 		"subject": "zey",
@@ -60,7 +96,8 @@
 		"possessiveobject": "zers",
 		"objectself": "zerself",
 		"conjunction": "are",
-		"possessiveconjunction":"have"
+		"possessiveconjunction":"have",
+		"pluralar": true
 	},
 	{
 		"subject": "e",
@@ -69,7 +106,8 @@
 		"possessiveobject": "es",
 		"objectself": "emself",
 		"conjunction": "is",
-		"possessiveconjunction":"has"
+		"possessiveconjunction":"has",
+		"pluralar": false
 	},
 	{
 		"subject": "e",
@@ -78,7 +116,8 @@
 		"possessiveobject": "ers",
 		"objectself": "erself",
 		"conjunction": "is",
-		"possessiveconjunction":"has"
+		"possessiveconjunction":"has",
+		"pluralar": false
 	},
 	{
 		"subject": "it",
@@ -87,7 +126,8 @@
 		"possessiveobject": "its",
 		"objectself": "itself",
 		"conjunction": "is",
-		"possessiveconjunction":"has"
+		"possessiveconjunction":"has",
+		"pluralar": false
 	},
 	{
 		"subject": "fae",
@@ -96,7 +136,8 @@
 		"possessiveobject": "faers",
 		"objectself": "faeself",
 		"conjunction": "are",
-		"possessiveconjunction":"have"
+		"possessiveconjunction":"have",
+		"pluralar": true
 	},
 	{
 		"subject": "xe",
@@ -105,7 +146,8 @@
 		"possessiveobject": "xyrs",
 		"objectself": "xyrself",
 		"conjunction": "is",
-		"possessiveconjunction":"has"
+		"possessiveconjunction":"has",
+		"pluralar": false
 	},
 	{
 		"subject": "ze",
@@ -114,7 +156,8 @@
 		"possessiveobject": "zyrs",
 		"objectself": "zyrself",
 		"conjunction": "is",
-		"possessiveconjunction":"has"
+		"possessiveconjunction":"has",
+		"pluralar": false
 	},
 	{
 		"subject": "se",
@@ -123,6 +166,7 @@
 		"possessiveobject": "seirs",
 		"objectself": "seirself",
 		"conjunction": "is",
-		"possessiveconjunction":"has"
+		"possessiveconjunction":"has",
+		"pluralar": false
 	}
 ]

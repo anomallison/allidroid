@@ -4,7 +4,7 @@
 		"plural": "demons",
 		"parts": ["arms","legs","chest","head","eyes","ears","horns","mouth","lips","tentacles"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","demonic"]
 	},
 	{
 		"single": "people eater",
@@ -18,126 +18,126 @@
 		"plural": "shoggoths",
 		"parts": ["tentacles"],
 		"slots": [],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","eldritch"]
 	},
 	{
 		"single": "millipede",
 		"plural": "millipedes",
 		"parts": ["chest","head","mouth","antenna"],
 		"slots": ["neck","hat","face","belt","ring","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","insectoid"]
 	},
 	{
 		"single": "horror",
 		"plural": "horrors",
 		"parts": ["chest","head","eyes","horns","mouth","wings","antenna","tentacles"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","eldritch"]
 	},
 	{
 		"single": "bee",
 		"plural": "bees",
 		"parts": ["chest","head","legs","wings","antenna","eyes"],
 		"slots": ["neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","insectoid"]
 	},
 	{
 		"single": "android",
 		"plural": "androids",
 		"parts": ["mechlegs","mecharms","mechchest","mechhead"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","robotic"]
 	},
 	{
 		"single": "penguin",
 		"plural": "penguins",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["animal","monster","boss","friend","sexy","species"]
+		"lists": ["animal","monster","boss","friend","sexy","species","avian"]
 	},
 	{
 		"single": "cyclops",
 		"plural": "cyclopses",
-		"parts": ["chest","head","mouth","legs","arms","eyes","lips"],
+		"parts": ["chest","head","mouth","legs","arms","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["species","monster","boss","friend","sexy","gacha"]
+		"lists": ["species","monster","boss","friend","sexy","gacha","humanoid"]
 	},
 	{
 		"single": "anchovy",
 		"plural": "anchovies",
 		"parts": ["chest","head","mouth","fins","tail"],
 		"slots": ["weapon","offhand","neck","hat","face","coat"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","fish"]
 	},
 	{
 		"single": "mass of eyes",
 		"plural": "masses of eyes",
-		"parts": ["eyes","eyes"],
+		"parts": ["eyes"],
 		"slots": ["neck","hat","face","coat"],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","eldritch"]
 	},
 	{
 		"single": "octopus",
 		"plural": "octopuses",
 		"parts": ["head","eyes","tentacles","beak"],
 		"slots": ["weapon","offhand","weapon","offhand","weapon","offhand","weapon","offhand","pants","coat","ring","ring","ring","ring","ring","face","neck"],
-		"lists": ["animal","monster","boss","friend","sexy"]
+		"lists": ["animal","monster","boss","friend","sexy","cephalopod"]
 	},
 	{
 		"single": "dragon",
 		"plural": "dragons",
 		"parts": ["head","eyes","hindlegs","frontlegs","chest","tail","mouth"],
 		"slots": ["neck","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","ring","ring","ring"],
-		"lists": ["monster","boss","friend","sexy","species","gacha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","draconic"]
 	},
 	{
 		"single": "treasure chest",
 		"plural": "treasure chests",
 		"parts": ["mouth","chest"],
 		"slots": ["hat"],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","eldritch"]
 	},
 	{
 		"single": "tyrannosaurus",
 		"plural": "tyrannosauruses",
 		"parts": ["head","eyes","arms","legs","chest","tail","mouth"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","dinosaur"]
 	},
 	{
 		"single": "brachiosaurus",
 		"plural": "brachiosauruses",
 		"parts": ["head","eyes","hindlegs","frontlegs","chest","tail","mouth"],
 		"slots": ["neck","neck","hat","face","belt","shoes","shirt","coat"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","dinosaur"]
 	},
 	{
 		"single": "stegosaurus",
 		"plural": "stegosauruses",
 		"parts": ["head","eyes","hindlegs","frontlegs","chest","tail","mouth"],
 		"slots": ["neck","hat","face","belt","shoes","shirt","coat"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","dinosaur"]
 	},
 	{
 		"single": "plateosaurus",
 		"plural": "plateosauruses",
 		"parts": ["head","eyes","arms","legs","chest","tail","mouth"],
 		"slots": ["weapon","offhand","neck","neck","hat","face","pants","belt","shoes","shirt","coat","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","dinosaur"]
 	},
 	{
 		"single": "marshosaurus",
 		"plural": "marshosauruses",
 		"parts": ["head","eyes","arms","legs","chest","tail","mouth"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","dinosaur"]
 	},
 	{
 		"single": "allosaurus",
 		"plural": "allosauruses",
 		"parts": ["head","eyes","arms","legs","chest","tail","mouth"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","dinosaur"]
 	},
 	{
 		"single": "cookie monster",
@@ -151,154 +151,154 @@
 		"plural": "trains",
 		"parts": ["engine","carriage","carriage","carriage","freight","freight"],
 		"slots": [],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","robotic"]
 	},
 	{
 		"single": "cat",
 		"plural": "cats",
 		"parts": ["eyes","hindlegs","frontlegs","chest","head","ears","tail","mouth"],
 		"slots": ["neck","hat","face","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","animalia"]
 	},
 	{
 		"single": "dingo",
 		"plural": "dingoes",
 		"parts": ["eyes","hindlegs","frontlegs","chest","head","ears","tail","mouth"],
 		"slots": ["neck","hat","face","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","animalia"]
 	},
 	{
 		"single": "emu",
 		"plural": "emus",
 		"parts": ["wings","legs","chest","head","eyes","beak"],
 		"slots": ["neck","hat","face","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","avian"]
 	},
 	{
 		"single": "kangaroo",
 		"plural": "kangaroos",
 		"parts": ["arms","legs","chest","head","eyes","ears","tail","mouth"],
 		"slots": ["weapon","offhand","neck","hat","face","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","animalia"]
 	},
 	{
 		"single": "bird",
 		"plural": "birds",
 		"parts": ["wings","legs","chest","head","eyes","beak"],
 		"slots": ["neck","hat","face","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","avian"]
 	},
 	{
 		"single": "sasquatch",
 		"plural": "sasquatches",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring"],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","humanoid"]
 	},
 	{
 		"single": "godzilla",
 		"plural": "godzillas",
 		"parts": ["head","eyes","arms","legs","chest","tail","mouth"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring"],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","dinosaur"]
 	},
 	{
 		"single": "loch ness monster",
 		"plural": "loch ness monsters",
 		"parts": ["head","eyes","hindlegs","frontlegs","chest","tail","mouth"],
 		"slots": ["neck","neck","hat","face","belt","shoes","shirt","coat"],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","dinosaur"]
 	},
 	{
 		"single": "tomato with a face",
 		"plural": "tomatoes with faces",
 		"parts": ["head","mouth"],
 		"slots": ["hat","face"],
-		"lists": ["monster","boss","friend","sexy"]
+		"lists": ["monster","boss","friend","sexy","vegetoid"]
 	},
 	{
 		"single": "jackolantern",
 		"plural": "jackolanterns",
 		"parts": ["head","mouth"],
 		"slots": ["hat","face"],
-		"lists": ["monster","boss","friend","sexy","gacha"]
+		"lists": ["monster","boss","friend","sexy","gacha","vegetoid"]
 	},
 	{
 		"single": "raven",
 		"plural": "ravens",
 		"parts": ["wings","legs","chest","head","eyes","beak"],
 		"slots": ["neck","hat","face","belt","shoes","shirt","coat","ring","ring"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","avian"]
 	},
 	{
 		"single": "drider",
 		"plural": "driders",
 		"parts": ["head","eyes","arms","spiderlegs","chest","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","belt","shoes","shirt","coat","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","eldritch"]
 	},
 	{
 		"single": "beastfolk",
 		"plural": "beastfolk",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","horns","tail","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","furry"]
 	},
 	{
 		"single": "ogre",
 		"plural": "ogres",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","humanoid"]
 	},
 	{
 		"single": "elf",
 		"plural": "elves",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid"]
 	},
 	{
 		"single": "dwarf",
 		"plural": "dwarves",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid"]
 	},
 	{
 		"single": "halfling",
 		"plural": "halflings",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid"]
 	},
 	{
 		"single": "orc",
 		"plural": "orcs",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid"]
 	},
 	{
 		"single": "gnome",
 		"plural": "gnomes",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid"]
 	},
 	{
 		"single": "tengu",
 		"plural": "tengu",
 		"parts": ["arms","legs","chest","head","eyes","beak","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid","avian"]
 	},
 	{
 		"single": "goblin",
 		"plural": "goblins",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips","tail"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid"]
 	},
 	{
 		"single": "human",
@@ -312,125 +312,125 @@
 		"plural": "[species] vampires",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","gacha","gaycha","vampiric"]
 	},
 	{
 		"single": "zombie [species]",
 		"plural": "zombie [species]",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","gacha","gaycha","zombie"]
 	},
 	{
 		"single": "[species] skeleton",
 		"plural": "[species] skeletons",
 		"parts": ["bonearms","bonelegs","bonechest","bonehead"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","gacha","gaycha","skeleton"]
 	},
 	{
 		"single": "catfolk",
 		"plural": "catfolk",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips","tail"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","furry"]
 	},
 	{
 		"single": "kitsune",
 		"plural": "kitsune",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips","tail"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","furry"]
 	},
 	{
 		"single": "minotaur",
 		"plural": "minotaurs",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips","tail","horns"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","furry"]
 	},
 	{
 		"single": "dhampir",
 		"plural": "dhampirs",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","gacha","gaycha","vampiric","humanoid"]
 	},
 	{
 		"single": "turtlefolk",
 		"plural": "turtlefolk",
 		"parts": ["arms","legs","chest","head","eyes","mouth","lips","shell"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","turtles"]
 	},
 	{
 		"single": "frogfolk",
 		"plural": "frogfolk",
 		"parts": ["arms","legs","chest","head","eyes","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","frogs"]
 	},
 	{
 		"single": "awakened tree",
 		"plural": "awakened trees",
 		"parts": ["branches","trunk"],
 		"slots": [],
-		"lists": ["monster","boss","friend"]
+		"lists": ["monster","boss","friend","vegetoid"]
 	},
 	{
 		"single": "plantfolk",
 		"plural": "plantfolk",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","vegetoid"]
 	},
 	{
 		"single": "rockfolk",
 		"plural": "rockfolk",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","mineroid"]
 	},
 	{
 		"single": "mermaid",
 		"plural": "mermaids",
 		"parts": ["arms","tail","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid","fish"]
 	},
 	{
 		"single": "sharkfolk",
 		"plural": "sharkfolk",
 		"parts": ["arms","legs","tail","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","humanoid","fish"]
 	},
 	{
 		"single": "slimefolk",
 		"plural": "slimefolk",
 		"parts": ["arms","legs","tail","chest","head","eyes","ears","mouth","lips","tentacles"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","species","gacha","gaycha","eldritch"]
 	},
 	{
 		"single": "ghoul",
 		"plural": "ghouls",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","gacha","gaycha"]
+		"lists": ["monster","boss","friend","sexy","gacha","gaycha","zombie","humanoid"]
 	},
 	{
 		"single": "wight",
 		"plural": "wights",
 		"parts": ["arms","legs","chest","head","eyes","ears","mouth","lips"],
 		"slots": ["weapon","offhand","neck","hat","face","pants","belt","shoes","shirt","coat","ring","ring","ring","shoulders"],
-		"lists": ["monster","boss","friend","sexy","gacha"]
+		"lists": ["monster","boss","friend","sexy","gacha","zombie","skeleton"]
 	},
 	{
 		"single": "wolf",
 		"plural": "wolves",
 		"parts": ["eyes","hindlegs","frontlegs","chest","head","ears","tail","mouth"],
 		"slots": ["neck","hat","face","belt","shoes","shirt","coat","ring","ring","shoulders"],
-		"lists": ["animal","monster","boss","friend"]
+		"lists": ["animal","monster","boss","friend","animalia"]
 	}
 ]

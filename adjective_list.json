@@ -2,484 +2,631 @@
 	{
 		"word": "angry",
 		"priority": 3,
-		"lists": ["monster","boss"],
+		"lists": ["monster","boss","gacha"],
 		"antonyms": ["peaceful"],
-		"synonyms": []
+		"synonyms": ["angy"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "awkward",
 		"priority": 3,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "bloodied",
 		"priority": 6,
 		"lists": ["monster","boss"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "bubbly",
 		"priority": 3,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": ["miserable"],
-		"synonyms": ["effervescent"]
+		"synonyms": ["effervescent"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "butch",
 		"priority": 9,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "caring",
 		"priority": 3,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "cheerful",
 		"priority": 3,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "chemically-enhanced",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "chitinous",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": ["shell"],
+		"removedparts": []
 	},
 	{
 		"word": "confused",
 		"priority": 3,
 		"lists": ["monster","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "cybernetic",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "drunken",
 		"priority": 3,
 		"lists": ["monster","boss","friend"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "dummy thicc",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "ecclesiastical",
 		"priority": 9,
 		"lists": ["monster","boss"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "enthusiastic",
 		"priority": 3,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "fangorious",
 		"priority": 4,
 		"lists": ["monster","boss","gacha"],
 		"antonyms": [],
-		"synonyms": ["vicious"]
+		"synonyms": ["vicious"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "fleshy",
 		"priority": 4,
 		"lists": ["monster","boss","friend"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "flying",
 		"priority": 10,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": ["winged"]
+		"synonyms": ["winged"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "genetically-engineered",
 		"priority": 4,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "ghastly",
 		"priority": 3,
 		"lists": ["monster","boss"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "ghostly",
 		"priority": 3,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "giant",
 		"priority": 2,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": ["miniature"],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "glitched",
 		"priority": 1,
-		"lists": ["monster","boss","friend"],
+		"lists": ["monster","boss","friend","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "goopy",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": ["goopy"],
-		"synonyms": ["gelatinous"]
+		"synonyms": ["gelatinous"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "gooey",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": ["goopy"],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "hairy",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "headless",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": ["head","mechhead","bonehead"]
 	},
 	{
 		"word": "litigous",
 		"priority": 4,
 		"lists": ["monster","boss"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "malignant",
 		"priority": 4,
 		"lists": ["monster","boss"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "miniature",
 		"priority": 2,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": ["giant"],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "minty fresh",
 		"priority": 1,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "miserable",
 		"priority": 3,
 		"lists": ["monster"],
 		"antonyms": ["bubby"],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "mutant",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "obviously fake",
 		"priority": 1,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "peaceful",
 		"priority": 3,
 		"lists": ["friend","sexy"],
 		"antonyms": ["angry"],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "phosphorescent",
 		"priority": 3,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "pretty",
 		"priority": 2,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "protective",
 		"priority": 3,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "psychic",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "pulsating",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "purple",
 		"priority": 8,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": ["green","blue","red","grey","orange","rainbow"]
+		"synonyms": ["green","blue","red","grey","orange","rainbow"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "radioactive",
 		"priority": 4,
-		"lists": ["monster","boss","friend"],
+		"lists": ["monster","boss","friend","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "rather silly looking",
 		"priority": 9,
 		"lists": ["monster","boss","friend"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "sassy",
 		"priority": 3,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
+	},
+	{
+		"word": "sleepy",
+		"priority": 1,
+		"lists": ["monster","boss","friend","sexy","gacha"],
+		"antonyms": [],
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "scaly",
 		"priority": 3,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "sharp looking",
 		"priority": 6,
-		"lists": ["monster","boss","friend","sexy"],
+		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": ["smart looking"]
+		"synonyms": ["smart looking"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "skittering",
 		"priority": 3,
 		"lists": ["monster","boss","friend"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "slight perturbed",
 		"priority": 3,
 		"lists": ["monster","boss","friend"],
 		"antonyms": [],
-		"synonyms": ["perturbed"]
+		"synonyms": ["perturbed"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "slimy",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "stalking",
 		"priority": 3,
 		"lists": ["monster","boss","friend"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "sticky",
 		"priority": 4,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "suspiciously handsome",
 		"priority": 9,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": ["unexpectedly handsome"]
+		"synonyms": ["unexpectedly handsome"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "sweet",
 		"priority": 3,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "swole",
 		"priority": 3,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": ["buff"]
+		"synonyms": ["buff"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "uncontrollably farting",
 		"priority": 10,
 		"lists": ["monster"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "uncontrollably laughing",
 		"priority": 10,
 		"lists": ["monster"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "very bi",
 		"priority": 7,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": ["bisexual"]
+		"synonyms": ["bisexual"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "very gay",
 		"priority": 7,
 		"lists": ["monster","boss","friend","sexy","gacha"],
 		"antonyms": [],
-		"synonyms": ["gay"]
+		"synonyms": ["gay"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "vile",
 		"priority": 1,
 		"lists": ["monster","boss","gacha"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "powerful",
 		"priority": 1,
 		"lists": ["monster","boss","gacha","sexy","friend"],
 		"antonyms": [],
-		"synonyms": ["overpowered"]
+		"synonyms": ["overpowered"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "wandering",
 		"priority": 1,
 		"lists": ["monster","boss","friend"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "writhing",
 		"priority": 6,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "thirsty",
 		"priority": 3,
 		"lists": ["sexy"],
 		"antonyms": [],
-		"synonyms": ["horny"]
+		"synonyms": ["horny"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "busty",
 		"priority": 6,
 		"lists": ["sexy"],
 		"antonyms": [],
-		"synonyms": ["well endowed"]
+		"synonyms": ["well endowed"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "hypnotising",
 		"priority": 6,
 		"lists": ["boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": ["mesmerising", "enthralling"]
+		"synonyms": ["mesmerising", "enthralling"],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "smiling",
 		"priority": 1,
 		"lists": ["monster","boss","friend","sexy"],
 		"antonyms": [],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "domineering",
 		"priority": 1,
 		"lists": ["boss","friend","sexy"],
 		"antonyms": ["submissive"],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "submissive",
 		"priority": 1,
 		"lists": ["monster","friend","sexy"],
 		"antonyms": ["domineering"],
-		"synonyms": []
+		"synonyms": [],
+		"addedparts": [],
+		"removedparts": []
 	},
 	{
 		"word": "gay",
 		"priority": 7,
 		"lists": ["gaycha"],
 		"antonyms": [],
-		"synonyms": ["bi","lesbian","asexual","pan"]
+		"synonyms": ["bi","lesbian","asexual","pan"],
+		"addedparts": [],
+		"removedparts": []
 	}
 ]
