@@ -16,7 +16,10 @@
 		"wings",
 		"tail",
 		"friend",
-		"twink"
+		"himbo",
+		"twink",
+		"ally",
+		"firearm"
 	],
 	"randomkeywords":
 	[
@@ -31,7 +34,10 @@
 		"clothes",
 		"item",
 		"friend",
-		"twink"
+		"himbo",
+		"twink",
+		"ally",
+		"firearm"
 	],
 	"bases":
 	[
@@ -152,6 +158,11 @@
 			"variations": ["demon","android","cyclops","dragon","drider","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk"]
 		},
 		{
+			"base": "zombie",
+			"keywords": ["zombie"],
+			"variations": ["demon","cyclops","dragon","drider","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk"]
+		},
+		{
 			"base": "vampire",
 			"keywords": ["vampire"],
 			"variations": ["elf","dwarf","halfling","orc","gnome","human"]
@@ -237,7 +248,11 @@
 		},
 		{
 			"class": "pirate",
-			"keywords": ["roguish","clothes","loadout","item","friend"]
+			"keywords": ["roguish","clothes","loadout","firearm","friend"]
+		},
+		{
+			"class": "samurai",
+			"keywords": ["martial","clothes","loadout","item","friend"]
 		},
 		{
 			"class": "pokemon trainer",
@@ -256,7 +271,7 @@
 	[
 		{
 			"keywords": ["himbo","clothes"],
-			"description": "[subject] [pluralnoun wear wears] ripped skinny jeans, no shirt and a beret",
+			"description": "[subject] [pluralnoun wear wears] ripped skinny jeans without a shirt",
 			"priority": 0
 		},
 		{
@@ -311,7 +326,7 @@
 		},
 		{
 			"keywords": ["cyberpunk","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item longarms +cyberpunk], [item longarms +cyberpunk] and [item shortblade +cyberpunk] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item longarms +cyberpunk +modern], [item longarms +cyberpunk +modern] and [item shortblade +cyberpunk] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
@@ -350,18 +365,33 @@
 			"priority": 1
 		},
 		{
-			"keywords": ["roguish","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item shortblade], [item dagger] and [item throwingknives] as [possessivesubject] primary loadout",
+			"keywords": ["roguish","firearm","loadout"],
+			"description": "[subject] [pluralnoun use uses] [item smallarms -cyberpunk -modern], [item shortblade -cyberpunk] and [item dagger -dark] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
 			"keywords": ["roguish","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item shortblade], [item bow] and [item throwingknives] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item shortblade -cyberpunk], [item dagger] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["roguish","loadout"],
+			"description": "[subject] [pluralnoun use uses] [item dualblades] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["roguish","loadout"],
+			"description": "[subject] [pluralnoun use uses] [item dualmixed] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["roguish","loadout"],
+			"description": "[subject] [pluralnoun use uses] [item shortblade -cyberpunk], [item bow] and [item throwingknives] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
 			"keywords": ["martial","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item largeblade] [item bow +handbow] and [item throwingknives] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item largeblade -cyberpunk] [item bow +handbow] and [item throwingknives] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
@@ -376,17 +406,47 @@
 		},
 		{
 			"keywords": ["martial","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item largeblade], [item shield] and [item bow] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item largeblade -cyberpunk], [item shield] and [item bow] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["martial","loadout"],
+			"description": "[subject] [pluralnoun use uses] [items dualblades] and [item bow] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["martial","loadout"],
+			"description": "[subject] [pluralnoun use uses] [items dualhammers] and [item bow] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["martial","loadout"],
+			"description": "[subject] [pluralnoun use uses] [items dualmixed] and [item bow] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["loadout","firearm"],
+			"description": "[subject] [pluralnoun use uses] [item smallarms -cyberpunk] and [item dagger -dark] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["loadout","firearm"],
+			"description": "[subject] [pluralnoun use uses] [items dualranged -cyberpunk] and [item dagger -dark] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
+			"keywords": ["himbo","loadout"],
+			"description": "[subject] [pluralnoun use uses] [item largehammer] and [item largeblade -cyberpunk] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
 			"keywords": ["loadout"],
-			"description": "[subject] [pluralnoun use uses] [item shortblade] and [item dagger] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item shortblade] and [item dagger -dark] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
 			"keywords": ["loadout"],
-			"description": "[subject] [pluralnoun use uses] [item smallhammer] and [item dagger] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item smallhammer] and [item dagger -dark] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
@@ -402,6 +462,11 @@
 		{
 			"keywords": ["anthromorphic"],
 			"description": "one of [possessivesubject] legs has been removed just below the knee, with [item legreplacement] in its place",
+			"priority": 4
+		},
+		{
+			"keywords": ["anthromorphic"],
+			"description": "one of [possessivesubject] arms has been removed just past the shoulder, with a cute stump remaining",
 			"priority": 4
 		},
 		{
@@ -440,6 +505,16 @@
 			"priority": 1
 		},
 		{
+			"keywords": ["item"],
+			"description": "[subject] [possessiveconjunction] [item tool -pokemon]",
+			"priority": 1
+		},
+		{
+			"keywords": ["pokemon","item"],
+			"description": "[subject] [possessiveconjunction] [item tool +pokemon]",
+			"priority": 1
+		},
+		{
 			"keywords": ["pokemon","item"],
 			"description": "[subject] [possessiveconjunction] [item pokemon +starters], [item pokemon], [item pokemon] and [item pokemon]",
 			"priority": 1
@@ -447,11 +522,26 @@
 		{
 			"keywords": ["pokemon"],
 			"description": "[item pokemon +starters] loyally follows [object]",
-			"priority": 1
+			"priority": 5
 		},
 		{
 			"keywords": ["friend"],
-			"description": "[item friend -dark] loyally follows [object]",
+			"description": "[item friend -dark -magical] loyally follows [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally"],
+			"description": "[monster] loyally follows [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally"],
+			"description": "a group of [monstergroup] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["arcane","friend"],
+			"description": "[item friend +magical] loyally follows [object]",
 			"priority": 5
 		},
 		{
@@ -490,6 +580,11 @@
 			"priority": 0
 		},
 		{
+			"keywords": ["clothes"],
+			"description": "[subject] [pluralnoun wear wears] [item clothes]",
+			"priority": 0
+		},
+		{
 			"keywords": ["natural"],
 			"description": "roots and little vines grow from various parts of [object]",
 			"priority": 4
@@ -516,7 +611,32 @@
 		},
 		{
 			"keywords": ["skeleton"],
-			"description": "[possessivesubject] bones are wrapped in [item bonewraps]",
+			"description": "[possessivesubject] bones are wrapped in [items bonewraps]",
+			"priority": 4
+		},
+		{
+			"keywords": ["skeleton"],
+			"description": "vines and flowers grow amongst [possessivesubject] ribs and bones",
+			"priority": 4
+		},
+		{
+			"keywords": ["zombie"],
+			"description": "putrid bile oozes from [possessivesubject] various wounds",
+			"priority": 4
+		},
+		{
+			"keywords": ["zombie"],
+			"description": "[possessivesubject] flesh is putrid and rotting from their bones",
+			"priority": 4
+		},
+		{
+			"keywords": ["slime"],
+			"description": "[subject] [conjunction] semi-transparent, with a core suspended in the center",
+			"priority": 4
+		},
+		{
+			"keywords": ["slime"],
+			"description": "[subject] [conjunction] gooey and leave a trail behind them",
 			"priority": 4
 		}
 		
@@ -528,13 +648,13 @@
 			"name": "long curved dagger",
 			"type": "dagger",
 			"lists": [],
-			"synonyms": ["short dagger","tiny knife","oversized knife"]
+			"synonyms": ["short dagger","tiny knife","oversized knife","punching dagger"]
 		},
 		{
 			"name": "kukri",
 			"type": "shortblade",
 			"lists": [],
-			"synonyms": ["short sword","scimitar","light axe","punching dagger"]
+			"synonyms": ["short sword","scimitar","light axe","katar"]
 		},
 		{
 			"name": "two handed curved blade",
@@ -546,7 +666,7 @@
 			"name": "set of throwing knives",
 			"type": "throwingknives",
 			"lists": [],
-			"synonyms": ["set of shuriken","pair of throwing axes","set of kunai","a thong of javelins"]
+			"synonyms": ["set of shuriken","pair of throwing axes","set of kunai","thong of javelins"]
 		},
 		{
 			"name": "spike chain whip",
@@ -645,16 +765,40 @@
 			"synonyms": ["sickle"]
 		},
 		{
+			"name": "flintlock pistol",
+			"type": "smallarms",
+			"lists": [],
+			"synonyms": []
+		},
+		{
 			"name": "revolver",
 			"type": "smallarms",
+			"lists": ["modern"],
+			"synonyms": ["machine pistol","pistol"]
+		},
+		{
+			"name": "machine pistol",
+			"type": "smallarms",
 			"lists": ["cyberpunk"],
-			"synonyms": ["machine pistol","handgun"]
+			"synonyms": ["laser pistol"]
+		},
+		{
+			"name": "flintlock rifle",
+			"type": "longarms",
+			"lists": [],
+			"synonyms": []
 		},
 		{
 			"name": "shotgun",
 			"type": "longarms",
+			"lists": ["modern"],
+			"synonyms": ["sniper rifle","minigun","machine gun"]
+		},
+		{
+			"name": "laser rifle",
+			"type": "longarms",
 			"lists": ["cyberpunk"],
-			"synonyms": ["sniper rifle","gauss cannon","flechette rifle","minigun","machine gun"]
+			"synonyms": ["gauss cannon","flechette rifle"]
 		},
 		{
 			"name": "laser sword",
@@ -684,7 +828,13 @@
 			"name": "slime friend",
 			"type": "friend",
 			"lists": ["magical"],
-			"synonyms": ["bird friend","tiny dragon friend","smol lizard friend","pixie friend","talking cat friend","miniature dinosaur friend","aggressive rock friend"]
+			"synonyms": ["tiny dragon friend","pixie friend","talking cat friend","miniature dinosaur friend","aggressive rock friend"]
+		},
+		{
+			"name": "bird friend",
+			"type": "friend",
+			"lists": [],
+			"synonyms": ["cat friend","dog friend","smol lizard friend"]
 		},
 		{
 			"name": "mithril plate armour",
@@ -708,13 +858,19 @@
 			"name": "singed labcoat",
 			"type": "armour",
 			"lists": ["alchemy"],
-			"synonyms": ["stained robes","white labcoat","singed cloak"]
+			"synonyms": ["stained robe","white labcoat","singed cloak"]
 		},
 		{
 			"name": "monster hide leather armour",
 			"type": "armour",
 			"lists": ["lightarmour"],
 			"synonyms": ["brigadine","silk robe","spidersilk bandage outfit"]
+		},
+		{
+			"name": "leather jerkin",
+			"type": "clothes",
+			"lists": [],
+			"synonyms": ["cloth tunic","silk dress","robe"]
 		},
 		{
 			"name": "heavy crossbow",
@@ -733,6 +889,18 @@
 			"type": "sling",
 			"lists": [],
 			"synonyms": ["sling","hand-held catapult"]
+		},
+		{
+			"name": "set of lockpicks",
+			"type": "tool",
+			"lists": ["rogueish"],
+			"synonyms": []
+		},
+		{
+			"name": "alchemy lab",
+			"type": "tool",
+			"lists": ["alchemy"],
+			"synonyms": []
 		},
 		{
 			"name": "pokéball",

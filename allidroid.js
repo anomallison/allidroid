@@ -1209,6 +1209,7 @@ function getSuffixString(suffix)
 
 function nounlesbian()
 {
+	/*
 	let noun = Math.floor(Math.random()*(item_nouns.length+monster_classes.length));
 	let lesbian = "";
 	
@@ -1223,6 +1224,32 @@ function nounlesbian()
 		noun = Math.floor(Math.random()*monster_classes.length);
 		lesbian = monster_classes[noun].single + " lesbian";
 	}
+	*/
+	
+	let noun = Math.floor(Math.random()*(boss_generator.randomkeywords.length+boss_generator.classes.length));
+	let lesbian = "";
+	let keyword = "";
+	
+	if (noun < boss_generator.randomkeywords.length)
+	{
+		keyword = boss_generator.randomkeywords[noun];
+		if (keyword == "item")
+		{
+			noun = Math.floor(Math.random()*boss_generator.items.length);
+			lesbian = getObjectName(boss_generator.items[noun]) + " lesbian";
+		}
+		else
+		{
+			lesbian = keyword + " lesbian";
+		}
+	}
+	else
+	{
+		noun = noun % boss_generator.randomkeywords.length;
+		keyword = boss_generator.classes[noun].class;
+		lesbian = keyword + " lesbian";
+	}
+	
 	return lesbian.toLowerCase();
 }
 
@@ -2688,6 +2715,15 @@ function generateBoss(extrakeywords = null)
 		{
 			descriptors_strings = descriptors_strings.substr(0,position) + getRandomMonster("species").single + descriptors_strings.substr(endposition+1);
 		}
+		else if (bosssubstr == "monster")
+		{
+			let tempmonster = getRandomMonster("monster");
+			descriptors_strings = descriptors_strings.substr(0,position) + grammarAorAn(tempmonster.single.charAt(0)) + " " + tempmonster.single + descriptors_strings.substr(endposition+1);
+		}
+		else if (bosssubstr == "monstergroup")
+		{
+			descriptors_strings = descriptors_strings.substr(0,position) + getRandomMonster("monster").plural + descriptors_strings.substr(endposition+1);
+		}
 		else if (bosssubstr.substr(0,10) == "pluralnoun")
 		{
 			let words = bosssubstr.split(" ");
@@ -2695,6 +2731,32 @@ function generateBoss(extrakeywords = null)
 				descriptors_strings = descriptors_strings.substr(0,position) + words[1] + descriptors_strings.substr(endposition+1);
 			else
 				descriptors_strings = descriptors_strings.substr(0,position) + words[2] + descriptors_strings.substr(endposition+1);
+		}
+		else if (bosssubstr.substr(0,5) == "items")
+		{
+			let lists = bosssubstr.split(" ");
+			let type = lists[1];
+			let neededlists = [];
+			let disallowedlists = [];
+			for (let i = 2; i < lists.length; i++)
+			{
+				if (lists[i].substr(0,1) == "+")
+				{
+					neededlists.push(lists[i].substr(1));
+				}
+				else if (lists[i].substr(0,1) == "-")
+				{
+					disallowedlists.push(lists[i].substr(1));
+				}
+			}
+			let tempitem = generateItemOfType(type,neededlists,disallowedlists);
+			if (tempitem != null)
+				descriptors_strings = descriptors_strings.substr(0,position) + tempitem.item + descriptors_strings.substr(endposition+1);
+			else
+			{
+				console.log("warning: null item found using substring: " + bosssubstr);
+				descriptors_strings = descriptors_strings.substr(0,position) + descriptors_strings.substr(endposition+1);
+			}
 		}
 		else if (bosssubstr.substr(0,4) == "item")
 		{
@@ -2781,7 +2843,8 @@ function generateBossBase()
 	if (random_int < boss_generator.bases.length)
 	{
 		boss_base = boss_generator.bases[random_int];
-	} else
+	}
+	else
 	{
 		random_int = random_int % boss_generator.bases.length;
 		let special_base = boss_generator.specialbases[random_int];
