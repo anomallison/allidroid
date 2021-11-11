@@ -81,7 +81,8 @@ var tarot_deck = JSON.parse(fs.readFileSync('tarot_deck.json'));
 var tarot_readings = JSON.parse(fs.readFileSync('tarot_readings.json'));
 
 //questgen file
-var quest_gen = JSON.parse(fs.readFileSync('questgen.json'));
+//var quest_gen = JSON.parse(fs.readFileSync('questgen.json'));
+var quest_gen = JSON.parse(fs.readFileSync('questgenerator.json'));
 var QUEST_GEN_MAX_LEVEL = 4;
 
 //questgen file
@@ -3067,6 +3068,8 @@ function filterByLevel(object)
 	return object.level == this;
 }
 
+
+/*
 //
 // generate quest
 
@@ -3174,6 +3177,129 @@ function generateQuest(level = -1)
 	
 	return quest_string;
 }
+*/
+
+
+function getNameSynonym(reward)
+{
+	if (reward.synonyms.length > 0)
+	{
+		let random_int = Math.floor(Math.random()*(reward.synonyms.length+1));
+		if (random_int < reward.synonyms.length)
+			return reward.synonyms[random_int];
+		else
+			return reward.name;
+	}
+	return reward.name;
+}
+
+function getClosestRewardToLevel(rewards, level)
+{
+	let difference = 999999;
+	let index = -1;
+	for(i in rewards)
+	{
+		if (rewards[i].level == level)
+		{
+			return i;
+		}
+		else if (rewards[i].level < level && (level - rewards[i].level) < difference)
+		{
+			difference = level - rewards[i].level;
+			index = i;
+		}
+		else if (rewards[i].level > level && (rewards[i].level - level) < difference)
+		{
+			difference = rewards[i].level - level;
+			index = i;
+		}
+	}
+	
+	return index;
+}
+
+function generateQuest(minlevel = -1)
+{
+	let questgod = quest_gen.questgods[Math.floor(Math.random()*quest_gen.questgods.length)]
+	let questlocation = quest_gen.questlocations[Math.floor(Math.random()*quest_gen.questlocations.length)];
+	let tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocation.keywords);
+	let random_int = Math.floor(Math.random()*tempantagonists.length)
+	let questantagonist = tempantagonists[random_int];
+	let questkeyword = questantagonist.keywords[Math.floor(Math.random()*questantagonist.keywords.length)];
+	let tempquestgivers = quest_gen.questgivers.filter(filterByList,questkeyword);
+	random_int = Math.floor(Math.random()*tempquestgivers.length);
+	let questgiver = tempquestgivers[random_int];
+	let tempquestobjectives = quest_gen.questobjectives.filter(filterByList,questkeyword);
+	random_int = Math.floor(Math.random()*tempquestobjectives.length);
+	let questobjective = tempquestobjectives[random_int];
+	let tempquestitems = quest_gen.questitems.filter(filterByList,questkeyword);
+	random_int = Math.floor(Math.random()*tempquestitems.length)
+	let questitem = getNameSynonym(tempquestitems[random_int]);
+	
+	let questlevel = questlocation.level + questantagonist.level + questgiver.level + questobjective.level;
+	while (questlevel < minlevel)
+	{
+		questlocation = quest_gen.questlocations[Math.floor(Math.random()*quest_gen.questlocations.length)];
+		tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocation);
+		random_int = Math.floor(Math.random()*tempantagonists.length)
+		questantagonist = tempantagonists[random_int];
+		questkeyword = questantagonist.keywords[Math.floor(Math.random()*questantagonist.keywords.length)];
+		tempquestgivers = quest_gen.questgivers.filter(filterByList,questkeyword);
+		random_int = Math.floor(Math.random()*tempquestgivers.length);
+		questgiver = tempquestgivers[random_int];
+		tempquestobjectives = quest_gen.questobjectives.filter(filterByList,questkeyword);
+		random_int = Math.floor(Math.random()*tempquestobjectives.length);
+		questobjective = tempquestobjectives[random_int];
+		tempquestitems = quest_gen.questitems.filter(filterByList,questkeyword);
+		random_int = Math.floor(Math.random()*tempquestitems.length)
+		questitem = getNameSynonym(tempquestitems[random_int]);
+		
+		questlevel = questlocation.level + questantagonist.level + questgiver.level + questobjective.level;
+	}
+	
+	let tempquestrewards = quest_gen.questrewards.filter(filterByList,questkeyword);
+	
+	let questreward = getClosestRewardToLevel(tempquestrewards,questlevel);
+	
+	let quest_string = "**Quest from " + grammarAorAn(questgiver.name.charAt(0)) + " " + questgiver.name + "**\n" +
+		"**Location:** the " + questlocation.name + "\n**Objective:** " + questobjective.objective + "\n" +
+		"**Reward:** " + getNameSynonym(tempquestrewards[questreward]);
+	
+	let position = quest_string.indexOf("\[");
+	let endposition = -1;
+	let bosssubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = quest_string.indexOf("\]");
+		bosssubstr = quest_string.substring(position+1,endposition);
+		substr_number = randomNumberForText(bosssubstr);
+		if (bosssubstr == "antagonist")
+		{
+			quest_string = quest_string.substr(0,position) + questantagonist.name + quest_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "item")
+		{
+			quest_string = quest_string.substr(0,position) + questitem + quest_string.substr(endposition+1);
+		}
+		else if (bosssubstr == "god")
+		{
+			quest_string = quest_string.substr(0,position) + questgod + quest_string.substr(endposition+1);
+		}
+		else if (substr_number != false)
+		{
+			quest_string = quest_string.substr(0,position) + substr_number.toString() + quest_string.substr(endposition+1);
+		}
+		else
+		{
+			quest_string = quest_string.substr(0,position) + quest_string.substr(endposition+1);
+		}
+		position = quest_string.indexOf("\[");
+	}
+	
+	return quest_string;
+}
+
 
 
 function generateOneShotRPG(length)

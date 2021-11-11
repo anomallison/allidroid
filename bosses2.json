@@ -9,6 +9,7 @@
 		"cyberpunk",
 		"necromantic",
 		"gothic",
+		"psionic",
 		"clothes",
 		"anthromorphic",
 		"loadout",
@@ -31,6 +32,7 @@
 		"cyberpunk",
 		"necromantic",
 		"gothic",
+		"psionic",
 		"item",
 		"friend",
 		"himbo",
@@ -125,6 +127,10 @@
 			"keywords": ["anthromorphic"]
 		},
 		{
+			"base": "lizardfolk",
+			"keywords": ["anthromorphic","tail"]
+		},
+		{
 			"base": "frogfolk",
 			"keywords": ["anthromorphic"]
 		},
@@ -147,6 +153,10 @@
 		{
 			"base": "slimefolk",
 			"keywords": ["slime"]
+		},
+		{
+			"base": "ghoul",
+			"keywords": ["zombie"]
 		}
 	],
 	"specialbases":
@@ -169,7 +179,7 @@
 		{
 			"base": "mutant",
 			"keywords": ["wings","tail","anthromorphic","slime"],
-			"variations": ["demon","cyclops","dragon","drider","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk","slimefolk"]
+			"variations": ["demon","cyclops","dragon","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk","slimefolk"]
 		}
 	],
 	"classes":
@@ -196,11 +206,11 @@
 		},
 		{
 			"class": "summoner",
-			"keywords": ["arcane","clothes","arcane","loadout","friend","friend"]
+			"keywords": ["arcane","clothes","arcane","loadout","ally","friend"]
 		},
 		{
 			"class": "psychic warrior",
-			"keywords": ["martial","clothes","loadout","item"]
+			"keywords": ["martial","clothes","psionic","loadout","item"]
 		},
 		{
 			"class": "blackguard",
@@ -253,6 +263,10 @@
 		{
 			"class": "pirate",
 			"keywords": ["roguish","clothes","roguish","loadout","firearm","friend"]
+		},
+		{
+			"class": "psion",
+			"keywords": ["psionic","clothes","psionic","loadout","item","friend"]
 		},
 		{
 			"class": "samurai",
@@ -444,6 +458,11 @@
 			"priority": 1
 		},
 		{
+			"keywords": ["psionic", "loadout"],
+			"description": "[subject] [pluralnoun use uses] [item magestaff +magical] and a floating crystal orb as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
 			"keywords": ["loadout"],
 			"description": "[subject] [pluralnoun use uses] [item shortblade] and [item dagger -dark] as [possessivesubject] primary loadout",
 			"priority": 1
@@ -476,6 +495,11 @@
 		{
 			"keywords": ["wings"],
 			"description": "patches of [items wingrepairmaterial] are stitched into holes in [possessivesubject] wings",
+			"priority": 4
+		},
+		{
+			"keywords": ["wings"],
+			"description": "[possessivesubject] wings have been torn out at the base",
 			"priority": 4
 		},
 		{
@@ -747,9 +771,62 @@
 			"keywords": ["slime"],
 			"description": "[subject] [conjunction] gooey and leave a trail behind them",
 			"priority": 4
+		},
+		{
+			"keywords": ["psionic","anthromorphic"],
+			"description": "a large, elaborate set of tattoos covers [possessivesubject] arms and legs, glowing faintly",
+			"priority": 4
+		},
+		{
+			"keywords": ["psionic"],
+			"description": "a transluscent eye seems to hover above [object], watching everything",
+			"priority": 4
+		},
+		{
+			"keywords": ["psionic"],
+			"description": "a faint trail of energy seems to follow [possessivesubject] movements",
+			"priority": 4
+		},
+		{
+			"keywords": ["necromantic","horns"],
+			"description": "[possessivesubject] horns weep with black, vicious energy",
+			"priority": 4
+		},
+		{
+			"keywords": ["arcane","horns"],
+			"description": "[possessivesubject] horns are decorated with runes of glowing arcane power",
+			"priority": 4
+		},
+		{
+			"keywords": ["horns"],
+			"description": "[possessivesubject] horns are decorated with lace and jewellery",
+			"priority": 4
+		},
+		{
+			"keywords": ["horns"],
+			"description": "[possessivesubject] horns battleworn and patched with steel and iron",
+			"priority": 4
+		},
+		{
+			"keywords": ["tail"],
+			"description": "[possessivesubject] tail is a cute short nubbin",
+			"priority": 4
+		},
+		{
+			"keywords": ["tail"],
+			"description": "[possessivesubject] tail is decorated with rings of copper and iron",
+			"priority": 4
+		},
+		{
+			"keywords": ["tail","necromantic"],
+			"description": "[possessivesubject] tail is decayed and withered to mere bone",
+			"priority": 4
+		},
+		{
+			"keywords": ["tail","psionic"],
+			"description": "[possessivesubject] tail flickers with an elaborate, glowing tattoo",
+			"priority": 4
 		}
-		
-		
 	],
 	"items":
 	[
