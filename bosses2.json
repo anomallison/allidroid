@@ -31,7 +31,6 @@
 		"cyberpunk",
 		"necromantic",
 		"gothic",
-		"clothes",
 		"item",
 		"friend",
 		"himbo",
@@ -131,7 +130,7 @@
 		},
 		{
 			"base": "plantfolk",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","natural"]
 		},
 		{
 			"base": "rockfolk",
@@ -166,33 +165,38 @@
 			"base": "vampire",
 			"keywords": ["vampire"],
 			"variations": ["elf","dwarf","halfling","orc","gnome","human"]
+		},
+		{
+			"base": "mutant",
+			"keywords": ["wings","tail","anthromorphic","slime"],
+			"variations": ["demon","cyclops","dragon","drider","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk","slimefolk"]
 		}
 	],
 	"classes":
 	[
 		{
 			"class": "fighter",
-			"keywords": ["martial","clothes","loadout","item","friend"]
+			"keywords": ["martial","clothes","martial","loadout","item","friend"]
 		},
 		{
 			"class": "necromancer",
-			"keywords": ["necromantic","clothes","loadout","item","friend"]
+			"keywords": ["necromantic","clothes","necromantic","loadout","item","friend"]
 		},
 		{
 			"class": "wizard",
-			"keywords": ["arcane","clothes","loadout","item","friend"]
+			"keywords": ["arcane","clothes","arcane","loadout","item","friend"]
 		},
 		{
 			"class": "rogue",
-			"keywords": ["roguish","clothes","loadout","item","friend"]
+			"keywords": ["roguish","clothes","roguish","loadout","item","friend"]
 		},
 		{
 			"class": "thief",
-			"keywords": ["roguish","clothes","loadout","item","friend"]
+			"keywords": ["roguish","clothes","roguish","loadout","item","friend"]
 		},
 		{
 			"class": "summoner",
-			"keywords": ["arcane","clothes","loadout","friend","friend"]
+			"keywords": ["arcane","clothes","arcane","loadout","friend","friend"]
 		},
 		{
 			"class": "psychic warrior",
@@ -200,23 +204,23 @@
 		},
 		{
 			"class": "blackguard",
-			"keywords": ["martial","clothes","loadout","necromantic","item"]
+			"keywords": ["martial","clothes","martial","loadout","necromantic","item"]
 		},
 		{
 			"class": "bounty hunter",
-			"keywords": ["martial","clothes","loadout","item"]
+			"keywords": ["martial","clothes","martial","loadout","item"]
 		},
 		{
 			"class": "vampire slayer",
-			"keywords": ["martial","holy","clothes","loadout","item"]
+			"keywords": ["martial","holy","clothes","martial","loadout","item"]
 		},
 		{
 			"class": "witch",
-			"keywords": ["arcane","gothic","loadout","item","friend"]
+			"keywords": ["arcane","gothic","clothes","arcane","loadout","item","friend"]
 		},
 		{
 			"class": "decker",
-			"keywords": ["cyberpunk","clothes","loadout","item","friend"]
+			"keywords": ["cyberpunk","clothes","cyberpunk","loadout","item","friend"]
 		},
 		{
 			"class": "druid",
@@ -228,43 +232,43 @@
 		},
 		{
 			"class": "paladin",
-			"keywords": ["martial","holy","clothes","loadout","item"]
+			"keywords": ["martial","holy","clothes","martial","loadout","item"]
 		},
 		{
 			"class": "berserker",
-			"keywords": ["martial","clothes","loadout","item"]
+			"keywords": ["martial","clothes","martial","loadout","item"]
 		},
 		{
 			"class": "alchemist",
-			"keywords": ["alchemist","clothes","loadout","item"]
+			"keywords": ["alchemist","clothes","arcane","loadout","item"]
 		},
 		{
 			"class": "warlock",
-			"keywords": ["arcane","clothes","loadout","item"]
+			"keywords": ["arcane","clothes","arcane","loadout","item"]
 		},
 		{
 			"class": "hypnotist",
-			"keywords": ["arcane","clothes","loadout","item"]
+			"keywords": ["arcane","clothes","arcane","loadout","item"]
 		},
 		{
 			"class": "pirate",
-			"keywords": ["roguish","clothes","loadout","firearm","friend"]
+			"keywords": ["roguish","clothes","roguish","loadout","firearm","friend"]
 		},
 		{
 			"class": "samurai",
-			"keywords": ["martial","clothes","loadout","item","friend"]
+			"keywords": ["martial","clothes","martial","loadout","item","friend"]
 		},
 		{
 			"class": "pokemon trainer",
-			"keywords": ["pokemon","clothes","item","friend"]
+			"keywords": ["pokemon","clothes","pokemon","item","pokemon","friend"]
 		},
 		{
 			"class": "twink",
-			"keywords": ["twink","clothes","item","friend"]
+			"keywords": ["twink","twink","clothes","item","friend"]
 		},
 		{
 			"class": "himbo",
-			"keywords": ["himbo","loadout","clothes","item","friend"]
+			"keywords": ["himbo","himbo","loadout","clothes","item","friend"]
 		}
 	],
 	"descriptors":
@@ -376,12 +380,12 @@
 		},
 		{
 			"keywords": ["roguish","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item dualblades] and [item throwingknives] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [items dualblades] and [item throwingknives] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
 			"keywords": ["roguish","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item dualmixed] and [item throwingknives] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [items dualmixed] and [item throwingknives] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
@@ -436,7 +440,7 @@
 		},
 		{
 			"keywords": ["himbo","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item largehammer] and [item largeblade -cyberpunk] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item largehammer -cyberpunk] and [item largeblade -cyberpunk] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
@@ -471,12 +475,7 @@
 		},
 		{
 			"keywords": ["wings"],
-			"description": "patches of silk are stitched into holes in [possessivesubject] wings",
-			"priority": 4
-		},
-		{
-			"keywords": ["wings"],
-			"description": "patches of leather are stitched into holes in [possessivesubject] wings",
+			"description": "patches of [items wingrepairmaterial] are stitched into holes in [possessivesubject] wings",
 			"priority": 4
 		},
 		{
@@ -498,6 +497,36 @@
 			"keywords": ["anthromorphic"],
 			"description": "a scar marks X near [possessivesubject] heart",
 			"priority": 4
+		},
+		{
+			"keywords": ["item","item"],
+			"description": "[subject] [possessiveconjunction] [item consumable] and [item consumable]",
+			"priority": 1
+		},
+		{
+			"keywords": ["item","item"],
+			"description": "[subject] [possessiveconjunction] [item tool -pokemon] and [item consumable]",
+			"priority": 1
+		},
+		{
+			"keywords": ["item","item"],
+			"description": "[subject] [possessiveconjunction] [item tool -pokemon] and [item tool -pokemon]",
+			"priority": 1
+		},
+		{
+			"keywords": ["pokemon","item","item"],
+			"description": "[subject] [possessiveconjunction] [item tool +pokemon] and [item tool +pokemon]",
+			"priority": 1
+		},
+		{
+			"keywords": ["pokemon","item","item"],
+			"description": "[subject] [possessiveconjunction] [item tool +pokemon] and [item consumable]",
+			"priority": 1
+		},
+		{
+			"keywords": ["item"],
+			"description": "[subject] [possessiveconjunction] [item tool -pokemon]",
+			"priority": 1
 		},
 		{
 			"keywords": ["item"],
@@ -525,8 +554,63 @@
 			"priority": 5
 		},
 		{
+			"keywords": ["friend","friend"],
+			"description": "[item friend -dark -magical] and [item friend -dark -magical] loyally follows [object]",
+			"priority": 5
+		},
+		{
 			"keywords": ["friend"],
 			"description": "[item friend -dark -magical] loyally follows [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","necromantic","arcane","friend","friend"],
+			"description": "[monster], [item friend +magical] and [item friend +dark] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","necromantic","friend","friend"],
+			"description": "[monster], [item friend +dark] and [item friend +dark] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","necromantic","friend","friend"],
+			"description": "[monster], [item friend +dark] and [item friend -dark -magical] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","arcane","friend","friend"],
+			"description": "[monster], [item friend +magical] and [item friend +magical] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","arcane","friend","friend"],
+			"description": "[monster], [item friend +magical] and [item friend -dark -magical] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","friend","friend"],
+			"description": "[monster], [item friend -dark -magical] and [item friend -dark -magical] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","arcane","friend"],
+			"description": "[monster] and [item friend +magical] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","necromantic","friend"],
+			"description": "[monster] and [item friend +dark] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","friend"],
+			"description": "[monster] and [item friend -dark -magical] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","friend"],
+			"description": "a group of [monstergroup] and [item friend -dark -magical] loyally follow [object]",
 			"priority": 5
 		},
 		{
@@ -540,8 +624,33 @@
 			"priority": 5
 		},
 		{
+			"keywords": ["arcane","necromantic","friend","friend"],
+			"description": "[item friend +dark] and [item friend +magical] loyally follows [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["arcane","friend","friend"],
+			"description": "[item friend +magical] and [item friend +magical] loyally follows [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["arcane","friend","friend"],
+			"description": "[item friend +magical] and [item friend -dark -magical] loyally follows [object]",
+			"priority": 5
+		},
+		{
 			"keywords": ["arcane","friend"],
 			"description": "[item friend +magical] loyally follows [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["necromantic","friend","friend"],
+			"description": "[item friend +dark] and [item friend +dark] loyally follows [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["necromantic","friend","friend"],
+			"description": "[item friend +dark] and [item friend -dark -magical] loyally follows [object]",
 			"priority": 5
 		},
 		{
@@ -560,7 +669,7 @@
 			"priority": 0
 		},
 		{
-			"keywords": ["nartual","clothes"],
+			"keywords": ["natural","clothes"],
 			"description": "[subject] [pluralnoun wear wears] [item armour +druid]",
 			"priority": 0
 		},
@@ -717,10 +826,10 @@
 			"synonyms": ["dual hammers","warhammer and mace"]
 		},
 		{
-			"name": "axe and hammer",
+			"name": "dual axe and warhammer",
 			"type": "dualmixed",
 			"lists": [],
-			"synonyms": ["sword and mace","axe and warhammer"]
+			"synonyms": ["dual sword and mace","dual axe and sword"]
 		},
 		{
 			"name": "dual revolvers",
@@ -955,6 +1064,12 @@
 			"type": "bonewraps",
 			"lists": [],
 			"synonyms": ["fine silken bandages","dusty, musty bandages","soiled rags"]
+		},
+		{
+			"name": "silk",
+			"type": "wingrepairmaterial",
+			"lists": [],
+			"synonyms": ["leather","cloth","paper","steel"]
 		}
 	]
 }

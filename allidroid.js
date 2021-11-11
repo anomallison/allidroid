@@ -1058,6 +1058,23 @@ function filterByList(object)
 	return false;
 }
 
+//
+// filter the objects by whether 'this' is one of the lists it is on
+//
+
+function filterByAtleastOneList(object)
+{
+	for (let j in this)
+	{
+		for (let i in object.lists)
+		{
+			if (this[j] == object.lists[i])
+				return true;
+		}
+	}
+	return false;
+}
+
 
 //
 // filter the objects by removing where 'this' is one of the lists it is on
@@ -1601,7 +1618,7 @@ function generateKeysmash(length = -1)
 
 function dieRoll(r)
 {
-	if (r.length == 0)
+	if (r == null || r.length == 0)
 	{
 		return "roll what exactly?";
 	}
@@ -1612,8 +1629,11 @@ function dieRoll(r)
 	let diceSides = 0;
 	let diceSidesPre;
 	let diceroll = 0;
+	let diceDropped = 0;
 	let stringroll = "";
 	let resultString = "(";
+	let dieresults = [];
+	let droppeddie = [];
 	
 	if (numberOfDice == "NaN")
 	{
@@ -1640,10 +1660,21 @@ function dieRoll(r)
 	
 		if(!isNaN(diceSides) && ((MAX_DICE_ROLL / diceSides) < numberOfDice))
 		{
-			return "excuse me, no";
+			return "excuse me, no (number too large!)";
 		}
 	}
 	
+	position = r.indexOf("d");
+	dposition = r.lastIndexOf("d");
+	if (dposition != -1 && dposition != position)
+	{
+		diceDropped = parseInt(r.substr(dposition+1));
+	}
+	
+	if (diceDropped > numberOfDice)
+	{
+		return "can't drop more dice than you're rolling";
+	}
 	
 	for (let i = 0; i < numberOfDice; i++)
 	{
@@ -1656,20 +1687,7 @@ function dieRoll(r)
 		}
 		else
 		{
-			diceroll = Math.floor((Math.random() * diceSides) + 1);
-			totalroll += diceroll;
-			if (i+1 < numberOfDice)
-				resultString += diceroll + " + ";
-			else
-			{
-				if (diceMod < 0)
-					resultString += diceroll +  " *- " + Math.abs(diceMod) + "*)";
-				else if (diceMod > 0)
-					resultString += diceroll +  " *+ " + Math.abs(diceMod) + "*)";
-				else
-					resultString += diceroll + ")";
-			}
-			
+			dieresults.push(Math.floor((Math.random() * diceSides) + 1));
 		}
 	}
 	if (stringroll.length > 0)
@@ -1677,7 +1695,48 @@ function dieRoll(r)
 		return stringroll;
 	}
 	
+	for (let i = 0; i < diceDropped; i++)
+	{
+		let lowestDie = diceSides+1;
+		let lowestDieIndex = -1;
+		for (j in dieresults)
+		{
+			if (dieresults[j] < lowestDie)
+			{
+				lowestDie = dieresults[j];
+				lowestDieIndex = j;
+			}
+		}
+		dieresults.splice(lowestDieIndex,1);
+		droppeddie.push(lowestDie);
+	}
+	
+	for (i in dieresults)
+	{
+		totalroll += dieresults[i];
+		resultString += dieresults[i] + " + ";
+	}
+	
+	for (i in droppeddie)
+	{
+		resultString += "~~" + droppeddie[i] + "~~ + ";
+	}
+	
 	totalroll += diceMod;
+	if (diceMod < 0)
+	{
+		resultString = resultString.substr(0,resultString.length-3) + " - " + Math.abs(diceMod) + ")";
+	}
+	else if (diceMod > 0)
+	{
+		resultString = resultString.substr(0,resultString.length-3) + " + " + diceMod + ")";
+	}
+	else
+	{
+		resultString = resultString.substr(0,resultString.length-3) + ")";
+	}
+	
+	
 	resultString = "**" + totalroll + "** " + resultString;
 	if (resultString.length > 2000)
 		return totalroll + ", I will not be fielding any questions, thank you."
@@ -2575,8 +2634,22 @@ function generatePhonemeName(maxsyllables = 8, minimumsyllables = 1)
 //
 
 
+// descriptor is the descriptor from the array calling filter(descriptorIsValid,x)
+// this is x from the array calling filter(descriptorIsValid,x)
 function descriptorIsValid(descriptor)
 {
+	let tempkeywordarr = this.slice();
+	for (let i in descriptor.keywords)
+	{
+		let indexOfkeyword = tempkeywordarr.indexOf(descriptor.keywords[i]);
+		if (indexOfkeyword != -1)
+		{
+			tempkeywordarr.splice(indexOfkeyword,1);
+		}
+		else
+			return false;
+	}
+	/*
 	for (let i in descriptor.keywords)
 	{
 		if (this.includes(descriptor.keywords[i]) == false)
@@ -2584,11 +2657,12 @@ function descriptorIsValid(descriptor)
 			return false;
 		}
 	}
+	*/
 	return true;
 }
 
 //
-// remove kkeywords by descriptors
+// remove keywords by descriptors
 
 function removeKeywordsByDescriptor(keyword)
 {
@@ -2628,17 +2702,24 @@ function generateBoss(extrakeywords = null)
 		random_int = Math.floor(Math.random()*(temprandomkeywords.length));
 	}
 	
-	console.log("boss keywords: " + keywords);
 	
 	validdescriptors = boss_generator.descriptors.filter(descriptorIsValid,keywords);
 	
 	let descriptors = [];
 	random_int = Math.floor(Math.random()*(validdescriptors.length));
-	let descriptorattemptcount = 12;
+	let descriptorattemptcount = 7;
 	for (let i = 0; i < descriptorattemptcount; i++)
 	{
 		descriptors.push(validdescriptors[random_int]);
-		keywords = keywords.filter(removeKeywordsByDescriptor,validdescriptors[random_int]);
+		for (j in validdescriptors[random_int].keywords)
+		{
+			let keywordindex = keywords.indexOf(validdescriptors[random_int].keywords[j]);
+			if (keywordindex != -1)
+			{
+				keywords.splice(keywordindex,1);
+			}
+		}
+		// keywords = keywords.filter(removeKeywordsByDescriptor,validdescriptors[random_int]);
 		validdescriptors = boss_generator.descriptors.filter(descriptorIsValid,keywords);
 		
 		random_int = Math.floor(Math.random()*(validdescriptors.length));
@@ -2814,10 +2895,7 @@ function generateItemOfType(type, musthavelists = null, disallowedlists = null)
 	
 	if (musthavelists != null && musthavelists.length > 0)
 	{
-		for (let i = 0; i < musthavelists.length; i++)
-		{
-			itempool = itempool.filter(filterByList,musthavelists[i]);
-		}
+		itempool = itempool.filter(filterByAtleastOneList,musthavelists);
 	}
 	
 	if (disallowedlists != null && disallowedlists.length > 0)
