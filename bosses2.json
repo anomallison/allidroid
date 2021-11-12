@@ -5,6 +5,7 @@
 		"alchemy",
 		"holy",
 		"martial",
+		"karate",
 		"roguish",
 		"cyberpunk",
 		"necromantic",
@@ -28,6 +29,7 @@
 		"alchemy",
 		"holy",
 		"martial",
+		"karate",
 		"roguish",
 		"cyberpunk",
 		"necromantic",
@@ -44,15 +46,15 @@
 	[
 		{
 			"base": "demon",
-			"keywords": ["wings","tail","anthromorphic"]
+			"keywords": ["wings","tail","anthromorphic","clothes"]
 		},
 		{
 			"base": "android",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "cyclops",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "dragon",
@@ -60,125 +62,125 @@
 		},
 		{
 			"base": "leshy",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes","natural"]
 		},
 		{
 			"base": "drider",
-			"keywords": []
+			"keywords": ["clothes"]
 		},
 		{
 			"base": "charr",
-			"keywords": ["horns","tail","anthromorphic"]
+			"keywords": ["horns","tail","anthromorphic","clothes"]
 		},
 		{
 			"base": "ogre",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "elf",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "dwarf",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "halfling",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "orc",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "gnome",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "tengu",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "goblin",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "human",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "catfolk",
-			"keywords": ["tail","anthromorphic"]
+			"keywords": ["tail","anthromorphic","clothes"]
 		},
 		{
 			"base": "kitsune",
-			"keywords": ["tail","anthromorphic"]
+			"keywords": ["tail","anthromorphic","clothes"]
 		},
 		{
 			"base": "minotaur",
-			"keywords": ["horns","anthromorphic"]
+			"keywords": ["horns","anthromorphic","clothes"]
 		},
 		{
 			"base": "dhampir",
-			"keywords": ["anthromorphic","vampire"]
+			"keywords": ["anthromorphic","vampire","clothes"]
 		},
 		{
 			"base": "turtlefolk",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "lizardfolk",
-			"keywords": ["anthromorphic","tail"]
+			"keywords": ["anthromorphic","tail","clothes"]
 		},
 		{
 			"base": "frogfolk",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "plantfolk",
-			"keywords": ["anthromorphic","natural"]
+			"keywords": ["anthromorphic","natural","clothes"]
 		},
 		{
 			"base": "rockfolk",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "mermaid",
-			"keywords": ["tail"]
+			"keywords": ["tail","clothes"]
 		},
 		{
 			"base": "sharkfolk",
-			"keywords": ["anthromorphic"]
+			"keywords": ["anthromorphic","clothes"]
 		},
 		{
 			"base": "slimefolk",
-			"keywords": ["slime"]
+			"keywords": ["slime","clothes"]
 		},
 		{
 			"base": "ghoul",
-			"keywords": ["zombie"]
+			"keywords": ["zombie","clothes"]
 		}
 	],
 	"specialbases":
 	[
 		{
 			"base": "skeleton",
-			"keywords": ["skeleton"],
+			"keywords": ["skeleton","clothes"],
 			"variations": ["demon","android","cyclops","dragon","drider","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk"]
 		},
 		{
 			"base": "zombie",
-			"keywords": ["zombie"],
+			"keywords": ["zombie","clothes"],
 			"variations": ["demon","cyclops","dragon","drider","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk"]
 		},
 		{
 			"base": "vampire",
-			"keywords": ["vampire"],
+			"keywords": ["vampire","clothes"],
 			"variations": ["elf","dwarf","halfling","orc","gnome","human"]
 		},
 		{
 			"base": "mutant",
-			"keywords": ["wings","tail","anthromorphic","slime"],
+			"keywords": ["wings","tail","anthromorphic","slime","clothes"],
 			"variations": ["demon","cyclops","dragon","charr","ogre","elf","dwarf","halfling","orc","gnome","tengu","goblin","human","catfolk","kitsune","minotaur","turtlefolk","frogfolk","mermaid","sharkfolk","slimefolk"]
 		}
 	],
@@ -186,103 +188,107 @@
 	[
 		{
 			"class": "fighter",
-			"keywords": ["martial","clothes","martial","loadout","item","friend"]
+			"keywords": ["martial","martial","loadout","item","friend"]
+		},
+		{
+			"class": "martial artist",
+			"keywords": ["karate","karate","loadout","item","friend"]
 		},
 		{
 			"class": "necromancer",
-			"keywords": ["necromantic","clothes","necromantic","loadout","item","friend"]
+			"keywords": ["necromantic","necromantic","loadout","item","friend"]
 		},
 		{
 			"class": "wizard",
-			"keywords": ["arcane","clothes","arcane","loadout","item","friend"]
+			"keywords": ["arcane","arcane","loadout","item","friend"]
 		},
 		{
 			"class": "rogue",
-			"keywords": ["roguish","clothes","roguish","loadout","item","friend"]
+			"keywords": ["roguish","roguish","loadout","item","friend"]
 		},
 		{
 			"class": "thief",
-			"keywords": ["roguish","clothes","roguish","loadout","item","friend"]
+			"keywords": ["roguish","roguish","loadout","item","friend"]
 		},
 		{
 			"class": "summoner",
-			"keywords": ["arcane","clothes","arcane","loadout","ally","friend"]
+			"keywords": ["arcane","arcane","loadout","ally","friend"]
 		},
 		{
 			"class": "psychic warrior",
-			"keywords": ["martial","clothes","psionic","loadout","item"]
+			"keywords": ["martial","psionic","loadout","item"]
 		},
 		{
 			"class": "blackguard",
-			"keywords": ["martial","clothes","martial","loadout","necromantic","item"]
+			"keywords": ["martial","martial","loadout","necromantic","item"]
 		},
 		{
 			"class": "bounty hunter",
-			"keywords": ["martial","clothes","martial","loadout","item"]
+			"keywords": ["martial","martial","loadout","item"]
 		},
 		{
 			"class": "vampire slayer",
-			"keywords": ["martial","holy","clothes","martial","loadout","item"]
+			"keywords": ["martial","holy","martial","loadout","item"]
 		},
 		{
 			"class": "witch",
-			"keywords": ["arcane","gothic","clothes","arcane","loadout","item","friend"]
+			"keywords": ["arcane","gothic","arcane","loadout","item","friend"]
 		},
 		{
 			"class": "decker",
-			"keywords": ["cyberpunk","clothes","cyberpunk","loadout","item","friend"]
+			"keywords": ["cyberpunk","cyberpunk","loadout","item","friend"]
 		},
 		{
 			"class": "druid",
-			"keywords": ["natural","clothes","loadout","item","friend"]
+			"keywords": ["natural","loadout","item","friend"]
 		},
 		{
 			"class": "cleric",
-			"keywords": ["holy","clothes","loadout","item","friend"]
+			"keywords": ["holy","loadout","item","friend"]
 		},
 		{
 			"class": "paladin",
-			"keywords": ["martial","holy","clothes","martial","loadout","item"]
+			"keywords": ["martial","holy","martial","loadout","item"]
 		},
 		{
 			"class": "berserker",
-			"keywords": ["martial","clothes","martial","loadout","item"]
+			"keywords": ["martial","martial","loadout","item"]
 		},
 		{
 			"class": "alchemist",
-			"keywords": ["alchemist","clothes","arcane","loadout","item"]
+			"keywords": ["alchemist","arcane","loadout","item"]
 		},
 		{
 			"class": "warlock",
-			"keywords": ["arcane","clothes","arcane","loadout","item"]
+			"keywords": ["arcane","arcane","loadout","item"]
 		},
 		{
 			"class": "hypnotist",
-			"keywords": ["arcane","clothes","arcane","loadout","item"]
+			"keywords": ["arcane","arcane","loadout","item"]
 		},
 		{
 			"class": "pirate",
-			"keywords": ["roguish","clothes","roguish","loadout","firearm","friend"]
+			"keywords": ["roguish","roguish","loadout","firearm","friend"]
 		},
 		{
 			"class": "psion",
-			"keywords": ["psionic","clothes","psionic","loadout","item","friend"]
+			"keywords": ["psionic","psionic","loadout","item","friend"]
 		},
 		{
 			"class": "samurai",
-			"keywords": ["martial","clothes","martial","loadout","item","friend"]
+			"keywords": ["martial","martial","loadout","item","friend"]
 		},
 		{
 			"class": "pokemon trainer",
-			"keywords": ["pokemon","clothes","pokemon","item","pokemon","friend"]
+			"keywords": ["pokemon","pokemon","item","pokemon","friend"]
 		},
 		{
 			"class": "twink",
-			"keywords": ["twink","twink","clothes","item","friend"]
+			"keywords": ["twink","twink","item","friend"]
 		},
 		{
 			"class": "himbo",
-			"keywords": ["himbo","himbo","loadout","clothes","item","friend"]
+			"keywords": ["himbo","himbo","loadout","item","friend"]
 		}
 	],
 	"descriptors":
@@ -293,18 +299,33 @@
 			"priority": 0
 		},
 		{
+			"keywords": ["himbo","clothes"],
+			"description": "[subject] [pluralnoun wear wears] cut-off short shorts without a shirt",
+			"priority": 0
+		},
+		{
 			"keywords": ["twink","clothes"],
 			"description": "[subject] [pluralnoun wear wears] skinny jeans and a croptop with fingerless gloves",
 			"priority": 0
 		},
 		{
+			"keywords": ["twink","clothes"],
+			"description": "[subject] [pluralnoun wear wears] cut-off short shorts and a croptop with fingerless gloves",
+			"priority": 0
+		},
+		{
 			"keywords": ["necromantic","clothes"],
-			"description": "[subject] [conjunction] outfitted with bone fetishes, black cord braclets of teeth, and a black cloak",
+			"description": "[subject] [conjunction] outfitted with [item jewelery +dark], [item jewelery +dark], and [item armour +dark]",
 			"priority": 0
 		},
 		{
 			"keywords": ["arcane","cyberpunk","clothes"],
 			"description": "[subject] [conjunction] outfitted with magical fetishes, magical glowing tattoos and a sleek glowing high collar bomber jacket",
+			"priority": 0
+		},
+		{
+			"keywords": ["arcane","cyberpunk","clothes"],
+			"description": "[subject] [pluralnoun wear wears] a suit with glowing lining, white gloves and magical glowing earrings",
 			"priority": 0
 		},
 		{
@@ -320,27 +341,27 @@
 		{
 			"keywords": ["cyberpunk","anthromorphic"],
 			"description": "[subject] [possessiveconjunction] sleek cybernetic arms and legs connected to an augmented spine and nervous system",
-			"priority": 2
+			"priority": 4
 		},
 		{
 			"keywords": ["cyberpunk","wings","anthromorphic"],
 			"description": "[subject] [possessiveconjunction] sleek cybernetic wings, arms and legs connected to an augmented spine and nervous system",
-			"priority": 2
+			"priority": 4
 		},
 		{
 			"keywords": ["cyberpunk","wings","tail","anthromorphic"],
 			"description": "[subject] [possessiveconjunction] sleek cybernetic wings, tail, arms and legs connected to an augmented spine and nervous system",
-			"priority": 2
+			"priority": 4
 		},
 		{
 			"keywords": ["cyberpunk","wings"],
 			"description": "[subject] [possessiveconjunction] sleek cybernetic wings connected to an augmented spine and nervous system",
-			"priority": 2
+			"priority": 4
 		},
 		{
 			"keywords": ["cyberpunk","anthromorphic"],
 			"description": "[possessivesubject] spine glows with fancy neural augmentations",
-			"priority": 2
+			"priority": 4
 		},
 		{
 			"keywords": ["cyberpunk","loadout"],
@@ -409,7 +430,7 @@
 		},
 		{
 			"keywords": ["martial","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item largeblade -cyberpunk] [item bow +handbow] and [item throwingknives] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item largeblade -cyberpunk], [item bow +handbow] and [item throwingknives] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
@@ -443,6 +464,11 @@
 			"priority": 1
 		},
 		{
+			"keywords": ["karate","loadout"],
+			"description": "[subject] [pluralnoun use uses] [items staff] and [item throwingknives] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
 			"keywords": ["loadout","firearm"],
 			"description": "[subject] [pluralnoun use uses] [item smallarms -cyberpunk] and [item dagger -dark] as [possessivesubject] primary loadout",
 			"priority": 1
@@ -464,7 +490,7 @@
 		},
 		{
 			"keywords": ["loadout"],
-			"description": "[subject] [pluralnoun use uses] [item shortblade] and [item dagger -dark] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item shortblade -cyberpunk] and [item dagger -dark] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
@@ -509,12 +535,17 @@
 		},
 		{
 			"keywords": ["necromantic","anthromorphic"],
-			"description": "[possessivesubject] body is gaunt and withered and ribs visibly pronounced",
+			"description": "[possessivesubject] body is gaunt and withered with ribs visibly pronounced",
 			"priority": 4
 		},
 		{
 			"keywords": ["necromantic","anthromorphic"],
 			"description": "an incision scar with remaining stitches trails from [possessivesubject] sternum to [possessivesubject] crotch",
+			"priority": 4
+		},
+		{
+			"keywords": ["necromantic","anthromorphic"],
+			"description": "a scar in the shape of a pentagram is carved into [possessivesubject] chest",
 			"priority": 4
 		},
 		{
@@ -525,52 +556,57 @@
 		{
 			"keywords": ["item","item"],
 			"description": "[subject] [possessiveconjunction] [item consumable] and [item consumable]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["item","item"],
 			"description": "[subject] [possessiveconjunction] [item tool -pokemon] and [item consumable]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["item","item"],
 			"description": "[subject] [possessiveconjunction] [item tool -pokemon] and [item tool -pokemon]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["pokemon","item","item"],
 			"description": "[subject] [possessiveconjunction] [item tool +pokemon] and [item tool +pokemon]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["pokemon","item","item"],
 			"description": "[subject] [possessiveconjunction] [item tool +pokemon] and [item consumable]",
-			"priority": 1
+			"priority": 2
+		},
+		{
+			"keywords": ["pokemon","item","item"],
+			"description": "[subject] [possessiveconjunction] [item tool +pokemon] and [item tool]",
+			"priority": 2
 		},
 		{
 			"keywords": ["item"],
 			"description": "[subject] [possessiveconjunction] [item tool -pokemon]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["item"],
 			"description": "[subject] [possessiveconjunction] [item consumable]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["item"],
 			"description": "[subject] [possessiveconjunction] [item tool -pokemon]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["pokemon","item"],
 			"description": "[subject] [possessiveconjunction] [item tool +pokemon]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["pokemon","item"],
 			"description": "[subject] [possessiveconjunction] [item pokemon +starters], [item pokemon], [item pokemon] and [item pokemon]",
-			"priority": 1
+			"priority": 2
 		},
 		{
 			"keywords": ["pokemon"],
@@ -579,12 +615,22 @@
 		},
 		{
 			"keywords": ["friend","friend"],
-			"description": "[item friend -dark -magical] and [item friend -dark -magical] loyally follows [object]",
+			"description": "[item friend -dark -magical -cyberpunk] and [item friend -dark -magical -cyberpunk] loyally follows [object]",
 			"priority": 5
 		},
 		{
 			"keywords": ["friend"],
-			"description": "[item friend -dark -magical] loyally follows [object]",
+			"description": "[item friend -dark -magical -cyberpunk] loyally follows [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","arcane","cyberpunk","friend","friend"],
+			"description": "[monster], [item friend +cyberpunk] and [item friend +magical] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","necromantic","cyberpunk","friend","friend"],
+			"description": "[monster], [item friend +cyberpunk] and [item friend +dark] loyally follow [object]",
 			"priority": 5
 		},
 		{
@@ -599,7 +645,7 @@
 		},
 		{
 			"keywords": ["ally","necromantic","friend","friend"],
-			"description": "[monster], [item friend +dark] and [item friend -dark -magical] loyally follow [object]",
+			"description": "[monster], [item friend +dark] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
 			"priority": 5
 		},
 		{
@@ -609,12 +655,22 @@
 		},
 		{
 			"keywords": ["ally","arcane","friend","friend"],
-			"description": "[monster], [item friend +magical] and [item friend -dark -magical] loyally follow [object]",
+			"description": "[monster], [item friend +magical] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","cyberpunk","friend","friend"],
+			"description": "[monster], [item friend +cyberpunk] and [item friend +cyberpunk] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","cyberpunk","friend","friend"],
+			"description": "[monster], [item friend +cyberpunk] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
 			"priority": 5
 		},
 		{
 			"keywords": ["ally","friend","friend"],
-			"description": "[monster], [item friend -dark -magical] and [item friend -dark -magical] loyally follow [object]",
+			"description": "[monster], [item friend -dark -magical -cyberpunk] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
 			"priority": 5
 		},
 		{
@@ -628,13 +684,18 @@
 			"priority": 5
 		},
 		{
-			"keywords": ["ally","friend"],
-			"description": "[monster] and [item friend -dark -magical] loyally follow [object]",
+			"keywords": ["ally","cyberpunk","friend"],
+			"description": "[monster] and [item friend +cyberpunk] loyally follow [object]",
 			"priority": 5
 		},
 		{
 			"keywords": ["ally","friend"],
-			"description": "a group of [monstergroup] and [item friend -dark -magical] loyally follow [object]",
+			"description": "[monster] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["ally","friend"],
+			"description": "a group of [monstergroup] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
 			"priority": 5
 		},
 		{
@@ -648,18 +709,28 @@
 			"priority": 5
 		},
 		{
+			"keywords": ["cyberpunk","arcane","friend","friend"],
+			"description": "[item friend +magical] and [item friend +cyberpunk] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["cyberpunk","necromantic","friend","friend"],
+			"description": "[item friend +dark] and [item friend +cyberpunk] loyally follow [object]",
+			"priority": 5
+		},
+		{
 			"keywords": ["arcane","necromantic","friend","friend"],
-			"description": "[item friend +dark] and [item friend +magical] loyally follows [object]",
+			"description": "[item friend +dark] and [item friend +magical] loyally follow [object]",
 			"priority": 5
 		},
 		{
 			"keywords": ["arcane","friend","friend"],
-			"description": "[item friend +magical] and [item friend +magical] loyally follows [object]",
+			"description": "[item friend +magical] and [item friend +magical] loyally follow [object]",
 			"priority": 5
 		},
 		{
 			"keywords": ["arcane","friend","friend"],
-			"description": "[item friend +magical] and [item friend -dark -magical] loyally follows [object]",
+			"description": "[item friend +magical] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
 			"priority": 5
 		},
 		{
@@ -669,12 +740,12 @@
 		},
 		{
 			"keywords": ["necromantic","friend","friend"],
-			"description": "[item friend +dark] and [item friend +dark] loyally follows [object]",
+			"description": "[item friend +dark] and [item friend +dark] loyally follow [object]",
 			"priority": 5
 		},
 		{
 			"keywords": ["necromantic","friend","friend"],
-			"description": "[item friend +dark] and [item friend -dark -magical] loyally follows [object]",
+			"description": "[item friend +dark] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
 			"priority": 5
 		},
 		{
@@ -683,8 +754,43 @@
 			"priority": 5
 		},
 		{
+			"keywords": ["cyberpunk","friend","friend"],
+			"description": "[item friend +cyberpunk] and [item friend -dark -magical -cyberpunk] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["cyberpunk","friend","friend"],
+			"description": "[item friend +cyberpunk] and [item friend +cyberpunk] loyally follow [object]",
+			"priority": 5
+		},
+		{
+			"keywords": ["cyberpunk","friend"],
+			"description": "[item friend +cyberpunk] loyally follows [object]",
+			"priority": 5
+		},
+		{
 			"keywords": ["cyberpunk","clothes"],
 			"description": "[subject] [pluralnoun wear wears] fingerless leather gloves with glowing orange strips, mirror shades and a sleek glowing high collar bomber jacket",
+			"priority": 0
+		},
+		{
+			"keywords": ["cyberpunk","clothes"],
+			"description": "[subject] [pluralnoun wear wears] a stylish vest with glowing lining over a dress shirt, mirror shades, and black gloves",
+			"priority": 0
+		},
+		{
+			"keywords": ["cyberpunk","gothic","clothes"],
+			"description": "[subject] [pluralnoun wear wears] a steel corset with glowing LEDs, fishnet sleeves ending in purple fingerless gloves with a glowing holographic skirt",
+			"priority": 0
+		},
+		{
+			"keywords": ["karate","clothes"],
+			"description": "[subject] [pluralnoun wear wears] a simple gi with wrappings",
+			"priority": 0
+		},
+		{
+			"keywords": ["karate","clothes"],
+			"description": "[subject] [pluralnoun wear wears] ripped jeans, no shirt, and biking gloves",
 			"priority": 0
 		},
 		{
@@ -723,13 +829,43 @@
 			"priority": 4
 		},
 		{
+			"keywords": ["natural"],
+			"description": "small flowers grow from spots on [object]",
+			"priority": 4
+		},
+		{
 			"keywords": ["holy"],
 			"description": "a faint halo rings [possessivesubject] head",
 			"priority": 4
 		},
 		{
+			"keywords": ["holy","item"],
+			"description": "[subject] [pluralnoun carry carries] [item sanctified] [items holysymbol]",
+			"priority": 2
+		},
+		{
+			"keywords": ["necromantic","item"],
+			"description": "[subject] [pluralnoun carry carries] [item unsanctified] [items holysymbol]",
+			"priority": 2
+		},
+		{
+			"keywords": ["necromantic"],
+			"description": "a faint aura of death eminates from [object]",
+			"priority": 4
+		},
+		{
+			"keywords": ["cyberpunk"],
+			"description": "[subject] [conjunction] adorned with circuitry tattoos",
+			"priority": 4
+		},
+		{
+			"keywords": ["cyberpunk"],
+			"description": "[subject] [pluralnoun have has] minor cybernetic implants",
+			"priority": 4
+		},
+		{
 			"keywords": ["alchemy"],
-			"description": "[possessivesubject] skin is stained with alchemical reagents and chemicals",
+			"description": "[subject] [conjunction] stained with alchemical reagents and chemicals",
 			"priority": 4
 		},
 		{
@@ -804,7 +940,7 @@
 		},
 		{
 			"keywords": ["horns"],
-			"description": "[possessivesubject] horns battleworn and patched with steel and iron",
+			"description": "[possessivesubject] horns are battleworn and patched with steel and iron",
 			"priority": 4
 		},
 		{
@@ -865,6 +1001,12 @@
 			"type": "polearm",
 			"lists": [],
 			"synonyms": ["glaive","halberd","pike"]
+		},
+		{
+			"name": "bo staff",
+			"type": "staff",
+			"lists": [],
+			"synonyms": ["quarterstaff"]
 		},
 		{
 			"name": "wooden staff",
@@ -1017,10 +1159,16 @@
 			"synonyms": ["tiny dragon friend","pixie friend","talking cat friend","miniature dinosaur friend","aggressive rock friend"]
 		},
 		{
+			"name": "hovering drone friend",
+			"type": "friend",
+			"lists": ["cyberpunk"],
+			"synonyms": ["holographic ai friend"]
+		},
+		{
 			"name": "bird friend",
 			"type": "friend",
 			"lists": [],
-			"synonyms": ["cat friend","dog friend","smol lizard friend"]
+			"synonyms": ["cat friend","dog friend","smol lizard friend","otter friend","snake friend"]
 		},
 		{
 			"name": "mithril plate armour",
@@ -1035,10 +1183,22 @@
 			"synonyms": ["chain shirt","breast plate","hide armour"]
 		},
 		{
-			"name": "spidersilk robes",
+			"name": "spidersilk robe",
+			"type": "armour",
+			"lists": ["dark","druid"],
+			"synonyms": []
+		},
+		{
+			"name": "silkweave leather armour",
 			"type": "armour",
 			"lists": ["druid"],
-			"synonyms": ["silkweave leather armour","duskleaf weave armour","underbrush cloak"]
+			"synonyms": ["duskleaf weave armour","underbrush cloak"]
+		},
+		{
+			"name": "black silk cloak",
+			"type": "armour",
+			"lists": ["dark"],
+			"synonyms": ["ragged black silk robe"]
 		},
 		{
 			"name": "singed labcoat",
@@ -1077,15 +1237,33 @@
 			"synonyms": ["sling","hand-held catapult"]
 		},
 		{
+			"name": "journal",
+			"type": "tool",
+			"lists": [],
+			"synonyms": ["healing kit","treasure map"]
+		},
+		{
 			"name": "set of lockpicks",
 			"type": "tool",
 			"lists": ["rogueish"],
-			"synonyms": []
+			"synonyms": ["disguise kit"]
 		},
 		{
 			"name": "alchemy lab",
 			"type": "tool",
 			"lists": ["alchemy"],
+			"synonyms": []
+		},
+		{
+			"name": "mobile phone",
+			"type": "tool",
+			"lists": ["modern"],
+			"synonyms": ["tablet computer"]
+		},
+		{
+			"name": "cyberdeck",
+			"type": "tool",
+			"lists": ["cyberpunk"],
 			"synonyms": []
 		},
 		{
@@ -1128,13 +1306,37 @@
 			"name": "necklace of beads",
 			"type": "jewelery",
 			"lists": [],
-			"synonyms": ["medallion of copper","bracelet of cord and twine"]
+			"synonyms": ["medallion of copper","bracelet of cord and twine","amulet of silver","copper ring","bronze ring","gold ring"]
+		},
+		{
+			"name": "black cord bracelet of teeth",
+			"type": "jewelery",
+			"lists": ["dark"],
+			"synonyms": ["bone fetish","mummified hand amulet","bone bracelet","obsidian stone ring"]
+		},
+		{
+			"name": "white gold statuette",
+			"type": "holysymbol",
+			"lists": [],
+			"synonyms": ["silver amulet","wooden carving","bronze symbol"]
+		},
+		{
+			"name": "holy",
+			"type": "sanctified",
+			"lists": [],
+			"synonyms": ["sanctified","blessed"]
+		},
+		{
+			"name": "unholy",
+			"type": "unsanctified",
+			"lists": [],
+			"synonyms": ["desecrated","unsanctified"]
 		},
 		{
 			"name": "simple peg",
 			"type": "legreplacement",
 			"lists": [],
-			"synonyms": ["squishy tentacle","bionic leg","monster leg"]
+			"synonyms": ["squishy tentacle","bionic leg","monster leg","basic prosthetic"]
 		},
 		{
 			"name": "rotting rags",
@@ -1147,6 +1349,79 @@
 			"type": "wingrepairmaterial",
 			"lists": [],
 			"synonyms": ["leather","cloth","paper","steel"]
+		}
+	],
+	"titles":
+	[
+		{
+			"name":"never ending torment",
+			"keywords":["necromantic"],
+			"synonyms":["blood","eldirtch secrets","the dead","the undead","plague","famine","agony","pain"]
+		},
+		{
+			"name":"twilight",
+			"keywords":["gothic"],
+			"synonyms":["darkness","twilight","souls"]
+		},
+		{
+			"name":"tacos",
+			"keywords":["himbo"],
+			"synonyms":["cheese platters","joy","happiness"]
+		},
+		{
+			"name":"hubris",
+			"keywords":["psionic"],
+			"synonyms":["the mind","ancient secrets","psionic power"]
+		},
+		{
+			"name":"light",
+			"keywords":["holy"],
+			"synonyms":["the gods","holy power"]
+		},
+		{
+			"name":"seasons",
+			"keywords":["natural"],
+			"synonyms":["ages","nature"]
+		},
+		{
+			"name":"war",
+			"keywords":["martial"],
+			"synonyms":["battle","defense"]
+		},
+		{
+			"name":"magic",
+			"keywords":["arcane"],
+			"synonyms":["arcane knowledge","of mana","esoteric knowledge"]
+		},
+		{
+			"name":"pride",
+			"keywords":["twink"],
+			"synonyms":["envy","pleasure"]
+		},
+		{
+			"name":"cybersecurity",
+			"keywords":["cyberpunk"],
+			"synonyms":["hacking","intrusion countermeasures"]
+		},
+		{
+			"name":"management",
+			"keywords":["friend"],
+			"synonyms":["accounting","human resources","friendship"]
+		},
+		{
+			"name":"retail",
+			"keywords":["roguish"],
+			"synonyms":["customer service","public relations","clandestine operations","boredom"]
+		},
+		{
+			"name":"engineering",
+			"keywords":["alchemy"],
+			"synonyms":["science","research and development","research","development"]
+		},
+		{
+			"name":"mundane tasks",
+			"keywords":["item"],
+			"synonyms":["pop quizzes","dice","random chance"]
 		}
 	]
 }

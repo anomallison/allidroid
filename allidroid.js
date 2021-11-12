@@ -1226,24 +1226,7 @@ function getSuffixString(suffix)
 //
 
 function nounlesbian()
-{
-	/*
-	let noun = Math.floor(Math.random()*(item_nouns.length+monster_classes.length));
-	let lesbian = "";
-	
-	
-	if (noun < item_nouns.length)
-	{
-		noun = Math.floor(Math.random()*item_nouns.length);
-		lesbian = getObjectName(item_nouns[noun]) + " lesbian";
-	} 
-	else 
-	{
-		noun = Math.floor(Math.random()*monster_classes.length);
-		lesbian = monster_classes[noun].single + " lesbian";
-	}
-	*/
-	
+{	
 	let noun = Math.floor(Math.random()*(boss_generator.randomkeywords.length+boss_generator.classes.length));
 	let lesbian = "";
 	let keyword = "";
@@ -2650,15 +2633,6 @@ function descriptorIsValid(descriptor)
 		else
 			return false;
 	}
-	/*
-	for (let i in descriptor.keywords)
-	{
-		if (this.includes(descriptor.keywords[i]) == false)
-		{
-			return false;
-		}
-	}
-	*/
 	return true;
 }
 
@@ -2677,6 +2651,16 @@ function removeKeywordsByDescriptor(keyword)
 	return true;
 }
 
+function findIndexOfDescriptor(list,descriptor)
+{
+	for (i in list)
+	{
+		if (list[i].description == descriptor.description)
+			return i;
+	}
+	return -1;
+}
+
 //
 // generate boss base function
 
@@ -2685,8 +2669,10 @@ function generateBoss(extrakeywords = null)
 	let boss_string = "";
 	//let basemonster = boss_generator.bases[Math.floor(Math.random()*(boss_generator.bases.length))];
 	let basemonster = generateBossBase();
+	let tempbossdescriptors = boss_generator.descriptors.slice();
 	let bossclass = boss_generator.classes[Math.floor(Math.random()*(boss_generator.classes.length))];
-	let keywords = basemonster.keywords.slice();
+	let bosstitle = boss_generator.titles[Math.floor(Math.random()*(boss_generator.titles.length))];
+	let keywords = basemonster.keywords.concat(bosstitle.keywords);
 	if (extrakeywords != null && extrakeywords.length > 0)
 	{
 		keywords = keywords.concat(extrakeywords);
@@ -2695,7 +2681,7 @@ function generateBoss(extrakeywords = null)
 	keywords = keywords.concat(bossclass.keywords);
 	let temprandomkeywords = boss_generator.randomkeywords.slice();
 	let random_int = Math.floor(Math.random()*(temprandomkeywords.length));
-	let RANDOM_EXTRA_KEYWORDS = 2;
+	let RANDOM_EXTRA_KEYWORDS = 1;
 	for (let i = 0; i < RANDOM_EXTRA_KEYWORDS; i++)
 	{
 		keywords.push(temprandomkeywords[random_int]);
@@ -2704,10 +2690,15 @@ function generateBoss(extrakeywords = null)
 	}
 	
 	
-	validdescriptors = boss_generator.descriptors.filter(descriptorIsValid,keywords);
+	validdescriptors = tempbossdescriptors.filter(descriptorIsValid,keywords);
 	
 	let descriptors = [];
 	random_int = Math.floor(Math.random()*(validdescriptors.length));
+	let random_int2 = Math.floor(Math.random()*(validdescriptors.length));
+	if (validdescriptors[random_int].keywords.length < validdescriptors[random_int2].keywords.length)
+	{
+		random_int = random_int2;
+	}
 	let descriptorattemptcount = 7;
 	for (let i = 0; i < descriptorattemptcount; i++)
 	{
@@ -2720,10 +2711,20 @@ function generateBoss(extrakeywords = null)
 				keywords.splice(keywordindex,1);
 			}
 		}
+		let indexOfDescriptor = findIndexOfDescriptor(tempbossdescriptors,validdescriptors[random_int])
+		if (indexOfDescriptor != -1)
+		{
+			tempbossdescriptors.splice(indexOfDescriptor,1);
+		}
 		// keywords = keywords.filter(removeKeywordsByDescriptor,validdescriptors[random_int]);
-		validdescriptors = boss_generator.descriptors.filter(descriptorIsValid,keywords);
+		validdescriptors = tempbossdescriptors.filter(descriptorIsValid,keywords);
 		
 		random_int = Math.floor(Math.random()*(validdescriptors.length));
+		random_int2 = Math.floor(Math.random()*(validdescriptors.length));
+		if (validdescriptors.length > 0 && validdescriptors[random_int].keywords.length < validdescriptors[random_int2].keywords.length)
+		{
+			random_int = random_int2;
+		}
 		if (keywords.length == 0)
 			i += descriptorattemptcount;
 		if (validdescriptors.length == 0)
@@ -2754,7 +2755,7 @@ function generateBoss(extrakeywords = null)
 	
 	
 	boss_string += generateBossName(false,false) + ", the " + basemonster.base + " " + bossclass.class 
-			+ " of " + title_suffixes[Math.floor((Math.random()*title_suffixes.length))] + ".\n";
+			+ " of " + getNameSynonym(bosstitle) + ".\n";
 	
 	let position = descriptors_strings.indexOf("\[");
 	let endposition = -1;
@@ -2939,12 +2940,6 @@ function generateBossBase()
 
 
 
-
-
-
-
-
-
 //
 //
 //
@@ -3058,127 +3053,10 @@ function tarotdraw(suitefilter = null, drawcount = 2)
 	return reading_string;
 }
 
-
 //
-// filter the objects by whether 'this' is the level of the object
 //
-
-function filterByLevel(object)
-{
-	return object.level == this;
-}
-
-
-/*
+// generateQuest function 
 //
-// generate quest
-
-function generateQuest(level = -1)
-{
-	if (level == -1 || level > QUEST_GEN_MAX_LEVEL)
-		level = Math.floor(Math.random()*(QUEST_GEN_MAX_LEVEL+1));
-	
-	let tempquestgivers = quest_gen.questgivers.filter(filterByLevel,level);
-	
-	let quest_giver = tempquestgivers[Math.floor(Math.random()*tempquestgivers.length)];
-	let quest_given = quest_gen.quests[level][Math.floor(Math.random()*quest_gen.quests[level].length)];
-	
-	let quest_reward = Math.floor(Math.random()*quest_giver.reward.length);
-	let quest_location = Math.floor(Math.random()*quest_given.location.length);
-	let quest_twist = Math.floor(Math.random()*quest_given.twists.length);
-	
-	let quest_string
-	if (quest_given.details.length > 0)
-	{
-		let quest_detail1 = Math.floor(Math.random()*quest_given.details.length);
-		let quest_detail2 = Math.floor(Math.random()*quest_given.details.length);
-		while (quest_detail2 == quest_detail1)
-		{
-			quest_detail2 = Math.floor(Math.random()*quest_given.details.length);
-		}
-		
-		
-		if(Math.random() < 0.6) //one quest detail
-		{
-			quest_string = grammarCapitalFirstLetter(quest_giver.name) + " is asking for adventurers to " + quest_given.objective + " in " + quest_given.location[quest_location] 
-			+ "\n" + grammarCapitalFirstLetter(quest_given.details[quest_detail1])
-			+ ".\nThey are offering " + quest_giver.reward[quest_reward] + " for completing their quest, but " + quest_given.twists[quest_twist];
-		}
-		else //two quest details
-		{
-			quest_string = grammarCapitalFirstLetter(quest_giver.name) + " is asking for adventurers to " + quest_given.objective + " in " + quest_given.location[quest_location] 
-			+ "\n" + grammarCapitalFirstLetter(quest_given.details[quest_detail1]) + " and " + quest_given.details[quest_detail2] 
-			+ ".\nThey are offering " + quest_giver.reward[quest_reward] + " for completing their quest, but " + quest_given.twists[quest_twist];
-		}
-		
-	}
-	else
-	{
-		quest_string = grammarCapitalFirstLetter(quest_giver.name) + " is asking for adventurers to " + quest_given.objective + " in " + quest_given.location[quest_location] 
-			+ ".\nThey are offering " + quest_giver.reward[quest_reward] + " for completing their quest, but " + quest_given.twists[quest_twist];
-	}
-	
-	
-	
-	
-	
-	let position = quest_string.indexOf("\[");
-	let endposition = -1;
-	let quest_substring = "";
-	let substr_number = "";
-	
-	while (position != -1)
-	{
-		endposition = quest_string.indexOf("\]");
-		quest_substring = quest_string.substring(position+1,endposition);
-		substr_number = randomNumberForText(quest_substring);
-		if (quest_substring == "masterworkitem")
-		{
-			quest_string = quest_string.substr(0,position) + quest_gen.masterworkitems[Math.floor(Math.random()*quest_gen.masterworkitems.length)] + quest_string.substr(endposition+1);
-		}
-		else if (quest_substring == "magicitem")
-		{
-			quest_string = quest_string.substr(0,position) + quest_gen.magicitems[Math.floor(Math.random()*quest_gen.magicitems.length)] + quest_string.substr(endposition+1);
-		}
-		else if (quest_substring == "artifact")
-		{
-			quest_string = quest_string.substr(0,position) + grammarCapitalFirstLetter(artifactToString(generateArtifact(), false)) + quest_string.substr(endposition+1);
-		}
-		else if (quest_substring == "alchemicalingredient")
-		{
-			quest_string = quest_string.substr(0,position) + quest_gen.alchemicalingredients[Math.floor(Math.random()*quest_gen.alchemicalingredients.length)] + quest_string.substr(endposition+1);
-		}
-		else if (quest_substring == "questgiver")
-		{
-			quest_string = quest_string.substr(0,position) + quest_giver.name + quest_string.substr(endposition+1);
-		}
-		else if (quest_substring == "location")
-		{
-			quest_string = quest_string.substr(0,position) + quest_given.location[quest_location] + quest_string.substr(endposition+1);
-		}
-		else if (quest_substring == "locationisare" && quest_given.location[quest_location].substr(-1).toLowerCase() == "s")
-		{
-			quest_string = quest_string.substr(0,position) + "are" + quest_string.substr(endposition+1);
-		}
-		else if (quest_substring == "locationisare")
-		{
-			quest_string = quest_string.substr(0,position) + "is" + quest_string.substr(endposition+1);
-		}
-		else if (substr_number != false)
-		{
-			quest_string = quest_string.substr(0,position) + substr_number.toString() + quest_string.substr(endposition+1);
-		}
-		else
-		{
-			quest_string = quest_string.substr(0,position) + quest_string.substr(endposition+1);
-		}
-		position = quest_string.indexOf("\[");
-	}
-	
-	return quest_string;
-}
-*/
-
 
 function getNameSynonym(reward)
 {
@@ -3218,51 +3096,93 @@ function getClosestRewardToLevel(rewards, level)
 	return index;
 }
 
+function filterByMinLevel(questobjective)
+{
+	return this >= questobjective.minlevel;
+}
+
 function generateQuest(minlevel = -1)
 {
 	let questgod = quest_gen.questgods[Math.floor(Math.random()*quest_gen.questgods.length)]
 	let questlocation = quest_gen.questlocations[Math.floor(Math.random()*quest_gen.questlocations.length)];
-	let tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocation.keywords);
-	let random_int = Math.floor(Math.random()*tempantagonists.length)
+	let tempquestlocmods = quest_gen.questlocationmodifiers.filter(filterByAtleastOneList,questlocation.keywords);
+	let random_int = Math.floor(Math.random()*tempquestlocmods.length)
+	let questlocationmodifier = tempquestlocmods[random_int];
+	
+	if (Math.random() < 0.667)
+	{
+		questlocationmodifier = 
+		{
+			"name":"",
+			"lists":[],
+			"keywords":[],
+			"level": 0
+		};
+	}
+	
+	let questlocationkeywoodsfull = questlocation.keywords.concat(questlocationmodifier.keywords);
+	let tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocationkeywoodsfull);
+	random_int = Math.floor(Math.random()*tempantagonists.length)
 	let questantagonist = tempantagonists[random_int];
 	let questkeyword = questantagonist.keywords[Math.floor(Math.random()*questantagonist.keywords.length)];
 	let tempquestgivers = quest_gen.questgivers.filter(filterByList,questkeyword);
 	random_int = Math.floor(Math.random()*tempquestgivers.length);
 	let questgiver = tempquestgivers[random_int];
-	let tempquestobjectives = quest_gen.questobjectives.filter(filterByList,questkeyword);
+	let tempquestobjectives = quest_gen.questobjectives.filter(filterByMinLevel,questantagonist.level);
+	tempquestobjectives = tempquestobjectives.filter(filterByList,questkeyword);
 	random_int = Math.floor(Math.random()*tempquestobjectives.length);
 	let questobjective = tempquestobjectives[random_int];
 	let tempquestitems = quest_gen.questitems.filter(filterByList,questkeyword);
 	random_int = Math.floor(Math.random()*tempquestitems.length)
 	let questitem = getNameSynonym(tempquestitems[random_int]);
 	
-	let questlevel = questlocation.level + questantagonist.level + questgiver.level + questobjective.level;
+	let questlevel = questlocation.level + questlocationmodifier.level + questantagonist.level + questgiver.level + questobjective.level + Math.floor(Math.random()*5) - 3;
 	while (questlevel < minlevel)
 	{
 		questlocation = quest_gen.questlocations[Math.floor(Math.random()*quest_gen.questlocations.length)];
 		tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocation);
+		tempquestlocmods = quest_gen.questlocationmodifiers.filter(filterByAtleastOneList,questlocation.keywords);
+		random_int = Math.floor(Math.random()*tempquestlocmods.length)
+		questlocationmodifier = tempquestlocmods[random_int];
+		
+		if (Math.random() < 0.667)
+		{
+			questlocationmodifier = 
+			{
+				"name":"",
+				"lists":[],
+				"keywords":[],
+				"level": 0
+			};
+		}
+		
+		questlocationkeywoodsfull = questlocation.keywords.concat(questlocationmodifier.keywords);
+		tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocationkeywoodsfull);
 		random_int = Math.floor(Math.random()*tempantagonists.length)
 		questantagonist = tempantagonists[random_int];
 		questkeyword = questantagonist.keywords[Math.floor(Math.random()*questantagonist.keywords.length)];
 		tempquestgivers = quest_gen.questgivers.filter(filterByList,questkeyword);
 		random_int = Math.floor(Math.random()*tempquestgivers.length);
 		questgiver = tempquestgivers[random_int];
-		tempquestobjectives = quest_gen.questobjectives.filter(filterByList,questkeyword);
+		tempquestobjectives = quest_gen.questobjectives.filter(filterByMinLevel,questantagonist.level);
+		tempquestobjectives = tempquestobjectives.filter(filterByList,questkeyword);
 		random_int = Math.floor(Math.random()*tempquestobjectives.length);
 		questobjective = tempquestobjectives[random_int];
 		tempquestitems = quest_gen.questitems.filter(filterByList,questkeyword);
 		random_int = Math.floor(Math.random()*tempquestitems.length)
 		questitem = getNameSynonym(tempquestitems[random_int]);
 		
-		questlevel = questlocation.level + questantagonist.level + questgiver.level + questobjective.level;
+		questlevel = questlocation.level + questlocationmodifier.level + questantagonist.level + questgiver.level + questobjective.level + Math.floor(Math.random()*5) - 3;
 	}
 	
 	let tempquestrewards = quest_gen.questrewards.filter(filterByList,questkeyword);
 	
 	let questreward = getClosestRewardToLevel(tempquestrewards,questlevel);
 	
+	let modifiedquestlocationname = (questlocationmodifier.name + " " + questlocation.name).trim();
+	
 	let quest_string = "**Quest from " + grammarAorAn(questgiver.name.charAt(0)) + " " + questgiver.name + "**\n" +
-		"**Location:** the " + questlocation.name + "\n**Objective:** " + questobjective.objective + "\n" +
+		"**Location:** the " + modifiedquestlocationname + "\n**Objective:** " + questobjective.objective + "\n" +
 		"**Reward:** " + getNameSynonym(tempquestrewards[questreward]);
 	
 	let position = quest_string.indexOf("\[");

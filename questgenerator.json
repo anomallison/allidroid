@@ -97,7 +97,7 @@
 		},
 		{
 			"name":"mayor",
-			"lists":["law","peasant","merchant"],
+			"lists":["law","merchant"],
 			"level": 3
 		},
 		{
@@ -112,7 +112,7 @@
 		},
 		{
 			"name":"guildmaster",
-			"lists":["peasant","merchant","intrigue"],
+			"lists":["merchant","intrigue"],
 			"level": 3
 		},
 		{
@@ -127,7 +127,7 @@
 		},
 		{
 			"name":"chancellor",
-			"lists":["court","peasant","merchant"],
+			"lists":["court","merchant"],
 			"level": 4
 		},
 		{
@@ -147,12 +147,12 @@
 		},
 		{
 			"name":"king",
-			"lists":["court","law","peasant","merchant","clergy","intrigue","arcane"],
+			"lists":["court","law","merchant","clergy","intrigue","arcane"],
 			"level": 5
 		},
 		{
 			"name":"queen",
-			"lists":["court","law","peasant","merchant","clergy","intrigue","arcane"],
+			"lists":["court","law","merchant","clergy","intrigue","arcane"],
 			"level": 5
 		},
 		{
@@ -194,6 +194,11 @@
 			"level": 1
 		},
 		{
+			"name":"graveyard",
+			"keywords":["urban","desolate"],
+			"level": 1
+		},
+		{
 			"name":"crypt",
 			"keywords":["underground","desolate","desecrated"],
 			"level": 2
@@ -205,7 +210,7 @@
 		},
 		{
 			"name":"ancient ruin",
-			"keywords":["desolate","desecrated","wet","underground"],
+			"keywords":["desolate","desecrated","underground"],
 			"level": 2
 		},
 		{
@@ -230,7 +235,7 @@
 		},
 		{
 			"name":"cave",
-			"keywords":["underground","wet"],
+			"keywords":["underground"],
 			"level": 2
 		},
 		{
@@ -277,6 +282,45 @@
 			"name":"interplanar rift",
 			"keywords":["magical"],
 			"level": 5
+		}
+	],
+	"questlocationmodifiers":
+	[
+		{
+			"name":"abandoned",
+			"lists":["urban","rural"],
+			"keywords":["desolate"],
+			"level": 0
+		},
+		{
+			"name":"desecrated",
+			"lists":["desolate","desecrated"],
+			"keywords":["desecrated"],
+			"level": 0
+		},
+		{
+			"name":"overrun",
+			"lists":["urban","rural","wet","forested","plains","underground","magical","desolate","desecrated"],
+			"keywords":[],
+			"level": 2
+		},
+		{
+			"name":"wild magic",
+			"lists":["wet","forested","plains","underground","magical","desolate","desecrated"],
+			"keywords":["magical"],
+			"level": 1
+		},
+		{
+			"name":"overgrown",
+			"lists":["urban","rural","desolate"],
+			"keywords":["forested"],
+			"level": 0
+		},
+		{
+			"name":"flooded",
+			"lists":["urban","rural","desolate","underground"],
+			"keywords":["wet"],
+			"level": 0
 		}
 	],
 	"questantagonists":
@@ -386,7 +430,7 @@
 		{
 			"name":"warlord",
 			"lists":["urban","rural"],
-			"keywords":["natural","law","peasant","clergy","intrigue","arcane","merchant","court","world"],
+			"keywords":["natural","law","peasant","clergy","arcane","merchant","court","world"],
 			"level": 5
 		},
 		{
@@ -422,43 +466,43 @@
 		{
 			"name":"aboleth",
 			"lists":["wet","magical"],
-			"keywords":["natural","law","clergy","intrigue","arcane","merchant","court","world"],
+			"keywords":["natural","law","clergy","arcane","merchant","court","world"],
 			"level": 5
 		},
 		{
 			"name":"lich",
 			"lists":["desecrated","magical","urban"],
-			"keywords":["natural","law","clergy","intrigue","arcane","merchant","court","world"],
+			"keywords":["natural","law","clergy","arcane","merchant","court","world"],
 			"level": 5
 		},
 		{
 			"name":"dragon",
 			"lists":["underground","desolate","magical"],
-			"keywords":["natural","law","clergy","intrigue","arcane","merchant","court","world"],
+			"keywords":["natural","law","clergy","arcane","merchant","court","world"],
 			"level": 5
 		},
 		{
 			"name":"demons",
 			"lists":["urban","desecrated","desolate","rural","magical"],
-			"keywords":["natural","law","clergy","intrigue","arcane","merchant","court","world"],
+			"keywords":["natural","law","clergy","arcane","merchant","court","world"],
 			"level": 5
 		},
 		{
 			"name":"elder dragon",
 			"lists":["underground","desolate","magical"],
-			"keywords":["natural","law","clergy","intrigue","arcane","merchant","court","world"],
+			"keywords":["natural","law","clergy","arcane","merchant","court","world"],
 			"level": 6
 		},
 		{
 			"name":"archlich",
 			"lists":["desecrated","magical","urban"],
-			"keywords":["natural","law","clergy","intrigue","arcane","merchant","court","world"],
+			"keywords":["natural","law","clergy","arcane","merchant","court","world"],
 			"level": 6
 		},
 		{
 			"name":"archdemon",
 			"lists":["urban","desecrated","desolate","rural","magical"],
-			"keywords":["natural","law","clergy","intrigue","arcane","merchant","court","world"],
+			"keywords":["natural","law","clergy","arcane","merchant","court","world"],
 			"level": 6
 		}
 	],
@@ -467,27 +511,50 @@
 		{
 			"objective":"kill the [antagonist]",
 			"lists":["natural","law","clergy","intrigue","peasant","court","merchant","arcane","world"],
-			"level": 1
+			"level": 1,
+			"minlevel": 0
 		},
 		{
-			"objective":"guard the caravan",
+			"objective":"guard the caravan from [antagonist]",
 			"lists":["merchant","peasant","court","law"],
-			"level": 1
+			"level": 1,
+			"minlevel": 1
 		},
 		{
 			"objective":"steal information from the [antagonist]",
 			"lists":["intrigue"],
-			"level": 1
+			"level": 1,
+			"minlevel": 1
 		},
 		{
 			"objective":"retreive the [item] from the [antagonist]",
-			"lists":["natural","law","clergy","intrigue","court","merchant","arcane","world"],
-			"level": 2
+			"lists":["peasant","natural","law","clergy","court","merchant","arcane","world"],
+			"level": 2,
+			"minlevel": 1
+		},
+		{
+			"objective":"steal the [item] from the [antagonist]",
+			"lists":["intrigue"],
+			"level": 2,
+			"minlevel": 1
+		},
+		{
+			"objective":"steal the [item] from the [antagonist]",
+			"lists":["arcane"],
+			"level": 3,
+			"minlevel": 4
 		},
 		{
 			"objective":"banish the [antagonist] from this world",
 			"lists":["natural","law","clergy","court","merchant","arcane","world"],
-			"level": 5
+			"level": 6,
+			"minlevel": 5
+		},
+		{
+			"objective":"banish the [antagonist]'s [item] from this world",
+			"lists":["world"],
+			"level": 6,
+			"minlevel": 5
 		}
 	],
 	"questitems":
@@ -578,6 +645,12 @@
 			"level": 2
 		},
 		{
+			"name":"potions of healing",
+			"lists":["clergy","arcane"],
+			"synonyms":["spell scrolls"],
+			"level": 2
+		},
+		{
 			"name":"holy symbols",
 			"lists":["clergy"],
 			"synonyms":[],
@@ -596,9 +669,21 @@
 			"level": 4
 		},
 		{
+			"name":"faintly enchanted sword",
+			"lists":["arcane"],
+			"synonyms":["faintly enchanted axe","faintly enchanted hammer","faintly enchanted bow","faintly enchanted crossbow","faintly enchanted staff","faintly enchanted leather jerkin"],
+			"level": 4
+		},
+		{
 			"name":"4000 silver pieces",
 			"lists":["clergy","intrigue","court","law","merchant","arcane"],
 			"synonyms":["40 gold pieces"],
+			"level": 5
+		},
+		{
+			"name":"blessing's of nature",
+			"lists":["natural"],
+			"synonyms":["blessed fruit"],
 			"level": 5
 		},
 		{
@@ -608,9 +693,21 @@
 			"level": 6
 		},
 		{
+			"name":"enchanted leather jerkin",
+			"lists":["arcane"],
+			"synonyms":["faintly enchanted scalemail","faintly enchanted plate armour"],
+			"level": 6
+		},
+		{
 			"name":"15000 silver pieces",
 			"lists":["clergy","intrigue","court","law","merchant","arcane"],
 			"synonyms":["150 gold pieces"],
+			"level": 7
+		},
+		{
+			"name":"enchanted sword",
+			"lists":["arcane"],
+			"synonyms":["enchanted axe","enchanted hammer","enchanted bow","enchanted crossbow","enchanted staff"],
 			"level": 7
 		},
 		{
@@ -632,44 +729,74 @@
 			"level": 10
 		},
 		{
+			"name":"magical animal companion",
+			"lists":["natural"],
+			"synonyms":["magic seedlings"],
+			"level": 10
+		},
+		{
 			"name":"a noble title",
 			"lists":["court"],
 			"synonyms":["a piece of land"],
 			"level": 10
 		},
 		{
+			"name":"strongly enchanted leather jerkin",
+			"lists":["arcane"],
+			"synonyms":["enchanted scalemail","enchanted plate armour"],
+			"level": 10
+		},
+		{
 			"name":"a position on the court",
 			"lists":["court"],
-			"synonyms":["400 gold pieces"],
+			"synonyms":["400 gold pieces","a noble title"],
+			"level": 11
+		},
+		{
+			"name":"strongly enchanted sword",
+			"lists":["arcane"],
+			"synonyms":["strongly enchanted axe","strongly enchanted hammer","strongly enchanted bow","strongly enchanted crossbow","strongly enchanted staff"],
 			"level": 11
 		},
 		{
 			"name":"500 gold pieces",
 			"lists":["court"],
-			"synonyms":[],
+			"synonyms":["a position on the court","a noble title"],
 			"level": 12
+		},
+		{
+			"name":"strongly enchanted scalemail",
+			"lists":["arcane"],
+			"synonyms":["strongly enchanted plate armour"],
+			"level": 10
 		},
 		{
 			"name":"750 gold pieces",
 			"lists":["court"],
-			"synonyms":[],
+			"synonyms":["a position on the court","a noble title"],
 			"level": 13
 		},
 		{
 			"name":"1000 gold pieces",
 			"lists":["court"],
-			"synonyms":[],
+			"synonyms":["a position on the court","a noble title"],
 			"level": 14
 		},
 		{
 			"name":"1500 gold pieces",
 			"lists":["court"],
-			"synonyms":[],
+			"synonyms":["a position on the court","a noble title"],
+			"level": 15
+		},
+		{
+			"name":"power of the natural world",
+			"lists":["natural"],
+			"synonyms":["bond with a powerful mythical creature"],
 			"level": 15
 		},
 		{
 			"name":"artifacts of legend",
-			"lists":["world"],
+			"lists":["world","arcane"],
 			"synonyms":["secrets of the world"],
 			"level": 15
 		},
