@@ -83,7 +83,9 @@ var tarot_readings = JSON.parse(fs.readFileSync('tarot_readings.json'));
 //questgen file
 //var quest_gen = JSON.parse(fs.readFileSync('questgen.json'));
 var quest_gen = JSON.parse(fs.readFileSync('questgenerator.json'));
-var QUEST_GEN_MAX_LEVEL = 4;
+
+//roomgen file
+var room_gen = JSON.parse(fs.readFileSync('room_generator.json'));
 
 //questgen file
 var oneshotrpg_gen = JSON.parse(fs.readFileSync('oneshotrpggenerator.json'));
@@ -199,6 +201,17 @@ function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: boss");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		}
+		receivedMessage.channel.send(output);
+		return;
+    } else if (normalizedCommand == "room") 
+	{
+		output = generateRoom(arguments);
+		if (output == null)
+		{
+			console.log("failed command: room");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		}
@@ -2916,6 +2929,49 @@ function generateItemOfType(type, musthavelists = null, disallowedlists = null)
 	return fullpool[Math.floor((Math.random()*fullpool.length))];
 }
 
+//
+// generate an item from a variety of types from the boss generator item list
+
+function generateItemFromTypes(types = null, musthavelists = null, disallowedlists = null)
+{
+	let itempool;
+	let fullpool = [];
+	
+	if (types != null)
+	{
+		itempool = [];
+		for (i in types)
+		{
+			itempool = itempool.concat(boss_generator.items.filter(filterByType,types[i]));
+		}
+	}
+	else
+	{
+		itempool = boss_generator.items.slice();
+	}
+	
+	if (musthavelists != null && musthavelists.length > 0)
+	{
+		itempool = itempool.filter(filterByAtleastOneList,musthavelists);
+	}
+	
+	if (disallowedlists != null && disallowedlists.length > 0)
+	{
+		for (let i = 0; i < disallowedlists.length; i++)
+		{
+			itempool = itempool.filter(removeByList,disallowedlists[i]);
+		}
+	}
+	
+	for (let i = 0; i < itempool.length; i++)
+	{
+		fullpool = fullpool.concat(getItemList(itempool[i]));
+	}
+	
+	return fullpool[Math.floor((Math.random()*fullpool.length))];
+}
+
+
 function generateBossBase()
 {
 	let boss_base;
@@ -2936,7 +2992,279 @@ function generateBossBase()
 }
 
 
+//
+//
+// room generator function
+//
+//
 
+function getRoomSizeName(size)
+{
+	let roomsizename = null;
+	for(i in room_gen.sizenames)
+	{
+		if (size >= room_gen.sizenames[i].minsize)
+		{
+			roomsizename = room_gen.sizenames[i];
+		}
+	}
+	return roomsizename;
+}
+
+//
+// 'this' is the array of keywords
+function roomDescriptionIsValid(descriptor)
+{
+	for (i in descriptor.keywords)
+	{
+		for (j in this)
+		{
+			if (descriptor.keywords[i] == this[j])
+				return true;
+		}
+	}
+	return false;
+}
+
+//
+// 'this' is the size remaining
+function roomDescriptionSmallEnough(descriptor)
+{
+	return descriptor.size <= this;
+}
+
+function arrayContainsDescriptor(array,descriptor)
+{
+	for (i in array)
+	{
+		if (array[i].description == descriptor.description)
+			return i;
+	}
+	
+	return -1;
+}
+
+function getRoomTypeByKeywords(keywords)
+{
+	let roomtypes = room_gen.types.slice();
+	let roomtypecount = [];
+	for (i in roomtypes)
+	{
+		roomtypecount.push(0);
+	}
+	
+	for (i in keywords)
+	{
+		for (j in roomtypes)
+		{
+			if (keywords[i] == roomtypes[j].keywords[0])
+			{
+				roomtypecount[j]++;
+			}
+		}
+	}
+	
+	let largest = -1;
+	let index = -1;
+	for (i in roomtypecount)
+	{
+		if (largest < roomtypecount[i])
+		{
+			index = i;
+			largest = roomtypecount[i];
+		}
+	}
+	
+	return roomtypes[index];
+}
+
+function generateRoom(extrakeywords = null)
+{
+	let roomtype = room_gen.types[Math.floor(Math.random()*room_gen.types.length)];
+	let roomsize = randomNumberForText("2-10");
+	let roomname;
+	let roomsizename = getRoomSizeName(roomsize);
+	let roomlevel = roomtype.level + roomsizename.level;
+	
+	let roomkeywords = [];
+	if (extrakeywords != null && extrakeywords.length > 0)
+	{
+		roomkeywords = roomkeywords.concat(extrakeywords);
+	}
+	
+	let randomkeywordcount = 3;
+	let temprandomkeywords = room_gen.randomkeywords.slice();
+	let random_int = Math.floor(Math.random()*temprandomkeywords.length);
+	for(let i = 0; i < randomkeywordcount; i++)
+	{
+		roomkeywords.push(temprandomkeywords[random_int]);
+		temprandomkeywords.splice(random_int,1);
+	}
+	
+	
+	let validdescriptors = room_gen.descriptors.filter(roomDescriptionIsValid,roomkeywords);
+	validdescriptors = validdescriptors.filter(roomDescriptionSmallEnough,roomsize);
+	let roomdescriptors = [];
+	
+	random_int = Math.floor(Math.random()*(validdescriptors.length));
+	let random_int2 = Math.floor(Math.random()*(validdescriptors.length));
+	if (validdescriptors[random_int].size < validdescriptors[random_int2].size)
+	{
+		random_int = random_int2;
+	}
+	let sizeused = 0;
+	while (sizeused < roomsize && validdescriptors.length > 0)
+	{
+		if (validdescriptors[random_int].stacks)
+		{
+			let descriptorindex = arrayContainsDescriptor(roomdescriptors,validdescriptors[random_int]);
+			if (descriptorindex != -1)
+			{
+				roomdescriptors[descriptorindex].size += validdescriptors[random_int].size;
+				roomdescriptors[descriptorindex].level += validdescriptors[random_int].level;
+			}
+			else
+			{
+				roomdescriptors.push(validdescriptors[random_int]);
+			}
+		}
+		else
+		{
+			roomdescriptors.push(validdescriptors[random_int]);
+		}
+		
+		sizeused += validdescriptors[random_int].size;
+		if (!validdescriptors[random_int].repeats)
+		{
+			validdescriptors.splice(random_int,1);
+		}
+		
+		validdescriptors = validdescriptors.filter(roomDescriptionSmallEnough,roomsize-sizeused);
+		if (validdescriptors.length > 0)
+		{
+			random_int = Math.floor(Math.random()*(validdescriptors.length));
+			random_int2 = Math.floor(Math.random()*(validdescriptors.length));
+			if (validdescriptors[random_int].size < validdescriptors[random_int2].size)
+			{
+				random_int = random_int2;
+			}
+		}
+	}
+	
+	let roomnamekeywords = [];
+	for (i in roomdescriptors)
+	{
+		roomnamekeywords = roomnamekeywords.concat(roomdescriptors[i].keywords);
+	}
+	
+	roomname = getRoomTypeByKeywords(roomnamekeywords);
+	
+	
+	let room_string = "**" + grammarCapitalFirstLetter(roomname.name) + " " + roomsizename.name + "**\n";
+	
+	for (let i = 0; i < roomdescriptors.length; i++)
+	{
+		room_string += roomdescriptors[i].description;
+		if (i < roomdescriptors.length-2)
+		{
+			room_string += ", ";
+		}
+		else if (i == roomdescriptors.length-2)
+		{
+			room_string += " and ";
+		}
+		
+		let position = room_string.indexOf("\[");
+		let endposition = -1;
+		let roomsubstr = "";
+		
+		while (position != -1)
+		{
+			endposition = room_string.indexOf("\]");
+			roomsubstr = room_string.substring(position+1,endposition);
+			substr_number = randomNumberForText(roomsubstr);
+			if (roomsubstr.substr(0,5) == "size>")
+			{
+				let words = roomsubstr.split(" ");
+				let comparison = parseInt(words[0].substr(5));
+				if (roomdescriptors[i].size > comparison)
+					room_string = room_string.substr(0,position) + words[1] + room_string.substr(endposition+1);
+				else
+					room_string = room_string.substr(0,position) + words[2] + room_string.substr(endposition+1);
+			}
+			else if (roomsubstr.substr(0,5) == "size<")
+			{
+				let words = roomsubstr.split(" ");
+				let comparison = parseInt(words[0].substr(5));
+				if (roomdescriptors[i].size < comparison)
+					room_string = room_string.substr(0,position) + words[1] + room_string.substr(endposition+1);
+				else
+					room_string = room_string.substr(0,position) + words[2] + room_string.substr(endposition+1);
+			}
+			else if (roomsubstr == "size")
+			{
+				room_string = room_string.substr(0,position) + roomdescriptors[i].size + room_string.substr(endposition+1);
+			}
+			else if (roomsubstr == "monstersingle")
+			{
+				let tempmonster = getRandomMonster("monster");
+				room_string = room_string.substr(0,position) + grammarAorAn(tempmonster.single.charAt(0)) + " " + tempmonster.single + room_string.substr(endposition+1);
+			}
+			else if (roomsubstr == "monsterplural")
+			{
+				room_string = room_string.substr(0,position) + getRandomMonster("monster").plural + room_string.substr(endposition+1);
+			}
+			else if (roomsubstr == "species")
+			{
+				room_string = room_string.substr(0,position) + getRandomMonster("species").single + room_string.substr(endposition+1);
+			}
+			else if (roomsubstr.substr(0,4) == "item")
+			{
+				let lists = roomsubstr.split(" ");
+				let types = [];
+				let neededlists = [];
+				let disallowedlists = [];
+				
+				for(let i = 1; i < lists.length; i++)
+				{
+					if (lists[i].substr(0,1) == "+")
+					{
+						neededlists.push(lists[i].substr(1));
+					}
+					else if (lists[i].substr(0,1) == "-")
+					{
+						disallowedlists.push(lists[i].substr(1));
+					}
+					else
+					{
+						types.push(lists[i]);
+					}
+				}
+				
+				let tempitem = generateItemFromTypes(types,neededlists,disallowedlists);
+				if (tempitem != null)
+					room_string = room_string.substr(0,position) + grammarAorAn(tempitem.item.charAt(0)) + " " + tempitem.item + room_string.substr(endposition+1);
+				else
+				{
+					console.log("warning: null item found using substring: " + roomsubstr);
+					room_string = room_string.substr(0,position) + room_string.substr(endposition+1);
+				}
+			}
+			else if (substr_number != false)
+			{
+				room_string = room_string.substr(0,position) + substr_number.toString() + room_string.substr(endposition+1);
+			}
+			else
+			{
+				room_string = room_string.substr(0,position) + room_string.substr(endposition+1);
+			}
+			position = room_string.indexOf("\[");
+		}
+		
+	}
+	
+	return room_string;
+}
 
 
 
@@ -3056,6 +3384,7 @@ function tarotdraw(suitefilter = null, drawcount = 2)
 //
 //
 // generateQuest function 
+//
 //
 
 function getNameSynonym(reward)

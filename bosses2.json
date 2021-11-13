@@ -1033,16 +1033,16 @@
 			"synonyms": ["maul","tetsubo"]
 		},
 		{
-			"name": "short sword and scimitar",
+			"name": "dual short sword and scimitar",
 			"type": "dualblades",
 			"lists": [],
-			"synonyms": ["dual daggers","dual axes","punching daggers","ninja claws"]
+			"synonyms": ["dual daggers","dual axes","dual punching daggers","dual ninja claws"]
 		},
 		{
 			"name": "dual warhammers",
 			"type": "dualhammers",
 			"lists": [],
-			"synonyms": ["dual hammers","warhammer and mace"]
+			"synonyms": ["dual hammers","dual warhammer and mace"]
 		},
 		{
 			"name": "dual axe and warhammer",
