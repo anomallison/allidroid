@@ -201,7 +201,7 @@
 			"keywords":["bow"]
 		},
 		{
-			"description":"when you notch an arrow and pullback the bowstring of this [item] the arrowhead glows green with caustic acid",
+			"description":"when you notch an arrow and pullback the bowstring of [it] the arrowhead glows green with caustic acid",
 			"keywords":["bow"]
 		},
 		{
@@ -333,7 +333,7 @@
 			"keywords":["armour","clothes","jewelery","tool"]
 		},
 		{
-			"description":"[it] forms a protective barrior forms where strikes would hit you",
+			"description":"[it] forms a protective barrior where strikes would hit you",
 			"keywords":["armour","clothes","jewelery"]
 		},
 		{
@@ -369,11 +369,11 @@
 			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
 		},
 		{
-			"description":"[it] allows you to turn invisible on at your will",
+			"description":"[it] allows you to turn invisible at your will",
 			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
 		},
 		{
-			"description":"[it] allows you to turn into fog on at your will",
+			"description":"[it] allows you to turn into fog at your will",
 			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
 		},
 		{

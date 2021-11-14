@@ -3224,6 +3224,9 @@ function filterByKeyword(artifactproperty)
 	return false;
 }
 
+let MAX_CURSES = 7;
+let MAX_ENCHANTS = 7;
+let MAX_QUIRKS = 7;
 
 function generateArtifact(arguments)
 {
@@ -3237,8 +3240,59 @@ function generateArtifact(arguments)
 	let cursecount = Math.floor(Math.random()*3)-1;
 	let enchantcount = Math.floor(Math.random()*7)-3;
 	let quirkcount = Math.floor(Math.random()*3)-1;
+	let numberofproperties = 0;
+	let totalchosenproperties = 0;
 	
-	while (Math.max(cursecount,0)+Math.max(enchantcount,0)+Math.max(quirkcount,0) < 2)
+	if (arguments != null)
+	{
+		if (arguments.length > 0)
+		{
+			numberofproperties = randomNumberForText(arguments[0]);
+			if (!numberofproperties)
+				numberofproperties = parseInt(arguments[0]);
+			
+			if (numberofproperties > MAX_ENCHANTS)
+				numberofproperties = MAX_ENCHANTS;
+			
+			if (!isNaN(numberofproperties))
+			{
+				enchantcount = numberofproperties;
+				totalchosenproperties += numberofproperties;
+			}
+		}
+		if (arguments.length > 1)
+		{
+			numberofproperties = randomNumberForText(arguments[1]);
+			if (!numberofproperties)
+				numberofproperties = parseInt(arguments[1]);
+			
+			if (numberofproperties > MAX_CURSES)
+				numberofproperties = MAX_CURSES;
+			
+			if (!isNaN(numberofproperties))
+			{
+				cursecount = numberofproperties;
+				totalchosenproperties += numberofproperties;
+			}
+		}
+		if (arguments.length > 2)
+		{
+			numberofproperties = randomNumberForText(arguments[2]);
+			if (!numberofproperties)
+				numberofproperties = parseInt(arguments[2]);
+			
+			if (numberofproperties > MAX_QUIRKS)
+				numberofproperties = MAX_QUIRKS;
+			
+			if (!isNaN(numberofproperties))
+			{
+				quirkcount = numberofproperties;
+				totalchosenproperties += numberofproperties;
+			}
+		}
+	}
+	
+	while (totalchosenproperties < 1 && Math.max(cursecount,0)+Math.max(enchantcount,0)+Math.max(quirkcount,0) < 2)
 	{
 		cursecount = Math.floor(Math.random()*3)-1;
 		enchantcount = Math.floor(Math.random()*7)-3;
