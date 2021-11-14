@@ -96,7 +96,7 @@
 	"descriptors":
 	[
 		{
-			"description":"[size] [size>1 rows row] of bunk beds line the walls",
+			"description":"[size] [size>1 bunkbeds bunkbed] [size>1 are is] lined against the wall",
 			"keywords":["militaryliving"],
 			"level":0,
 			"size":1,
@@ -110,6 +110,22 @@
 			"size":2,
 			"stacks":true,
 			"repeats":true
+		},
+		{
+			"description":"[size] [size>1 cells cell] [size>1 are is] empty",
+			"keywords":["military"],
+			"level":0,
+			"size":1,
+			"stacks":true,
+			"repeats":true
+		},
+		{
+			"description":"a table and chairs are set up as a basic guard post",
+			"keywords":["military"],
+			"level":0,
+			"size":1,
+			"stacks":false,
+			"repeats":false
 		},
 		{
 			"description":"[size] [size>1 pairs pair] of support columns adorn this room",
@@ -152,7 +168,15 @@
 			"repeats":false
 		},
 		{
-			"description":"[size] [size>1 rows row] of tables are lined up",
+			"description":"the room is tilted and flooded",
+			"keywords":["antechamber","ritual","wet","eating","living","treasure","shopping","mine","livestock"],
+			"level":0,
+			"size":2,
+			"stacks":false,
+			"repeats":false
+		},
+		{
+			"description":"[size] dining [size>1 tables table] [size>1 are is] lined up",
 			"keywords":["eating"],
 			"level":0,
 			"size":1,
@@ -168,7 +192,7 @@
 			"repeats":false
 		},
 		{
-			"description":"[size>4 sizeable enviable] amounts of treasure are piled up here",
+			"description":"[size>4 enviable sizeable] amounts of treasure are piled up here",
 			"keywords":["treasure"],
 			"level":0,
 			"size":1,
@@ -239,5 +263,15 @@
 			"stacks":false,
 			"repeats":false
 		}
+	],
+	"doorways":
+	[
+		"an iron door with a large lock blocks the [direction] wall",
+		"fine wooden double doors adorn the [direction] wall",
+		"a simple wooden door stands on the [direction] wall",
+		"a wooden door with a \"shoppe\" sign on it adorns the [direction] wall",
+		"an iron portcullis blocks a corridoor in the [direction]",
+		"a secret door can be found in the [direction] wall",
+		"an open doorway leads to a corridoor in the [direction] wall"
 	]
 }

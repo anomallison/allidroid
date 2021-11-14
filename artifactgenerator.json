@@ -1,0 +1,547 @@
+{
+	"curses":
+	[
+		{
+			"description":"[it] drips with black brackish water that sizzles on contact with anything living",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] is heavy as if leaden weights were placed from end to end",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool","shield"]
+		},
+		{
+			"description":"when you kill with [it] it drains your life force in tandem with the life you take",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","smallarms","longarms","bow","sling"]
+		},
+		{
+			"description":"fissues glow all over [it]that spurt hot steam, burning you",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","smallarms","longarms","bow","sling","wand","magicoffhand","shield","jewelery","holysymbol","armour","clothes","tool"]
+		},
+		{
+			"description":"[it] fills your vision with darkness to near blindness",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","smallarms","longarms","bow","sling","wand","magicoffhand","shield","jewelery","holysymbol","armour","clothes","tool"]
+		},
+		{
+			"description":"trying to swing [it] drains you of your strength",
+			"keywords":["largeblade","ropeweapon","polearm","staff","magestaff","largehammer"]
+		},
+		{
+			"description":"mouths filled with rows of razor sharp teeth gnash all over [it] that bite you",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","smallarms","longarms","bow"]
+		},
+		{
+			"description":"as you grip [it] frost and ice affixes your grip to this weapon indefinitely",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"[it] uncannily tries to coil itself around you at every opportunity",
+			"keywords":["ropeweapon"]
+		},
+		{
+			"description":"[it] lashes out wildly with the anger of a contained snake demon",
+			"keywords":["ropeweapon"]
+		},
+		{
+			"description":"[it] bubbles with a transparent gooey and bloody viscera that burns and evaporates on contact with anything else",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"the string of [it] feels so fine it cuts into your fingers like razors, even when wearing gloves",
+			"keywords":["bow"]
+		},
+		{
+			"description":"the arrows fired from [it] are bathed in a sickly green glow",
+			"keywords":["bow"]
+		},
+		{
+			"description":"[it] fills your sight with mist making you farsighted",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] is steeped in a dark aura",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"a demon haunts [it] and, by extension, you",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"sickly transparent gunk oozes in the mechanisms of [it], making it jam frequently",
+			"keywords":["smallarms","longarms"]
+		},
+		{
+			"description":"[it] makes you see the world through a haze of dust, debris and ash",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"thorny black vines twist from [it] painfully securing it in your grip",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","shield"]
+		},
+		{
+			"description":"[it] drinks your blood as you use it",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling"]
+		},
+		{
+			"description":"a dark magical aura permeates [it] and infects you",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"a trapped soul screams whenever you use [it]",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling"]
+		},
+		{
+			"description":"an aura of darkness eminates from [it], infecting and tainting your mana",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] feeds off your aura, draining you",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] is covered in frost, feeling as if your joints are frozen",
+			"keywords":["armour","clothes"]
+		},
+		{
+			"description":"it feels as if [it] is lined with sharp barbs, worse should anything strike you",
+			"keywords":["armour","clothes"]
+		},
+		{
+			"description":"blood seems to weep from nowhere on [it]",
+			"keywords":["armour","clothes"]
+		},
+		{
+			"description":"[it] darkens your countenance",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] taints your vision, seeing yourself as decaying and rotting",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] slowly withers and decays unless fed fresh blood",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it]  is tight to a point of painfully drawing blood",
+			"keywords":["jewelery"]
+		},
+		{
+			"description":"[it] feeds on your life force",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] fills you will dull noise as you use it",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool"]
+		},
+		{
+			"description":"[it] bleeds as you use it",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool"]
+		},
+		{
+			"description":"[it] fills you with a sense of dread",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] fills you with a sense of impending doom",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] beats as if it had its own heart",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] burns hot with the torment of a trapped soul",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		}
+	],
+	"enchantments":
+	[
+		{
+			"description":"when you draw [it] it glows red hot and drips with liquid fire that singes the ground",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","shield"]
+		},
+		{
+			"description":"when you parry with [it] it cracks with thunder, disorienting your attacker",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","shield"]
+		},
+		{
+			"description":"[it] holds a magical edge which never dulls",
+			"keywords":["shortblade","largeblade","dagger"]
+		},
+		{
+			"description":"as [it] moves through the air it supercools the air around it, freezing it",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"[it] swings lighter than it's heavier hits would suggest",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"[it] is maintained by magic and held in peak form",
+			"keywords":["ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","smallarms","longarms","tool"]
+		},
+		{
+			"description":"glowing fissures in [it] lash out with lightning when you use it",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","shield","holysymbol"]
+		},
+		{
+			"description":"when [it] is drawn it perfectly coils into position",
+			"keywords":["ropeweapon"]
+		},
+		{
+			"description":"when you parry with [it] it coils around the weapon of your attacker and tries to pry it from them",
+			"keywords":["ropeweapon"]
+		},
+		{
+			"description":"[it] never tangles with itself, unfurling with a single flick",
+			"keywords":["ropeweapon"]
+		},
+		{
+			"description":"arrows fired from [it] fly true and preternaturally fast",
+			"keywords":["bow"]
+		},
+		{
+			"description":"when you notch an arrow and pullback the bowstring of this [item] the arrowhead glows green with caustic acid",
+			"keywords":["bow"]
+		},
+		{
+			"description":"[it] makes you far steadier on your feet",
+			"keywords":["bow"]
+		},
+		{
+			"description":"bullets fired from [it] fly true and preternaturally fast",
+			"keywords":["sling"]
+		},
+		{
+			"description":"when you spin [it] the bullet inside becomes charged with lightning",
+			"keywords":["sling"]
+		},
+		{
+			"description":"when you spin [it] the bullet inside ignites into a small bolt of flame",
+			"keywords":["sling"]
+		},
+		{
+			"description":"rounds fired from [it] are charged with arcane power and explode with aetheric force on impact",
+			"keywords":["smallarms","longarms"]
+		},
+		{
+			"description":"when drawn [it]s magazine and barrel permeates with frost, and its rounds explode in shards of vicious ice",
+			"keywords":["smallarms","longarms"]
+		},
+		{
+			"description":"[it] is imbued with an set of minor magical functions, charged simply by your voice",
+			"keywords":["wand"]
+		},
+		{
+			"description":"[it] is imbued with a powerful amplifying enchantment, magnifying your power",
+			"keywords":["wand","magicoffhand"]
+		},
+		{
+			"description":"[it] is imbued with am array of spells and functions, charged by a powerful recharging enchantment",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon balls of fire, lightning, or ice",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon balls of fire or ice",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon balls of fire or lightning",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon balls of lightning or ice",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon balls of fire",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon balls of lightning",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon balls of ice",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon bolts of arcane, divine, or necromantic",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon bolts of arcane or necromantic",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon bolts of arcane or divine",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon bolts of divine or necromantic",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon bolts of arcane",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon bolts of divine",
+			"keywords":["wand"]
+		},
+		{
+			"description":"with a command [it] can summon bolts of necromantic",
+			"keywords":["wand"]
+		},
+		{
+			"description":"[it] imbues its wielder with the power to breathe flame",
+			"keywords":["magicoffhand"]
+		},
+		{
+			"description":"[it] imbues its wielder with the power to breathe acid",
+			"keywords":["magicoffhand"]
+		},
+		{
+			"description":"[it] imbues its wielder with the power to breathe ice",
+			"keywords":["magicoffhand"]
+		},
+		{
+			"description":"[it] imbues its wielder with the power to breathe lightning",
+			"keywords":["magicoffhand"]
+		},
+		{
+			"description":"[it] contains a large reservoir of mana that you can easily tap into",
+			"keywords":["magicoffhand"]
+		},
+		{
+			"description":"[it] projects a protective circle around you",
+			"keywords":["magicoffhand","shield","armour","clothes","holysymbol","jewelery"]
+		},
+		{
+			"description":"you feel [it] rapidly knit and renew your body",
+			"keywords":["magicoffhand","shield","armour","clothes","holysymbol","jewelery"]
+		},
+		{
+			"description":"[it] seems to collect itself and protect at the points of impacts",
+			"keywords":["armour","clothes"]
+		},
+		{
+			"description":"[it] warns your of nearby dangers",
+			"keywords":["armour","clothes","jewelery","tool"]
+		},
+		{
+			"description":"[it] forms a protective barrior forms where strikes would hit you",
+			"keywords":["armour","clothes","jewelery"]
+		},
+		{
+			"description":"[it] makes you magically more alluring and enticing",
+			"keywords":["armour","clothes","jewelery"]
+		},
+		{
+			"description":"[it] magically camouflages amongst environments both urban and natural far more easily",
+			"keywords":["armour","clothes"]
+		},
+		{
+			"description":"[it] magically slows your aging",
+			"keywords":["magicoffhand","armour","clothes","holysymbol","jewelery"]
+		},
+		{
+			"description":"[it] makes you more alert of your surroundings",
+			"keywords":["magicoffhand","armour","clothes","holysymbol","jewelery"]
+		},
+		{
+			"description":"[it] infuses you with magic, making you tire far slower",
+			"keywords":["magicoffhand","tool","holysymbol","jewelery"]
+		},
+		{
+			"description":"[it] fills you with vitality",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] fills you with magical energies",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"with a command word you can use [it] to summon a swirling ball of frost to your hand",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] allows you to turn invisible on at your will",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] allows you to turn into fog on at your will",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"you can use [it] to summon globules of burning liquid into your hand",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] allows you to shoot lightning from your pointed finger",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		}
+	],
+	"quirks":
+	[
+		{
+			"description":"when blood is flicked or wiped from [it] it forms into words forming esoteric poems",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"[it] changes colour with every parry, and it sparks with each parry matching its colour",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","shield"]
+		},
+		{
+			"description":"while put away [it] points itself as best due north as it can from where-ever it is on your person",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"when smashed against basic objects, instead of destroying them [it] expells the power of the blow in a harmless shockwave",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"[it] makes the sound of a goat when smashed into things",
+			"keywords":["ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"[it] makes the sound of an eagle when swung",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"when spun [it] sings an elaborate ballad",
+			"keywords":["largeblade","ropeweapon","polearm","staff","magestaff","largehammer","sling"]
+		},
+		{
+			"description":"when held at attention [it] is practically weightless",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"the head of [it] is always magically clean",
+			"keywords":["shortblade","largeblade","dagger","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer"]
+		},
+		{
+			"description":"when kept on your person [it] behaves like a pet snake",
+			"keywords":["ropeweapon"]
+		},
+		{
+			"description":"while you have [it] on your person you always feel a faint breeze",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] lets out a faint howl with every arrow it launches",
+			"keywords":["bow"]
+		},
+		{
+			"description":"the arrows fired from [it] leave a trail of feathers that slowly turn to dust over several minutes",
+			"keywords":["bow"]
+		},
+		{
+			"description":"[it] superficially changes your eyes to appear like those of a cats",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] yells excitedly when spun",
+			"keywords":["largeblade","ropeweapon","polearm","staff","magestaff","largehammer","sling"]
+		},
+		{
+			"description":"spinning [it] imbues you with a booming voice",
+			"keywords":["largeblade","ropeweapon","polearm","staff","magestaff","largehammer","sling"]
+		},
+		{
+			"description":"spinning [it] imbues you with a booming voice",
+			"keywords":["largeblade","ropeweapon","polearm","staff","magestaff","largehammer","sling"]
+		},
+		{
+			"description":"when fired [it] roars with the spirit of a mighty dragon",
+			"keywords":["smallarms","longarms"]
+		},
+		{
+			"description":"when drawn [it]'s magazine is magically reloaded and full",
+			"keywords":["smallarms","longarms"]
+		},
+		{
+			"description":"[it] never fires against you when you wield it, whether accidentally or intentionally",
+			"keywords":["smallarms","longarms"]
+		},
+		{
+			"description":"[it] is covered in glowing runes that change which is glowing, seemingly at random",
+			"keywords":["wand","staff","magestaff","armour","clothes","holysymbol","magicoffhand","shield"]
+		},
+		{
+			"description":"[it] sighs whenever you use it",
+			"keywords":["wand","magestaff","holysymbol","magicoffhand"]
+		},
+		{
+			"description":"[it] curls and twists in some way whenever used, staying mostly straight and pointed yet managing to twist itself still",
+			"keywords":["wand"]
+		},
+		{
+			"description":"[it] talks, albeit in song lyrics from ancient songs and is rather upset people do not recognize its songs",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] appears to suck the colour from whatever it's touching",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it]'s always cool to the touch, and a slight fog billows from its surface",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] changes colour with your temperature and how hungry you are",
+			"keywords":["armour","clothes","jewelery"]
+		},
+		{
+			"description":"[it] hums a familiar yet never quite identifiable tune when on a march",
+			"keywords":["armour","clothes"]
+		},
+		{
+			"description":"wearing [it] seems to make you pale as if drained of blood",
+			"keywords":["armour","clothes","jewelery"]
+		},
+		{
+			"description":"wearing [it] seems to attract birds and other small woodland critters",
+			"keywords":["armour","clothes","jewelery"]
+		},
+		{
+			"description":"a signet on [it] shifts whenever you use it",
+			"keywords":["jewelery"]
+		},
+		{
+			"description":"[it] shifts colour whenever it is used",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"a gem on [it] changes whenever it is used",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] sings as you use it",
+			"keywords":["tool"]
+		},
+		{
+			"description":"[it] grumbles as you use it",
+			"keywords":["tool"]
+		},
+		{
+			"description":"[it] is excitedly enthusiastic as you use it",
+			"keywords":["tool"]
+		},
+		{
+			"description":"[it] changes colour over time",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] glows whenever you use it's powers",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool","shield","jewelery","holysymbol"]
+		},
+		{
+			"description":"[it] hums and crackles with lightning whenever you use it's powers",
+			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","bow","sling","tool","shield","jewelery","holysymbol"]
+		}
+	]
+}

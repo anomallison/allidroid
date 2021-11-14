@@ -34,18 +34,11 @@ var monster_names = JSON.parse(fs.readFileSync('name_given_list.json'));
 var monster_surnames = JSON.parse(fs.readFileSync('name_surname_list.json'));
 var title_prefixes = JSON.parse(fs.readFileSync('title_prefix_list.json'));
 var title_suffixes = JSON.parse(fs.readFileSync('title_suffix_list.json'));
-var monster_classes = JSON.parse(fs.readFileSync('class_list.json'));
-var monster_descriptors = JSON.parse(fs.readFileSync('boss_descriptors.json'));
 var boss_generator = JSON.parse(fs.readFileSync('bosses2.json'));
 
 //artifact files
-var item_nouns = JSON.parse(fs.readFileSync('item_list.json'));
-var item_suffixes = JSON.parse(fs.readFileSync('item_suffix_list.json'));
-var item_prefixes = JSON.parse(fs.readFileSync('item_prefix_list.json'));
-var item_sorting = JSON.parse(fs.readFileSync('item_sorting.json'));
-var item_slotlimits = JSON.parse(fs.readFileSync('item_slotlimits.json'));
-var item_artifactproperties = JSON.parse(fs.readFileSync('item_artifactproperties.json'));
 var item_artifactnames = JSON.parse(fs.readFileSync('item_artifactnames.json'));
+var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
@@ -421,7 +414,7 @@ function processCommand(receivedMessage)
 		}
     } else if (normalizedCommand == "generateartifact") 
 	{
-		output = artifactToString(generateArtifact(), true);
+		output = generateArtifact(arguments);
 		
 		if (output == null)
 		{
@@ -524,107 +517,23 @@ function gaygacha(coins)
 
 	let rarity = getGachaRarity(baserand);
 	let hero_base = generateMonster("gaycha",0,0,1);
-	let hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single; 
+	let hero_class = boss_generator.classes[Math.floor(Math.random()*boss_generator.classes.length)].class;
 	
 	let hero_name = generateBossName(false);
-	//let hero_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
 	
 	let fullreturnstring = "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
 	
 	return fullreturnstring;
 }
 
-//
-//
-//
 
-function gayartifact(coins, slot = null, favoureditems = null)
-{
-	while (slot == null || slot == "friend")
-	{
-		slot = item_slotlimits[Math.floor((Math.random()*item_slotlimits.length))].slot;
-	}
 
-	let baseitem = generateBasicItem(slot,favoureditems,["largehammer","polearm","ropeweapon","dualhammers","dualmixed","dualranged","smallhammer","bow","sling","smallarms","longarms","launchergun","musicinstrument","pokemon","friend","consumable"]);
-	
-	let propertypool = item_artifactproperties.filter(filterByList,baseitem.type);
-	propertypool = propertypool.concat(item_artifactproperties.filter(filterByList,"any"));
-	
-	
-	let enchantpool = [];
-	let quirkpool = [];
-	
-	for (let i = 0; i < propertypool.length; i++)
-	{
-		for (let y = 0; y < propertypool[i].enchantment.length; y++)
-		{
-			enchantpool.push(propertypool[i].enchantment[y]);
-		}
-		for (let z = 0; z < propertypool[i].quirk.length; z++)
-		{
-			quirkpool.push(propertypool[i].quirk[z]);
-		}
-	}
-	
-	let propertycount = Math.floor((Math.random()*(1.25+coins*0.01))+(Math.random()*1.25+coins*0.01)+(Math.random()*0.75+coins*0.01)+1+coins*0.01);
-	
-	let properties = [];
-	let baserand  = Math.random();
-	let random_int = 0;
-	let quirkchance = 0.22 + (0.05*propertycount);
-	
-	
-	for (let i  = 0; i < propertycount; i++)
-	{
-		baserand  = Math.random();
-		if (baserand < (quirkchance) && quirkpool.length > 0) // quirks
-		{
-			random_int = Math.floor((Math.random()*quirkpool.length));
-			properties.push(quirkpool[random_int]);
-			quirkpool.splice(random_int,1);
-			quirkchance = quirkchance/3;
-		}
-		else if (enchantpool.length > 0) // enchantments
-		{
-			random_int = Math.floor((Math.random()*enchantpool.length));
-			properties.splice(0,0,enchantpool[random_int]);
-			enchantpool.splice(random_int,1);
-		}
-		else
-		{
-			console.log("Unable to generate artifact property?");
-		}
-	}
-	let name = ""
-	
-	baserand  = Math.random();
-	if (baserand < 0.06) // single first word name
-	{
-		name = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))];
-	}
-	else if (baserand < 0.12) // single last word name
-	{
-		name = "the " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
-	}
-	else
-	{
-		name = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))] + " " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
-	}
-	
-	return {
-				name:name,
-				baseitem:baseitem, //item.item, .type, .number
-				properties:properties,
-				cursed:false,
-			};
-}
+//
+//
+//
 
 var MAX_COIN_PERCENTAGE = 0.20;
 var MAX_COINS = 100;
-
-//
-//
-//
 
 function shakethejar()
 {
@@ -658,30 +567,27 @@ function shakethejar()
 	currentgay -= randomcoins;
 	
 	let hero = gaygacha(randomcoins);
-	let artifact = gayartifact(randomcoins);
+	let artifact = "";
+	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"];
+	let baseitem = generateItemFromTypes(baseitemtypes);
 	
-	let fullstring = hero + " and their artifact " + artifact.name + ", the " + item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + artifact.baseitem.item;
-	
-	/*
-	let magical_properties = ""
-	
-	for (let i = 0; i < artifact.properties.length; i++)
+	baserand  = Math.random();
+	if (baserand < 0.06) // single first word name
 	{
-		if ((i+2) == artifact.properties.length)
-		{
-		magical_properties += artifact.properties[i] + ", and ";
-		} 
-		else if ((i+1) == artifact.properties.length)
-		{
-		magical_properties += artifact.properties[i] + ".";
-		} 
-		else
-		{
-		magical_properties += artifact.properties[i] + ", ";
-		}
+		artifact = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))];
 	}
-	fullstring = "\n" + grammarCapitalFirstLetter(magical_properties);
-	*/
+	else if (baserand < 0.12) // single last word name
+	{
+		artifact = "the " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
+	}
+	else
+	{
+		artifact = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))] + " " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
+	}
+	
+	
+	let fullstring = hero + " and their artifact " + artifact + ", the " + item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + baseitem.item;
+	
 	let shakestring = ""
 	if (shaketime > 2)
 	{
@@ -2009,7 +1915,7 @@ function playGacha(amount)
 	let baserand = Math.random() - ((amount-1)/160);
 	let rarity = getGachaRarity(baserand);
 	let hero_base = generateMonster("gacha",2,1,1);
-	let hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single; 
+	let hero_class = boss_generator.classes[Math.floor(Math.random()*boss_generator.classes.length)].class;
 	
 	let hero_name = generateBossName(false);
 	//let hero_pronouns = pronouns[Math.floor(Math.random()*pronouns.length)]; 
@@ -2021,7 +1927,7 @@ function playGacha(amount)
 		baserand = Math.random() - ((amount-1)/160);
 		rarity = getGachaRarity(baserand);
 		hero_base = generateMonster("gacha",2,1,1);
-		hero_class = monster_classes[Math.floor(Math.random()*monster_classes.length)].single;
+		hero_class = boss_generator.classes[Math.floor(Math.random()*boss_generator.classes.length)].class;
 		hero_name = generateBossName(false);
 		fullreturnstring += "\n[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
 	}
@@ -2100,316 +2006,13 @@ function getItemList(object)
 	
 	for (let i = 0; i < object.synonyms.length; i++)
 	{
-		temparr.push({item:object.synonyms[i], type:object.type, number: object.number});
+		temparr.push({item:object.synonyms[i], type:object.type});
 	}
 	
-	temparr.push({item:object.name, type:object.type, number: object.number});
+	temparr.push({item:object.name, type:object.type});
 	
 	return temparr;
 }
-
-
-//
-// Generate an artifact
-//
-
-
-var GENERATE_ARTIFACT_DISALLOWEDTYPES = ["pokemon","friend","musicinstrument","consumable"];
-
-function generateArtifact(slot = null, favoureditems = null)
-{
-	while (slot == null || slot == "friend")
-	{
-		slot = item_slotlimits[Math.floor((Math.random()*item_slotlimits.length))].slot;
-	}
-
-	let baseitem = generateBasicItem(slot,favoureditems,GENERATE_ARTIFACT_DISALLOWEDTYPES);
-	
-	let propertypool = item_artifactproperties.filter(filterByList,baseitem.type);
-	propertypool = propertypool.concat(item_artifactproperties.filter(filterByList,"any"));
-	
-	
-	let cursepool = [];
-	let enchantpool = [];
-	let quirkpool = [];
-	
-	for (let i = 0; i < propertypool.length; i++)
-	{
-		for (let x = 0; x < propertypool[i].curse.length; x++)
-		{
-			cursepool.push(propertypool[i].curse[x]);
-		}
-		for (let y = 0; y < propertypool[i].enchantment.length; y++)
-		{
-			enchantpool.push(propertypool[i].enchantment[y]);
-		}
-		for (let z = 0; z < propertypool[i].quirk.length; z++)
-		{
-			quirkpool.push(propertypool[i].quirk[z]);
-		}
-	}
-	
-	let propertycount = Math.floor((Math.random()*1.25)+(Math.random()*1.25)+(Math.random()*0.75)+1);
-	
-	let properties = [];
-	let cursecount = 0;
-	let baserand  = Math.random();
-	let random_int = 0;
-	let cursechance = 0.16 + (0.03*propertycount);
-	let quirkchance = 0.20 + (0.04*propertycount);
-	
-	
-	for (let i  = 0; i < propertycount; i++)
-	{
-		baserand  = Math.random();
-		if (baserand < cursechance && cursepool.length > 0) // curses
-		{
-			random_int = [Math.floor((Math.random()*cursepool.length))]
-			properties.splice(0,0,cursepool[random_int])
-			cursepool.splice(random_int,1);
-			cursecount++;
-			cursechance = cursechance/3;
-		} 
-		else if (baserand < (cursechance + quirkchance) && quirkpool.length > 0) // quirks
-		{
-			random_int = [Math.floor((Math.random()*quirkpool.length))]
-			properties.push(quirkpool[random_int])
-			quirkpool.splice(random_int,1);
-			quirkchance = quirkchance/3;
-		}
-		else if (enchantpool.length > 0) // enchantments
-		{
-			random_int = [Math.floor((Math.random()*enchantpool.length))]
-			properties.splice(cursecount,0,enchantpool[random_int])
-			enchantpool.splice(random_int,1);
-		}
-		else
-		{
-			console.log("Unable to generate artifact property?")
-		}
-	}
-	let name = ""
-	
-	baserand  = Math.random();
-	if (baserand < 0.1) // single first word name
-	{
-		name = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))]
-	}
-	else if (baserand < 0.2) // single last word name
-	{
-		name = "the " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))]
-	}
-	else
-	{
-		name = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))] + " " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))]
-	}
-	
-	return {
-				name:name,
-				baseitem:baseitem, //item.item, .type, .number
-				properties:properties,
-				cursed:(cursecount > 0)
-			};
-}
-
-
-//
-//
-
-function artifactToString(artifact, full = false)
-{
-	let output_string = artifact.name + ", the ";
-	if (full)
-	{
-		output_string = grammarCapitalFirstLetter(artifact.name) + ", the ";
-	}
-	
-	if (artifact.cursed)
-	{
-		output_string +=  item_artifactnames.cursed[Math.floor((Math.random()*item_artifactnames.cursed.length))] + " ";
-	}
-	else
-	{
-		output_string += item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " ";
-	}
-	output_string += artifact.baseitem.item;
-	
-	if (full)
-	{
-		let magical_properties = ""
-	
-		for (let i = 0; i < artifact.properties.length; i++)
-		{
-			if ((i+2) == artifact.properties.length)
-			{
-			magical_properties += artifact.properties[i] + ", and ";
-			} 
-			else if ((i+1) == artifact.properties.length)
-			{
-			magical_properties += artifact.properties[i] + ".";
-			} 
-			else
-			{
-			magical_properties += artifact.properties[i] + ", ";
-			}
-		}
-		output_string += "\n" + grammarCapitalFirstLetter(magical_properties);
-	}
-	
-	return output_string
-}
-
-//
-// Generate a basic item
-
-function generateBasicItem(slot,favoureditems,disallowedtypes = null)
-{
-	let itempool = item_nouns.slice();
-	let fullpool = [];
-	
-	if (favoureditems != null && favoureditems.length > 0)
-	{
-		for (let i = 0; i < favoureditems.length; i++)
-		{
-			itempool = itempool.concat(item_nouns.filter(filterByList,favoureditems[i]));
-		}
-	}
-	itempool = itempool.filter(filterBySlot,slot);
-	
-	if (disallowedtypes != null)
-	{
-			for (let i = 0; i < disallowedtypes.length; i++)
-			{
-				itempool = itempool.filter(removeByType,disallowedtypes[i]);
-			}
-	}
-	
-	for (let i = 0; i < itempool.length; i++)
-	{
-		fullpool = fullpool.concat(getItemList(itempool[i]));
-	}
-	
-	return fullpool[Math.floor((Math.random()*fullpool.length))];
-}
-
-function generateMagicItem(slot,favoureditems)
-{
-	let baseitem = generateBasicItem(slot,favoureditems);
-	let tempprefix = getItemAffix(baseitem.type,AFFIX_PREFIX);
-	let tempsuffix = getItemAffix(baseitem.type,AFFIX_SUFFIX,baseitem.number);
-	
-	return {
-				item:tempitem.item,
-				prefix:tempprefix,
-				suffix:tempsuffix,
-				type:tempitem.type
-			};
-}
-
-//
-// get a random part description for a part
-//
-
-function getPartDesciptor(part)
-{
-	descriptorlist = monster_descriptors.filter(filterByList,part);
-	if (descriptorlist.length < 1)
-	{
-		return null;
-	}
-	descriptor = descriptorlist[Math.floor(Math.random()*(descriptorlist.length))];
-	
-	return descriptor.text;
-}
-
-//
-// takes a type and an affix and finds an appropriate affixture
-//
-
-var AFFIX_PREFIX = 0;
-var AFFIX_SUFFIX = 1;
-
-function getItemAffix(itemtype,affix = AFFIX_PREFIX,number = null)
-{
-	if (itemtype == null)
-	{
-		return null;
-	}
-	let tempaffixlist = [];
-	
-	if (affix == AFFIX_PREFIX)
-	{
-		tempaffixlist = item_prefixes.filter(filterByList,itemtype);
-	} 
-	else if (affix == AFFIX_SUFFIX)
-	{
-		tempaffixlist = item_suffixes.filter(filterByList,itemtype);
-	} 
-	
-	if (tempaffixlist.length < 1)
-	{
-		if (affix == AFFIX_PREFIX)
-		{
-			console.log("no prefixes for itemtype: " + itemtype);
-		}
-		else
-		{
-			console.log("no suffixes for itemtype: " + itemtype);
-		}
-		return null;
-	}
-	let fullaffixlist = [];
-	for (let i = 0; i < tempaffixlist.length; i++)
-	{
-		if (number == 2) //ie if an item is a pural format, like pantaloons, pauldrons, glasses, etc
-		{
-			fullaffixlist = fullaffixlist.concat(tempaffixlist[i].synonyms2);
-		}
-		else
-		{
-			fullaffixlist = fullaffixlist.concat(getActualList(tempaffixlist[i]));
-		}
-	}
-	
-	return fullaffixlist[Math.floor(Math.random()*(fullaffixlist.length))];
-}
-
-//
-// sort an array of items by type
-//
-
-function sortItemArray(arr)
-{
-	let temparr = arr.slice();
-	let sortedarr = [];
-	
-	for (let itemtype in item_sorting)
-	{
-		for (let i = 0; i < temparr.length; i++)
-		{
-			if (temparr[i].type == item_sorting[itemtype])
-			{
-				sortedarr.push(temparr[i]);
-				temparr.splice(i,1);
-				i--;
-			}
-		}
-	}
-	
-	if (temparr.length > 0)
-	{
-		let debugstring = "";
-		for (let i = 0; i < temparr.length; i++)
-		{
-			debugstring += temparr[i].type + ", ";
-		}
-		console.log("WARNING: remaining types after sorting: " + debugstring)
-		sortedarr = sortedarr.concat(temparr);
-	}
-	
-	return sortedarr;
-}
-
 
 
 
@@ -3081,7 +2684,7 @@ function getRoomTypeByKeywords(keywords)
 function generateRoom(extrakeywords = null)
 {
 	let roomtype = room_gen.types[Math.floor(Math.random()*room_gen.types.length)];
-	let roomsize = randomNumberForText("2-10");
+	let roomsize = randomNumberForText("3-15");
 	let roomname;
 	let roomsizename = getRoomSizeName(roomsize);
 	let roomlevel = roomtype.level + roomsizename.level;
@@ -3154,7 +2757,10 @@ function generateRoom(extrakeywords = null)
 	let roomnamekeywords = [];
 	for (i in roomdescriptors)
 	{
-		roomnamekeywords = roomnamekeywords.concat(roomdescriptors[i].keywords);
+		for (let j = 0; j < roomdescriptors[i].size; j++)
+		{
+			roomnamekeywords = roomnamekeywords.concat(roomdescriptors[i].keywords);
+		}
 	}
 	
 	roomname = getRoomTypeByKeywords(roomnamekeywords);
@@ -3162,61 +2768,63 @@ function generateRoom(extrakeywords = null)
 	
 	let room_string = "**" + grammarCapitalFirstLetter(roomname.name) + " " + roomsizename.name + "**\n";
 	
+	let room_description_string = "";
+	
 	for (let i = 0; i < roomdescriptors.length; i++)
 	{
-		room_string += roomdescriptors[i].description;
+		room_description_string += roomdescriptors[i].description;
 		if (i < roomdescriptors.length-2)
 		{
-			room_string += ", ";
+			room_description_string += ", ";
 		}
 		else if (i == roomdescriptors.length-2)
 		{
-			room_string += " and ";
+			room_description_string += " and ";
 		}
 		
-		let position = room_string.indexOf("\[");
+		let position = room_description_string.indexOf("\[");
 		let endposition = -1;
 		let roomsubstr = "";
 		
 		while (position != -1)
 		{
-			endposition = room_string.indexOf("\]");
-			roomsubstr = room_string.substring(position+1,endposition);
+			endposition = room_description_string.indexOf("\]");
+			roomsubstr = room_description_string.substring(position+1,endposition);
 			substr_number = randomNumberForText(roomsubstr);
 			if (roomsubstr.substr(0,5) == "size>")
 			{
 				let words = roomsubstr.split(" ");
 				let comparison = parseInt(words[0].substr(5));
 				if (roomdescriptors[i].size > comparison)
-					room_string = room_string.substr(0,position) + words[1] + room_string.substr(endposition+1);
+					room_description_string = room_description_string.substr(0,position) + words[1] + room_description_string.substr(endposition+1);
 				else
-					room_string = room_string.substr(0,position) + words[2] + room_string.substr(endposition+1);
+					room_description_string = room_description_string.substr(0,position) + words[2] + room_description_string.substr(endposition+1);
 			}
 			else if (roomsubstr.substr(0,5) == "size<")
 			{
 				let words = roomsubstr.split(" ");
 				let comparison = parseInt(words[0].substr(5));
 				if (roomdescriptors[i].size < comparison)
-					room_string = room_string.substr(0,position) + words[1] + room_string.substr(endposition+1);
+					room_description_string = room_description_string.substr(0,position) + words[1] + room_description_string.substr(endposition+1);
 				else
-					room_string = room_string.substr(0,position) + words[2] + room_string.substr(endposition+1);
+					room_description_string = room_description_string.substr(0,position) + words[2] + room_description_string.substr(endposition+1);
 			}
 			else if (roomsubstr == "size")
 			{
-				room_string = room_string.substr(0,position) + roomdescriptors[i].size + room_string.substr(endposition+1);
+				room_description_string = room_description_string.substr(0,position) + roomdescriptors[i].size + room_description_string.substr(endposition+1);
 			}
 			else if (roomsubstr == "monstersingle")
 			{
 				let tempmonster = getRandomMonster("monster");
-				room_string = room_string.substr(0,position) + grammarAorAn(tempmonster.single.charAt(0)) + " " + tempmonster.single + room_string.substr(endposition+1);
+				room_description_string = room_description_string.substr(0,position) + grammarAorAn(tempmonster.single.charAt(0)) + " " + tempmonster.single + room_description_string.substr(endposition+1);
 			}
 			else if (roomsubstr == "monsterplural")
 			{
-				room_string = room_string.substr(0,position) + getRandomMonster("monster").plural + room_string.substr(endposition+1);
+				room_description_string = room_description_string.substr(0,position) + getRandomMonster("monster").plural + room_description_string.substr(endposition+1);
 			}
 			else if (roomsubstr == "species")
 			{
-				room_string = room_string.substr(0,position) + getRandomMonster("species").single + room_string.substr(endposition+1);
+				room_description_string = room_description_string.substr(0,position) + getRandomMonster("species").single + room_description_string.substr(endposition+1);
 			}
 			else if (roomsubstr.substr(0,4) == "item")
 			{
@@ -3243,24 +2851,74 @@ function generateRoom(extrakeywords = null)
 				
 				let tempitem = generateItemFromTypes(types,neededlists,disallowedlists);
 				if (tempitem != null)
-					room_string = room_string.substr(0,position) + grammarAorAn(tempitem.item.charAt(0)) + " " + tempitem.item + room_string.substr(endposition+1);
+					room_description_string = room_description_string.substr(0,position) + grammarAorAn(tempitem.item.charAt(0)) + " " + tempitem.item + room_description_string.substr(endposition+1);
 				else
 				{
 					console.log("warning: null item found using substring: " + roomsubstr);
-					room_string = room_string.substr(0,position) + room_string.substr(endposition+1);
+					room_description_string = room_description_string.substr(0,position) + room_description_string.substr(endposition+1);
 				}
 			}
 			else if (substr_number != false)
 			{
-				room_string = room_string.substr(0,position) + substr_number.toString() + room_string.substr(endposition+1);
+				room_description_string = room_description_string.substr(0,position) + substr_number.toString() + room_description_string.substr(endposition+1);
 			}
 			else
 			{
-				room_string = room_string.substr(0,position) + room_string.substr(endposition+1);
+				room_description_string = room_description_string.substr(0,position) + room_description_string.substr(endposition+1);
 			}
-			position = room_string.indexOf("\[");
+			position = room_description_string.indexOf("\[");
 		}
 		
+	}
+	room_string += grammarCapitalFirstLetter(room_description_string) + ".\n";
+	//doorways
+	
+	let roomdoorcount = Math.max(Math.floor((Math.random()*5)-2),0)+1;
+	let directions = ["north","east","south","west"];
+	let room_doorways_strings = "";
+	for(let i = 0; i < roomdoorcount; i++)
+	{
+		random_int = Math.floor(Math.random()*directions.length);
+		let currentdirection = directions[random_int];
+		directions.splice(random_int,1);
+		
+		room_doorways_strings += room_gen.doorways[Math.floor(Math.random()*room_gen.doorways.length)];
+		if (i < roomdoorcount-2)
+		{
+			room_doorways_strings += ", ";
+		}
+		else if (i == roomdoorcount-2)
+		{
+			room_doorways_strings += " and ";
+		}
+		
+		let position = room_doorways_strings.indexOf("\[");
+		let endposition = -1;
+		let roomsubstr = "";
+		
+		while (position != -1)
+		{
+			endposition = room_doorways_strings.indexOf("\]");
+			roomsubstr = room_doorways_strings.substring(position+1,endposition);
+			substr_number = randomNumberForText(roomsubstr);
+			if (roomsubstr == "direction")
+			{
+				room_doorways_strings = room_doorways_strings.substr(0,position) + currentdirection + room_doorways_strings.substr(endposition+1);
+			}
+			else if (substr_number != false)
+			{
+				room_doorways_strings = room_doorways_strings.substr(0,position) + substr_number.toString() + room_doorways_strings.substr(endposition+1);
+			}
+			else
+			{
+				room_doorways_strings = room_doorways_strings.substr(0,position) + room_doorways_strings.substr(endposition+1);
+			}
+			position = room_doorways_strings.indexOf("\[");
+		}
+	}
+	if (roomdoorcount > 0)
+	{
+		room_string += grammarCapitalFirstLetter(room_doorways_strings) + ".\n";
 	}
 	
 	return room_string;
@@ -3550,6 +3208,155 @@ function generateQuest(minlevel = -1)
 }
 
 
+//
+// new 
+// generateArtifact
+//
+//
+
+function filterByKeyword(artifactproperty)
+{
+	for (i in artifactproperty.keywords)
+	{
+		if (this == artifactproperty.keywords[i])
+			return true;
+	}
+	return false;
+}
+
+
+function generateArtifact(arguments)
+{
+	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"];
+	let baseitem = generateItemFromTypes(baseitemtypes);
+	
+	let tempcurselist = artifact_gen.curses.filter(filterByKeyword,baseitem.type);
+	let tempenchantlist = artifact_gen.enchantments.filter(filterByKeyword,baseitem.type);
+	let tempquirklist = artifact_gen.quirks.filter(filterByKeyword,baseitem.type);
+	
+	let cursecount = Math.floor(Math.random()*3)-1;
+	let enchantcount = Math.floor(Math.random()*7)-3;
+	let quirkcount = Math.floor(Math.random()*3)-1;
+	
+	while (Math.max(cursecount,0)+Math.max(enchantcount,0)+Math.max(quirkcount,0) < 2)
+	{
+		cursecount = Math.floor(Math.random()*3)-1;
+		enchantcount = Math.floor(Math.random()*7)-3;
+		quirkcount = Math.floor(Math.random()*3)-1;
+	}
+	
+	let effects = [];
+	
+	let random_int = Math.floor(Math.random()*tempcurselist.length);
+	for (let i = 0; i < cursecount; i++)
+	{
+		effects.push(tempcurselist[random_int]);
+		tempcurselist.splice(random_int,1);
+		if (tempenchantlist.length == 0)
+			i += cursecount;
+		else
+			random_int = Math.floor(Math.random()*tempcurselist.length);
+	}
+	
+	random_int = Math.floor(Math.random()*tempenchantlist.length);
+	for (let i = 0; i < enchantcount; i++)
+	{
+		effects.push(tempenchantlist[random_int]);
+		tempenchantlist.splice(random_int,1);
+		if (tempenchantlist.length == 0)
+			i += enchantcount;
+		else
+			random_int = Math.floor(Math.random()*tempenchantlist.length);
+	}
+	
+	random_int = Math.floor(Math.random()*tempquirklist.length);
+	for (let i = 0; i < quirkcount; i++)
+	{
+		effects.push(tempquirklist[random_int]);
+		tempquirklist.splice(random_int,1);
+		if (tempquirklist.length == 0)
+			i += quirkcount;
+		else
+			random_int = Math.floor(Math.random()*tempquirklist.length);
+	}
+	
+	artifact_string = "";
+	
+	let baserand  = Math.random();
+	if (baserand < 0.1) // single first word name
+	{
+		artifact_string = "The " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))] + "\n";
+	}
+	else if (baserand < 0.2) // single last word name
+	{
+		artifact_string = "The " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))] + "\n";
+	}
+	else
+	{
+		artifact_string = "The " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))] + " " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))] + "\n";
+	}
+	
+	let artifact_effects_string = "";
+	
+	for (let i = 0; i < effects.length; i++)
+	{
+		artifact_effects_string += effects[i].description;
+		if (i < effects.length-2)
+		{
+			artifact_effects_string += ", ";
+		}
+		else if (i == effects.length-2)
+		{
+			artifact_effects_string += " and ";
+		}
+	}
+	
+	
+	let position = artifact_effects_string.indexOf("\[");
+	let endposition = -1;
+	let artifactsubstr = "";
+	let itnouned = false;
+	
+	while (position != -1)
+	{
+		endposition = artifact_effects_string.indexOf("\]");
+		artifactsubstr = artifact_effects_string.substring(position+1,endposition);
+		substr_number = randomNumberForText(artifactsubstr);
+		if (artifactsubstr == "it")
+		{
+			if (!itnouned)
+			{
+				artifact_effects_string = artifact_effects_string.substr(0,position) + "this " + baseitem.item + artifact_effects_string.substr(endposition+1);
+				itnouned = true;
+			}
+			else
+			{
+				artifact_effects_string = artifact_effects_string.substr(0,position) + "it" + artifact_effects_string.substr(endposition+1);
+			}
+		}
+		else if (substr_number != false)
+		{
+			artifact_effects_string = artifact_effects_string.substr(0,position) + substr_number.toString() + artifact_effects_string.substr(endposition+1);
+		}
+		else
+		{
+			artifact_effects_string = artifact_effects_string.substr(0,position) + artifact_effects_string.substr(endposition+1);
+		}
+		position = artifact_effects_string.indexOf("\[");
+	}
+	
+	
+	artifact_string += grammarCapitalFirstLetter(artifact_effects_string) + ".";
+	
+	return artifact_string;
+}
+
+
+//
+//
+// one shot RPG generator
+//
+//
 
 function generateOneShotRPG(length)
 {

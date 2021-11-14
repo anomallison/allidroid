@@ -279,6 +279,10 @@
 			"keywords": ["martial","martial","loadout","item","friend"]
 		},
 		{
+			"class": "street samurai",
+			"keywords": ["cyberpunk","cyberpunk","firearm","loadout","item","friend"]
+		},
+		{
 			"class": "pokemon trainer",
 			"keywords": ["pokemon","pokemon","item","pokemon","friend"]
 		},
@@ -364,8 +368,13 @@
 			"priority": 4
 		},
 		{
+			"keywords": ["cyberpunk","loadout","firearm"],
+			"description": "[subject] [pluralnoun use uses] [item longarms +cyberpunk +modern], [item smallarms +cyberpunk +modern] and [item shortblade] as [possessivesubject] primary loadout",
+			"priority": 1
+		},
+		{
 			"keywords": ["cyberpunk","loadout"],
-			"description": "[subject] [pluralnoun use uses] [item longarms +cyberpunk +modern], [item longarms +cyberpunk +modern] and [item shortblade +cyberpunk] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item largeblade], [item smallarms +cyberpunk +modern] and [item shortblade] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{
