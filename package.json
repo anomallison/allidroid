@@ -4,13 +4,15 @@
   "description": "a bot for discord by allison galloway",
   "main": "allidroid.js",
   "dependencies": {
-    "discord.js": "^11.4.2"
+    "canvas": "^2.8.0",
+    "discord.js": "^11.4.2",
+    "merge-images": "^2.0.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "!monster",
-	"start": "nohup node allidroid.js > log.txt 2>&1 & echo $! > pid.txt",
-	"stop": "kill $(tail pid.txt)"
+    "start": "nohup node allidroid.js > log.txt 2>&1 & echo $! > pid.txt",
+    "stop": "kill $(tail pid.txt)"
   },
   "author": "allison galloway",
   "license": "ISC"

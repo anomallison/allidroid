@@ -1,7 +1,7 @@
 ////////
 //
 // written by AnomAllison
-// last updated 11/11/2019
+// last updated 15/11/2021
 //
 // I hope Allidroid can bring people some humour and entertainment
 //
@@ -9,6 +9,9 @@
 
 const Discord = require('discord.js')
 const client = new Discord.Client()
+
+const mergeImages = require('merge-images');
+const { Canvas, Image } = require('canvas');
 
 var fs = require("fs");
 
@@ -468,6 +471,9 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
+    } else if (normalizedCommand == "generatemap") 
+	{
+		generateMap(receivedMessage.channel,arguments);
     } else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -3403,6 +3409,434 @@ function generateArtifact(arguments)
 	artifact_string += grammarCapitalFirstLetter(artifact_effects_string) + ".";
 	
 	return artifact_string;
+}
+
+//
+//
+// base64 to binary file function
+//
+//
+
+function base64data(uri)
+{
+	return uri.split(';base64,').pop();
+}
+
+// returns a 1D array that is a noise map, height x width size
+function noiseMap(height, width)
+{
+	let map = [];
+	let previousx = 0.33;
+	let previousy = 0.33;
+	let dx = 0;
+	let dy = 0;
+	let val = 0;
+	for (let y = 0; y < height; y++)
+	{
+		for (let x  = 0; x < width; x++)
+		{
+			if (Math.random() < 0.5)
+				dx = Math.random()*0.25;
+			else
+				dx = Math.random()*-0.25;
+			if (Math.random() < 0.5)
+				dy = Math.random()*0.25;
+			else
+				dy = Math.random()*-0.25;
+			val = (previousx + previousy)/2 + (dy + dx)/2;
+			if (val < 0)
+				val = 0;
+			else if (val > 1)
+				val = 1;
+			
+			map.push(val);
+			previousx = val;
+			if (x+(y-1*width) > -1)
+				previousy = map[x+(y-1*width)];
+		}
+		previousx = 0.33;
+	}
+	
+	return map;
+}
+
+
+//
+//
+// map generator function
+//
+//
+
+let LAND_LEVEL = 0.3;
+let HILL_LEVEL = 0.55;
+let MOUNTAIN_LEVEL = 0.725;
+
+let PLAINS_LEVEL = 0.2;
+let GRASS_LEVEL = 0.425
+let TUNDRA_LEVEL = 0.7
+let SNOW_LEVEL = 0.85
+
+let FOREST_LEVEL = 0.575;
+let JUNGLE_LEVEL = 0.85;
+
+let MAX_MAP_HEIGHT = 100;
+let MAX_MAP_WIDTH = 150;
+
+let SMOOTHING_ITERATIONS = 3;
+let LAND_EROSION = 0.67;
+
+function generateMap(channel, arguments)
+{
+	let MAP_HEIGHT = 20;
+	let MAP_WIDTH = 30;
+	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 7);
+	if (arguments != null)
+	{
+		if (!isNaN(arguments[1]))
+			MAP_HEIGHT = arguments[1];
+		if (!isNaN(arguments[0]))
+			MAP_WIDTH = arguments[0];
+		if (!isNaN(arguments[2]))
+			LANDMASSES = arguments[2];
+	}
+	
+	if (MAP_WIDTH < 1)
+		return null;
+	if (MAP_HEIGHT < 1)
+		return null;
+	
+	MAP_HEIGHT = Math.min(MAP_HEIGHT,MAX_MAP_HEIGHT);
+	MAP_WIDTH = Math.min(MAP_WIDTH,MAX_MAP_WIDTH);
+	
+	let heightmap = noiseMap(MAP_HEIGHT,MAP_WIDTH);
+	let terrainmap = noiseMap(MAP_HEIGHT,MAP_WIDTH);
+	
+	let premapmap = [];
+	//initialize the premapmap
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			premapmap.push({ sealevel: "water", terrain: "grass" });
+		}
+	}
+	
+	//do landmasses
+	
+	for (let i = 0; i < LANDMASSES; i++)
+	{
+		let randomwidth = Math.floor(Math.random()*Math.ceil(MAP_WIDTH*0.58))+8;
+		let randomheight = Math.floor(Math.random()*Math.ceil(MAP_HEIGHT*0.58))+8;
+		let randomx = Math.floor(Math.random()*(MAP_WIDTH - randomwidth-4))+2;
+		let randomy = Math.floor(Math.random()*(MAP_HEIGHT - randomheight-4))+2;
+		
+		let midpointx = Math.floor(randomwidth/2);
+		let midpointy = Math.floor(randomheight/2);
+		
+		for (let x = randomx; x < randomwidth+randomx; x++)
+		{
+			for (let y = randomy; y < randomheight+randomy; y++)
+			{
+				let probx = Math.abs(1 - ((x - randomx) / midpointx));
+				let proby = Math.abs(1 - ((y - randomy) / midpointy));
+				let probability = probx * proby * LAND_EROSION;
+				if (Math.random() < probability)
+				{
+					if (x+(y*MAP_WIDTH) > -1 && x+(y*MAP_WIDTH) < MAP_HEIGHT*MAP_WIDTH)
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "land";
+				}
+			}
+		}
+	}
+	
+	for (let i = 0; i < SMOOTHING_ITERATIONS; i++)
+	{
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				let waterCount = 0;
+				if (x+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y+1)*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+				if (x+((y-1)*MAP_WIDTH) > -1 && premapmap[x+((y-1)*MAP_WIDTH)].sealevel == "water")
+					waterCount++;
+				if (x%2 == 0)
+				{
+					if ((x+1)+(y*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+(y*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+					if ((x+1)+((y-1)*MAP_WIDTH) > -1 && (x+1)+((y-1)*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+((y-1)*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+					if ((x-1)+(y*MAP_WIDTH) > -1 && premapmap[(x-1)+(y*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+					if ((x-1)+((y-1)*MAP_WIDTH) > -1 && premapmap[(x-1)+((y-1)*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+				}
+				else
+				{
+					if ((x+1)+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+((y+1)*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+					if ((x+1)+(y*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+(y*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+					if ((x-1)+((y+1)*MAP_WIDTH) > -1 && (x-1)+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[(x-1)+((y+1)*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+					if ((x-1)+(y*MAP_WIDTH) > -1 && premapmap[(x-1)+(y*MAP_WIDTH)].sealevel == "water")
+						waterCount++;
+				}
+				
+				if (waterCount == 6)
+				{
+					premapmap[x+(y*MAP_WIDTH)].sealevel = "water";
+				}
+				else if (waterCount < 3 && premapmap[x+(y*MAP_WIDTH)].sealevel == "water")
+				{
+					premapmap[x+(y*MAP_WIDTH)].sealevel = "land";
+				}
+			}
+		}
+	}
+	
+	
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			if (premapmap[x+(y*MAP_WIDTH)].sealevel == "land")
+			{
+				if (heightmap[x+(y*MAP_WIDTH)] > MOUNTAIN_LEVEL)
+				{
+					if (terrainmap[x+(y*MAP_WIDTH)] > SNOW_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "mountain";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "snow";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > TUNDRA_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "mountain";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "tundra";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > GRASS_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "mountain";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "grass";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > PLAINS_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "mountain";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "plains";
+					}
+					else
+					{
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "mountain";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "desert";
+					}
+				}
+				else if (heightmap[x+(y*MAP_WIDTH)] > HILL_LEVEL)
+				{
+					if (terrainmap[x+(y*MAP_WIDTH)] > SNOW_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "hill";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "snow";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > TUNDRA_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "hill";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "tundra";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > GRASS_LEVEL)
+					{
+						
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "hill";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "grass";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > PLAINS_LEVEL)
+					{
+						
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "hill";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "plains";
+					}
+					else
+					{
+						
+						premapmap[x+(y*MAP_WIDTH)].sealevel = "hill";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "desert";
+					}
+				}
+				else if (heightmap[x+(y*MAP_WIDTH)] > LAND_LEVEL)
+				{
+					if (terrainmap[x+(y*MAP_WIDTH)] > SNOW_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].terrain = "snow";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > TUNDRA_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].terrain = "tundra";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > GRASS_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].terrain = "grass";
+					}
+					else if (terrainmap[x+(y*MAP_WIDTH)] > PLAINS_LEVEL)
+					{
+						premapmap[x+(y*MAP_WIDTH)].terrain = "plains";
+					}
+					else
+					{
+						premapmap[x+(y*MAP_WIDTH)].terrain = "desert";
+					}
+				}
+			}
+		}
+	}
+	
+	let mapmap = [];
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			let xpos = (12*x);
+			let ypos = (16*y+((x%2)*8));
+			let trees = true;
+			if (premapmap[x+(y*MAP_WIDTH)].sealevel == "mountain")
+			{
+				if (premapmap[x+(y*MAP_WIDTH)].terrain == "snow")
+				{
+					mapmap.push({ src: './terrain_tiles_snow_flat.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "tundra")
+				{
+					mapmap.push({ src: './terrain_tiles_tundra_flat.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass")
+				{
+					mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "plains")
+				{
+					mapmap.push({ src: './terrain_tiles_plains_flat.png', x: xpos, y: ypos});
+				}
+				else
+				{
+					mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
+				}
+				mapmap.push({ src: './terrain_tiles_mountain.png', x: xpos, y: ypos});
+			}
+			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "hill")
+			{
+				if (premapmap[x+(y*MAP_WIDTH)].terrain == "snow")
+				{
+					mapmap.push({ src: './terrain_tiles_snow_hills.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "tundra")
+				{
+					mapmap.push({ src: './terrain_tiles_tundra_hills.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass")
+				{
+					mapmap.push({ src: './terrain_tiles_grass_hills.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "plains")
+				{
+					mapmap.push({ src: './terrain_tiles_plains_hills.png', x: xpos, y: ypos});
+				}
+				else
+				{
+					trees = false;
+					mapmap.push({ src: './terrain_tiles_desert_hills.png', x: xpos, y: ypos});
+				}
+				
+				if (trees)
+				{
+					let baserand = Math.random();
+					if (baserand > JUNGLE_LEVEL)
+					{
+						mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
+					}
+					else if (baserand > FOREST_LEVEL)
+					{
+						mapmap.push({ src: './terrain_tiles_forest.png', x: xpos, y: ypos});
+					}
+				}
+			}
+			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "land")
+			{
+				if (premapmap[x+(y*MAP_WIDTH)].terrain == "snow")
+				{
+					mapmap.push({ src: './terrain_tiles_snow_flat.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "tundra")
+				{
+					mapmap.push({ src: './terrain_tiles_tundra_flat.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass")
+				{
+					if (Math.random() < 0.125)
+					{
+						mapmap.push({ src: './terrain_tiles_marsh.png', x: xpos, y: ypos});
+						trees = false;
+					}
+					else
+					{
+						mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
+					}
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "plains")
+				{
+					mapmap.push({ src: './terrain_tiles_plains_flat.png', x: xpos, y: ypos});
+				}
+				else
+				{
+					trees = false;
+					if (Math.random() < 0.033)
+					{
+						mapmap.push({ src: './terrain_tiles_oasis.png', x: xpos, y: ypos});
+					}
+					else
+					{
+						mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
+					}
+				}
+				if (trees)
+				{
+					let baserand = Math.random();
+					if (baserand > JUNGLE_LEVEL)
+					{
+						mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
+					}
+					else if (baserand > FOREST_LEVEL)
+					{
+						mapmap.push({ src: './terrain_tiles_forest.png', x: xpos, y: ypos});
+					}
+				}
+					
+			}
+			else
+				mapmap.push({ src: './terrain_tiles_water.png', x: xpos, y: ypos});
+		}
+	}
+	
+	let file = 'generatedmap.png';
+	let path = './' + file;
+	
+	mergeImages(mapmap, 
+	{
+		width: (12*MAP_WIDTH + 4),
+		height: (16*MAP_HEIGHT + 8),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64,file), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+	/*
+	channel.send({
+	files: [{
+	attachment: path,
+	name: file
+	}]
+	})*/
 }
 
 
