@@ -3468,36 +3468,36 @@ function noiseMap(height, width)
 //
 
 let LAND_LEVEL = 0.3;
-let HILL_LEVEL = 0.55;
-let MOUNTAIN_LEVEL = 0.725;
+let HILL_LEVEL = 0.45;
+let MOUNTAIN_LEVEL = 0.61;
 
-let PLAINS_LEVEL = 0.2;
-let GRASS_LEVEL = 0.425
-let TUNDRA_LEVEL = 0.7
-let SNOW_LEVEL = 0.85
+let PLAINS_LEVEL = 0.295;
+let GRASS_LEVEL = 0.4875;
+let TUNDRA_LEVEL = 0.595;
+let SNOW_LEVEL = 0.734;
 
-let FOREST_LEVEL = 0.575;
-let JUNGLE_LEVEL = 0.85;
+let FOREST_LEVEL = 0.55;
+let JUNGLE_LEVEL = 0.83;
 
 let MAX_MAP_HEIGHT = 100;
 let MAX_MAP_WIDTH = 150;
 
 let SMOOTHING_ITERATIONS = 3;
-let LAND_EROSION = 0.67;
+let LAND_EROSION = 0.64;
 
 function generateMap(channel, arguments)
 {
-	let MAP_HEIGHT = 20;
-	let MAP_WIDTH = 30;
-	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 7);
+	let MAP_HEIGHT = 18;
+	let MAP_WIDTH = 32;
+	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 6.9);
 	if (arguments != null)
 	{
 		if (!isNaN(arguments[1]))
-			MAP_HEIGHT = arguments[1];
+			MAP_HEIGHT = Math.floor(arguments[1]);
 		if (!isNaN(arguments[0]))
-			MAP_WIDTH = arguments[0];
+			MAP_WIDTH = Math.floor(arguments[0]);
 		if (!isNaN(arguments[2]))
-			LANDMASSES = arguments[2];
+			LANDMASSES = Math.floor(arguments[2]);
 	}
 	
 	if (MAP_WIDTH < 1)
@@ -3555,32 +3555,32 @@ function generateMap(channel, arguments)
 		{
 			for (let x  = 0; x < MAP_WIDTH; x++)
 			{
-				let waterCount = 0;
-				if (x+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y+1)*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
-				if (x+((y-1)*MAP_WIDTH) > -1 && premapmap[x+((y-1)*MAP_WIDTH)].sealevel == "water")
-					waterCount++;
+				let waterCount = 6;
+				if (x+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y+1)*MAP_WIDTH)].sealevel == "land")
+					waterCount--;
+				if (x+((y-1)*MAP_WIDTH) > -1 && premapmap[x+((y-1)*MAP_WIDTH)].sealevel == "land")
+					waterCount--
 				if (x%2 == 0)
 				{
-					if ((x+1)+(y*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+(y*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
-					if ((x+1)+((y-1)*MAP_WIDTH) > -1 && (x+1)+((y-1)*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+((y-1)*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
-					if ((x-1)+(y*MAP_WIDTH) > -1 && premapmap[(x-1)+(y*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
-					if ((x-1)+((y-1)*MAP_WIDTH) > -1 && premapmap[(x-1)+((y-1)*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
+					if ((x+1)+(y*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+(y*MAP_WIDTH)].sealevel == "land")
+						waterCount--;
+					if ((x+1)+((y-1)*MAP_WIDTH) > -1 && (x+1)+((y-1)*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+((y-1)*MAP_WIDTH)].sealevel == "land")
+						waterCount--;
+					if ((x-1)+(y*MAP_WIDTH) > -1 && premapmap[(x-1)+(y*MAP_WIDTH)].sealevel == "land")
+						waterCount--;
+					if ((x-1)+((y-1)*MAP_WIDTH) > -1 && premapmap[(x-1)+((y-1)*MAP_WIDTH)].sealevel == "land")
+						waterCount--;
 				}
 				else
 				{
-					if ((x+1)+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+((y+1)*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
-					if ((x+1)+(y*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+(y*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
-					if ((x-1)+((y+1)*MAP_WIDTH) > -1 && (x-1)+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[(x-1)+((y+1)*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
-					if ((x-1)+(y*MAP_WIDTH) > -1 && premapmap[(x-1)+(y*MAP_WIDTH)].sealevel == "water")
-						waterCount++;
+					if ((x+1)+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+((y+1)*MAP_WIDTH)].sealevel == "land")
+						waterCount--;
+					if ((x+1)+(y*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+(y*MAP_WIDTH)].sealevel == "land")
+						waterCount--;
+					if ((x-1)+((y+1)*MAP_WIDTH) > -1 && (x-1)+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[(x-1)+((y+1)*MAP_WIDTH)].sealevel == "land")
+						waterCount--;
+					if ((x-1)+(y*MAP_WIDTH) > -1 && premapmap[(x-1)+(y*MAP_WIDTH)].sealevel == "land")
+						waterCount--;
 				}
 				
 				if (waterCount == 6)
