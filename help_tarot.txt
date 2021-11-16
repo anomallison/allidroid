@@ -1,0 +1,7 @@
+``!tarot`` is a silly, unpolished command which does basic, tongue in cheek tarot readings based on a number of cards drawn
+
+``!tarot`` takes upto one argument, defaulting to 2 if none is specified. Maximum number is 21.
+
+example:
+``!tarot 4``
+``!tarot 12``

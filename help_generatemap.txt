@@ -1,0 +1,8 @@
+``!generatemap`` generates a low resolution hex grid terrain map
+
+``!generatemap`` takes upto 3 arguments currently, the width, the height, and the number of landmasses to generate on the map
+
+example
+``!generatemap`` 40 30 10
+``!generatemap`` 150 100 33
+``!generatemap``

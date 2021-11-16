@@ -1,0 +1,4 @@
+``!roll`` is a dice rolling command, using standard dice notation
+
+``!roll`` takes 1 argument in the form of *x*d*y*d*z*+*c* or *x*d*y*d*z*-*c*, where *x* is the number of dice to roll, *y* is the sides per die, *z* is the number of lowest die to drop, and *c* is added to the total.
+It can also be shortened to *x*d*y*+*c* or *x*d*y*-*c* or even just *x*d*y*

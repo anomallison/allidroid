@@ -1,0 +1,1 @@
+``!oneshotrpg`` generates basic, tongue in cheek oneshot RPGs. It takes no arguments, just ``!oneshotrpg`` and go!

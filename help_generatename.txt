@@ -1,0 +1,7 @@
+``!generatename`` generates names from a variety of phonemes and probabilities
+
+``!generatename`` takes two arguments, the first being maximum syllables, the second being minimum syllables, it only accepts arguments between 0 and 100
+
+examples:
+``!generatename 6 2``
+``!generatename 12 6``

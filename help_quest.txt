@@ -1,0 +1,5 @@
+``!quest`` generates a random quest, with a location and a quest provider
+
+``!quest`` takes upto 1 argument, which represents the minimum "level" of the quest.
+
+Currently quests range from levels 1 to level 18

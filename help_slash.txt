@@ -1,0 +1,19 @@
+``!slash`` generates a slashfic prompt, defaulting to any two characters from any list
+
+``!slash`` can also be specified to take pairings such as f/f, m/m/m, or x/x/x/x, where a can be used to mean any gender marker
+
+slash character lists can also be specified, such as da (dragon age) or me (mass effect)
+
+slash sublists can be specified too, such as blaseball teams like "lovers" or "jazz-hands"
+
+an example is ``!slash f/m/a fe3h blackeagles,goldendeer``
+which will take characters from list fe3h and sublists blackeagles and goldendeer
+
+another example is ``!slash m/m/m me,da``
+which will take characters from lists me and da
+
+character lists are as follows:
+fe3h (fire emblem three houses), da (dragon age), me (mass effect), g9 (gideon the ninth), ow (overwatch), ff7 (final fantasy VII), xcom (XCOM), blaseball (blaseball)
+
+sublists are as follow:
+blackeagles, bluelions, goldendeer, churhcofseiros, ashenwolves (fire emblem three houses), overwatch, talon (overwatch), party, turks (final fantasy VII), chimerasquad (XCOM), lovers, jazz-hands, georgias, worms, millennials, fridays, spies, steaks, breath-mints, flowers, moist-talkers, magic, pods, mechanics, shoe-thieves, garages, wild-wings, dale, crabs, sunbeams, tigers, lift, pies, tacos, firefighters, hall-stars (blaseball)

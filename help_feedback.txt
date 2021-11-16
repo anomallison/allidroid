@@ -1,0 +1,1 @@
+!feedback provides a link to the feedback form for Allidroid, to provide AnomAllison feedback on her bot, for bug reports, feature requests, and general comments. Don't be shy!

@@ -1,0 +1,29 @@
+For help, type !help [command]
+There are the following commands:
+``!help``
+``!monster``
+``!friend``
+``!boss``
+``!sexymonster``
+``!roll``
+``!gay``
+``!shake``
+``!lesbian``
+``!lesbifriend``
+``!slash``
+``!generatename``
+``!generateartifact``
+``!generatemap``
+``!how``
+``!gacha``
+``!princess``
+``!remindme``
+``!removereminder``
+``!feedback``
+``!tarot``
+``!oneshotrpg``
+``!plznoyell``
+``!keysmash`` or ``!ks``
+``!quest``
+``!howtoinitiate``
+``!room``

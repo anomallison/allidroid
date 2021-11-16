@@ -2006,14 +2006,14 @@
 		"name": "Hotbox Sato",
 		"gender": "x",
 		"invalidpairs": [],
-		"lists":["flowers", "shoe thieves"]
+		"lists":["flowers", "shoe-thieves"]
 	},
 	{
 		"id": "blaseball-79",
 		"name": "Caligula Lotus",
 		"gender": "f",
 		"invalidpairs": [],
-		"lists":["flowers", "hall stars"]
+		"lists":["flowers", "hall-stars"]
 	},
 	{
 		"id": "blaseball-80",
@@ -2034,7 +2034,7 @@
 		"name": "Morrow Doyle",
 		"gender": "x",
 		"invalidpairs": [],
-		"lists":["shoe thieves", "flowers", "hall stars"]
+		"lists":["shoe-thieves", "flowers", "hall stars"]
 	},
 	{
 		"id": "blaseball-83",

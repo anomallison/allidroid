@@ -1,0 +1,1 @@
+``!princess`` is a command that generates a Wierd Princess from a table I was provided by a friend. It can be very wordy, it takes no arguments.

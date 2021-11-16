@@ -1,0 +1,6 @@
+``!gacha`` does gacha pulls, with a brief description and a rarity of a named monster.
+
+``!gacha`` takes up to one argument, which is a number, which is the number of pulls it will do, up to 12.
+
+example: ``!gacha 7``
+``!gacha``

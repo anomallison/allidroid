@@ -1,0 +1,6 @@
+``!keysmash`` or ``!ks`` provides a keysmash string, as if you made Allidroid blush or something
+
+``!keysmash`` or ``!ks`` takes upto 1 argument which is the length of the keysmash. If no argument is provided, it will be a random length between 18 amd 32 characters long.
+
+examples: ``!keysmash 24``
+``!ks 44``

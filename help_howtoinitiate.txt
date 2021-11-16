@@ -1,0 +1,1 @@
+``!howtoinitiate`` takes no arguments, it simple goes !howtoinitiate and gives you Allidroid's best guess as to how to initiate?

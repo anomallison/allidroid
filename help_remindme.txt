@@ -1,0 +1,12 @@
+``!remindme`` sets a reminder, to go off in a certain amount of time in the channel you set it in. Did you know you can DM Allidroid if you share a server with her?
+
+``!remindme`` requires 2 arguments, a time, and a message. It takes time in the form of xhymzs or a mix of xh ym zs, where x is the number of hours, y is the number of minutes, and z is the number of seconds.
+
+Examples:
+``!remindme`` 2h take medicine
+``!remindme`` 15m check oven
+``!remindme`` 2m noodles done
+
+note: these reminders do not survive if Allidroid is updated or crashes, so shorter reminders are probably best.
+
+When a reminder is set, you will be given a reminder id, a reminder can be unset with !removereminder [reminderid]

@@ -1,0 +1,8 @@
+``!generateartifact`` generates an artifact, a named item with random properties; curses, enchantments and quirks
+
+``!generateartifact`` takes upto 3 arguments: the number of enchantments, the number of curses, and the number of quirks on the artifact, and will abide by these arguments as long as there is at least 1 property. the arguments can also be in the form of x-y where x is a minimum number, minimally 1, and y is a maximum number.
+
+The maximum of each property for the artifact is 7 inside the generator
+
+example: ``!generateartifact 0 1 0``
+``!generateartifact 1-4 1-2 2-3``

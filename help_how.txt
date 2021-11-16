@@ -1,0 +1,1 @@
+``!how`` command posits a question, such as "!how good are cats" or "!how delicious is gravy" or "!how much do I love broccoli" and it answers in variety of positives. Please only use for good

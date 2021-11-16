@@ -1,0 +1,9 @@
+``!gay`` puts a coin in the gay jar
+
+``!shake`` shakes the gay jar for coins to put into the gaycha
+
+``!lesbian`` generates a random lesbian
+
+``!lesbifriend`` generates a random lesbian friend
+
+``!gay``, ``!shake``, ``!lesbian``, and ``!lesbifriend`` do not take arguments, just type and go!

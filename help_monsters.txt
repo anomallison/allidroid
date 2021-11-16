@@ -1,0 +1,14 @@
+``!monster`` generates a random monster with brief descriptors
+
+``!friend`` generates a random friend with brief descriptors
+
+``!sexymonster`` generates a random sexymonster with brief descriptors
+
+``!boss`` generates a more elaborate boss monster, who is named and may have equipment and more descriptive usually
+
+``!monster``, ``!friend``, ``!sexymonster`` take no arguments, simply type and go
+
+``!boss`` takes extra keywords as arguments, if you want higher chance of certain types of descriptions.
+
+the following are keywords:
+arcane, alchemy, holy, martial, karate, roguish, cyberpunk, necromantic, gothic, psionic, clothes, anthromorphic, loadout, item, wings, tail, friend, himbo, twink, ally, firearm

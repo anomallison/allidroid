@@ -1,0 +1,10 @@
+``!room`` generates a random room with a brief description of contents
+
+``!room`` takes arguments in the form of keywords to give a room to add to the pool of possible descriptions for that room.
+
+Example:
+``!room living ritual``
+``!room treasure military wares``
+
+the keywords as as follows:
+military, antechamber, ritual, wet, living, militaryliving, treasure, wares, mine, livestock

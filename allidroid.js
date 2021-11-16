@@ -274,7 +274,8 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "help")
 	{
-		receivedMessage.channel.send(fs.readFileSync('helpcommand.txt').toString());
+		//receivedMessage.channel.send(fs.readFileSync('helpcommand.txt').toString());
+		receivedMessage.author.send(helpCommand(receivedMessage.author,arguments));
 		return;
 	} else if (normalizedCommand == "feedback")
 	{
@@ -490,6 +491,157 @@ function processCommand(receivedMessage)
 	}
 }
 
+//
+//
+// Help command
+//
+//
+
+function helpCommand(user, arguments)
+{
+	help_string = "";
+	if (arguments == null || arguments.length == 0)
+	{
+		help_string = fs.readFileSync('help_general.txt').toString();
+		//user.send({ files: [{ attachment: './help_general.txt', name: 'help_general.txt' }] });
+	}
+	else if (arguments[0] == "!help" || arguments[0] == "help")
+	{
+		help_string = fs.readFileSync('help_general.txt').toString();
+		//user.send({ files: [{ attachment: './help_general.txt', name: 'help_general.txt' }] });
+	}
+	else if (arguments[0] == "!monster" || arguments[0] == "monster")
+	{
+		help_string = fs.readFileSync('help_monsters.txt').toString();
+		//user.send({ files: [{ attachment: './help_monsters.txt', name: 'help_monsters.txt' }] });
+	}
+	else if (arguments[0] == "!friend" || arguments[0] == "friend")
+	{
+		help_string = fs.readFileSync('help_monsters.txt').toString();
+		//user.send({ files: [{ attachment: './help_monsters.txt', name: 'help_monsters.txt' }] });
+	}
+	else if (arguments[0] == "!boss" || arguments[0] == "boss")
+	{
+		help_string = fs.readFileSync('help_monsters.txt').toString();
+		//user.send({ files: [{ attachment: './help_monsters.txt', name: 'help_monsters.txt' }] });
+	}
+	else if (arguments[0] == "!sexymonster" || arguments[0] == "sexymonster")
+	{
+		help_string = fs.readFileSync('help_monsters.txt').toString();
+		//user.send({ files: [{ attachment: './help_monsters.txt', name: 'help_monsters.txt' }] });
+	}
+	else if (arguments[0] == "!roll" || arguments[0] == "roll")
+	{
+		help_string = fs.readFileSync('help_roll.txt').toString();
+		//user.send({ files: [{ attachment: './help_roll.txt', name: 'help_roll.txt' }] });
+	}
+	else if (arguments[0] == "!gay" || arguments[0] == "gay")
+	{
+		help_string = fs.readFileSync('help_gay.txt').toString();
+		//user.send({ files: [{ attachment: './help_gay.txt', name: 'help_gay.txt' }] });
+	}
+	else if (arguments[0] == "!shake" || arguments[0] == "shake")
+	{
+		help_string = fs.readFileSync('help_gay.txt').toString();
+		//user.send({ files: [{ attachment: './help_gay.txt', name: 'help_gay.txt' }] });
+	}
+	else if (arguments[0] == "!lesbian" || arguments[0] == "lesbian")
+	{
+		help_string = fs.readFileSync('help_gay.txt').toString();
+		//user.send({ files: [{ attachment: './help_gay.txt', name: 'help_gay.txt' }] });
+	}
+	else if (arguments[0] == "!lesbifriend" || arguments[0] == "lesbifriend")
+	{
+		help_string = fs.readFileSync('help_gay.txt').toString();
+		//user.send({ files: [{ attachment: './help_gay.txt', name: 'help_gay.txt' }] });
+	}
+	else if (arguments[0] == "!slash" || arguments[0] == "slash")
+	{
+		help_string = fs.readFileSync('help_slash.txt').toString();
+		//user.send({ files: [{ attachment: './help_slash.txt', name: 'help_slash.txt' }] });
+	}
+	else if (arguments[0] == "!generatename" || arguments[0] == "generatename")
+	{
+		help_string = fs.readFileSync('help_generatename.txt').toString();
+		//user.send({ files: [{ attachment: './help_generatename.txt', name: 'help_generatename.txt' }] });
+	}
+	else if (arguments[0] == "!generateartifact" || arguments[0] == "generateartifact")
+	{
+		help_string = fs.readFileSync('help_generateartifact.txt').toString();
+		//user.send({ files: [{ attachment: './help_generateartifact.txt', name: 'help_generateartifact.txt' }] });
+	}
+	else if (arguments[0] == "!generatemap" || arguments[0] == "generatemap")
+	{
+		help_string = fs.readFileSync('help_generatemap.txt').toString();
+		//user.send({ files: [{ attachment: './help_generatemap.txt', name: 'help_generatemap.txt' }] });
+	}
+	else if (arguments[0] == "!how" || arguments[0] == "how")
+	{
+		help_string = fs.readFileSync('help_how.txt').toString();
+		//user.send({ files: [{ attachment: './help_how.txt', name: 'help_how.txt' }] });
+	}
+	else if (arguments[0] == "!gacha" || arguments[0] == "gacha")
+	{
+		help_string = fs.readFileSync('help_gacha.txt').toString();
+		//user.send({ files: [{ attachment: './help_gacha.txt', name: 'help_gacha.txt' }] });
+	}
+	else if (arguments[0] == "!princess" || arguments[0] == "princess")
+	{
+		help_string = fs.readFileSync('help_gacha.txt').toString();
+		//user.send({ files: [{ attachment: './help_gacha.txt', name: 'help_gacha.txt' }] });
+	}
+	else if (arguments[0] == "!remindme" || arguments[0] == "remindme")
+	{
+		help_string = fs.readFileSync('help_remindme.txt').toString();
+		//user.send({ files: [{ attachment: './help_remindme.txt', name: 'help_remindme.txt' }] });
+	}
+	else if (arguments[0] == "!removereminder" || arguments[0] == "removereminder")
+	{
+		help_string = fs.readFileSync('help_remindme.txt').toString();
+		//user.send({ files: [{ attachment: './help_remindme.txt', name: 'help_remindme.txt' }] });
+	}
+	else if (arguments[0] == "!feedback" || arguments[0] == "feedback")
+	{
+		help_string = fs.readFileSync('help_feedback.txt').toString();
+		//user.send({ files: [{ attachment: './help_feedback.txt', name: 'help_feedback.txt' }] });
+	}
+	else if (arguments[0] == "!tarot" || arguments[0] == "tarot")
+	{
+		help_string = fs.readFileSync('help_tarot.txt').toString();
+		//user.send({ files: [{ attachment: './help_tarot.txt', name: 'help_tarot.txt' }] });
+	}
+	else if (arguments[0] == "!oneshotrpg" || arguments[0] == "oneshotrpg")
+	{
+		help_string = fs.readFileSync('help_oneshotrpg.txt').toString();
+		//user.send({ files: [{ attachment: './help_oneshotrpg.txt', name: 'help_oneshotrpg.txt' }] });
+	}
+	else if (arguments[0] == "!plznoyell" || arguments[0] == "plznoyell")
+	{
+		help_string = fs.readFileSync('help_plznoyell.txt').toString();
+		//user.send({ files: [{ attachment: './help_plznoyell.txt', name: 'help_plznoyell.txt' }] });
+	}
+	else if (arguments[0] == "!keysmash" || arguments[0] == "keysmash" || arguments[0] == "!ks" || arguments[0] == "ks")
+	{
+		help_string = fs.readFileSync('help_keysmash.txt').toString();
+		//user.send({ files: [{ attachment: './help_keysmash.txt', name: 'help_keysmash.txt' }] });
+	}
+	else if (arguments[0] == "!quest" || arguments[0] == "quest")
+	{
+		help_string = fs.readFileSync('help_quest.txt').toString();
+		//user.send({ files: [{ attachment: './help_quest.txt', name: 'help_quest.txt' }] });
+	}
+	else if (arguments[0] == "!howtoinitiate" || arguments[0] == "howtoinitiate")
+	{
+		help_string = fs.readFileSync('help_howtoinitiate.txt').toString();
+		//user.send({ files: [{ attachment: './help_howtoinitiate.txt', name: 'help_howtoinitiate.txt' }] });
+	}
+	else if (arguments[0] == "!room" || arguments[0] == "room")
+	{
+		help_string = fs.readFileSync('help_room.txt').toString();
+		//user.send({ files: [{ attachment: './help_room.txt', name: 'help_room.txt' }] });
+	}
+	return help_string;
+}
 
 //
 //
@@ -3096,6 +3248,11 @@ function filterByMinLevel(questobjective)
 
 function generateQuest(minlevel = -1)
 {
+	if (minlevel > 18)
+	{
+		return "minimum level too high";
+	}
+		
 	let questgod = quest_gen.questgods[Math.floor(Math.random()*quest_gen.questgods.length)]
 	let questlocation = quest_gen.questlocations[Math.floor(Math.random()*quest_gen.questlocations.length)];
 	let tempquestlocmods = quest_gen.questlocationmodifiers.filter(filterByAtleastOneList,questlocation.keywords);
