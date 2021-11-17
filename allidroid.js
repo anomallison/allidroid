@@ -43,6 +43,10 @@ var boss_generator = JSON.parse(fs.readFileSync('bosses2.json'));
 var item_artifactnames = JSON.parse(fs.readFileSync('item_artifactnames.json'));
 var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 
+//goblin generator files
+var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'));
+
+
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
 var au_twists = JSON.parse(fs.readFileSync('au_twists.json'));
@@ -475,6 +479,9 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generatemap") 
 	{
 		generateMap(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "generategoblin") 
+	{
+		generateGoblin(receivedMessage.channel,arguments);
     } else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -3994,6 +4001,81 @@ function generateMap(channel, arguments)
 	name: file
 	}]
 	})*/
+}
+
+//
+//
+// goblin generator function
+//
+//
+
+let GOBLINCOLOURS = 4;
+
+function generateGoblin(channel, arguments)
+{
+	let goblin_colour = Math.floor(Math.random()*GOBLINCOLOURS);
+	let assembledgoblin = [];
+	
+	let goblin_body = goblin_gen.bodies[Math.floor(Math.random()*goblin_gen.bodies.length)];
+	let bodypath = goblin_body.path[goblin_colour%goblin_body.path.length];
+	assembledgoblin.push(bodypath);
+	
+	let random_int = Math.floor(Math.random()*goblin_gen.clothes.length);
+	let clothespath = goblin_gen.clothes[random_int].path[goblin_colour%goblin_gen.clothes[random_int].path.length];
+	assembledgoblin.push(clothespath);
+	
+	random_int = Math.floor(Math.random()*goblin_gen.heads.length);
+	let headpath = goblin_gen.heads[random_int].path[goblin_colour%goblin_gen.heads[random_int].path.length];
+	assembledgoblin.push(headpath);
+	
+	random_int = Math.floor(Math.random()*goblin_gen.mouths.length);
+	let mouthpath = goblin_gen.mouths[random_int].path[goblin_colour%goblin_gen.mouths[random_int].path.length];
+	assembledgoblin.push(mouthpath);
+	
+	random_int = Math.floor(Math.random()*goblin_gen.noses.length);
+	let nosepath = goblin_gen.noses[random_int].path[goblin_colour%goblin_gen.noses[random_int].path.length];
+	assembledgoblin.push(nosepath);
+	
+	random_int = Math.floor(Math.random()*goblin_gen.eyes.length);
+	let eyespath = goblin_gen.eyes[random_int].path[goblin_colour%goblin_gen.eyes[random_int].path.length];
+	assembledgoblin.push(eyespath);
+	
+	random_int = Math.floor(Math.random()*goblin_gen.earrings.length);
+	let earringspath = goblin_gen.earrings[random_int].path[goblin_colour%goblin_gen.earrings[random_int].path.length];
+	assembledgoblin.push(earringspath);
+	
+	random_int = Math.floor(Math.random()*goblin_gen.headstuff.length);
+	let headstuffpath = goblin_gen.headstuff[random_int].path[goblin_colour%goblin_gen.headstuff[random_int].path.length];
+	assembledgoblin.push(headstuffpath);
+	
+	if (goblin_body.leftarm)
+	{
+		random_int = Math.floor(Math.random()*goblin_gen.lefthand.length);
+		let lefthandpath = goblin_gen.lefthand[random_int].path[goblin_colour%goblin_gen.lefthand[random_int].path.length];
+		assembledgoblin.push(lefthandpath);
+	}
+	
+	if (goblin_body.rightarm)
+	{
+		random_int = Math.floor(Math.random()*goblin_gen.righthand.length);
+		let righthandpath = goblin_gen.righthand[random_int].path[goblin_colour%goblin_gen.righthand[random_int].path.length];
+		assembledgoblin.push(righthandpath);
+	}
+	
+	let file = 'goblinoftheminute.png';
+	let path = './' + file;
+	
+	mergeImages(assembledgoblin, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64,file), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
 }
 
 
