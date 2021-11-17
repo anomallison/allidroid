@@ -3587,7 +3587,7 @@ function base64data(uri)
 }
 
 // returns a 1D array that is a noise map, height x width size
-function noiseMap(height, width)
+function noiseMap(height, width, noisevariance)
 {
 	let map = [];
 	let previousx = 0.33;
@@ -3600,13 +3600,13 @@ function noiseMap(height, width)
 		for (let x  = 0; x < width; x++)
 		{
 			if (Math.random() < 0.5)
-				dx = Math.random()*0.25;
+				dx = Math.random()*noisevariance;
 			else
-				dx = Math.random()*-0.25;
+				dx = Math.random()*noisevariance*-1;
 			if (Math.random() < 0.5)
-				dy = Math.random()*0.25;
+				dy = Math.random()*noisevariance;
 			else
-				dy = Math.random()*-0.25;
+				dy = Math.random()*noisevariance*-1;
 			val = (previousx + previousy)/2 + (dy + dx)/2;
 			if (val < 0)
 				val = 0;
@@ -3631,14 +3631,14 @@ function noiseMap(height, width)
 //
 //
 
-let LAND_LEVEL = 0.3;
-let HILL_LEVEL = 0.45;
-let MOUNTAIN_LEVEL = 0.61;
+let LAND_LEVEL = 0.32;
+let HILL_LEVEL = 0.466;
+let MOUNTAIN_LEVEL = 0.633;
 
-let PLAINS_LEVEL = 0.295;
-let GRASS_LEVEL = 0.4875;
-let TUNDRA_LEVEL = 0.595;
-let SNOW_LEVEL = 0.734;
+let PLAINS_LEVEL = 0.27;
+let GRASS_LEVEL = 0.495;
+let TUNDRA_LEVEL = 0.795;
+let SNOW_LEVEL = 0.905;
 
 let FOREST_LEVEL = 0.55;
 let JUNGLE_LEVEL = 0.83;
@@ -3672,8 +3672,8 @@ function generateMap(channel, arguments)
 	MAP_HEIGHT = Math.min(MAP_HEIGHT,MAX_MAP_HEIGHT);
 	MAP_WIDTH = Math.min(MAP_WIDTH,MAX_MAP_WIDTH);
 	
-	let heightmap = noiseMap(MAP_HEIGHT,MAP_WIDTH);
-	let terrainmap = noiseMap(MAP_HEIGHT,MAP_WIDTH);
+	let heightmap = noiseMap(MAP_HEIGHT,MAP_WIDTH, 0.37);
+	let terrainmap = noiseMap(MAP_HEIGHT,MAP_WIDTH, 0.18);
 	
 	let premapmap = [];
 	//initialize the premapmap
@@ -4016,11 +4016,18 @@ function generateGoblin(channel, arguments)
 	let goblin_colour = Math.floor(Math.random()*GOBLINCOLOURS);
 	let assembledgoblin = [];
 	
-	let goblin_body = goblin_gen.bodies[Math.floor(Math.random()*goblin_gen.bodies.length)];
+	let random_int = Math.floor(Math.random()*goblin_gen.bodies.length);
+	let rerolls = 0;
+	while (random_int > 3 && rerolls < 3)
+	{
+		random_int = Math.floor(Math.random()*goblin_gen.bodies.length);
+		rerolls++;
+	}
+	let goblin_body = goblin_gen.bodies[random_int];
 	let bodypath = goblin_body.path[goblin_colour%goblin_body.path.length];
 	assembledgoblin.push(bodypath);
 	
-	let random_int = Math.floor(Math.random()*goblin_gen.clothes.length);
+	random_int = Math.floor(Math.random()*goblin_gen.clothes.length);
 	let clothespath = goblin_gen.clothes[random_int].path[goblin_colour%goblin_gen.clothes[random_int].path.length];
 	assembledgoblin.push(clothespath);
 	
