@@ -46,6 +46,9 @@ var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 //goblin generator files
 var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'));
 
+//goblin generator files
+var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
+
 
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
@@ -482,6 +485,9 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generategoblin") 
 	{
 		generateGoblin(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "generatecity") 
+	{
+		generateCityMap(receivedMessage.channel,arguments);
     } else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -3988,7 +3994,7 @@ function generateMap(channel, arguments)
 		Canvas: Canvas,
 		Image: Image
 	})
-	.then(b64 => fs.writeFile(path,base64data(b64,file), {encoding: 'base64'}, (err) => {
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
 		if (err) throw err;
 		console.log('The file has been saved!');
 		channel.send({ files: [{ attachment: path, name: file }] });
@@ -4077,13 +4083,633 @@ function generateGoblin(channel, arguments)
 		Canvas: Canvas,
 		Image: Image
 	})
-	.then(b64 => fs.writeFile(path,base64data(b64,file), {encoding: 'base64'}, (err) => {
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
 		if (err) throw err;
 		console.log('The file has been saved!');
 		channel.send({ files: [{ attachment: path, name: file }] });
 		}
 		))
 }
+
+//
+//
+//
+// city map generator
+//
+//
+
+function fillMapSpace(map, mapwidth, mapheight, width, height, xpos, ypos)
+{
+	for (let y = ypos; y < ypos+height; y++)
+	{
+		for (let x = xpos; x < xpos+width; x++)
+		{
+			if (y < mapheight && x < mapwidth)
+				map[x+y*mapwidth] = "b";
+		}
+	}
+	return map;
+}
+
+function mapSpaceOpen(map, mapwidth, mapheight, width, height, xpos, ypos)
+{
+	for (let y = ypos; y < ypos+height; y++)
+	{
+		for (let x = xpos; x < xpos+width; x++)
+		{
+			if (y < 0 || x < 0 || y >= mapheight || x >= mapwidth || map[x+y*mapwidth] != "")
+				return false;
+		}
+	}
+	return true;
+}
+
+function mapHasSpace(map, mapwidth, mapheight, width, height, xpos, ypos)
+{
+	for (let y = ypos; y > ypos - height; y--)
+	{
+		for (let x = xpos; x > xpos - width; x--)
+		{
+			if (mapSpaceOpen(map, mapwidth, mapheight, width, height, x, y))
+				return { x: x, y: y };
+		}
+	}
+	return false;
+}
+
+function tryPlaceBuilding(map, mapwidth, mapheight, buildings, xpos, ypos)
+{
+	let buildingslooped = 0;
+	for (let i = Math.floor(Math.random()*buildings.length); buildingslooped < buildings.length; buildingslooped++)
+	{
+		
+		let buildingplacement = mapHasSpace(map, mapwidth, mapheight, buildings[i].width, buildings[i].height, xpos, ypos);
+		if (buildingplacement != false)
+		{
+			return { path: buildings[i].path, width: buildings[i].width, height: buildings[i].height, x: buildingplacement.x, y: buildingplacement.y };
+		}
+		i++;
+		if (i == buildings.length)
+			i = 0;
+	}
+	return false;
+}
+
+function isRoadAdjacent(map, mapwidth, mapheight, xpos, ypos)
+{
+	if (xpos-1 > -1 && map[xpos-1+ypos*mapwidth] == "r")
+	{
+		return true;
+	}
+	else if (xpos+1 < mapwidth && map[xpos+1+ypos*mapwidth] == "r")
+	{
+		return true;
+	}
+	else if (ypos-1 > -1 && map[xpos+(ypos-1)*mapwidth] == "r")
+	{
+		return true;
+	}
+	else if (ypos+1 < mapheight && map[xpos+(ypos+1)*mapwidth] == "r")
+	{
+		return true;
+	}
+	return false;
+}
+
+let MAX_CITY_HEIGHT = 200;
+let MAX_CITY_WIDTH = 150;
+
+function generateCityMap(channel, arguments)
+{
+	let premapmap = []
+	
+	let map_height = 60;
+	let map_width = 80;
+	
+	let main_road_count = Math.floor(Math.random()*(map_height+map_width)/50)+2;
+	
+	if (arguments != null)
+	{
+		if (!isNaN(arguments[1]))
+			map_height = Math.floor(arguments[1]);
+		if (!isNaN(arguments[0]))
+			map_width = Math.floor(arguments[0]);
+		if (!isNaN(arguments[2]))
+			main_road_count = Math.floor(arguments[2]);
+	}
+	
+	if (map_width < 1)
+		return null;
+	if (map_height < 1)
+		return null;
+	if (main_road_count < 1)
+		return null;
+	
+	map_height = Math.min(map_height,MAX_CITY_HEIGHT);
+	map_width = Math.min(map_width,MAX_CITY_WIDTH);
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x = 0; x < map_width; x++)
+		{
+			premapmap.push("");
+		}
+	}
+	
+	let town_centre = { x: Math.floor(map_width/2+Math.random()*6)-3, y: Math.floor(map_height/2+Math.random()*6)-3};
+	
+	//spremapmap[town_centre.x+town_centre.y*map_width] = { path: "./city_gen/centerpoint.png", width: 1, height: 1, x: town_centre.x, y: town_centre.y };
+	
+	let map_hypotenuse = Math.sqrt(map_height*map_height+map_width*map_width);
+	let offshootroadpoints = [];
+	let initialdirections = [0,2,1,3];
+	
+	for (let i = 0; i < main_road_count; i++)
+	{
+		let next_offshootroadpoint = Math.floor(Math.random()*8)+4;
+		let road_length = Math.floor(Math.random()*(map_hypotenuse)/2+Math.random()*(map_hypotenuse)/2)+map_hypotenuse/3;
+		let initial_direction = initialdirections[i%initialdirections.length];
+		initial_direction += (Math.random()*3)-1;
+		
+		if (initial_direction < 0)
+			initial_direction = initial_direction+4;
+		if (initial_direction > 3)
+			initial_direction = initial_direction-4;
+			
+		let current_road_position = { x: town_centre.x, y: town_centre.y };
+		let directionchange = 0;
+		
+		while (road_length > 0)
+		{
+			let direction = Math.floor(initial_direction);
+			directionchange += initial_direction - Math.floor(initial_direction);
+			
+			if (directionchange <= -1)
+			{
+				direction--;
+				directionchange++;
+			}
+			else if (directionchange >= 1)
+			{
+				direction++;
+				directionchange--;
+			}
+			
+			if (direction < 0)
+				direction = direction+4;
+			if (direction > 3)
+				direction = direction-4;
+			
+			if (direction == 3)
+			{
+				current_road_position.y++;
+			}
+			else if (direction == 2)
+			{
+				current_road_position.x++;
+			}
+			else if (direction == 1)
+			{
+				current_road_position.y--;
+			}
+			else if (direction == 0)
+			{
+				current_road_position.x--;
+			}
+			if (current_road_position.y < map_height && current_road_position.y > -1 && current_road_position.x < map_width && current_road_position.x > -1)
+			{
+				premapmap[current_road_position.x + (current_road_position.y*map_width)] = "r";
+			}
+			else
+			{
+				road_length = 0;
+			}
+			next_offshootroadpoint--;
+			if (next_offshootroadpoint == 0)
+			{
+				let offshootdirection = initial_direction;
+				if (Math.random() < 0.5)
+					offshootdirection++;
+				else
+					offshootdirection--;
+				
+				if (offshootdirection < 0)
+					offshootdirection = offshootdirection+4;
+				if (offshootdirection > 3)
+					offshootdirection = offshootdirection-4;
+				
+				offshootroadpoints.push( { x: current_road_position.x, y: current_road_position.y, initialdirection: offshootdirection, nested: 0 } );
+				next_offshootroadpoint = Math.floor(Math.random()*8)+4;
+			}
+			road_length--;
+		}
+	}
+	
+	let max_nesting = 4;
+	
+	for(let i = 0; i < offshootroadpoints.length; i++)
+	{
+		let next_offshootroadpoint = Math.floor(Math.random()*24)+5;
+		let road_length = Math.floor(Math.random()*27)+4;
+		let initial_direction = offshootroadpoints[i].initialdirection;
+		let current_road_position = { x: offshootroadpoints[i].x, y: offshootroadpoints[i].y };
+		let directionchange = 0;
+		let nesting = offshootroadpoints[i].nested;
+		while (road_length > 0)
+		{
+			let direction = Math.floor(initial_direction);
+			directionchange += initial_direction - Math.floor(initial_direction);
+			
+			if (directionchange <= -1)
+			{
+				direction--;
+				directionchange++;
+			}
+			else if (directionchange >= 1)
+			{
+				direction++;
+				directionchange--;
+			}
+			
+			if (direction < 0)
+				direction = direction+4;
+			if (direction > 3)
+				direction = direction-4;
+			
+			if (direction == 0)
+			{
+				current_road_position.y++;
+			}
+			else if (direction == 1)
+			{
+				current_road_position.x++;
+			}
+			else if (direction == 2)
+			{
+				current_road_position.y--;
+			}
+			else if (direction == 3)
+			{
+				current_road_position.x--;
+			}
+			if (current_road_position.y < map_height && current_road_position.y > -1 && current_road_position.x < map_width && current_road_position.x > -1)
+			{
+				premapmap[current_road_position.x + (current_road_position.y*map_width)] = "r";
+			}
+			else
+			{
+				road_length = 0;
+			}
+			next_offshootroadpoint--;
+			if (next_offshootroadpoint == 0 && nesting < max_nesting)
+			{
+				let offshootdirection = initial_direction;
+				if (Math.random() < 0.5)
+					offshootdirection++;
+				else
+					offshootdirection--;
+				
+				if (offshootdirection < 0)
+					offshootdirection = offshootdirection+4;
+				if (offshootdirection > 3)
+					offshootdirection = offshootdirection-4;
+				
+				offshootroadpoints.push( { x: current_road_position.x, y: current_road_position.y, initialdirection: offshootdirection, nested:nesting+1 } );
+				next_offshootroadpoint = Math.floor(Math.random()*12)+7;
+			}
+			road_length--;
+		}
+	}
+	
+	let churchcount = 0;
+	let inncount = 0;
+	let taverncount = 0;
+	let wellcount = 0;
+	let shrinecount = 0;
+	let statuecount = 0;
+	
+	
+	let buildingloops = 1;
+	
+	for (let i = 0; i < buildingloops; i++)
+	{
+		let posxy = { x: town_centre.x, y: town_centre.y };
+		let position = town_centre.x + town_centre.y*map_width;
+		let lastxmovement = 1;
+		let lastymovement = 1;
+		let xmovement = 1;
+		let ymovement = 1;
+		let currentlyXaxis = true;
+		while (lastxmovement < map_width || lastymovement < map_height)
+		{
+			if(currentlyXaxis)
+			{
+				if (lastxmovement%2 == 1)
+				{
+					posxy.x++;
+				}
+				else
+				{
+					posxy.x--;
+				}
+			}
+			else
+			{
+				if (lastymovement%2 == 1)
+				{
+					posxy.y++;
+				}
+				else
+				{
+					posxy.y--;
+				}
+			}
+			
+			position = posxy.x + posxy.y*map_width;
+			
+			if (isRoadAdjacent(premapmap,map_width,map_height,posxy.x,posxy.y))
+			{
+				let buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.house, posxy.x, posxy.y);
+				let baserand = Math.random();
+				
+				if (baserand < 0.16 && churchcount < Math.floor((map_height+map_width)/45)+1)
+				{
+					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.church, posxy.x, posxy.y);
+					churchcount++;
+				}
+				else if (baserand < 0.24 && inncount < Math.floor((map_height+map_width)/40)+1)
+				{
+					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.inn, posxy.x, posxy.y);
+					inncount++;
+				}
+				else if (baserand < 0.29 && taverncount < Math.floor((map_height+map_width)/35)+2)
+				{
+					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.tavern, posxy.x, posxy.y);
+					taverncount++;
+				}
+				else if (baserand < 0.42 && shrinecount < Math.floor((map_height+map_width)/25)+1)
+				{
+					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.shrine, posxy.x, posxy.y);
+					shrinecount++;
+				}
+				else if (baserand < 0.46 && statuecount < Math.floor((map_height+map_width)/25)+1)
+				{
+					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.statue, posxy.x, posxy.y);
+					statuecount++;
+				}
+				
+				
+				if (buildingplacement != false)
+				{
+					premapmap = fillMapSpace(premapmap, map_width, map_height, buildingplacement.width, buildingplacement.height, buildingplacement.x, buildingplacement.y);
+					premapmap[posxy.x+posxy.y*map_width] = buildingplacement;
+				}
+				else if (wellcount < Math.floor((map_height+map_width)/75))
+				{
+					premapmap[posxy.x+posxy.y*map_width] = { path: city_gen.features.well, width: 1, height: 1, x: posxy.x, y: posxy.y };
+					wellcount++;
+				}
+			}
+			
+			if(currentlyXaxis)
+			{
+				xmovement--;
+				if (xmovement == 0)
+				{
+					lastxmovement++;
+					xmovement = lastxmovement;
+					currentlyXaxis = false;
+				}
+			}
+			else
+			{
+				ymovement--;
+				if (ymovement == 0)
+				{
+					lastymovement++;
+					ymovement = lastymovement;
+					currentlyXaxis = true;
+				}
+			}
+			
+		}
+	}
+	
+	buildingloops = 1;
+	
+	for (let i = 0; i < buildingloops; i++)
+	{
+		let posxy = { x: town_centre.x, y: town_centre.y };
+		let position = town_centre.x + town_centre.y*map_width;
+		let lastxmovement = 1;
+		let lastymovement = 1;
+		let xmovement = 1;
+		let ymovement = 1;
+		let currentlyXaxis = true;
+		while (lastxmovement < map_width || lastymovement < map_height)
+		{
+			if(currentlyXaxis)
+			{
+				if (lastxmovement%2 == 1)
+				{
+					posxy.x++;
+				}
+				else
+				{
+					posxy.x--;
+				}
+			}
+			else
+			{
+				if (lastymovement%2 == 1)
+				{
+					posxy.y++;
+				}
+				else
+				{
+					posxy.y--;
+				}
+			}
+			
+			position = posxy.x + posxy.y*map_width;
+			
+			if (position > -1 && position < map_width*map_height && premapmap[position] == "")
+			{
+				if (Math.random() < 0.003)
+				{
+					let buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.house, posxy.x, posxy.y);
+					let baserand = Math.random();
+					if (baserand < 0.125 && churchcount < Math.floor((map_height+map_width)/45)+1)
+					{
+						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.church, posxy.x, posxy.y);
+						churchcount++;
+					}
+					else if (baserand < 0.275 && inncount < Math.floor((map_height+map_width)/40)+1)
+					{
+						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.inn, posxy.x, posxy.y);
+						inncount++;
+					}
+					else if (baserand < 0.485 && taverncount < Math.floor((map_height+map_width)/35)+2)
+					{
+						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.tavern, posxy.x, posxy.y);
+						taverncount++;
+					}
+					else if (baserand < 0.7 && shrinecount < Math.floor((map_height+map_width)/25)+1)
+					{
+						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.shrine, posxy.x, posxy.y);
+						shrinecount++;
+					}
+					else if (baserand < 0.9 && statuecount < Math.floor((map_height+map_width)/25)+1)
+					{
+						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.statue, posxy.x, posxy.y);
+						statuecount++;
+					}
+					
+					
+					if (buildingplacement != false)
+					{
+						premapmap = fillMapSpace(premapmap, map_width, map_height, buildingplacement.width, buildingplacement.height, buildingplacement.x, buildingplacement.y);
+						premapmap[position] = buildingplacement;
+					}
+				}
+				
+				if (Math.random() < 0.11)
+				{
+					premapmap[position] = { path: city_gen.features.tree, width: 1, height: 1, x: posxy.x, y: posxy.y };
+				}
+			}
+			
+			if(currentlyXaxis)
+			{
+				xmovement--;
+				if (xmovement == 0)
+				{
+					lastxmovement++;
+					xmovement = lastxmovement;
+					currentlyXaxis = false;
+				}
+			}
+			else
+			{
+				ymovement--;
+				if (ymovement == 0)
+				{
+					lastymovement++;
+					ymovement = lastymovement;
+					currentlyXaxis = true;
+				}
+			}
+			
+		}
+	}
+	
+	
+	let imagemap = []
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x = 0; x < map_width; x++)
+		{
+			let xpos = x*10;
+			let ypos = y*10;
+			imagemap.push({ src: "./city_gen/Grass_Texture.png", x: xpos, y: ypos});
+		}
+	}
+	
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x = 0; x < map_width; x++)
+		{
+			let xpos = x*10;
+			let ypos = y*10;
+			if (premapmap[x+y*map_width] == "r")
+			{
+				let roadgraphic = 0;
+				if (x+1+y*map_width < map_width*map_height && premapmap[x+1+y*map_width] == "r")
+					roadgraphic += 1;
+				if (x+(y+1)*map_width < map_width*map_height && premapmap[x+(y+1)*map_width] == "r")
+					roadgraphic += 2;
+				if (x-1+y*map_width > 0 && premapmap[x-1+y*map_width] == "r")
+					roadgraphic += 4;
+				if (x+(y-1)*map_width > 0 && premapmap[x+(y-1)*map_width] == "r")
+					roadgraphic += 8;
+				
+				switch (roadgraphic)
+				{
+					case 1:
+						imagemap.push({ src: city_gen.roads.end.E, x: xpos, y: ypos})
+						break;
+					case 2:
+						imagemap.push({ src: city_gen.roads.end.S, x: xpos, y: ypos})
+						break;
+					case 3:
+						imagemap.push({ src: city_gen.roads.corner.ES, x: xpos, y: ypos})
+						break;
+					case 4:
+						imagemap.push({ src: city_gen.roads.end.W, x: xpos, y: ypos})
+						break;
+					case 5:
+						imagemap.push({ src: city_gen.roads.straight.EW, x: xpos, y: ypos})
+						break;
+					case 6:
+						imagemap.push({ src: city_gen.roads.corner.SW, x: xpos, y: ypos})
+						break;
+					case 7:
+						imagemap.push({ src: city_gen.roads.threeway.ESW, x: xpos, y: ypos})
+						break;
+					case 8:
+						imagemap.push({ src: city_gen.roads.end.N, x: xpos, y: ypos})
+						break;
+					case 9:
+						imagemap.push({ src: city_gen.roads.corner.NE, x: xpos, y: ypos})
+						break;
+					case 10:
+						imagemap.push({ src: city_gen.roads.straight.NS, x: xpos, y: ypos})
+						break;
+					case 11:
+						imagemap.push({ src: city_gen.roads.threeway.NES, x: xpos, y: ypos})
+						break;
+					case 12:
+						imagemap.push({ src: city_gen.roads.corner.NW, x: xpos, y: ypos})
+						break;
+					case 13:
+						imagemap.push({ src: city_gen.roads.threeway.NEW, x: xpos, y: ypos})
+						break;
+					case 14:
+						imagemap.push({ src: city_gen.roads.threeway.NSW, x: xpos, y: ypos})
+						break;
+					case 15:
+						imagemap.push({ src: city_gen.roads.fourway, x: xpos, y: ypos})
+						break;
+				}
+			}
+			else if (premapmap[x+y*map_width] != "" && premapmap[x+y*map_width] != "b")
+			{
+				imagemap.push({ src: premapmap[x+y*map_width].path, x: premapmap[x+y*map_width].x*10+1, y: premapmap[x+y*map_width].y*10+1});
+			}
+		}
+	}
+	
+	let file = 'generatedhabitat.png';
+	let path = './' + file;
+	
+	mergeImages(imagemap, 
+	{
+		width: (10*map_width),
+		height: (10*map_height),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+}
+
+
 
 
 //
