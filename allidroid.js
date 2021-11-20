@@ -46,9 +46,9 @@ var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 //goblin generator files
 var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'));
 
-//goblin generator files
+//city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
-
+var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
 
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
@@ -488,6 +488,9 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generatecity") 
 	{
 		generateCityMap(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "generatevillage") 
+	{
+		generateHexCity(receivedMessage.channel,arguments);
     } else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -4229,7 +4232,7 @@ function generateCityMap(channel, arguments)
 		let next_offshootroadpoint = Math.floor(Math.random()*8)+4;
 		let road_length = Math.floor(Math.random()*(map_hypotenuse)/2+Math.random()*(map_hypotenuse)/2)+map_hypotenuse/3;
 		let initial_direction = initialdirections[i%initialdirections.length];
-		initial_direction += (Math.random()*3)-1;
+		initial_direction += (Math.random()*2)-1;
 		
 		if (initial_direction < 0)
 			initial_direction = initial_direction+4;
@@ -4710,6 +4713,1400 @@ function generateCityMap(channel, arguments)
 }
 
 
+//
+//
+// generate hex city map
+//
+//
+
+
+function drawCirclesIntoMap(map, mapwidth, mapheight, size, xpos, ypos)
+{
+	let totalloops = 1;
+	let sizecovered = 7;
+	
+	while (size > sizecovered)
+	{
+		totalloops++;
+		sizecovered += totalloops*6;
+	}
+	let opacity = 1;
+	let curdirdur = 0;
+	let dirduration = 1;
+	let loopend = 6;
+	let sizereached = 0;
+	let startpos = { x: xpos, y: ypos };
+	let currenthex = { x:0, y:0 };
+	for(let j = 0; j < totalloops && sizereached < size; j++)
+	{
+		let direction = 3;
+		if (startpos.x  % 2 == 1)
+		{
+			startpos.x = startpos.x+1;
+		}
+		else
+		{
+			startpos.x = startpos.x+1;
+			startpos.y = startpos.y-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let i = 0; i < loopend && sizereached < size; i++)
+		{
+			if (currenthex.x > -1 && currenthex.x < mapwidth && currenthex.y > -1 && currenthex.y < mapheight)
+			{
+				
+				map.push({ src: "./hexcity_gen/WhiteGrid.png", x: currenthex.x*25, y: currenthex.y*32+(currenthex.x%2)*16, opacity: opacity});
+				opacity -= 0.01;
+			}
+			
+			if (currenthex.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+					currenthex.y++;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+					currenthex.y++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+					currenthex.y--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+					currenthex.y--;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			}
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+				if (direction == 6)
+					direction = 0;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	return map;
+}
+
+
+
+function fillHexMapSpace(map, mapwidth, mapheight, size, xpos, ypos)
+{
+	map[xpos+ypos*mapwidth] = "b";
+	
+	let totalloops = 1;
+	let sizecovered = 7;
+	
+	while (size > sizecovered)
+	{
+		totalloops++;
+		sizecovered += totalloops*6;
+	}
+	
+	let curdirdur = 0;
+	let dirduration = 1;
+	let loopend = 6;
+	let sizereached = 1;
+	let startpos = { x: xpos, y: ypos };
+	let currenthex = { x:0, y:0 };
+	for(let j = 0; j < totalloops && sizereached < size; j++)
+	{
+		let direction = 3;
+		if (startpos.x  % 2 == 1)
+		{
+			startpos.x = startpos.x+1;
+		}
+		else
+		{
+			startpos.x = startpos.x+1;
+			startpos.y = startpos.y-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let i = 0; i < loopend && sizereached < size; i++)
+		{
+			if (currenthex.x > -1 && currenthex.x < mapwidth && currenthex.y > -1 && currenthex.y < mapheight)
+				map[currenthex.x+currenthex.y*mapwidth] = "b";
+			
+			if (currenthex.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+					currenthex.y++;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+					currenthex.y++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+					currenthex.y--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+					currenthex.y--;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			}
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+				if (direction == 6)
+					direction = 0;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	return map;
+}
+
+function hexMapSpaceOpen(map, mapwidth, mapheight, size, xpos, ypos)
+{
+	if (map[xpos+ypos*mapwidth] != "")
+	{
+		return false;
+	}
+	let totalloops = 1;
+	let sizecovered = 7;
+	
+	while (size > sizecovered)
+	{
+		totalloops++;
+		sizecovered += totalloops*6;
+	}
+	
+	let startpos = { x: xpos, y: ypos };
+	let currenthex = { x:0, y:0 };
+	let curdirdur = 0;
+	let dirduration = 1;
+	let loopend = 6;
+	let sizereached = 1;
+	for(let j = 0; j < totalloops && sizereached < size; j++)
+	{
+		let direction = 3;
+		if (startpos.x  % 2 == 1)
+		{
+			startpos.x = startpos.x+1;
+		}
+		else
+		{
+			startpos.x = startpos.x+1;
+			startpos.y = startpos.y-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let i = 0; i < loopend && sizereached < size; i++)
+		{
+			if (currenthex.x < 0 || currenthex.x >= mapwidth || currenthex.y < 0 || currenthex.y >= mapheight || map[currenthex.x+currenthex.y*mapwidth] != "")
+			{
+				return false;
+			}
+			
+			if (currenthex.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+					currenthex.y++;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+					currenthex.y++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+					currenthex.y--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+					currenthex.y--;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			}
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+				if (direction == 6)
+					direction = 0;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	return true;
+}
+
+function hexMapHasSpace(map, mapwidth, mapheight, size, xpos, ypos)
+{
+	if (hexMapSpaceOpen(map, mapwidth, mapheight, size, xpos, ypos))
+	{
+		return { x: xpos, y: ypos };
+	}
+	
+	let totalloops = 1;
+	let sizecovered = 7;
+	
+	while (size > sizecovered)
+	{
+		totalloops++;
+		sizecovered += totalloops*6;
+	}
+	
+	let startpos = { x: xpos, y: ypos };
+	let currenthex = { x:0, y:0 };
+	let curdirdur = 0;
+	let dirduration = 1;
+	let loopend = 6;
+	let sizereached = 1;
+	for(let j = 0; j < totalloops && sizereached < size; j++)
+	{
+		let direction = 3;
+		if (startpos.x  % 2 == 1)
+		{
+			startpos.x = startpos.x+1;
+		}
+		else
+		{
+			startpos.x = startpos.x+1;
+			startpos.y = startpos.y-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let i = 0; i < loopend && sizereached < size; i++)
+		{
+			if (hexMapSpaceOpen(map, mapwidth, mapheight, size, currenthex.x, currenthex.y))
+			{
+				return { x: currenthex.x, y: currenthex.y };
+			}
+			
+			if (currenthex.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+					currenthex.y++;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+					currenthex.y++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+					currenthex.y--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+					currenthex.y--;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			}
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+				if (direction == 6)
+					direction = 0;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	return false;
+}
+
+function hexMapIsRoadAdjacent(map, mapwidth, mapheight, xpos, ypos)
+{
+	let roadcode = 0;
+	if (xpos%2 == 1)
+	{
+		if (ypos-1 > -1 && map[xpos+(ypos-1)*mapwidth] == "r")
+		{
+			roadcode += 1;
+		}
+		if (xpos+1 < mapwidth && map[xpos+1+ypos*mapwidth] == "r")
+		{
+			roadcode += 2;
+		}
+		if (xpos+1 < mapwidth && ypos+1 < mapheight && map[xpos+1+(ypos+1)*mapwidth] == "r")
+		{
+			roadcode += 4;
+		}
+		if (ypos+1 < mapheight && map[xpos+(ypos+1)*mapwidth] == "r")
+		{
+			roadcode += 8;
+		}
+		if (xpos-1 > -1 && ypos+1 < mapheight && map[xpos-1+(ypos+1)*mapwidth] == "r")
+		{
+			roadcode += 16;
+		}
+		if (xpos-1 > -1 && map[xpos-1+ypos*mapwidth] == "r")
+		{
+			roadcode += 32;
+		}
+	} 
+	else
+	{
+		if (ypos-1 > -1 && map[xpos+(ypos-1)*mapwidth] == "r")
+		{
+			roadcode += 1;
+		}
+		if (xpos+1 < mapwidth && ypos-1 > -1 && map[xpos+1+(ypos-1)*mapwidth] == "r")
+		{
+			roadcode += 2;
+		}
+		if (xpos+1 < mapwidth && map[xpos+1+ypos*mapwidth] == "r")
+		{
+			roadcode += 4;
+		}
+		if (ypos+1 < mapheight && map[xpos+(ypos+1)*mapwidth] == "r")
+		{
+			roadcode += 8;
+		}
+		if (xpos-1 > -1 && map[xpos-1+ypos*mapwidth] == "r")
+		{
+			roadcode += 16;
+		}
+		if (xpos-1 > -1 && ypos-1 > -1 && map[xpos-1+(ypos-1)*mapwidth] == "r")
+		{
+			roadcode += 32;
+		}
+	}
+	return roadcode;
+}
+
+function hexMapIsBuildingAdjacent(map, mapwidth, mapheight, xpos, ypos)
+{
+	if (xpos%2 == 1)
+	{
+		if (ypos-1 > -1 && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (xpos+1 < mapwidth && map[xpos+1+ypos*mapwidth] == "b")
+		{
+			return true;
+		}
+		if (xpos+1 < mapwidth && ypos+1 < mapheight && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (ypos+1 < mapheight && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (xpos-1 > -1 && ypos+1 < mapheight && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (xpos-1 > -1 && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+	} 
+	else
+	{
+		if (ypos-1 > -1 && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (xpos+1 < mapwidth && ypos-1 > -1 && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (xpos+1 < mapwidth && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (ypos+1 < mapheight && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (xpos-1 > -1 && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+		if (xpos-1 > -1 && ypos-1 > -1 && (map[xpos+(ypos-1)*mapwidth] == "b" || (map[xpos+(ypos-1)*mapwidth] != "" && map[xpos+(ypos-1)*mapwidth] != "r" && map[xpos+(ypos-1)*mapwidth] != "c")))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+function hexMapTryPlaceBuilding(map, mapwidth, mapheight, buildings, xpos, ypos)
+{
+	let buildingslooped = 0;
+	for (let i = Math.floor(Math.random()*buildings.path.length); buildingslooped < buildings.path.length; buildingslooped++)
+	{
+		
+		let buildingplacement = hexMapHasSpace(map, mapwidth, mapheight, buildings.size, xpos, ypos);
+		if (buildingplacement != false)
+		{
+			return { path: buildings.path[i], size: buildings.size, x: buildingplacement.x, y: buildingplacement.y };
+		}
+		i++;
+		if (i == buildings.length)
+			i = 0;
+	}
+	return false;
+}
+
+//
+// main generate hex city function
+//
+
+MAX_VILLAGE_HEIGHT = 30;
+MAX_VILLAGE_WIDTH = 50;
+
+function generateHexCity(channel, arguments)
+{
+	let premapmap = [];
+	let imagemap = [];
+	let terrainmap = [];
+	
+	let map_height = 12;
+	let map_width = 20;
+	
+	let main_road_count = Math.floor(Math.random()*(map_height+map_width)/50)+3;
+	
+	if (arguments != null)
+	{
+		if (!isNaN(arguments[1]))
+			map_height = Math.floor(arguments[1]);
+		if (!isNaN(arguments[0]))
+			map_width = Math.floor(arguments[0]);
+		if (!isNaN(arguments[2]))
+			main_road_count = Math.floor(arguments[2]);
+	}
+	
+	if (map_width < 1)
+		return null;
+	if (map_height < 1)
+		return null;
+	if (main_road_count < 1)
+		return null;
+	
+	map_height = Math.min(map_height,MAX_VILLAGE_HEIGHT);
+	map_width = Math.min(map_width,MAX_VILLAGE_WIDTH);
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x = 0; x < map_width; x++)
+		{
+			premapmap.push("");
+		}
+	}
+	
+	let town_centre = { x: Math.floor(map_width/2+Math.random()*3)-1, y: Math.floor(map_height/2+Math.random()*3)-1};
+	
+	let map_hypotenuse = Math.sqrt(map_height*map_height+map_width*map_width);
+	let offshootroadpoints = [];
+	let initialdirections = [0,3,1,4,2,5];
+	
+	let next_offshootroadrandom = Math.floor((map_width+map_height)/6);
+	let next_offshootroadconst = Math.floor((map_width+map_height)/16);
+	
+	let townsquareplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.townsquare, town_centre.x, town_centre.y);
+	if (townsquareplacement != false)
+	{
+		premapmap = fillHexMapSpace(premapmap, map_width, map_height, townsquareplacement.size, townsquareplacement.x, townsquareplacement.y);
+		premapmap[town_centre.x+town_centre.y*map_width] = townsquareplacement;
+	}
+	
+	for (let i = 0; i < main_road_count; i++)
+	{
+		let next_offshootroadpoint = Math.floor(Math.random()*next_offshootroadrandom)+next_offshootroadconst;
+		let road_length = Math.floor(Math.random()*(map_hypotenuse)/2+Math.random()*(map_hypotenuse)/2)+map_hypotenuse/3;
+		let initial_direction = initialdirections[i%initialdirections.length];
+		initial_direction += (Math.random()-0.5);
+		
+		if (initial_direction < 0)
+			initial_direction = initial_direction+6;
+		if (initial_direction > 5)
+			initial_direction = initial_direction-6;
+			
+		let current_road_position = { x: town_centre.x, y: town_centre.y };
+		let directionchange = 0;
+		
+		while (road_length > 0)
+		{
+			let direction = Math.floor(initial_direction);
+			directionchange += initial_direction - Math.floor(initial_direction);
+			
+			if (directionchange <= -1)
+			{
+				direction--;
+				directionchange++;
+			}
+			else if (directionchange >= 1)
+			{
+				direction++;
+				directionchange--;
+			}
+			
+			if (direction < 0)
+				direction = direction+6;
+			if (direction > 5)
+				direction = direction-6;
+			
+			if (current_road_position.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					current_road_position.x--;
+				}
+				else if (direction == 4)
+				{
+					current_road_position.x--;
+					current_road_position.y++;
+				}
+				else if (direction == 3)
+				{
+					current_road_position.y++;
+				}
+				else if (direction == 2)
+				{
+					current_road_position.x++;
+					current_road_position.y++;
+				}
+				else if (direction == 1)
+				{
+					current_road_position.x++;
+				}
+				else if (direction == 0)
+				{
+					current_road_position.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					current_road_position.x--;
+					current_road_position.y--;
+				}
+				else if (direction == 4)
+				{
+					current_road_position.x--;
+				}
+				else if (direction == 3)
+				{
+					current_road_position.y++;
+				}
+				else if (direction == 2)
+				{
+					current_road_position.x++;
+				}
+				else if (direction == 1)
+				{
+					current_road_position.x++;
+					current_road_position.y--;
+				}
+				else if (direction == 0)
+				{
+					current_road_position.y--;
+				}
+			}
+			
+			if (current_road_position.y < map_height && current_road_position.y > -1 && current_road_position.x < map_width && current_road_position.x > -1)
+			{
+				if (premapmap[current_road_position.x + (current_road_position.y*map_width)] == "")
+				{
+					premapmap[current_road_position.x + (current_road_position.y*map_width)] = "r";
+				}
+			}
+			else
+			{
+				road_length = 0;
+			}
+			next_offshootroadpoint--;
+			if (next_offshootroadpoint == 0)
+			{
+				let offshootdirection = initial_direction;
+				if (Math.random() < 0.5)
+					offshootdirection += 1;
+				else
+					offshootdirection -= 1;
+				
+				if (offshootdirection < 0)
+					offshootdirection = offshootdirection+6;
+				if (offshootdirection > 5)
+					offshootdirection = offshootdirection-6;
+				
+				offshootroadpoints.push( { x: current_road_position.x, y: current_road_position.y, initialdirection: offshootdirection, nested: 0 } );
+				next_offshootroadpoint = Math.floor(Math.random()*next_offshootroadrandom)+next_offshootroadconst;
+			}
+			road_length--;
+		}
+	}
+	
+	let max_nesting = 4;
+	
+	next_offshootroadrandom = Math.floor((map_width+map_height)/3);
+	next_offshootroadconst = Math.floor((map_width+map_height)/8);
+	
+	for(let i = 0; i < offshootroadpoints.length; i++)
+	{
+		let next_offshootroadpoint = Math.floor(Math.random()*next_offshootroadrandom)+next_offshootroadconst;
+		let road_length = Math.floor(Math.random()*27)+4;
+		let initial_direction = offshootroadpoints[i].initialdirection;
+		let current_road_position = { x: offshootroadpoints[i].x, y: offshootroadpoints[i].y };
+		let directionchange = 0;
+		let nesting = offshootroadpoints[i].nested;
+		while (road_length > 0)
+		{
+			let direction = Math.floor(initial_direction);
+			directionchange += initial_direction - Math.floor(initial_direction);
+			
+			if (directionchange <= -1)
+			{
+				direction--;
+				directionchange++;
+			}
+			else if (directionchange >= 1)
+			{
+				direction++;
+				directionchange--;
+			}
+			
+			if (direction < 0)
+				direction = direction+6;
+			if (direction > 5)
+				direction = direction-6;
+			
+			if (current_road_position.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					current_road_position.x--;
+				}
+				else if (direction == 4)
+				{
+					current_road_position.x--;
+					current_road_position.y++;
+				}
+				else if (direction == 3)
+				{
+					current_road_position.y++;
+				}
+				else if (direction == 2)
+				{
+					current_road_position.x++;
+					current_road_position.y++;
+				}
+				else if (direction == 1)
+				{
+					current_road_position.x++;
+				}
+				else if (direction == 0)
+				{
+					current_road_position.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					current_road_position.x--;
+					current_road_position.y--;
+				}
+				else if (direction == 4)
+				{
+					current_road_position.x--;
+				}
+				else if (direction == 3)
+				{
+					current_road_position.y++;
+				}
+				else if (direction == 2)
+				{
+					current_road_position.x++;
+				}
+				else if (direction == 1)
+				{
+					current_road_position.x++;
+					current_road_position.y--;
+				}
+				else if (direction == 0)
+				{
+					current_road_position.y--;
+				}
+			}
+			
+			
+			
+			if (current_road_position.y < map_height && current_road_position.y > -1 && current_road_position.x < map_width && current_road_position.x > -1)
+			{
+				if (premapmap[current_road_position.x + (current_road_position.y*map_width)] == "")
+				{
+					premapmap[current_road_position.x + (current_road_position.y*map_width)] = "r";
+				}
+			}
+			else
+			{
+				road_length = 0;
+			}
+			next_offshootroadpoint--;
+			if (next_offshootroadpoint == 0 && nesting < max_nesting)
+			{
+				let offshootdirection = initial_direction;
+				if (Math.random() < 0.5)
+					offshootdirection += 1;
+				else
+					offshootdirection -= 1;
+				
+				if (offshootdirection < 0)
+					offshootdirection = offshootdirection+6;
+				if (offshootdirection > 5)
+					offshootdirection = offshootdirection-6;
+				
+				offshootroadpoints.push( { x: current_road_position.x, y: current_road_position.y, initialdirection: offshootdirection, nested:nesting+1 } );
+				next_offshootroadpoint = Math.floor(Math.random()*next_offshootroadrandom)+next_offshootroadconst;
+			}
+			road_length--;
+		}
+	}
+	
+	let churchcount = 0;
+	let inncount = 0;
+	let taverncount = 0;
+	let wellcount = 0;
+	let shrinecount = 0;
+	let barrackscount = 0;
+	
+	// populate with buildings
+	
+	let totalloops = 1;
+	let sizecovered = 7;
+	let mapsize = map_width*map_height;
+	
+	while (mapsize > sizecovered)
+	{
+		totalloops++;
+		sizecovered += totalloops*6;
+	}
+	
+	let curdirdur = 0;
+	let dirduration = 1;
+	let loopend = 6;
+	let sizereached = 1;
+	let startpos = { x: town_centre.x, y: town_centre.y };
+	let currenthex = { x:0, y:0 };
+	for(let j = 0; j < totalloops && sizereached < mapsize; j++)
+	{
+		let direction = 0;
+		if (startpos.x  % 2 == 0)
+		{
+			startpos.x = startpos.x-1;
+			startpos.y = startpos.y+1;
+		}
+		else
+		{
+			startpos.x = startpos.x-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let i = 0; i < loopend && sizereached < mapsize; i++)
+		{
+			if (currenthex.x > -1 && currenthex.x < map_width && currenthex.y > -1 && currenthex.y < map_height && hexMapIsRoadAdjacent(premapmap, map_width, map_height, currenthex.x, currenthex.y) > 0)
+			{
+				let buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.houses, currenthex.x, currenthex.y);
+					let baserand = Math.random();
+					
+					if (baserand < 0.16 && churchcount < Math.floor((map_height+map_width)/45)+1)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.churches, currenthex.x, currenthex.y);
+						churchcount++;
+					}
+					else if (baserand < 0.24 && inncount < Math.floor((map_height+map_width)/40)+1)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.inns, currenthex.x, currenthex.y);
+						inncount++;
+					}
+					else if (baserand < 0.29 && taverncount < Math.floor((map_height+map_width)/35)+2)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.taverns, currenthex.x, currenthex.y);
+						taverncount++;
+					}
+					else if (baserand < 0.42 && shrinecount < Math.floor((map_height+map_width)/25)+1)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.shrines, currenthex.x, currenthex.y);
+						shrinecount++;
+					}
+					else if (baserand < 0.42 && barrackscount < Math.floor((map_height+map_width)/75)+1)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.barracks, currenthex.x, currenthex.y);
+						barrackscount++;
+					}
+					
+					if (buildingplacement != false)
+					{
+						premapmap = fillHexMapSpace(premapmap, map_width, map_height, buildingplacement.size, buildingplacement.x, buildingplacement.y);
+						premapmap[buildingplacement.x+buildingplacement.y*map_width] = buildingplacement;
+					}
+			}
+			
+			if (currenthex.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+					currenthex.y++;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+					currenthex.y++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+					currenthex.y--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+					currenthex.y--;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			}
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	
+	curdirdur = 0;
+	dirduration = 1;
+	loopend = 6;
+	sizereached = 1;
+	startpos = { x: town_centre.x, y: town_centre.y };
+	currenthex = { x:0, y:0 };
+	for(let j = 0; j < totalloops && sizereached < mapsize; j++)
+	{
+		let direction = 0;
+		if (startpos.x  % 2 == 0)
+		{
+			startpos.x = startpos.x-1;
+			startpos.y = startpos.y+1;
+		}
+		else
+		{
+			startpos.x = startpos.x-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let i = 0; i < loopend && sizereached < mapsize; i++)
+		{
+			if (currenthex.x > -1 && currenthex.x < map_width && currenthex.y > -1 && currenthex.y < map_height && premapmap[currenthex.x+currenthex.y*map_width] == "")
+			{
+				if (hexMapIsBuildingAdjacent(premapmap, map_width, map_height, currenthex.x, currenthex.y))
+				{
+					let randomcrop = Math.floor(Math.random()*hexcity_gen.terrain.crops.length);
+					terrainmap.push({ src: hexcity_gen.terrain.crops[randomcrop], x: currenthex.x*25, y: currenthex.y*32+(currenthex.x%2)*16});
+					premapmap[currenthex.x+currenthex.y*map_width] = "c";
+				}
+			}
+			
+			if (currenthex.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+					currenthex.y++;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+					currenthex.y++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+					currenthex.y--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+					currenthex.y--;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			}
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	
+	curdirdur = 0;
+	dirduration = 1;
+	loopend = 6;
+	sizereached = 1;
+	startpos = { x: town_centre.x, y: town_centre.y };
+	currenthex = { x:0, y:0 };
+	for(let j = 0; j < totalloops && sizereached < mapsize; j++)
+	{
+		let direction = 0;
+		if (startpos.x  % 2 == 0)
+		{
+			startpos.x = startpos.x-1;
+			startpos.y = startpos.y+1;
+		}
+		else
+		{
+			startpos.x = startpos.x-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let i = 0; i < loopend && sizereached < mapsize; i++)
+		{
+			if (currenthex.x > -1 && currenthex.x < map_width && currenthex.y > -1 && currenthex.y < map_height && premapmap[currenthex.x+currenthex.y*map_width] == "")
+			{
+				if (Math.random() < 0.003)
+				{
+					let buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.houses, currenthex.x, currenthex.y);
+					let baserand = Math.random();
+					
+					if (baserand < 0.16 && churchcount < Math.floor((map_height+map_width)/45)+1)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.churches, currenthex.x, currenthex.y);
+						churchcount++;
+					}
+					else if (baserand < 0.24 && inncount < Math.floor((map_height+map_width)/40)+1)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.inns, currenthex.x, currenthex.y);
+						inncount++;
+					}
+					else if (baserand < 0.29 && taverncount < Math.floor((map_height+map_width)/35)+2)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.taverns, currenthex.x, currenthex.y);
+						taverncount++;
+					}
+					else if (baserand < 0.42 && shrinecount < Math.floor((map_height+map_width)/25)+1)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.shrines, currenthex.x, currenthex.y);
+						shrinecount++;
+					}
+					else if (baserand < 0.42 && barrackscount < Math.floor((map_height+map_width)/75)+1)
+					{
+						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.barracks, currenthex.x, currenthex.y);
+						barrackscount++;
+					}
+					
+					if (buildingplacement != false)
+					{
+						premapmap = fillHexMapSpace(premapmap, map_width, map_height, buildingplacement.size, buildingplacement.x, buildingplacement.y);
+						premapmap[buildingplacement.x+buildingplacement.y*map_width] = buildingplacement;
+					}
+				}
+				
+				if (Math.random() < 0.11)
+				{
+					let randomtree = Math.floor(Math.random()*hexcity_gen.features.trees.length);
+					premapmap[currenthex.x+currenthex.y*map_width] = { path: hexcity_gen.features.trees[randomtree], size: 1, x: currenthex.x, y: currenthex.y };
+				}
+			}
+			
+			if (currenthex.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+					currenthex.y++;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+					currenthex.y++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+					currenthex.y--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+					currenthex.y--;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			}
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x = 0; x < map_width; x++)
+		{
+			let xpos = x*25;
+			let ypos = y*32 + (x%2)*16;
+			if (premapmap[x+y*map_width] != "c")
+				terrainmap.push({ src: hexcity_gen.terrain.grass[0], x: xpos, y: ypos});
+		}
+	}
+	
+	imagemap = terrainmap.concat(imagemap);
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x = 0; x < map_width; x++)
+		{
+			let xpos = x*25;
+			let ypos = y*32+(x%2)*16;
+			if (premapmap[x+y*map_width] == "r")
+			{
+				let roadgraphic = hexMapIsRoadAdjacent(premapmap, map_width, map_height, x, y);
+				if (roadgraphic > 0)
+				{
+					imagemap.push({ src: hexcity_gen.roads[roadgraphic-1], x: xpos, y: ypos})
+				}
+				
+			}
+			else if (premapmap[x+y*map_width] != "" && premapmap[x+y*map_width] != "b" && premapmap[x+y*map_width] != "c")
+			{
+				if (premapmap[x+y*map_width].size == 1)
+					imagemap.push({ src: premapmap[x+y*map_width].path, x: xpos, y: ypos});
+				else
+				{
+					let initialoffset = 0;
+					let initialoffsetsize = 1;
+					while (premapmap[x+y*map_width].size >= initialoffsetsize)
+					{
+						initialoffset++;
+						initialoffsetsize += 6*initialoffset;
+					}
+					let xoffset = Math.floor(initialoffset/2)*25;
+					let yoffset = Math.floor(initialoffset/2)*32+(initialoffset%2)*16;
+					imagemap.push({ src: premapmap[x+y*map_width].path, x: xpos-xoffset, y: ypos-yoffset });
+				}
+			}
+		}
+	}
+	
+	//imagemap = drawCirclesIntoMap(imagemap, map_width, map_height, 3, town_centre.x, town_centre.y)
+	let file = 'generatedhabitat.png';
+	let path = './' + file;
+	
+	
+	mergeImages(imagemap, 
+	{
+		width: (25*map_width + 7),
+		height: (32*map_height + 16),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+	
+}
 
 
 //
