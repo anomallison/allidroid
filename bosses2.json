@@ -474,7 +474,7 @@
 		},
 		{
 			"keywords": ["karate","loadout"],
-			"description": "[subject] [pluralnoun use uses] [items staff] and [item throwingknives] as [possessivesubject] primary loadout",
+			"description": "[subject] [pluralnoun use uses] [item staff] and [item throwingknives] as [possessivesubject] primary loadout",
 			"priority": 1
 		},
 		{

@@ -1,0 +1,8 @@
+``!generatecity`` generates a low resolution city map
+
+``!generatecity`` takes upto 3 arguments currently, the width, the height, and the number "main roads" to seed the map generation with
+
+example
+``!generatecity`` 50 37 3
+``!generatecity`` 80 60 4
+``!generatecity`` 

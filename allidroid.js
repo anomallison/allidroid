@@ -591,6 +591,16 @@ function helpCommand(user, arguments)
 		help_string = fs.readFileSync('help_generatemap.txt').toString();
 		//user.send({ files: [{ attachment: './help_generatemap.txt', name: 'help_generatemap.txt' }] });
 	}
+	else if (arguments[0] == "!generatecity" || arguments[0] == "generatecity")
+	{
+		help_string = fs.readFileSync('help_generatecity.txt').toString();
+		//user.send({ files: [{ attachment: './help_generatecity.txt', name: 'help_generatecity.txt' }] });
+	}
+	else if (arguments[0] == "!generatevillage" || arguments[0] == "generatevillage")
+	{
+		help_string = fs.readFileSync('help_generatevillage.txt').toString();
+		//user.send({ files: [{ attachment: './help_generatevillage.txt', name: 'help_generatevillage.txt' }] });
+	}
 	else if (arguments[0] == "!how" || arguments[0] == "how")
 	{
 		help_string = fs.readFileSync('help_how.txt').toString();
@@ -3596,11 +3606,11 @@ function base64data(uri)
 }
 
 // returns a 1D array that is a noise map, height x width size
-function noiseMap(height, width, noisevariance)
+function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 {
 	let map = [];
-	let previousx = 0.33;
-	let previousy = 0.33;
+	let previousx = edgevalue;
+	let previousy = edgevalue;
 	let dx = 0;
 	let dy = 0;
 	let val = 0;
@@ -3616,7 +3626,7 @@ function noiseMap(height, width, noisevariance)
 				dy = Math.random()*noisevariance;
 			else
 				dy = Math.random()*noisevariance*-1;
-			val = (previousx + previousy)/2 + (dy + dx)/2;
+			val = (previousx + dx)/2 + (previousy + dy )/2;
 			if (val < 0)
 				val = 0;
 			else if (val > 1)
@@ -3662,15 +3672,25 @@ function generateMap(channel, arguments)
 {
 	let MAP_HEIGHT = 18;
 	let MAP_WIDTH = 32;
-	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 6.9);
+	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 5.5);
+	let ClimateBalance = 0.51;
+	let ClimateVariance = 0.22;
+	let grid_opacity = 0;
+	
 	if (arguments != null)
 	{
 		if (!isNaN(arguments[1]))
 			MAP_HEIGHT = Math.floor(arguments[1]);
 		if (!isNaN(arguments[0]))
 			MAP_WIDTH = Math.floor(arguments[0]);
+		if (!isNaN(arguments[3]))
+			LANDMASSES = Math.floor(arguments[3]);
+		if (!isNaN(arguments[4]))
+			ClimateBalance = arguments[4];;
+		if (!isNaN(arguments[5]))
+			ClimateVariance = arguments[5];
 		if (!isNaN(arguments[2]))
-			LANDMASSES = Math.floor(arguments[2]);
+			grid_opacity = arguments[2];
 	}
 	
 	if (MAP_WIDTH < 1)
@@ -3678,11 +3698,18 @@ function generateMap(channel, arguments)
 	if (MAP_HEIGHT < 1)
 		return null;
 	
+	ClimateBalance = Math.min(ClimateBalance,1);
+	ClimateBalance = Math.max(ClimateBalance,0);
+	ClimateVariance = Math.min(ClimateVariance,1);
+	ClimateVariance = Math.max(ClimateVariance,0);
+	grid_opacity = Math.min(grid_opacity,1);
+	grid_opacity = Math.max(grid_opacity,0);
+	
 	MAP_HEIGHT = Math.min(MAP_HEIGHT,MAX_MAP_HEIGHT);
 	MAP_WIDTH = Math.min(MAP_WIDTH,MAX_MAP_WIDTH);
 	
 	let heightmap = noiseMap(MAP_HEIGHT,MAP_WIDTH, 0.37);
-	let terrainmap = noiseMap(MAP_HEIGHT,MAP_WIDTH, 0.18);
+	let terrainmap = noiseMap(MAP_HEIGHT,MAP_WIDTH, ClimateBalance, ClimateVariance);
 	
 	let premapmap = [];
 	//initialize the premapmap
@@ -3984,6 +4011,9 @@ function generateMap(channel, arguments)
 			}
 			else
 				mapmap.push({ src: './terrain_tiles_water.png', x: xpos, y: ypos});
+			
+			if (grid_opacity > 0)
+				mapmap.push({ src: './terrain_tiles_whitegrid.png', x: xpos, y: ypos, opacity: grid_opacity });
 		}
 	}
 	

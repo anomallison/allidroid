@@ -1,0 +1,8 @@
+``!generatevillage`` generates a village hexagonal map
+
+``!generatevillage`` takes upto 3 arguments currently, the width, the height, and the number "main roads" to seed the map generation with
+
+example
+``!generatevillage`` 24 16 3
+``!generatevillage`` 40 24 4
+``!generatevillage`` 
