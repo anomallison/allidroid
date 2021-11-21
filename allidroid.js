@@ -492,10 +492,10 @@ function processCommand(receivedMessage)
 	{
 		generateHexCity(receivedMessage.channel,arguments);
     } 
-	//else if (normalizedCommand == "noisemap") 
-	//{
-	//	noisemaptopng(receivedMessage.channel,arguments);
-    //} 
+	else if (normalizedCommand == "noisemap") 
+	{
+		noisemaptopng(receivedMessage.channel,arguments);
+    } 
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -3649,17 +3649,19 @@ function noiseMap2D(height, width, noisevariance, edgevalue = 0.33)
 	let map1 = noiseMap(height, width, noisevariance, edgevalue);
 	let lowest = 0;
 	let highest = 0;
-	
 	let combinedmap = [];
+	
 	for (let y = 0; y < height; y++)
 	{
 		for (let x = 0; x < width; x++)
 		{
-			let v = gradientOfTwo(map0[x+y*width],map1[(width-x-1)+((height-y-1)*height)]);
+			let v = gradientOfTwo(map0[x+(y*width)],map1[((width-1)-x)+((height-1)-y)*width]);
+			//let v = gradientOfTwo(map0[x+(y*width)],map1[x+(y*height)]);
 			if (v < lowest)
 				lowest = v;
 			if (v > highest)
 				highest = v;
+			
 			combinedmap.push(v);
 		}
 	}
@@ -3682,6 +3684,14 @@ function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 	let dx = 0;
 	let dy = 0;
 	let val = 0;
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x  = 0; x < width; x++)
+		{
+			map.push(0);
+		}
+	}
 	for (let y = 0; y < height; y++)
 	{
 		for (let x  = 0; x < width; x++)
@@ -3700,10 +3710,12 @@ function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 			else if (val > 1)
 				val = 1;
 			
-			map.push(val);
+			map[x+(y*width)] = val;
 			previousx = val;
-			if (x+(y-1*width) > -1)
-				previousy = map[x+(y-1*width)];
+			if ((y-1) > -1)
+			{
+				previousy = map[x+((y-1)*width)];
+			}
 		}
 		previousx = edgevalue;
 	}
@@ -6661,12 +6673,15 @@ function noisemaptopng(channel, arguments)
 	
 	let imagemap = [];
 	let noisemap = noiseMap2D(map_height, map_width, noise_variance, edge_value);
+	//let noisemap = noiseMap(map_height, map_width, noise_variance, edge_value);
+	//console.log(noisemap);
 	for (let i = 0; i < smoothing_loops; i++)
 	{
+		
 		noisemap = increaseContrast(noisemap, map_height, map_width, 0.4);
 		noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
 		noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
-		noisemap = smoothenMap(noisemap, map_height, map_width, 0.25);
+		//noisemap = smoothenMap(noisemap, map_height, map_width, 0.25);
 		
 		//noisemap = decreaseContrast(noisemap, map_height, map_width, smoothing_val);
 		//noisemap = blurMap(noisemap, map_height, map_width, smoothing_val);
