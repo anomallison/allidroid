@@ -492,10 +492,10 @@ function processCommand(receivedMessage)
 	{
 		generateHexCity(receivedMessage.channel,arguments);
     } 
-	else if (normalizedCommand == "noisemap") 
-	{
-		noisemaptopng(receivedMessage.channel,arguments);
-    } 
+	//else if (normalizedCommand == "noisemap") 
+	//{
+	//	noisemaptopng(receivedMessage.channel,arguments);
+    //} 
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
