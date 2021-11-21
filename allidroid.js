@@ -491,7 +491,12 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generatevillage") 
 	{
 		generateHexCity(receivedMessage.channel,arguments);
-    } else if (normalizedCommand.substr(0,2) == "!!")
+    } 
+	//else if (normalizedCommand == "noisemap") 
+	//{
+	//	noisemaptopng(receivedMessage.channel,arguments);
+    //} 
+	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
 		if (possibleString.length > 0)
@@ -3605,6 +3610,69 @@ function base64data(uri)
 	return uri.split(';base64,').pop();
 }
 
+
+//
+//
+//
+// Perlin Noise Functions
+//
+//
+//
+
+function interpolateBetween(a0, a1, w)
+{
+	if (w <= 0)
+		return a0;
+	if (w >= 1)
+		return a1;
+	
+	return (a1 - a0) * w + a0;
+}
+
+function randomGradient()
+{
+	let randomv = Math.random() * 2 * 3.14;
+	return { x: Math.sin(randomv), y: Math.sin(randomv) };
+}
+
+function gradientOfTwo(x, y)
+{
+	let gradient = randomGradient();
+	
+	let v = x*gradient.x + y*gradient.y;
+	return (v);
+}
+
+function noiseMap2D(height, width, noisevariance, edgevalue = 0.33)
+{
+	let map0 = noiseMap(height, width, noisevariance, edgevalue);
+	let map1 = noiseMap(height, width, noisevariance, edgevalue);
+	let lowest = 0;
+	let highest = 0;
+	
+	let combinedmap = [];
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			let v = gradientOfTwo(map0[x+y*width],map1[(width-x-1)+((height-y-1)*height)]);
+			if (v < lowest)
+				lowest = v;
+			if (v > highest)
+				highest = v;
+			combinedmap.push(v);
+		}
+	}
+	
+	//normlaize the combined map
+	for (i in combinedmap)
+	{
+		combinedmap[i] = (combinedmap[i]+Math.abs(lowest))/((Math.abs(lowest)+highest));
+	}
+	
+	return combinedmap;
+}
+
 // returns a 1D array that is a noise map, height x width size
 function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 {
@@ -3637,12 +3705,425 @@ function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 			if (x+(y-1*width) > -1)
 				previousy = map[x+(y-1*width)];
 		}
-		previousx = 0.33;
+		previousx = edgevalue;
 	}
 	
 	return map;
 }
 
+function blurMap(map, height, width, amount)
+{
+	let currentsquare = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	let total = 0;
+	let count = 0;
+	let average = 0;
+	let newmap = [];
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			total = 0;
+			count = 1;
+			if (x-2 > -1 && y-2 > -1)
+			{
+				total += map[(x-2)+(y-2)*width];
+				count++;
+			}
+			if (x-1 > -1 && y-2 > -1)
+			{
+				total += map[(x-1)+(y-2)*width];
+				count++;
+			}
+			if (y-2 > -1)
+			{
+				total += map[x+(y-2)*width];
+				count++
+			}
+			if (x+1 < width && y-2 > -1)
+			{
+				total += map[(x+1)+(y-2)*width];
+				count++;
+			}
+			if (x+2 < width && y-2 > -1)
+			{
+				total += map[(x+2)+(y-2)*width];
+				count++;
+			}
+			if (x-2 > -1 && y-1 > -1)
+			{
+				total += map[(x-2)+(y-1)*width];
+				count++;
+			}
+			if (x-1 > -1 && y-1 > -1)
+			{
+				total += map[(x-1)+(y-1)*width];
+				count++;
+			}
+			if (y-1 > -1)
+			{
+				total += map[x+(y-1)*width];
+				count++;
+			}
+			if (x+1 < width && y-1 > -1)
+			{
+				total += map[(x+1)+(y-1)*width];
+				count++;
+			}
+			if (x+2 < width && y-1 > -1)
+			{
+				total += map[(x+2)+(y-1)*width];
+				count++;
+			}
+			if (x-2 > -1)
+			{
+				total += map[(x-2)+y*width];
+				count++;
+			}
+			if (x-1 > -1)
+			{
+				total += map[(x-1)+y*width];
+				count++;
+			}
+			
+			total += map[x+y*width];
+			
+			if (x+1 < width)
+			{
+				total += map[(x+1)+y*width];
+				count++;
+			}
+			if (x+2 < width)
+			{
+				total += map[(x+2)+y*width];
+				count++;
+			}
+			if (x-2 > -1 && y+1 < height)
+			{
+				total += map[(x-2)+(y+1)*width];
+				count++;
+			}
+			if (x-1 > -1 && y+1 < height)
+			{
+				total += map[(x-1)+(y+1)*width];
+				count++;
+			}
+			if (y+1 < height)
+			{
+				total += map[x+(y+1)*width];
+				count++;
+			}
+			if (x+1 < width && y+1 < height)
+			{
+				total += map[(x+1)+(y+1)*width];
+				count++;
+			}
+			if (x+2 < width && y+1 < height)
+			{
+				total += map[(x+2)+(y+1)*width];
+				count++;
+			}
+			if (x-2 > -1 && y+2 < height)
+			{
+				total += map[(x-2)+(y+2)*width];
+				count++;
+			}
+			if (x-1 > -1 && y+2 < height)
+			{
+				total += map[(x-1)+(y+2)*width];
+				count++;
+			}
+			if (y+2 < height)
+			{
+				total += map[x+(y+2)*width];
+				count++;
+			}
+			if (x+1 < width && y+2 < height)
+			{
+				total += map[(x+1)+(y+2)*width];
+				count++;
+			}
+			if (x+2 < width && y+2 < height)
+			{
+				total += map[(x+2)+(y+2)*width];
+				count++;
+			}
+			
+			average = total / count;
+			
+			newmap.push(interpolateBetween(map[x+y*width],average,amount));
+		}
+	}
+	return newmap;
+}
+
+function sharpenMap(map, height, width, amount)
+{
+	let currentsquare = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	let highest = 0;
+	let newmap = [];
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			if (x-2 > -1 && y-2 > -1)
+			{
+				if (map[(x-2)+(y-2)*width] > highest);
+					highest = map[(x-2)+(y-2)*width];
+			}
+			if (x-1 > -1 && y-2 > -1)
+			{
+				if (map[(x-1)+(y-2)*width] > highest);
+					highest = map[(x-1)+(y-2)*width];
+			}
+			if (y-2 > -1)
+			{
+				if (map[x+(y-2)*width] > highest);
+					highest = map[x+(y-2)*width];
+			}
+			if (x+1 < width && y-2 > -1)
+			{
+				if (map[(x+1)+(y-2)*width] > highest);
+					highest = map[(x+1)+(y-2)*width];
+			}
+			if (x+2 < width && y-2 > -1)
+			{
+				if (map[(x+2)+(y-2)*width] > highest);
+					highest = map[(x+2)+(y-2)*width];
+			}
+			if (x-2 > -1 && y-1 > -1)
+			{
+				if (map[(x-2)+(y-1)*width] > highest);
+					highest = map[(x-2)+(y-1)*width];
+			}
+			if (x-1 > -1 && y-1 > -1)
+			{
+				if (map[(x-1)+(y-1)*width] > highest);
+					highest = map[(x-1)+(y-1)*width];
+			}
+			if (y-1 > -1)
+			{
+				if (map[x+(y-1)*width] > highest);
+					highest = map[x+(y-1)*width];
+			}
+			if (x+1 < width && y-1 > -1)
+			{
+				if (map[(x+1)+(y-1)*width] > highest);
+					highest = map[(x+1)+(y-1)*width];
+			}
+			if (x+2 < width && y-1 > -1)
+			{
+				if (map[(x+2)+(y-1)*width] > highest);
+					highest = map[(x+2)+(y-1)*width];
+			}
+			if (x-2 > -1)
+			{
+				if (map[(x-2)+(y-2)*width] > highest);
+					highest = map[(x-2)+y*width];
+			}
+			if (x-1 > -1)
+			{
+				if (map[(x-1)+(y-2)*width] > highest);
+					highest = map[(x-1)+y*width];
+			}
+			if (map[x+(y-2)*width] > highest);
+				highest = map[x+y*width];
+			if (x+1 < width)
+			{
+				if (map[(x+1)+(y-2)*width] > highest);
+					highest = map[(x+1)+y*width];
+			}
+			if (x+2 < width)
+			{
+				if (map[(x+2)+(y-2)*width] > highest);
+					highest = map[(x+2)+y*width];
+			}
+			if (x-2 > -1 && y+1 < height)
+			{
+				if (map[(x-2)+(y+1)*width] > highest);
+					highest = map[(x-2)+(y+1)*width];
+			}
+			if (x-1 > -1 && y+1 < height)
+			{
+				if (map[(x-1)+(y+1)*width] > highest);
+					highest = map[(x-1)+(y+1)*width];
+			}
+			if (y+1 < height)
+			{
+				if (map[x+(y+1)*width] > highest);
+					highest = map[x+(y+1)*width];
+			}
+			if (x+1 < width && y+1 < height)
+			{
+				if (map[(x+1)+(y+1)*width] > highest);
+					highest = map[(x+1)+(y+1)*width];
+			}
+			if (x+2 < width && y+1 < height)
+			{
+				if (map[(x+2)+(y-2)*width] > highest);
+					highest = map[(x+2)+(y+1)*width];
+			}
+			if (x-2 > -1 && y+2 < height)
+			{
+				if (map[(x-2)+(y+2)*width] > highest);
+					highest = map[(x-2)+(y+2)*width];
+			}
+			if (x-1 > -1 && y+2 < height)
+			{
+				if (map[(x-1)+(y+2)*width] > highest);
+					highest = map[(x-1)+(y+2)*width];
+			}
+			if (y+2 < height)
+			{
+				if (map[x+(y+2)*width] > highest);
+					highest = map[x+(y+2)*width];
+			}
+			if (x+1 < width && y+2 < height)
+			{
+				if (map[(x+1)+(y+2)*width] > highest);
+					highest = map[(x+1)+(y+2)*width];
+			}
+			if (x+2 < width && y+2 < height)
+			{
+				if (map[(x+2)+(y+2)*width] > highest);
+					highest = map[(x+2)+(y+2)*width];
+			}
+			
+			if (highest > 0.5)
+				newmap.push(interpolateBetween(map[x+y*width],map[x+y*width]/highest,amount));
+			else
+				newmap.push(interpolateBetween(map[x+y*width],1-map[x+y*width]/highest,amount));
+		}
+	}
+	return newmap;
+}
+
+function sumOfArray(array)
+{
+	let total = 0;
+	for(i in array)
+	{
+		total += array[i];
+	}
+	return total;
+}
+
+function decreaseContrast(map, height, width, amount)
+{
+	let target = 0.5;
+	let newmap = [];
+	let highest = 0;
+	let lowest = 1;
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			if (map[x+y*width] < lowest)
+				lowest = map[x+y*width];
+			
+			if (map[x+y*width] > highest)
+				highest = map[x+y*width];
+		}
+	}
+	
+	target = (highest + lowest)/2;
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			newmap.push(interpolateBetween(map[x+y*width],target,amount));
+		}
+	}
+	return newmap;
+}
+
+function increaseContrast(map, height, width, amount)
+{
+	let target = 0;
+	let newmap = [];
+	let midpoint = 0.5
+	let highest = 0;
+	let lowest = 1;
+	let total = 0;
+	let count = 0;
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			if (map[x+y*width] < lowest)
+				lowest = map[x+y*width];
+			
+			if (map[x+y*width] > highest)
+				highest = map[x+y*width];
+			total += map[x+y*width];
+			count++;
+		}
+	}
+	
+	midpoint = (highest + lowest)/2;
+	average = total / count;
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			target = map[x+y*width] > midpoint ? 1 : 0;
+			
+			newmap.push(interpolateBetween(map[x+y*width],target,amount));
+		}
+	}
+	return newmap;
+}
+
+function smoothenMap(map, height, width, amount)
+{
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			if (x-1 > -1 && y-1 > -1)
+			{
+				map[(x-1)+(y-1)*width] = interpolateBetween(map[(x-1)+(y-1)*width],map[x+y*width],amount);
+			}
+			if (y-1 > -1)
+			{
+				map[x+(y-1)*width] = interpolateBetween(map[x+(y-1)*width],map[x+y*width],amount);
+			}
+			if (x+1 < width && y-1 > -1)
+			{
+				map[(x+1)+(y-1)*width] = interpolateBetween(map[(x+1)+(y-1)*width],map[x+y*width],amount);
+			}
+			if (x-1 > -1)
+			{
+				map[(x-1)+y*width] = interpolateBetween(map[(x-1)+y*width],map[x+y*width],amount);
+			}
+			//map[x+y*width] = interpolateBetween(map[x+y*width],average,amount);
+			if (x+1 < width)
+			{
+				map[(x+1)+y*width] = interpolateBetween(map[(x+1)+y*width],map[x+y*width],amount);
+			}
+			if (x-1 > -1 && y+1 < height)
+			{
+				map[(x-1)+(y+1)*width] = interpolateBetween(map[(x-1)+(y+1)*width],map[x+y*width],amount);
+				
+			}
+			if (y+1 < height)
+			{
+				map[x+(y+1)*width] = interpolateBetween(map[x+(y+1)*width],map[x+y*width],amount);
+				
+			}
+			if (x+1 < width && y+1 < height)
+			{
+				map[(x+1)+(y+1)*width] = interpolateBetween(map[(x+1)+(y+1)*width],map[x+y*width],amount);
+			}
+		}
+	}
+	return map;
+}
 
 //
 //
@@ -3650,17 +4131,6 @@ function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 //
 //
 
-let LAND_LEVEL = 0.32;
-let HILL_LEVEL = 0.466;
-let MOUNTAIN_LEVEL = 0.633;
-
-let PLAINS_LEVEL = 0.27;
-let GRASS_LEVEL = 0.495;
-let TUNDRA_LEVEL = 0.795;
-let SNOW_LEVEL = 0.905;
-
-let FOREST_LEVEL = 0.55;
-let JUNGLE_LEVEL = 0.83;
 
 let MAX_MAP_HEIGHT = 100;
 let MAX_MAP_WIDTH = 150;
@@ -3670,11 +4140,22 @@ let LAND_EROSION = 0.64;
 
 function generateMap(channel, arguments)
 {
+	let LAND_LEVEL = 0.39;
+	let HILL_LEVEL = 0.576;
+	let MOUNTAIN_LEVEL = 0.71;
+
+	let PLAINS_LEVEL = 0.32;
+	let GRASS_LEVEL = 0.49;
+	let TUNDRA_LEVEL = 0.685;
+	let SNOW_LEVEL = 0.855;
+
+	let FOREST_LEVEL = 0.64;
+	let JUNGLE_LEVEL = 0.89;
+
 	let MAP_HEIGHT = 18;
 	let MAP_WIDTH = 32;
 	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 5.5);
-	let ClimateBalance = 0.51;
-	let ClimateVariance = 0.22;
+	let ClimateBalance = 125;
 	let grid_opacity = 0;
 	
 	if (arguments != null)
@@ -3687,29 +4168,36 @@ function generateMap(channel, arguments)
 			LANDMASSES = Math.floor(arguments[3]);
 		if (!isNaN(arguments[4]))
 			ClimateBalance = arguments[4];;
-		if (!isNaN(arguments[5]))
-			ClimateVariance = arguments[5];
 		if (!isNaN(arguments[2]))
 			grid_opacity = arguments[2];
 	}
+	
+	PLAINS_LEVEL = PLAINS_LEVEL * ClimateBalance / 150;
+	GRASS_LEVEL = GRASS_LEVEL * ClimateBalance/120;
+	TUNDRA_LEVEL = TUNDRA_LEVEL * ClimateBalance/110;
+	SNOW_LEVEL = SNOW_LEVEL * ClimateBalance/100;
 	
 	if (MAP_WIDTH < 1)
 		return null;
 	if (MAP_HEIGHT < 1)
 		return null;
 	
-	ClimateBalance = Math.min(ClimateBalance,1);
-	ClimateBalance = Math.max(ClimateBalance,0);
-	ClimateVariance = Math.min(ClimateVariance,1);
-	ClimateVariance = Math.max(ClimateVariance,0);
 	grid_opacity = Math.min(grid_opacity,1);
 	grid_opacity = Math.max(grid_opacity,0);
 	
 	MAP_HEIGHT = Math.min(MAP_HEIGHT,MAX_MAP_HEIGHT);
 	MAP_WIDTH = Math.min(MAP_WIDTH,MAX_MAP_WIDTH);
 	
-	let heightmap = noiseMap(MAP_HEIGHT,MAP_WIDTH, 0.37);
-	let terrainmap = noiseMap(MAP_HEIGHT,MAP_WIDTH, ClimateBalance, ClimateVariance);
+	let heightmap = noiseMap2D(MAP_HEIGHT,MAP_WIDTH, 0.67);
+		heightmap = increaseContrast(heightmap, MAP_HEIGHT, MAP_WIDTH, 0.4);
+		heightmap = smoothenMap(heightmap, MAP_HEIGHT, MAP_WIDTH, 0.175);
+		heightmap = increaseContrast(heightmap, MAP_HEIGHT, MAP_WIDTH, 0.25);
+	//heightmap = sharpenMap(heightmap, MAP_HEIGHT, MAP_WIDTH, 1);
+	let terrainmap = noiseMap2D(MAP_HEIGHT,MAP_WIDTH, 0.23, 0.45);
+		terrainmap = increaseContrast(terrainmap, MAP_HEIGHT, MAP_WIDTH, 0.4);
+		terrainmap = smoothenMap(terrainmap, MAP_HEIGHT, MAP_WIDTH, 0.175);
+		terrainmap = increaseContrast(terrainmap, MAP_HEIGHT, MAP_WIDTH, 0.25);
+	//terrainmap = sharpenMap(terrainmap, MAP_HEIGHT, MAP_WIDTH, 1);
 	
 	let premapmap = [];
 	//initialize the premapmap
@@ -3861,7 +4349,7 @@ function generateMap(channel, arguments)
 						premapmap[x+(y*MAP_WIDTH)].terrain = "desert";
 					}
 				}
-				else if (heightmap[x+(y*MAP_WIDTH)] > LAND_LEVEL)
+				else //if (heightmap[x+(y*MAP_WIDTH)] > LAND_LEVEL)
 				{
 					if (terrainmap[x+(y*MAP_WIDTH)] > SNOW_LEVEL)
 					{
@@ -6137,6 +6625,79 @@ function generateHexCity(channel, arguments)
 		))
 	
 }
+
+
+
+//
+//
+// visualize noiseMap
+//
+//
+
+function noisemaptopng(channel, arguments)
+{
+	let map_width = 100;
+	let map_height = 100;
+	let noise_variance = 0.25;
+	let edge_value = 0.5;
+	let smoothing_val = 0.24;
+	let smoothing_loops = 1;
+	
+	if (arguments != null)
+	{
+		if (!isNaN(arguments[0]))
+			map_width = parseInt(arguments[0]);
+		if (!isNaN(arguments[1]))
+			map_height = parseInt(arguments[1]);
+		if (!isNaN(arguments[2]))
+			noise_variance = parseFloat(arguments[2]);
+		if (!isNaN(arguments[3]))
+			edge_value = parseFloat(arguments[3]);
+		if (!isNaN(arguments[4]))
+			smoothing_val = parseFloat(arguments[4]);
+		if (!isNaN(arguments[5]))
+			smoothing_loops = parseInt(arguments[5]);
+	}
+	
+	let imagemap = [];
+	let noisemap = noiseMap2D(map_height, map_width, noise_variance, edge_value);
+	for (let i = 0; i < smoothing_loops; i++)
+	{
+		noisemap = increaseContrast(noisemap, map_height, map_width, 0.4);
+		noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
+		noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
+		noisemap = smoothenMap(noisemap, map_height, map_width, 0.25);
+		
+		//noisemap = decreaseContrast(noisemap, map_height, map_width, smoothing_val);
+		//noisemap = blurMap(noisemap, map_height, map_width, smoothing_val);
+	}
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x = 0; x < map_width; x++)
+		{
+			imagemap.push({ src: "./blackdot.png", x: x, y: y });
+			imagemap.push({ src: "./whitedot.png", x: x, y: y, opacity: noisemap[x+y*map_width]});
+		}
+	}
+	
+	let file = 'generatedmap.png';
+	let path = './' + file;
+	
+	mergeImages(imagemap, 
+	{
+		width: (map_width),
+		height: (map_height),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+}
+
 
 
 //
