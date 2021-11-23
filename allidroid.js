@@ -50,6 +50,10 @@ var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'))
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
 var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
 
+
+//alien language files
+var alien_alphabet = JSON.parse(fs.readFileSync('alienlanguage/alienalphabet.json'));
+
 //slashfic prompt lists
 var au_list = JSON.parse(fs.readFileSync('au_list.json'));
 var au_twists = JSON.parse(fs.readFileSync('au_twists.json'));
@@ -495,7 +499,11 @@ function processCommand(receivedMessage)
 	//else if (normalizedCommand == "noisemap") 
 	//{
 	//	noisemaptopng(receivedMessage.channel,arguments);
-    //} 
+    //}  
+	else if (normalizedCommand == "alienlanguage") 
+	{
+		encodeToAlienLanguage(receivedMessage.channel,arguments);
+    } 
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -3614,7 +3622,7 @@ function base64data(uri)
 //
 //
 //
-// Perlin Noise Functions
+// Noise Functions
 //
 //
 //
@@ -6876,6 +6884,113 @@ function nani()
 		return "!!??";
 	else
 		return "!?!?";
+}
+
+
+//
+//
+// alien language encoder
+//
+//
+
+function encodeToAlienLanguage(channel, arguments)
+{
+	for (let a in arguments)
+	{
+		if (arguments[a].match(/[^A-Za-z]+/))
+		{
+			channel.send("We can only words without punctuation and numbers into aliens words right now");
+			return;
+		}
+	}
+	
+	shuffledwords = [];
+	
+	for (let a in arguments)
+	{
+		let position = 0;
+		let half = Math.floor(arguments[a].length/2);
+		shuffledwords.push("");
+		while (position+half < (arguments[a].length - (arguments[a].length%2)))
+		{
+			shuffledwords[a] += arguments[a].charAt(position);
+			shuffledwords[a] += arguments[a].charAt(position+half);
+			position++;
+		}
+		if (shuffledwords[a].length < arguments[a].length)
+		{
+			shuffledwords[a] += arguments[a].charAt(arguments[a].length-1);
+		}
+	}
+	
+	let imgheight = 34; //alter this if largest heigh changes in alien alphabet
+	let spacewidth = 24; // space character width;
+	let maxlinewidth = 500; // do a line break!;
+	let imagemap = [];
+	let totalwidth = 0;
+	let currentxpos = 0;
+	let currentypos = 0;
+	for (let s = 0; s < shuffledwords.length; s++)
+	{
+		shuffledwords[s] = shuffledwords[s].toLowerCase();
+		for (let i = 0; i < shuffledwords[s].length; i++)
+		{
+			let alienletter;
+			let characterat = shuffledwords[s].charCodeAt(i)-97;
+			if (i == shuffledwords[s].length-1)
+			{
+				alienletter = alien_alphabet.single[characterat];
+			}
+			else if (i%2 == 0)
+			{
+				alienletter = alien_alphabet.even[characterat];
+			}
+			else
+			{
+				alienletter = alien_alphabet.odd[characterat];
+			}
+			let ypos = currentypos + Math.floor((imgheight - alienletter.height)/2);
+			
+			imagemap.push({ src: alienletter.path, x: currentxpos, y: ypos });
+			currentxpos += alienletter.width;
+			if (currentxpos > totalwidth)
+			{
+				totalwidth = currentxpos;
+			}
+		}
+		
+		if (s < shuffledwords.length-1)
+		{
+			currentxpos += spacewidth;
+			if (currentxpos > totalwidth)
+			{
+				totalwidth = currentxpos;
+			}
+		}
+		
+		if (currentxpos > maxlinewidth)
+		{
+			currentxpos = 0;
+			currentypos += imgheight+2;
+		}
+	}
+	
+	let file = 'alienwords.png';
+	let path = './' + file;
+	
+	mergeImages(imagemap, 
+	{
+		width: (totalwidth),
+		height: (currentypos + imgheight),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
 }
 
 //

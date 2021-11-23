@@ -3,3 +3,6 @@
 ``!quest`` takes upto 1 argument, which represents the minimum "level" of the quest.
 
 Currently quests range from levels 1 to level 18
+
+examples: ``!quest 7``
+``!quest``

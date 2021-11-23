@@ -2,3 +2,8 @@
 
 ``!roll`` takes 1 argument in the form of *x*d*y*d*z*+*c* or *x*d*y*d*z*-*c*, where *x* is the number of dice to roll, *y* is the sides per die, *z* is the number of lowest die to drop, and *c* is added to the total.
 It can also be shortened to *x*d*y*+*c* or *x*d*y*-*c* or even just *x*d*y*
+
+examples: ``!roll 4d6d1``
+``!roll 2d20d1+7``
+``!roll 4d6+4``
+``!roll 1d20-3``

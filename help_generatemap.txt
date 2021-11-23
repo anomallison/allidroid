@@ -3,7 +3,7 @@
 ``!generatemap`` takes upto 5 arguments currently: the width, the height, grid opacity, the number of landmasses to generate on the map, and the 'hot/cold' cold balance between 0 and upto about 400 (default is 125)
 
 example
-``!generatemap`` 40 30 0 8 166
-``!generatemap`` 150 100 0.33 15
-``!generatemap`` 32 18 0.5
+``!generatemap 40 30 0 8 166``
+``!generatemap 150 100 0.33 15``
+``!generatemap 32 18 0.5``
 ``!generatemap``
