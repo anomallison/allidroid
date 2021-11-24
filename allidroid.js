@@ -6940,6 +6940,12 @@ function encodeToAlienLanguage(channel, arguments)
 			let baseval = parseInt(arguments[a]);
 			let digit = 0;
 			let currentpower = 0;
+			
+			if (baseval == 0)
+			{
+				shuffledwords[a] += digit.toString();
+			}
+			
 			while (baseval/Math.pow(7,currentpower) >= 1)
 			{
 				digit = Math.floor((baseval % Math.pow(7,currentpower+1)) / Math.pow(7,currentpower));
