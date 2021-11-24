@@ -1,0 +1,4 @@
+``!alienlanguage`` command takes a length of strings to convert into alien glyphs. It only takes alphanumeric characters, no punctuation. It requires input.
+
+``!alienlanguage hello earthlings``
+``!alienlanguage 1000``

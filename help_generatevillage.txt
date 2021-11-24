@@ -5,4 +5,4 @@
 example
 ``!generatevillage 24 16 3``
 ``!generatevillage 40 24 4``
-``!generatevillage`` 
+``!generatevillage``

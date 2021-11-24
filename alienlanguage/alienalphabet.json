@@ -397,5 +397,43 @@
 			"width":16,
 			"height":31
 		}
+	],
+	"number":
+	[
+		{
+			"path":"./alienlanguage/number/0.png",
+			"width":16,
+			"height":22
+		},
+		{
+			"path":"./alienlanguage/number/1.png",
+			"width":14,
+			"height":28
+		},
+		{
+			"path":"./alienlanguage/number/2.png",
+			"width":16,
+			"height":28
+		},
+		{
+			"path":"./alienlanguage/number/3.png",
+			"width":18,
+			"height":28
+		},
+		{
+			"path":"./alienlanguage/number/4.png",
+			"width":14,
+			"height":28
+		},
+		{
+			"path":"./alienlanguage/number/5.png",
+			"width":14,
+			"height":28
+		},
+		{
+			"path":"./alienlanguage/number/6.png",
+			"width":18,
+			"height":28
+		}
 	]
 }

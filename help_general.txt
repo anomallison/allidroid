@@ -27,3 +27,4 @@ There are the following commands:
 ``!quest``
 ``!howtoinitiate``
 ``!room``
+``!alienlanguage``

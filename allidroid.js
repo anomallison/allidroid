@@ -614,6 +614,11 @@ function helpCommand(user, arguments)
 		help_string = fs.readFileSync('help_generatevillage.txt').toString();
 		//user.send({ files: [{ attachment: './help_generatevillage.txt', name: 'help_generatevillage.txt' }] });
 	}
+	else if (arguments[0] == "!alienlanguage" || arguments[0] == "alienlanguage")
+	{
+		help_string = fs.readFileSync('help_alienlanguage.txt').toString();
+		//user.send({ files: [{ attachment: './help_alienlanguage.txt', name: 'help_alienlanguage.txt' }] });
+	}
 	else if (arguments[0] == "!how" || arguments[0] == "how")
 	{
 		help_string = fs.readFileSync('help_how.txt').toString();
@@ -6897,15 +6902,15 @@ function encodeToAlienLanguage(channel, arguments)
 {
 	if (arguments == null || arguments.length == 0)
 	{
-		channel.send("I need words to transcode into alien words");
+		channel.send("I need words or numbers to transcode into alien words and numbers");
 		return;
 	}
 	
 	for (let a in arguments)
 	{
-		if (arguments[a].match(/[^A-Za-z]+/) != null)
+		if (arguments[a].match(/[^A-Za-z0-9]+/) != null)
 		{
-			channel.send("I can only transcode words without punctuation or numbers into aliens words right now");
+			channel.send("I can only transcode numbers or words without punctuation into aliens words and numbers right now");
 			return;
 		}
 	}
@@ -6914,19 +6919,33 @@ function encodeToAlienLanguage(channel, arguments)
 	
 	for (let a in arguments)
 	{
-		//console.log(arguments[a].match(/[A-Za-z]+/) != null);
-		let position = 0;
-		let half = Math.floor(arguments[a].length/2);
 		shuffledwords.push("");
-		while (position+half < (arguments[a].length - (arguments[a].length%2)))
+		if (arguments[a].match(/[^A-Za-z]+/) == null)
 		{
-			shuffledwords[a] += arguments[a].charAt(position);
-			shuffledwords[a] += arguments[a].charAt(position+half);
-			position++;
+			let position = 0;
+			let half = Math.floor(arguments[a].length/2);
+			while (position+half < (arguments[a].length - (arguments[a].length%2)))
+			{
+				shuffledwords[a] += arguments[a].charAt(position);
+				shuffledwords[a] += arguments[a].charAt(position+half);
+				position++;
+			}
+			if (shuffledwords[a].length < arguments[a].length)
+			{
+				shuffledwords[a] += arguments[a].charAt(arguments[a].length-1);
+			}
 		}
-		if (shuffledwords[a].length < arguments[a].length)
+		else
 		{
-			shuffledwords[a] += arguments[a].charAt(arguments[a].length-1);
+			let baseval = parseInt(arguments[a]);
+			let digit = 0;
+			let currentpower = 0;
+			while (baseval/Math.pow(7,currentpower) >= 1)
+			{
+				digit = Math.floor((baseval % Math.pow(7,currentpower+1)) / Math.pow(7,currentpower));
+				shuffledwords[a] += digit.toString();
+				currentpower++;
+			}
 		}
 	}
 	
@@ -6953,7 +6972,12 @@ function encodeToAlienLanguage(channel, arguments)
 		{
 			let alienletter;
 			let characterat = shuffledwords[s].charCodeAt(i)-97;
-			if (i == shuffledwords[s].length-1)
+			if (shuffledwords[s].match(/[0-9]+/) != null)
+			{
+				characterat += 49;
+				alienletter = alien_alphabet.number[characterat];
+			}
+			else if (i == shuffledwords[s].length-1)
 			{
 				alienletter = alien_alphabet.single[characterat];
 			}
