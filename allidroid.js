@@ -6895,11 +6895,17 @@ function nani()
 
 function encodeToAlienLanguage(channel, arguments)
 {
+	if (arguments == null || arguments.length == 0)
+	{
+		channel.send("I need words to transcode into alien words");
+		return;
+	}
+	
 	for (let a in arguments)
 	{
-		if (arguments[a].match(/[^A-Za-z]+/))
+		if (arguments[a].match(/[^A-Za-z]+/) != null)
 		{
-			channel.send("We can only words without punctuation and numbers into aliens words right now");
+			channel.send("I can only transcode words without punctuation or numbers into aliens words right now");
 			return;
 		}
 	}
@@ -6908,6 +6914,7 @@ function encodeToAlienLanguage(channel, arguments)
 	
 	for (let a in arguments)
 	{
+		//console.log(arguments[a].match(/[A-Za-z]+/) != null);
 		let position = 0;
 		let half = Math.floor(arguments[a].length/2);
 		shuffledwords.push("");
@@ -6920,6 +6927,15 @@ function encodeToAlienLanguage(channel, arguments)
 		if (shuffledwords[a].length < arguments[a].length)
 		{
 			shuffledwords[a] += arguments[a].charAt(arguments[a].length-1);
+		}
+	}
+	
+	for (let i = 0; i < shuffledwords.length; i++)
+	{
+		if (shuffledwords[i].length == 0)
+		{
+			shuffledwords.splice(i,1);
+			i--;
 		}
 	}
 	
@@ -6966,13 +6982,15 @@ function encodeToAlienLanguage(channel, arguments)
 			{
 				totalwidth = currentxpos;
 			}
-		}
-		
-		if (currentxpos > maxlinewidth)
-		{
+			
+			if (currentxpos > maxlinewidth)
+			{
 			currentxpos = 0;
 			currentypos += imgheight+2;
+			}
 		}
+		
+		
 	}
 	
 	let file = 'alienwords.png';
