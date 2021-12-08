@@ -1,0 +1,2342 @@
+{
+	"encounters":
+	[
+		{
+			"name": "hot jungle",
+			"encounters":
+			[
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat direbat",
+				"batswarm",
+				"batswarm",
+				"blotflyswarm",
+				"blotflyswarm",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly giantblotfly",
+				"venomoussnake venomoussnake",
+				"cyclops",
+				"cyclops",
+				"amoebaswarm",
+				"amoebaswarm",
+				"spiderswarm",
+				"spiderswarm",
+				"giantspider",
+				"giantspider",
+				"giantspider giantspider"
+			]
+		},
+		{
+			"name": "temperate jungle",
+			"encounters":
+			[
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat direbat",
+				"batswarm",
+				"batswarm",
+				"blotflyswarm",
+				"blotflyswarm",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly giantblotfly",
+				"venomoussnake venomoussnake",
+				"cyclops",
+				"cyclops",
+				"amoebaswarm",
+				"amoebaswarm",
+				"spiderswarm",
+				"spiderswarm",
+				"giantspider",
+				"giantspider",
+				"giantspider giantspider"
+			]
+		},
+		{
+			"name": "cold jungle",
+			"encounters":
+			[
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat direbat",
+				"batswarm",
+				"batswarm",
+				"blotflyswarm",
+				"blotflyswarm",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly giantblotfly",
+				"venomoussnake venomoussnake",
+				"cyclops",
+				"cyclops",
+				"amoebaswarm",
+				"amoebaswarm",
+				"spiderswarm",
+				"spiderswarm",
+				"giantspider",
+				"giantspider",
+				"giantspider giantspider"
+			]
+		},
+		{
+			"name": "hot forest",
+			"encounters":
+			[
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat direbat",
+				"batswarm",
+				"batswarm",
+				"blotflyswarm",
+				"blotflyswarm",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly",
+				"giantblotfly giantblotfly",
+				"amoebaswarm",
+				"amoebaswarm",
+				"spiderswarm",
+				"spiderswarm",
+				"giantspider",
+				"giantspider",
+				"giantspider giantspider"
+			]
+		},
+		{
+			"name": "temperate forest",
+			"encounters":
+			[
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat direbat",
+				"batswarm",
+				"batswarm",
+				"wolf wolf",
+				"wolf wolf",
+				"wolf wolf",
+				"wolf wolf wolf",
+				"direwolf",
+				"direwolf",
+				"spiderswarm",
+				"spiderswarm",
+				"giantspider",
+				"giantspider",
+				"giantspider giantspider",
+				"giantcentipede",
+				"giantcentipede",
+				"giantcentipede giantcentipede"
+			]
+		},
+		{
+			"name": "cold forest",
+			"encounters":
+			[
+				"bear",
+				"bear",
+				"bear bear",
+				"wolf wolf",
+				"wolf wolf",
+				"wolf wolf",
+				"wolf wolf wolf wolf",
+				"direwolf"
+			]
+		},
+		{
+			"name": "hot grasslands",
+			"encounters":
+			[
+				"direalligator",
+				"direalligator direalligator",
+				"giantfly giantfly",
+				"giantfly giantfly",
+				"giantfly giantfly",
+				"giantfly giantfly giantfly",
+				"giantfly giantfly giantfly",
+				"giantfrog",
+				"giantfrog",
+				"giantfrog giantfrog"
+			]
+		},
+		{
+			"name": "temperate grasslands",
+			"encounters":
+			[
+				"wolf wolf",
+				"wolf wolf",
+				"wolf wolf",
+				"wolf wolf wolf wolf",
+				"direwolf"
+			]
+		},
+		{
+			"name": "cold grasslands",
+			"encounters":
+			[
+				"wolf wolf",
+				"wolf wolf",
+				"wolf wolf",
+				"wolf wolf wolf wolf",
+				"direwolf",
+				"direwolf"
+			]
+		},
+		{
+			"name": "hot plains",
+			"encounters":
+			[
+				"cheetah cheetah",
+				"cheetah cheetah",
+				"hyena hyena hyena",
+				"hyena hyena hyena",
+				"goliathstagbeetle"
+			]
+		},
+		{
+			"name": "temperate plains",
+			"encounters":
+			[
+				"giantscorpion",
+				"bison bison bison",
+				"worg",
+				"ankheg",
+				"ankheg"
+			]
+		},
+		{
+			"name": "cold plains",
+			"encounters":
+			[
+				"tiger",
+				"tiger",
+				"tiger tiger",
+				"diretiger"
+			]
+		},
+		{
+			"name": "hot desolate",
+			"encounters":
+			[
+				"direbat",
+				"direbat",
+				"direbat",
+				"direbat direbat",
+				"direbat direbat",
+				"batswarm",
+				"batswarm",
+				"giantscorpion"
+			]
+		},
+		{
+			"name": "temperate desolate",
+			"encounters":
+			[
+				"direbat",
+				"direbat",
+				"direbat direbat",
+				"batswarm",
+				"batswarm",
+				"giantscorpion"
+			]
+		},
+		{
+			"name": "cold desolate",
+			"encounters":
+			[
+				"direbat",
+				"direbat",
+				"direbat direbat",
+				"batswarm",
+				"batswarm",
+				"diretiger"
+			]
+		}
+	],
+	"landmarks":
+	[
+		{
+			"name": "none",
+			"keywords": ["adventure","sleep","town"]
+		},
+		{
+			"name": "city",
+			"keywords": ["adventure","sleep","town"]
+		},
+		{
+			"name": "town",
+			"keywords": ["adventure","sleep","town"]
+		},
+		{
+			"name": "village",
+			"keywords": ["adventure","sleep","town"]
+		},
+		{
+			"name": "evil castle",
+			"keywords": ["adventure","sleep","town"]
+		},
+		{
+			"name": "monster lair",
+			"keywords": ["adventure","sleep","town"]
+		},
+		{
+			"name": "quest site",
+			"keywords": ["adventure","sleep","town"]
+		}
+	],
+	"adventurers":
+	{
+		"species":
+		[
+			{
+				"name": "android",
+				"stats":
+				{
+					"HP": 10,
+					"MP": 2,
+					"Stamina": 16,
+					"Attack": 5,
+					"Defense": 7,
+					"Charisma": 2,
+					"Size": 6
+				}
+			},
+			{
+				"name": "leshy",
+				"stats":
+				{
+					"HP": 5,
+					"MP": 6,
+					"Stamina": 12,
+					"Attack": 4,
+					"Defense": 8,
+					"Charisma": 5,
+					"Size": 3
+				}
+			},
+			{
+				"name": "charr",
+				"stats":
+				{
+					"HP": 11,
+					"MP": 3,
+					"Stamina": 12,
+					"Attack": 7,
+					"Defense": 6,
+					"Charisma": 4,
+					"Size": 7
+				}
+			},
+			{
+				"name": "elf",
+				"stats":
+				{
+					"HP": 3,
+					"MP": 12,
+					"Stamina": 16,
+					"Attack": 6,
+					"Defense": 6,
+					"Charisma": 5,
+					"Size": 6
+				}
+			},
+			{
+				"name": "dwarf",
+				"stats":
+				{
+					"HP": 11,
+					"MP": 2,
+					"Stamina": 16,
+					"Attack": 7,
+					"Defense": 8,
+					"Charisma": 3,
+					"Size": 4
+				}
+			},
+			{
+				"name": "halfling",
+				"stats":
+				{
+					"HP": 8,
+					"MP": 5,
+					"Stamina": 12,
+					"Attack": 5,
+					"Defense": 9,
+					"Charisma": 7,
+					"Size": 3
+				}
+			},
+			{
+				"name": "orc",
+				"stats":
+				{
+					"HP": 11,
+					"MP": 2,
+					"Stamina": 12,
+					"Attack": 7,
+					"Defense": 5,
+					"Charisma": 2,
+					"Size": 6
+				}
+			},
+			{
+				"name": "gnome",
+				"stats":
+				{
+					"HP": 6,
+					"MP": 8,
+					"Stamina": 11,
+					"Attack": 5,
+					"Defense": 8,
+					"Charisma": 6,
+					"Size": 3
+				}
+			},
+			{
+				"name": "tengu",
+				"stats":
+				{
+					"HP": 5,
+					"MP": 5,
+					"Stamina": 10,
+					"Attack": 11,
+					"Defense": 10,
+					"Charisma": 6,
+					"Size": 6
+				}
+			},
+			{
+				"name": "goblin",
+				"stats":
+				{
+					"HP": 10,
+					"MP": 4,
+					"Stamina": 10,
+					"Attack": 6,
+					"Defense": 5,
+					"Charisma": 5,
+					"Size": 3
+				}
+			},
+			{
+				"name": "human",
+				"stats":
+				{
+					"HP": 8,
+					"MP": 7,
+					"Stamina": 10,
+					"Attack": 5,
+					"Defense": 6,
+					"Charisma": 7,
+					"Size": 6
+				}
+			},
+			{
+				"name": "catfolk",
+				"stats":
+				{
+					"HP": 7,
+					"MP": 6,
+					"Stamina": 10,
+					"Attack": 9,
+					"Defense": 9,
+					"Charisma": 7,
+					"Size": 5
+				}
+			},
+			{
+				"name": "kitsune",
+				"stats":
+				{
+					"HP": 5,
+					"MP": 9,
+					"Stamina": 12,
+					"Attack": 7,
+					"Defense": 8,
+					"Charisma": 8,
+					"Size": 6
+				}
+			},
+			{
+				"name": "minotaur",
+				"stats":
+				{
+					"HP": 12,
+					"MP": 1,
+					"Stamina": 16,
+					"Attack": 6,
+					"Defense": 5,
+					"Charisma": 3,
+					"Size": 7
+				}
+			},
+			{
+				"name": "dhampir",
+				"stats":
+				{
+					"HP": 10,
+					"MP": 10,
+					"Stamina": 18,
+					"Attack": 9,
+					"Defense": 9,
+					"Charisma": 9,
+					"Size": 6
+				}
+			},
+			{
+				"name": "turtlefolk",
+				"stats":
+				{
+					"HP": 13,
+					"MP": 6,
+					"Stamina": 21,
+					"Attack": 2,
+					"Defense": 9,
+					"Charisma": 4,
+					"Size": 5
+				}
+			},
+			{
+				"name": "lizardfolk",
+				"stats":
+				{
+					"HP": 8,
+					"MP": 6,
+					"Stamina": 12,
+					"Attack": 7,
+					"Defense": 8,
+					"Charisma": 4,
+					"Size": 6
+				}
+			},
+			{
+				"name": "plantfolk",
+				"stats":
+				{
+					"HP": 11,
+					"MP": 10,
+					"Stamina": 12,
+					"Attack": 1,
+					"Defense": 2,
+					"Charisma": 3,
+					"Size": 5
+				}
+			},
+			{
+				"name": "rockfolk",
+				"stats":
+				{
+					"HP": 16,
+					"MP": 4,
+					"Stamina": 18,
+					"Attack": 2,
+					"Defense": 7,
+					"Charisma": 1,
+					"Size": 5
+				}
+			},
+			{
+				"name": "frogfolk",
+				"stats":
+				{
+					"HP": 4,
+					"MP": 4,
+					"Stamina": 12,
+					"Attack": 7,
+					"Defense": 12,
+					"Charisma": 4,
+					"Size": 3
+				}
+			},
+			{
+				"name": "sharkfolk",
+				"stats":
+				{
+					"HP": 12,
+					"MP": 1,
+					"Stamina": 17,
+					"Attack": 6,
+					"Defense": 5,
+					"Charisma": 3,
+					"Size": 7
+				}
+			},
+			{
+				"name": "slimefolk",
+				"stats":
+				{
+					"HP": 10,
+					"MP": 6,
+					"Stamina": 15,
+					"Attack": 6,
+					"Defense": 6,
+					"Charisma": 3,
+					"Size": 5
+				}
+			}
+		],
+		"classes":
+		[
+			{
+				"name": "fighter",
+				"stats":
+				{
+					"HP": 20,
+					"MP": 6,
+					"Attack": 10,
+					"Defense": 10,
+					"DamageDieNum": 1,
+					"DamageDieSides": 12,
+					"Charisma": 2,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 11,
+					"mp": 1,
+					"attack": 3,
+					"defense": 3,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.125
+				}
+			},
+			{
+				"name": "martial artist",
+				"stats":
+				{
+					"HP": 22,
+					"MP": 8,
+					"Attack": 10,
+					"Defense": 12,
+					"DamageDieNum": 3,
+					"DamageDieSides": 4,
+					"Charisma": 0,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 11,
+					"mp": 2,
+					"attack": 4,
+					"defense": 4,
+					"damagedienum": 0.5,
+					"damagediesides": 0,
+					"charisma": 0.1
+				}
+			},
+			{
+				"name": "necromancer",
+				"stats":
+				{
+					"HP": 11,
+					"MP": 18,
+					"Attack": 4,
+					"Defense": 8,
+					"DamageDieNum": 1,
+					"DamageDieSides": 4,
+					"Charisma": 2,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 6,
+					"mp": 4,
+					"attack": 1,
+					"defense": 1,
+					"damagedienum": 0.125,
+					"damagediesides": 0,
+					"charisma": 0.25
+				}
+			},
+			{
+				"name": "wizard",
+				"stats":
+				{
+					"HP": 10,
+					"MP": 20,
+					"Attack": 4,
+					"Defense": 8,
+					"DamageDieNum": 1,
+					"DamageDieSides": 4,
+					"Charisma": 1,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+					"fireball"
+				],
+				"levelup":
+				{
+					"hp": 6,
+					"mp": 5,
+					"attack": 1,
+					"defense": 1,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.1
+				}
+			},
+			{
+				"name": "rogue",
+				"stats":
+				{
+					"HP": 16,
+					"MP": 10,
+					"Attack": 8,
+					"Defense": 12,
+					"DamageDieNum": 2,
+					"DamageDieSides": 6,
+					"Charisma": 6,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 9,
+					"mp": 2,
+					"attack": 3,
+					"defense": 3,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.667
+				}
+			},
+			{
+				"name": "thief",
+				"stats":
+				{
+					"HP": 14,
+					"MP": 11,
+					"Attack": 8,
+					"Defense": 13,
+					"DamageDieNum": 2,
+					"DamageDieSides": 6,
+					"Charisma": 5,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 7,
+					"mp": 2,
+					"attack": 2,
+					"defense": 3,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.75
+				}
+			},
+			{
+				"name": "summoner",
+				"stats":
+				{
+					"HP": 10,
+					"MP": 20,
+					"Attack": 3,
+					"Defense": 7,
+					"DamageDieNum": 1,
+					"DamageDieSides": 4,
+					"Charisma": 4,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 5,
+					"mp": 5,
+					"attack": 1,
+					"defense": 2,
+					"damagedienum": 0.125,
+					"damagediesides": 0,
+					"charisma": 0.5
+				}
+			},
+			{
+				"name": "psychic warrior",
+				"stats":
+				{
+					"HP": 18,
+					"MP": 12,
+					"Attack": 10,
+					"Defense": 10,
+					"DamageDieNum": 2,
+					"DamageDieSides": 8,
+					"Charisma": 3,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 10,
+					"mp": 5,
+					"attack": 3,
+					"defense": 3,
+					"damagedienum": 0.334,
+					"damagediesides": 0,
+					"charisma": 0.334
+				}
+			},
+			{
+				"name": "blackguard",
+				"stats":
+				{
+					"HP": 20,
+					"MP": 7,
+					"Attack": 11,
+					"Defense": 12,
+					"DamageDieNum": 1,
+					"DamageDieSides": 12,
+					"Charisma": 4,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 11,
+					"mp": 2,
+					"attack": 3,
+					"defense": 3,
+					"damagedienum": 0.334,
+					"damagediesides": 0,
+					"charisma": 0.2
+				}
+			},
+			{
+				"name": "bounty hunter",
+				"stats":
+				{
+					"HP": 22,
+					"MP": 5,
+					"Attack": 12,
+					"Defense": 9,
+					"DamageDieNum": 1,
+					"DamageDieSides": 12,
+					"Charisma": 6,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 10,
+					"mp": 1,
+					"attack": 3,
+					"defense": 3,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.667
+				}
+			},
+			{
+				"name": "vampire slayer",
+				"stats":
+				{
+					"HP": 17,
+					"MP": 15,
+					"Attack": 13,
+					"Defense": 14,
+					"DamageDieNum": 2,
+					"DamageDieSides": 6,
+					"Charisma": 7,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 9,
+					"mp": 4,
+					"attack": 3,
+					"defense": 3,
+					"damagedienum": 0.334,
+					"damagediesides": 0,
+					"charisma": 0.5
+				}
+			},
+			{
+				"name": "witch",
+				"stats":
+				{
+					"HP": 10,
+					"MP": 21,
+					"Attack": 4,
+					"Defense": 8,
+					"DamageDieNum": 1,
+					"DamageDieSides": 4,
+					"Charisma": 3,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 5,
+					"mp": 5,
+					"attack": 1,
+					"defense": 1,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.2
+				}
+			},
+			{
+				"name": "druid",
+				"stats":
+				{
+					"HP": 15,
+					"MP": 19,
+					"Attack": 9,
+					"Defense": 12,
+					"DamageDieNum": 1,
+					"DamageDieSides": 8,
+					"Charisma": 4,
+					"Size": 0
+				},
+				"canheal": true,
+				"partyhealpoint": 0.875,
+				"abilities":
+				[
+					"curewounds"
+				],
+				"levelup":
+				{
+					"hp": 8,
+					"mp": 3,
+					"attack": 2,
+					"defense": 2,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.2
+				}
+			},
+			{
+				"name": "cleric",
+				"stats":
+				{
+					"HP": 16,
+					"MP": 16,
+					"Attack": 9,
+					"Defense": 9,
+					"DamageDieNum": 1,
+					"DamageDieSides": 8,
+					"Charisma": 4,
+					"Size": 0
+				},
+				"canheal": true,
+				"partyhealpoint": 0.9,
+				"abilities":
+				[
+					"curewounds"
+				],
+				"levelup":
+				{
+					"hp": 8,
+					"mp": 3,
+					"attack": 2,
+					"defense": 2,
+					"damagedienum": 0.2,
+					"damagediesides": 0,
+					"charisma": 0.2
+				}
+			},
+			{
+				"name": "paladin",
+				"stats":
+				{
+					"HP": 20,
+					"MP": 10,
+					"Attack": 11,
+					"Defense": 12,
+					"DamageDieNum": 1,
+					"DamageDieSides": 12,
+					"Charisma": 7,
+					"Size": 0
+				},
+				"canheal": true,
+				"partyhealpoint": 0.75,
+				"abilities":
+				[
+					"curewounds"
+				],
+				"levelup":
+				{
+					"hp": 11,
+					"mp": 4,
+					"attack": 3,
+					"defense": 3,
+					"damagedienum": 0.334,
+					"damagediesides": 0,
+					"charisma": 0.5
+				}
+			},
+			{
+				"name": "berserker",
+				"stats":
+				{
+					"HP": 30,
+					"MP": 6,
+					"Attack": 16,
+					"Defense": 4,
+					"DamageDieNum": 2,
+					"DamageDieSides": 8,
+					"Charisma": 6,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 16,
+					"mp": 1,
+					"attack": 4,
+					"defense": 3,
+					"damagedienum": 0.334,
+					"damagediesides": 0,
+					"charisma": 0.2
+				}
+			},
+			{
+				"name": "alchemist",
+				"stats":
+				{
+					"HP": 10,
+					"MP": 20,
+					"Attack": 4,
+					"Defense": 8,
+					"DamageDieNum": 1,
+					"DamageDieSides": 6,
+					"Charisma": 3,
+					"Size": 0
+				},
+				"canheal": true,
+				"partyhealpoint": 0.875,
+				"abilities":
+				[
+					"curewounds"
+				],
+				"levelup":
+				{
+					"hp": 5,
+					"mp": 5,
+					"attack": 1,
+					"defense": 2,
+					"damagedienum": 0.167,
+					"damagediesides": 0,
+					"charisma": 0.1
+				}
+			},
+			{
+				"name": "warlock",
+				"stats":
+				{
+					"HP": 11,
+					"MP": 20,
+					"Attack": 5,
+					"Defense": 9,
+					"DamageDieNum": 1,
+					"DamageDieSides": 4,
+					"Charisma": 3,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+					"fireball"
+				],
+				"levelup":
+				{
+					"hp": 6,
+					"mp": 5,
+					"attack": 1,
+					"defense": 2,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.2
+				}
+			},
+			{
+				"name": "pirate",
+				"stats":
+				{
+					"HP": 16,
+					"MP": 8,
+					"Attack": 13,
+					"Defense": 16,
+					"DamageDieNum": 2,
+					"DamageDieSides": 6,
+					"Charisma": 7,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 8,
+					"mp": 2,
+					"attack": 2,
+					"defense": 3,
+					"damagedienum": 0.334,
+					"damagediesides": 0,
+					"charisma": 0.75
+				}
+			},
+			{
+				"name": "psion",
+				"stats":
+				{
+					"HP": 9,
+					"MP": 25,
+					"Attack": 7,
+					"Defense": 9,
+					"DamageDieNum": 1,
+					"DamageDieSides": 4,
+					"Charisma": 6,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 5,
+					"mp": 6,
+					"attack": 1,
+					"defense": 1,
+					"damagedienum": 0.125,
+					"damagediesides": 0,
+					"charisma": 0.334
+				}
+			},
+			{
+				"name": "samurai",
+				"stats":
+				{
+					"HP": 22,
+					"MP": 6,
+					"Attack": 12,
+					"Defense": 13,
+					"DamageDieNum": 2,
+					"DamageDieSides": 8,
+					"Charisma": 3,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 11,
+					"mp": 2,
+					"attack": 3,
+					"defense": 3,
+					"damagedienum": 0.25,
+					"damagediesides": 0,
+					"charisma": 0.125
+				}
+			},
+			{
+				"name": "twink",
+				"stats":
+				{
+					"HP": 12,
+					"MP": 20,
+					"Attack": 8,
+					"Defense": 26,
+					"DamageDieNum": 2,
+					"DamageDieSides": 6,
+					"Charisma": 7,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+				],
+				"levelup":
+				{
+					"hp": 5,
+					"mp": 5,
+					"attack": 2,
+					"defense": 6,
+					"damagedienum": 0.2,
+					"damagediesides": 0,
+					"charisma": 0.75
+				}
+			},
+			{
+				"name": "himbo",
+				"stats":
+				{
+					"HP": 32,
+					"MP": 3,
+					"Attack": 11,
+					"Defense": 12,
+					"DamageDieNum": 1,
+					"DamageDieSides": 12,
+					"Charisma": 7,
+					"Size": 0
+				},
+				"canheal": false,
+				"partyhealpoint": 0,
+				"abilities":
+				[
+					"taunt"
+				],
+				"levelup":
+				{
+					"hp": 16,
+					"mp": 1,
+					"attack": 2,
+					"defense": 2,
+					"damagedienum": 0.334,
+					"damagediesides": 0,
+					"charisma": 0.75
+				}
+			}
+		]
+	},
+	"itemblueprints":
+	[
+		{
+			"name": "dayrations",
+			"mhp": 0,
+			"chp": 0,
+			"armour": 0,
+			"damage": "0-0",
+			"allowsmagic": false,
+			"range": 0,
+			"value": 10,
+			"specialaction": "eatrations"
+		}
+	],
+	"enemyblueprints":
+	[
+		{
+			"id": "venomoussnake",
+			"name": "Venomous Snake",
+			"plural": "Venomous Snakes",
+			"stats":
+			{
+				"level": 1,
+				"hp": 8,
+				"mp": 3,
+				"attack": 15,
+				"defense": 21,
+				"damagedienum": 2,
+				"damagediesides": 6,
+				"Size": 2
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "cyclops",
+			"name": "Cyclops",
+			"plural": "Cyclopes",
+			"stats":
+			{
+				"level": 5,
+				"hp": 44,
+				"mp": 12,
+				"attack": 26,
+				"defense": 24,
+				"damagedienum": 3,
+				"damagediesides": 8,
+				"Size": 8
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "blotflyswarm",
+			"name": "Blotfly Swarm",
+			"plural": "Blotfly Swarms",
+			"stats":
+			{
+				"level": 3,
+				"hp": 32,
+				"mp": 8,
+				"attack": 32,
+				"defense": 42,
+				"damagedienum": 2,
+				"damagediesides": 3,
+				"Size": 4
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "giantblotfly",
+			"name": "Giant Blotfly",
+			"plural": "Giant Blotflies",
+			"stats":
+			{
+				"level": 1,
+				"hp": 16,
+				"mp": 6,
+				"attack": 18,
+				"defense": 24,
+				"damagedienum": 1,
+				"damagediesides": 10,
+				"Size": 4
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "amoebaswarm",
+			"name": "Amoeba Swarm",
+			"plural": "Amoeba Swarms",
+			"stats":
+			{
+				"level": 4,
+				"hp": 32,
+				"mp": 8,
+				"attack": 28,
+				"defense": 32,
+				"damagedienum": 2,
+				"damagediesides": 4,
+				"Size": 4
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "spiderswarm",
+			"name": "Spider Swarm",
+			"plural": "Spider Swarms",
+			"stats":
+			{
+				"level": 4,
+				"hp": 32,
+				"mp": 8,
+				"attack": 27,
+				"defense": 28,
+				"damagedienum": 2,
+				"damagediesides": 6,
+				"Size": 4
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "giantspider",
+			"name": "Giant Spider",
+			"plural": "Giant Spiders",
+			"stats":
+			{
+				"level": 3,
+				"hp": 21,
+				"mp": 7,
+				"attack": 21,
+				"defense": 20,
+				"damagedienum": 4,
+				"damagediesides": 4,
+				"Size": 5
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "giantcentipede",
+			"name": "Giant Centipede",
+			"plural": "Giant Centipedes",
+			"stats":
+			{
+				"level": 3,
+				"hp": 23,
+				"mp": 9,
+				"attack": 24,
+				"defense": 20,
+				"damagedienum": 4,
+				"damagediesides": 4,
+				"Size": 5
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "bear",
+			"name": "Bear",
+			"plural": "Bears",
+			"stats":
+			{
+				"level": 4,
+				"hp": 29,
+				"mp": 8,
+				"attack": 26,
+				"defense": 25,
+				"damagedienum": 3,
+				"damagediesides": 6,
+				"Size": 6
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "direalligator",
+			"name": "Dire Alligator",
+			"plural": "Dire Alligators",
+			"stats":
+			{
+				"level": 5,
+				"hp": 49,
+				"mp": 18,
+				"attack": 36,
+				"defense": 28,
+				"damagedienum": 3,
+				"damagediesides": 8,
+				"Size": 9
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "giantfly",
+			"name": "Giant Fly",
+			"plural": "Giant Flies",
+			"stats":
+			{
+				"level": 1,
+				"hp": 13,
+				"mp": 7,
+				"attack": 18,
+				"defense": 26,
+				"damagedienum": 2,
+				"damagediesides": 4,
+				"Size": 3
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "giantfrog",
+			"name": "Giant Frog",
+			"plural": "Giant Frogs",
+			"stats":
+			{
+				"level": 3,
+				"hp": 26,
+				"mp": 11,
+				"attack": 28,
+				"defense": 24,
+				"damagedienum": 2,
+				"damagediesides": 6,
+				"Size": 5
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "wolf",
+			"name": "Wolf",
+			"plural": "Wolves",
+			"stats":
+			{
+				"level": 2,
+				"hp": 18,
+				"mp": 12,
+				"attack": 25,
+				"defense": 25,
+				"damagedienum": 1,
+				"damagediesides": 10,
+				"Size": 3
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "direwolf",
+			"name": "Dire Wolf",
+			"plural": "Dire Wolves",
+			"stats":
+			{
+				"level": 5,
+				"hp": 54,
+				"mp": 21,
+				"attack": 36,
+				"defense": 28,
+				"damagedienum": 2,
+				"damagediesides": 8,
+				"Size": 6
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "cheetah",
+			"name": "Cheetah",
+			"plural": "Cheetahs",
+			"stats":
+			{
+				"level": 1,
+				"hp": 16,
+				"mp": 12,
+				"attack": 23,
+				"defense": 27,
+				"damagedienum": 1,
+				"damagediesides": 8,
+				"Size": 3
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "hyena",
+			"name": "Hyena",
+			"plural": "Hyenas",
+			"stats":
+			{
+				"level": 1,
+				"hp": 16,
+				"mp": 12,
+				"attack": 24,
+				"defense": 28,
+				"damagedienum": 1,
+				"damagediesides": 6,
+				"Size": 3
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "goliathstagbeetle",
+			"name": "Goliath Stag Beetle",
+			"plural": "Goliath Stag Beetles",
+			"stats":
+			{
+				"level": 7,
+				"hp": 54,
+				"mp": 12,
+				"attack": 31,
+				"defense": 11,
+				"damagedienum": 3,
+				"damagediesides": 6,
+				"Size": 10
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "bison",
+			"name": "Bison",
+			"plural": "Bisons",
+			"stats":
+			{
+				"level": 2,
+				"hp": 33,
+				"mp": 12,
+				"attack": 19,
+				"defense": 24,
+				"damagedienum": 2,
+				"damagediesides": 4,
+				"Size": 5
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "worg",
+			"name": "Worg",
+			"plural": "Worgs",
+			"stats":
+			{
+				"level": 5,
+				"hp": 63,
+				"mp": 21,
+				"attack": 40,
+				"defense": 32,
+				"damagedienum": 2,
+				"damagediesides": 8,
+				"Size": 6
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "ankheg",
+			"name": "Ankheg",
+			"plural": "Ankhegs",
+			"stats":
+			{
+				"level": 2,
+				"hp": 31,
+				"mp": 12,
+				"attack": 24,
+				"defense": 21,
+				"damagedienum": 3,
+				"damagediesides": 4,
+				"Size": 4
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "giantscorpion",
+			"name": "Giant Scorpion",
+			"plural": "Giant Scorpions",
+			"stats":
+			{
+				"level": 4,
+				"hp": 49,
+				"mp": 16,
+				"attack": 33,
+				"defense": 24,
+				"damagedienum": 2,
+				"damagediesides": 8,
+				"Size": 9
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "direbat",
+			"name": "Dire Bat",
+			"plural": "Dire Bats",
+			"stats":
+			{
+				"level": 1,
+				"hp": 24,
+				"mp": 9,
+				"attack": 22,
+				"defense": 38,
+				"damagedienum": 3,
+				"damagediesides": 4,
+				"Size": 3
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "batswarm",
+			"name": "Bat Swarm",
+			"plural": "Bat Swarms",
+			"stats":
+			{
+				"level": 3,
+				"hp": 72,
+				"mp": 12,
+				"attack": 36,
+				"defense": 52,
+				"damagedienum": 5,
+				"damagediesides": 4,
+				"Size": 5
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "tiger",
+			"name": "Tiger",
+			"plural": "Tigers",
+			"stats":
+			{
+				"level": 1,
+				"hp": 22,
+				"mp": 8,
+				"attack": 21,
+				"defense": 23,
+				"damagedienum": 1,
+				"damagediesides": 10,
+				"Size": 5
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "diretiger",
+			"name": "Dire Tiger",
+			"plural": "Dire Tigers",
+			"stats":
+			{
+				"level": 3,
+				"hp": 49,
+				"mp": 16,
+				"attack": 32,
+				"defense": 28,
+				"damagedienum": 4,
+				"damagediesides": 4,
+				"Size": 6
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "bandit",
+			"name": "Bandit",
+			"plural": "Bandits",
+			"stats":
+			{
+				"level": 1,
+				"hp": 21,
+				"mp": 9,
+				"attack": 19,
+				"defense": 22,
+				"damagedienum": 1,
+				"damagediesides": 10,
+				"Size": 6
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "vampire",
+			"name": "Vampire",
+			"plural": "Vampires",
+			"stats":
+			{
+				"level": 5,
+				"hp": 66,
+				"mp": 34,
+				"attack": 36,
+				"defense": 41,
+				"damagedienum": 2,
+				"damagediesides": 8,
+				"Size": 6
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "vampirespawn",
+			"name": "Vampire Spawn",
+			"plural": "Vampire Spawn",
+			"stats":
+			{
+				"level": 2,
+				"hp": 25,
+				"mp": 11,
+				"attack": 23,
+				"defense": 29,
+				"damagedienum": 2,
+				"damagediesides": 4,
+				"Size": 6
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "cultist",
+			"name": "Cultist",
+			"plural": "Cultists",
+			"stats":
+			{
+				"level": 1,
+				"hp": 21,
+				"mp": 16,
+				"attack": 19,
+				"defense": 24,
+				"damagedienum": 1,
+				"damagediesides": 6,
+				"Size": 6
+			},
+			"abilities":
+			[
+			]
+		},
+		{
+			"id": "cultleader",
+			"name": "Cult Leader",
+			"plural": "Cult Leaders",
+			"stats":
+			{
+				"level": 4,
+				"hp": 33,
+				"mp": 29,
+				"attack": 25,
+				"defense": 28,
+				"damagedienum": 2,
+				"damagediesides": 6,
+				"Size": 6
+			},
+			"abilities":
+			[
+				"fireball"
+			]
+		}
+	],
+	"abilityblueprints":
+	[
+		{
+			"id": "curewounds",
+			"name": "cure wounds",
+			"target": "single",
+			"mpcost": 2,
+			"effecttype": "healing",
+			"effectdienum": 3,
+			"effectdiesides": 8
+		},
+		{
+			"id": "taunt",
+			"name": "taunt",
+			"target": "single",
+			"mpcost": 1,
+			"effecttype": "taunt",
+			"effectdienum": 3,
+			"effectdiesides": 1
+		},
+		{
+			"id": "fireball",
+			"name": "fireball",
+			"target": "all",
+			"mpcost": 6,
+			"effecttype": "fire",
+			"effectdienum": 5,
+			"effectdiesides": 6
+		}
+	],
+	"quests":
+	[
+		{
+			"level": 1,
+			"landmark":"quest site",
+			"reward":
+			{
+				"silverpieces": 150,
+				"itemmin": 0,
+				"itemrandom": 1,
+				"items":
+				[
+					"magicitem0"
+				]
+			},
+			"encounters":
+			[
+				"bandit bandit wolf",
+				"bandit bandit bandit wolf",
+				"bandit wolf wolf",
+				"bandit bandit wolf wolf"
+			]
+		},
+		{
+			"level": 2,
+			"landmark":"quest site",
+			"reward":
+			{
+				"silverpieces": 325,
+				"itemmin": 0,
+				"itemrandom": 2,
+				"items":
+				[
+					"magicitem0"
+				]
+			},
+			"encounters":
+			[
+				"bandit bandit wolf wolf",
+				"bandit bandit bandit bandit wolf",
+				"bandit wolf wolf wolf",
+				"bandit bandit wolf wolf wolf"
+			]
+		},
+		{
+			"level": 3,
+			"landmark":"monster lair",
+			"reward":
+			{
+				"silverpieces": 700,
+				"itemmin": 1,
+				"itemrandom": 1,
+				"items":
+				[
+					"magicitem0",
+					"magicitem0",
+					"magicitem0",
+					"magicitem0",
+					"magicitem1"
+				]
+			},
+			"encounters":
+			[
+				"giantspider giantspider",
+				"giantcentipede giantcentipede",
+				"giantscorpion giantscorpion"
+			]
+		},
+		{
+			"level": 4,
+			"landmark":"monster lair",
+			"reward":
+			{
+				"silverpieces": 1500,
+				"itemmin": 1,
+				"itemrandom": 1,
+				"items":
+				[
+					"magicitem0",
+					"magicitem0",
+					"magicitem0",
+					"magicitem1"
+				]
+			},
+			"encounters":
+			[
+				"giantspider giantspider giantspider",
+				"giantcentipede giantcentipede giantcentipede",
+				"giantscorpion giantscorpion giantscorpion"
+			]
+		},
+		{
+			"level": 5,
+			"landmark":"evil castle",
+			"reward":
+			{
+				"silverpieces": 3250,
+				"itemmin": 1,
+				"itemrandom": 2,
+				"items":
+				[
+					"magicitem0",
+					"magicitem1",
+					"magicitem1",
+					"magicitem2"
+				]
+			},
+			"encounters":
+			[
+				"vampire vampirespawn vampirespawn",
+				"cultleader cultist cultist cultist"
+			]
+		}
+	],
+	"items":
+	[
+		{
+			"id": "magicitem0",
+			"itlvlmin": 1,
+			"itlvlrandom": 3
+		},
+		{
+			"id": "magicitem1",
+			"itlvlmin": 3,
+			"itlvlrandom": 5
+		},
+		{
+			"id": "magicitem2",
+			"itlvlmin": 5,
+			"itlvlrandom": 7
+		}
+	],
+	"itemproperties":
+	[
+		{
+			"id": "manaplus 0",
+			"itlvl": 1,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 5,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "manaplus 1",
+			"itlvl": 2,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 12,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "manaplus 2",
+			"itlvl": 3,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 28,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "manaplus 3",
+			"itlvl": 4,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 62,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "manaplus 4",
+			"itlvl": 5,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 132,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "healthplus 0",
+			"itlvl": 1,
+			"effects":
+			{
+				"hp": 6,
+				"mp": 0,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "healthplus 1",
+			"itlvl": 2,
+			"effects":
+			{
+				"hp": 15,
+				"mp": 0,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "healthplus 2",
+			"itlvl": 3,
+			"effects":
+			{
+				"hp": 35,
+				"mp": 0,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "healthplus 3",
+			"itlvl": 4,
+			"effects":
+			{
+				"hp": 77,
+				"mp": 0,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "healthplus 4",
+			"itlvl": 5,
+			"effects":
+			{
+				"hp": 163,
+				"mp": 0,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "attackplus 0",
+			"itlvl": 1,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 4,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "attackplus 1",
+			"itlvl": 2,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 10,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "attackplus 2",
+			"itlvl": 3,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 24,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "attackplus 3",
+			"itlvl": 4,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 54,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "attackplus 4",
+			"itlvl": 5,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 116,
+				"defense": 0,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "defenseplus 0",
+			"itlvl": 1,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 0,
+				"defense": 5,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "defenseplus 1",
+			"itlvl": 2,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 0,
+				"defense": 12,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "defenseplus 2",
+			"itlvl": 3,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 0,
+				"defense": 28,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "defenseplus 3",
+			"itlvl": 4,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 0,
+				"defense": 62,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "defenseplus 4",
+			"itlvl": 5,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 0,
+				"defense": 132,
+				"damagedienum": 0
+			}
+		},
+		{
+			"id": "damageplus 0",
+			"itlvl": 2,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 1
+			}
+		},
+		{
+			"id": "damageplus 1",
+			"itlvl": 4,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 2
+			}
+		},
+		{
+			"id": "damageplus 2",
+			"itlvl": 6,
+			"effects":
+			{
+				"hp": 0,
+				"mp": 0,
+				"attack": 0,
+				"defense": 0,
+				"damagedienum": 4
+			}
+		}
+	],
+	"socialencounters":
+	[
+		{
+			"id": "barcarouse",
+			"chadif": 50,
+			"critsuccess": "[character] carouses at the bar long into the night, waking with not one but two guests in their bed",
+			"success": "[character] drinks into the night at the bar and cheers and merriment are had by many",
+			"fail": "[character] drunkenly insults and is thrown out of the bar",
+			"critfail": "[character] starts a drunken bar fight"
+		},
+		{
+			"id": "resupply",
+			"chadif": 35,
+			"critsuccess": "[character] haggles masterfully at the general store, resupplying the party at an excellent discount",
+			"success": "[character] is able to resupply the party at the general store at a moderate discount",
+			"fail": "[character] haggles poorly, and is upsold supplies for the party",
+			"critfail": "[character] haggles so poorly they pay more than double rate for the supplies for the party"
+		},
+		{
+			"id": "repairs",
+			"chadif": 35,
+			"critsuccess": "[character] haggles brilliantly at the blacksmith, getting the party's repairs at an excellent rate",
+			"success": "[character] is able to get the party's repairs done at a moderate rate",
+			"fail": "[character] haggles poorly, and the repairs are done at a higher rate",
+			"critfail": "[character] accidentally insults the blacksmith, making him charge more than double for the repairs"
+		},
+		{
+			"id": "blacksmithsson",
+			"chadif": 55,
+			"critsuccess": "[character] roguishly charms the blacksmith's apprentice and adult son, making a connection, when going to see about repairs",
+			"success": "[character] sees to the repairs of the party's equipment at the blacksmith",
+			"fail": "[character] is distracted by the charms of the blacksmith's apprentice and adult son, paying for repairs and many drinks as well",
+			"critfail": "[character] is caught carousing with the blacksmith's apprentice and adult son, and now the blacksmith refuses to repair their equipment"
+		},
+		{
+			"id": "shopkeepersdaughter",
+			"chadif": 55,
+			"critsuccess": "[character] roguishly charms the shopkeeper's adult daughter, making a connection, when going to see about supplies",
+			"success": "[character] sees that the party is resupplied by the shopkeeper",
+			"fail": "[character] is wooed by the shopkeeper's adult daughter and pays for many drinks in addition to the supplies for the party",
+			"critfail": "[character] is caught carousing with the shopkeeper's adult daughter, and now the shopkeeper refuses to sell them goods"
+		}
+	]
+}

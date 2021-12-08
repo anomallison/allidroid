@@ -1,0 +1,24 @@
+``!adventure id`` sends a party with the id equal to 'id' on an adventure. ids are case sensitive
+
+``!makeparty id -n Name Here -c Any Classes Here`` makes a party with an id of 'id', the arguments after ``-n`` make up the name, and arguments after ``-c`` are the classes of the adventurers in the party
+
+``!partysummary id`` gives a summary of the party with id equal to 'id'
+
+``!partymember id Name Here`` gives a summary of the party member of party id 'id' with the name Name Here. It is case sensitive.
+
+``!recruitpartymember id Any Classes Here`` recruits party members of specified classes to party with id 'id'
+
+``!retirepartymember id Name Here`` removes the partymember from party with id 'id' with the name Name Here from the party. It is case sensitive. Retiring the last member of a party disbands the party.
+
+``!disbandparty id`` disbands the party with id 'id'. This cannot be reversed.
+
+Examples:
+
+``!makeparty basic -n Team Basic -c himbo twink wizard fighter cleric``
+``!adventure basic``
+``!partysummary basic``
+``!partymember basic Allison Goku``
+``!recruitpartymember basic any``
+``!retirepartymember basic Allison Goku``
+``!disbandparty basic``
+

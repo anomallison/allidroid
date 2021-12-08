@@ -50,6 +50,8 @@ var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'))
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
 var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
 
+//adventure simulator files
+var adventure_sim = JSON.parse(fs.readFileSync('adventuresim.json'));
 
 //alien language files
 var alien_alphabet = JSON.parse(fs.readFileSync('alienlanguage/alienalphabet.json'));
@@ -483,6 +485,104 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
+    } else if (normalizedCommand == "makeparty") 
+	{
+		output = makeParty(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: adventure");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "adventure") 
+	{
+		output = startAdventure(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: adventure");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "partysummary") 
+	{
+		output = outputPartySummary(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: partysummary");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "partymember") 
+	{
+		output = outputPartyMemberSummary(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: partymember");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "disbandparty") 
+	{
+		output = disbandParty(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: disbandparty");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "retirepartymember") 
+	{
+		output = retirePartyMember(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: retirepartymember");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "recruitpartymembers") 
+	{
+		output = recruitPartyMembers(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: recruitpartymembers");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
     } else if (normalizedCommand == "generatemap") 
 	{
 		generateMap(receivedMessage.channel,arguments);
@@ -496,10 +596,10 @@ function processCommand(receivedMessage)
 	{
 		generateHexCity(receivedMessage.channel,arguments);
     } 
-	//else if (normalizedCommand == "noisemap") 
-	//{
-	//	noisemaptopng(receivedMessage.channel,arguments);
-    //}  
+	else if (normalizedCommand == "noisemap") 
+	{
+		noisemaptopng(receivedMessage.channel,arguments);
+    }  
 	else if (normalizedCommand == "alienlanguage") 
 	{
 		encodeToAlienLanguage(receivedMessage.channel,arguments);
@@ -682,6 +782,11 @@ function helpCommand(user, arguments)
 	else if (arguments[0] == "!room" || arguments[0] == "room")
 	{
 		help_string = fs.readFileSync('help_room.txt').toString();
+		//user.send({ files: [{ attachment: './help_room.txt', name: 'help_room.txt' }] });
+	}
+	else if (arguments[0] == "!adventure" || arguments[0] == "adventure")
+	{
+		help_string = fs.readFileSync('help_adventure.txt').toString();
 		//user.send({ files: [{ attachment: './help_room.txt', name: 'help_room.txt' }] });
 	}
 	return help_string;
@@ -981,19 +1086,18 @@ function removeReminder(reminderid)
 // Reconstitute arguments to string
 //
 
-function argumentsbacktostring(target, start, end = -1)
+function argumentsbacktostring(target, start, end = -99999)
 {
-	if (end == -1)
+	if (end == -99999)
 	{
 		end = target.length;
 	}
-	if (start > end)
+	if (start >= end)
 	{
-		console.log("argumentsbacktostring error, start greater than end");
-		return null;
+		return "";
 	}
 	let target_string = target[start];
-	for (let i = start+1; i < end; i++)
+	for (let i = start+1; i < end && i < target.length; i++)
 	{
 		target_string += " " + target[i];
 	}
@@ -2353,7 +2457,7 @@ function generatePhonemeName(maxsyllables = 8, minimumsyllables = 1)
 {
 	if (maxsyllables < minimumsyllables)
 	{
-		console.log("maxsyllables: " + maxsyllables + ", minimumsyllables: " + minimumsyllables);
+		//console.log("maxsyllables: " + maxsyllables + ", minimumsyllables: " + minimumsyllables);
 		return "when using !name, maximum syllables must not be lower than minimum syllables";
 	}
 	if (isNaN(maxsyllables) || isNaN(minimumsyllables) || maxsyllables < 1 || minimumsyllables < 1 || maxsyllables > 99 || minimumsyllables > 99)
@@ -6685,20 +6789,11 @@ function noisemaptopng(channel, arguments)
 	}
 	
 	let imagemap = [];
-	let noisemap = noiseMap2D(map_height, map_width, noise_variance, edge_value);
-	//let noisemap = noiseMap(map_height, map_width, noise_variance, edge_value);
-	//console.log(noisemap);
-	for (let i = 0; i < smoothing_loops; i++)
-	{
-		
-		noisemap = increaseContrast(noisemap, map_height, map_width, 0.4);
-		noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
-		noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
-		//noisemap = smoothenMap(noisemap, map_height, map_width, 0.25);
-		
-		//noisemap = decreaseContrast(noisemap, map_height, map_width, smoothing_val);
-		//noisemap = blurMap(noisemap, map_height, map_width, smoothing_val);
-	}
+	let noisemap = noiseMap2D(asworld_height,asworld_width, 0.04);
+	noisemap = increaseContrast(noisemap, asworld_height, asworld_width, 0.6);
+	noisemap = smoothenMap(noisemap, asworld_height, asworld_width, 0.175);
+	noisemap = increaseContrast(noisemap, asworld_height, asworld_width, 0.333);
+	
 	for (let y = 0; y < map_height; y++)
 	{
 		for (let x = 0; x < map_width; x++)
@@ -7042,6 +7137,2907 @@ function encodeToAlienLanguage(channel, arguments)
 }
 
 //
+//
+// adventuring party simulator
+//
+//
+//
+//
+
+var adventuringparties = [];
+var currentparty = 0;
+var simulatedTimeOfDay = 360; //minutes, 0 being midnight of day
+var asworld_width = 128;
+var asworld_height = 72;
+var asworldmap = [];
+
+var adventure_sim_max_lines = 24;
+
+function outputAdventureSimLog(partyid)
+{
+	let party = getPartyById(partyid)
+	if (party == null)
+		return null;
+	
+	let output = "";
+	for (let i = 0; i < party.log.length && output.length < 1800; i++)
+	{
+		output += party.log[i] + "\n";
+	}
+	if (output.length < 2000) //just to double check
+		return output.trim();
+}
+
+function addToAdventureSimLog(party, logtext)
+{
+	if (party.log.length == 0 || logtext != party.log[party.log.length-1])
+	{
+		party.log.push(logtext);
+		return true;
+	}
+	return false;
+	//while(party.log.length >= adventure_sim_max_lines)
+	//	party.log.shift();
+}
+
+//
+// sim world generation
+//
+
+function initializeSimWorldMap()
+{
+	for (let y = 0; y < asworld_height; y++)
+	{
+		for (let x = 0; x < asworld_width; x++)
+		{
+			asworldmap.push({ biome: "", sealevel: 1, climate: "", landmark: "none"});
+		}
+	}
+}
+
+function generateSimWorldMap()
+{
+	initializeSimWorldMap();
+	let noisemapsealevel = noiseMap2D(asworld_height,asworld_width, 0.35);
+	noisemapsealevel = increaseContrast(noisemapsealevel, asworld_height, asworld_width, 0.4);
+	noisemapsealevel = smoothenMap(noisemapsealevel, asworld_height, asworld_width, 0.175);
+	noisemapsealevel = increaseContrast(noisemapsealevel, asworld_height, asworld_width, 0.25)
+	let noisemapbiome = noiseMap2D(asworld_height,asworld_width, 0.13);
+	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.4);
+	noisemapbiome = smoothenMap(noisemapbiome, asworld_height, asworld_width, 0.175);
+	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.25);
+	let noisemapclimate = noiseMap2D(asworld_height,asworld_width, 0.07);
+	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.4);
+	noisemapbiome = smoothenMap(noisemapbiome, asworld_height, asworld_width, 0.175);
+	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.25);
+	let noisemaplandmarks = noiseMap2D(asworld_height,asworld_width, 0.04);
+	noisemaplandmarks = increaseContrast(noisemaplandmarks, asworld_height, asworld_width, 0.6);
+	noisemaplandmarks = smoothenMap(noisemaplandmarks, asworld_height, asworld_width, 0.175);
+	noisemaplandmarks = increaseContrast(noisemaplandmarks, asworld_height, asworld_width, 0.333);
+	
+	//do landmasses, 32
+	
+	for (let i = 0; i < 32; i++)
+	{
+		let randomwidth = Math.floor(Math.random()*Math.ceil(asworld_width*0.58))+8;
+		let randomheight = Math.floor(Math.random()*Math.ceil(asworld_height*0.58))+8;
+		let randomx = Math.floor(Math.random()*(asworld_width - randomwidth-4))+2;
+		let randomy = Math.floor(Math.random()*(asworld_height - randomheight-4))+2;
+		
+		let midpointx = Math.floor(randomwidth/2);
+		let midpointy = Math.floor(randomheight/2);
+		
+		for (let x = randomx; x < randomwidth+randomx; x++)
+		{
+			for (let y = randomy; y < randomheight+randomy; y++)
+			{
+				let probx = Math.abs(1 - ((x - randomx) / midpointx));
+				let proby = Math.abs(1 - ((y - randomy) / midpointy));
+				let probability = probx * proby * LAND_EROSION;
+				if (Math.random() > probability)
+				{
+					if (x+(y*asworld_width) > -1 && x+(y*asworld_width) < asworld_height*asworld_width)
+						asworldmap[x+(y*asworld_width)].sealevel = -1;
+				}
+			}
+		}
+	}
+	
+	for (let i = 0; i < 3; i++)
+	{
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				let waterCount = 6;
+				if (x+((y+1)*asworld_width) < asworldmap.length && asworldmap[x+((y+1)*asworld_width)].sealevel == -1)
+					waterCount--;
+				if (x+((y-1)*asworld_width) > -1 && asworldmap[x+((y-1)*asworld_width)].sealevel == -1)
+					waterCount--
+				if (x%2 == 0)
+				{
+					if ((x+1)+(y*asworld_width) < asworldmap.length && asworldmap[(x+1)+(y*asworld_width)].sealevel == -1)
+						waterCount--;
+					if ((x+1)+((y-1)*asworld_width) > -1 && (x+1)+((y-1)*asworld_width) < asworldmap.length && asworldmap[(x+1)+((y-1)*asworld_width)].sealevel == -1)
+						waterCount--;
+					if ((x-1)+(y*asworld_width) > -1 && asworldmap[(x-1)+(y*asworld_width)].sealevel == -1)
+						waterCount--;
+					if ((x-1)+((y-1)*asworld_width) > -1 && asworldmap[(x-1)+((y-1)*asworld_width)].sealevel == -1)
+						waterCount--;
+				}
+				else
+				{
+					if ((x+1)+((y+1)*asworld_width) < asworldmap.length && asworldmap[(x+1)+((y+1)*asworld_width)].sealevel == -1)
+						waterCount--;
+					if ((x+1)+(y*asworld_width) < asworldmap.length && asworldmap[(x+1)+(y*asworld_width)].sealevel == -1)
+						waterCount--;
+					if ((x-1)+((y+1)*asworld_width) > -1 && (x-1)+((y+1)*asworld_width) < asworldmap.length && asworldmap[(x-1)+((y+1)*asworld_width)].sealevel == -1)
+						waterCount--;
+					if ((x-1)+(y*asworld_width) > -1 && asworldmap[(x-1)+(y*asworld_width)].sealevel == -1)
+						waterCount--;
+				}
+				
+				if (waterCount == 6)
+				{
+					asworldmap[x+(y*asworld_width)].sealevel = -1;
+				}
+				else if (waterCount < 3 && asworldmap[x+(y*asworld_width)].sealevel == -1)
+				{
+					asworldmap[x+(y*asworld_width)].sealevel = 1;
+				}
+			}
+		}
+	}
+	
+	let baserand = 0;
+	
+	for (let y = 0; y < asworld_height; y++)
+	{
+		for (let x = 0; x < asworld_width; x++)
+		{
+			asworldmap[x+(y*asworld_width)].sealevel *= noisemapsealevel[x+(y*asworld_width)]*20;
+			if (asworldmap[x+(y*asworld_width)].sealevel > 0)
+			{
+				baserand = noisemapbiome[x+(y*asworld_width)];
+				if (baserand < 0.20)
+				{
+					asworldmap[x+(y*asworld_width)].biome = "jungle";
+				}
+				else if (baserand < 0.4)
+				{
+					asworldmap[x+(y*asworld_width)].biome = "forest";
+				}
+				else if (baserand < 0.6)
+				{
+					asworldmap[x+(y*asworld_width)].biome = "grasslands";
+				}
+				else if (baserand < 0.8)
+				{
+					asworldmap[x+(y*asworld_width)].biome = "plains";
+				}
+				else //if (baserand < 1)
+				{
+					asworldmap[x+(y*asworld_width)].biome = "desolate";
+				}
+				
+				baserand = noisemapclimate[x+(y*asworld_width)];
+				if (baserand < 0.1667)
+				{
+					asworldmap[x+(y*asworld_width)].climate = "extremely hot";
+				}
+				else if (baserand < 0.35)
+				{
+					asworldmap[x+(y*asworld_width)].climate = "hot";
+				}
+				else if (baserand < 0.65)
+				{
+					asworldmap[x+(y*asworld_width)].climate = "temperate";
+				}
+				else if (baserand < 0.8443)
+				{
+					asworldmap[x+(y*asworld_width)].climate = "cold";
+				}
+				else //if (baserand < 1)
+				{
+					asworldmap[x+(y*asworld_width)].climate = "extremely cold";
+				}
+				
+				baserand = noisemaplandmarks[x+(y*asworld_width)];
+				if (baserand < 0.25)
+				{
+					baserand = Math.random();
+					if (baserand < 0.2)
+						asworldmap[x+(y*asworld_width)].landmark = "city"
+					else if (baserand < 0.5)
+						asworldmap[x+(y*asworld_width)].landmark = "town"
+					else
+						asworldmap[x+(y*asworld_width)].landmark = "village"
+				}
+				else if (baserand < 0.75)
+				{
+					asworldmap[x+(y*asworld_width)].landmark = "none"
+				}
+				else
+				{
+					baserand = Math.random();
+					if (baserand < 0.2)
+						asworldmap[x+(y*asworld_width)].landmark = "evil castle"
+					else if (baserand < 0.5)
+						asworldmap[x+(y*asworld_width)].landmark = "monster lair"
+					else
+						asworldmap[x+(y*asworld_width)].landmark = "quest site"
+				}
+			}
+		}
+	}
+	
+	console.log("adventuresim world generated");
+}
+
+function findClassByName(classname)
+{
+	for(let i = 0; i < adventure_sim.adventurers.classes.length; i++)
+	{
+		if (adventure_sim.adventurers.classes[i].name == classname)
+			return adventure_sim.adventurers.classes[i];
+	}
+	return null;
+}
+
+function makeAdventurer(classname)
+{
+	let species = adventure_sim.adventurers.species[Math.floor(Math.random()*adventure_sim.adventurers.species.length)];
+	let adventurerclass = adventure_sim.adventurers.classes[Math.floor(Math.random()*adventure_sim.adventurers.classes.length)];
+	
+	if (classname != null && classname != "")
+	{
+		let tempclass = findClassByName(classname);
+		if (tempclass != null)
+			adventurerclass = tempclass;
+	}
+	
+	let firstname = monster_names[Math.floor(Math.random()*monster_names.length)];
+	let surname = monster_surnames[Math.floor(Math.random()*monster_surnames.length)];
+	
+	let adventurer = {
+		name: firstname + " " + surname, 
+		species: species.name, 
+		classname: adventurerclass.name,
+		cstatus: "good",
+		stats: {
+			level: 1,
+			exp: 0,
+			cHP: species.stats.HP + adventurerclass.stats.HP,
+			mHP: species.stats.HP + adventurerclass.stats.HP,
+			cMP: species.stats.MP + adventurerclass.stats.MP,
+			mMP: species.stats.MP + adventurerclass.stats.MP,
+			attack: species.stats.Attack + adventurerclass.stats.Attack,
+			defense: species.stats.Defense + adventurerclass.stats.Defense,
+			damagedienum: adventurerclass.stats.DamageDieNum,
+			damagediesides: adventurerclass.stats.DamageDieSides,
+			charisma: species.stats.Charisma + adventurerclass.stats.Charisma,
+			size: species.stats.Size + adventurerclass.stats.Size,
+		},
+		magicitems: [],
+		canheal: adventurerclass.canheal,
+		partyhealpoint: adventurerclass.partyhealpoint,
+		abilities: [],
+		personallog: []
+	}
+	
+	for (let i = 0; i < adventurerclass.abilities.length; i++)
+	{
+		adventurer.abilities.push(getAbilityByID(adventurerclass.abilities[i]));
+	}
+	
+	return adventurer;
+}
+
+function addToPersonalLog(adventurer, logtext)
+{
+	if (adventurer.personallog !== undefined)
+	{
+		if (adventurer.personallog.length == 0 || adventurer.personallog[adventurer.personallog.length-1] != logtext)
+		{
+			adventurer.personallog.push(logtext);
+			return true;
+		}
+	}
+	return false;
+}
+
+
+function getPartyMemberByName(party, name)
+{
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].name == name)
+			return party.members[i];
+	}
+	return null;
+}
+
+function getPartyById(id)
+{
+	for (let i = 0; i < adventuringparties.length; i++)
+	{
+		if (adventuringparties[i].id == id)
+			return adventuringparties[i];
+	}
+	return null;
+}
+
+function recruitPartyMembers(arguments)
+{
+	if (arguments == null || arguments.length == 0)
+		return "You must provide a party id for this command";
+	
+	let party = getPartyById(arguments[0]);
+	if (party == null)
+		return "There is no party with that id currently";
+	
+	if (arguments.length < 1)
+		return "you must specify at least one class, or put \"any\" for any class";
+	
+	
+	let output = "";
+	for (let i = 1; i < arguments.length; i++)
+	{
+		let adventurer = makeAdventurer(arguments[i]);
+		party.members.push(adventurer);
+		output += "Recruited " + adventurer.name + ", the " + adventurer.species + " " + adventurer.classname + "\n";
+	}
+	output = output.trim();
+	
+	saveAdventuringParties();
+	
+	return output;
+}
+
+function retirePartyMember(arguments)
+{
+	if (arguments == null || arguments.length == 0)
+		return "You must provide a party id for this command";
+	
+	let party = getPartyById(arguments[0]);
+	if (party == null)
+		return "There is no party with that id currently";
+	
+	let partymembername = argumentsbacktostring(arguments, 1);
+	let partymember = -1
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].name == partymembername)
+			partymember = i;
+	}
+	if (partymember == -1)
+		return "there is no party member with that name in this party";
+	
+	party.members.splice(partymember, 1);
+	
+	if (party.members.length == 0)
+	{
+		output = partymembername + " has been retired";
+		output += "\n" + disbandParty(arguments);
+		return output;
+	}
+	
+	
+	saveAdventuringParties();
+	
+	return partymembername + " has been retired";
+}
+
+
+function outputPartyMemberSummary(arguments)
+{
+	if (arguments == null || arguments.length == 0)
+		return "You must provide a party id for this command";
+	
+	let party = getPartyById(arguments[0]);
+	if (party == null)
+		return "There is no party with that id currently";
+	
+	let partymember = getPartyMemberByName(party, argumentsbacktostring(arguments, 1));
+	if (partymember == null)
+		return "there is no party member with that name in this party";
+	
+	let output = partymember.name + " the " + partymember.species + " " + partymember.classname + "\n"
+		+ "Status: " + partymember.cstatus + "\n"
+		+ "HP: " + partymember.stats.mHP + ", MP: " + partymember.stats.mMP + "\n"
+		+ "Attack: " + partymember.stats.attack + ", Defense: " + partymember.stats.defense + "\n"
+		+ "Damage: " + Math.floor(partymember.stats.damagedienum) + "d" + Math.floor(partymember.stats.damagediesides) + "\n"
+		+ "Magic Items: ";
+	
+	for (let i = 0; i < partymember.magicitems.length; i++)
+	{
+		output += partymember.magicitems[i].name + " (" + partymember.magicitems[i].classification + ")";
+		if (i < partymember.magicitems.length-2)
+			output += ", ";
+		else if (i == partymember.magicitems.length-2)
+			output += " and ";
+	}
+	
+	output += "\nAbilities: "
+	
+	for (let i = 0; i < partymember.abilities.length; i++)
+	{
+		output += partymember.abilities[i].name;
+		if (i < partymember.abilities.length-2)
+			output += ", ";
+		else if (i == partymember.abilities.length-2)
+			output += " and ";
+	}
+	
+	output += "\nPersonal Log:\n"
+	
+	for (let i = 0; i < partymember.personallog.length; i++)
+	{
+		output += partymember.personallog[i];
+		if (i < partymember.personallog.length-1)
+			output += "\n";
+	}
+	
+	return output;
+}
+
+function outputPartySummary(arguments)
+{
+	if (arguments == null || arguments.length == 0)
+		return "You must provide a party id for this command";
+	
+	let party = getPartyById(arguments[0]);
+	if (party == null)
+		return "There is no party with that id currently";
+	
+	let output = "id: " + party.id + ", name: " + party.name + "\n"
+		+ "members: " + party.members.length + ", ";
+	for (let i = 0; i < party.members.length; i++)
+	{
+		output += party.members[i].name + " (" + party.members[i].cstatus + ")";
+		if (i < party.members.length-2)
+			output += ", ";
+		else if (i == party.members.length-2)
+			output += " and ";
+	}
+	output += "\nSilverpieces: " + party.silverpieces;
+	
+	return output;
+}
+
+function checkIdIsUnique(id)
+{
+	for (let i = 0; i < adventuringparties.length; i++)
+	{
+		if (adventuringparties[i].id == id)
+			return false;
+	}
+	return true;
+}
+
+function makeParty(arguments)
+{
+	if (arguments == null || arguments.length == 0)
+		return "You must provide arguments for this command";
+	
+	if (!checkIdIsUnique(arguments[0]))
+		return "Sorry, that party id is already in use!";
+	
+	let partyname = "";
+	let partymemberclass = [];
+	
+	for (let i = 1; i < arguments.length; i++)
+	{
+		if (arguments[i] == "-n")
+		{
+			let end = i+1;
+			for (let j = i+1; j < arguments.length; j++)
+			{
+				end = j;
+				if (arguments[j].charAt(0) == "-")
+				{
+					j += arguments.length;
+				}
+			}
+			partyname = argumentsbacktostring(arguments, i+1, end);
+		}
+		else if (arguments[i] == "-c")
+		{
+			for (let j = i+1; j < arguments.length; j++)
+			{
+				if (arguments[j].charAt(0) == "-")
+				{
+					j += arguments.length;
+				}
+				else
+				{
+					partymemberclass.push(arguments[j]);
+				}
+			}
+		}
+	}
+	
+	if (partymemberclass.length < 1)
+		return "You must provide at least one class specification or \"any\" for this command";
+	
+	let nearestCity = findNearestLandmark(64, 36, "city", 0.667);
+	
+	adventuringparty = {
+		id: arguments[0],
+		name: partyname,
+		members: [], 
+		xpos: nearestCity.x, 
+		ypos: nearestCity.y, 
+		cstamina: 1,
+		cstatus: "intown",
+		cactionduration: 0,
+		silverpieces: 200, 
+		inventory: [],
+		priorities: [{name: "adventure", count: 1}],
+		currentlyinencounter: false,
+		currentpartymember: 0,
+		encounterenemies: [],
+		encountersummary: "",
+		encounterlevel: 0,
+		currentenemy: 0,
+		questfight: false,
+		questpath: [],
+		questlocation: 0,
+		questcomplete: false,
+		questsucceed: false,
+		log: []
+	};
+	
+	for (let i = 0; i < partymemberclass.length; i++)
+	{
+		adventuringparty.members.push(makeAdventurer(partymemberclass[i]));
+	}
+	adventuringparties.push(adventuringparty);
+	
+	saveAdventuringParties();
+	
+	return "Adventuring party \"" + adventuringparty.name +"\" successfully created";
+}
+
+function disbandParty(arguments)
+{
+	if (arguments == null || arguments.length == 0)
+		return "You must provide a party id for this command";
+	
+	
+	let party = -1;
+	let partyname = "";
+	for (let i = 0; i < adventuringparties.length; i++)
+	{
+		if (adventuringparties[i].id == arguments[0])
+		{
+			party = i;
+			partyname = adventuringparties[i].name;
+		}
+	}
+	if (party == -1)
+		return "There is no party with that id currently";
+	
+	
+	
+	adventuringparties.splice(party,1);
+	
+	saveAdventuringParties();
+	
+	return partyname + " has disbanded";
+}
+
+function addPriority(priorities, priority)
+{
+	for (let i = 0; i < priorities.length; i++)
+	{
+		if (priorities[i].name == priority)
+		{
+			priorities[i].count++;
+			return;
+		}
+	}
+	priorities.push({name:priority, count: 1});
+}
+
+function minusPriority(priorities, priority)
+{
+	for (let i = 0; i < priorities.length; i++)
+	{
+		if (priorities[i].name == priority)
+		{
+			if (priorities[i].count > 0)
+				priorities[i].count--;
+			return;
+		}
+	}
+}
+
+function clearPriority(prioritylist, priority)
+{
+	for (let i = 0; i < prioritylist.length; i++)
+	{
+		if (prioritylist[i].name == priority)
+		{
+			prioritylist[i].count = 0;
+			return;
+		}
+	}
+}
+
+function inventoryContainsItem(itemname)
+{
+	let itemcount = 0;
+	for(let i = 0; i < adventuringparty.inventory.length; i++)
+	{
+		if (adventuringparty.inventory[i].name == itemname)
+		{
+			itemcount++;
+		}
+	}
+	return itemcount;
+}
+
+function getHighestPriority(priorities)
+{
+	let currenthighest = 0;
+	let currentpos = -1;
+	for(let i = 0; i < priorities.length; i++)
+	{
+		if (priorities[i].count > currenthighest)
+		{
+			currenthighest = priorities[i].count;
+			currentpos = i;
+		}
+	}
+	if (currentpos == -1)
+		return null;
+	return priorities[currentpos].name;
+}
+
+function copyPrioritiesList(priorities)
+{
+	newlist = [];
+	for (let i = 0; i < priorities.length; i++)
+	{
+		newlist.push({ name: priorities[i].name, count: priorities[i].count });
+	}
+	
+	return newlist;
+}
+
+function getLandmarkKeywords(xpos, ypos)
+{
+	for (let i = 0; i < adventure_sim.landmarks.length; i++)
+	{
+		if (asworldmap[xpos+(ypos*asworld_width)].landmark == adventure_sim.landmarks[i].name)
+		{
+			return adventure_sim.landmarks[i].keywords;
+		}
+	}
+	return null;
+}
+
+function getAdventurerItemByName(itemname)
+{
+	for (let i = 0; i < adventure_sim.itemblueprints.length; i++)
+	{
+		if (adventure_sim.itemblueprints[i].name == itemname)
+		{
+			return adventure_sim.itemblueprints[i];
+		}
+	}
+	
+	return null;
+}
+
+function wantToSleep(party)
+{
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].stats.cHP / party.members[i].stats.mHP < 0.75)
+			return true;
+		if (party.members[i].stats.cMP / party.members[i].stats.mMP < 0.667)
+			return true;
+	}
+	return false;
+}
+
+function stateBasedPriorities(party)
+{	
+	
+	if (party.cstamina < 0.15 || wantToSleep(party))
+	{
+		addPriority(party.priorities, "sleep");
+	}
+	else if (party.cstamina > 0.95 && partyHPMonitor(party) > 0.98 && partyMPMonitor(party) > 0.96)
+	{
+		clearPriority(party.priorities, "sleep");
+	}
+}
+
+function getEncounterTableByName(tablename)
+{
+	for (let i = 0; i < adventure_sim.encounters.length; i++)
+	{
+		if (adventure_sim.encounters[i].name == tablename)
+			return adventure_sim.encounters[i];
+	}
+	return null;
+}
+
+function getEnemyByBlueprintID(enemyid)
+{
+	for (let i = 0; i < adventure_sim.enemyblueprints.length; i++)
+	{
+		if (adventure_sim.enemyblueprints[i].id == enemyid)
+		{
+			let enemy = {
+				id: adventure_sim.enemyblueprints[i].id,
+				name: adventure_sim.enemyblueprints[i].name,
+				plural: adventure_sim.enemyblueprints[i].plural,
+				cstatus: "good",
+				stats:
+				{
+					level: adventure_sim.enemyblueprints[i].stats.level,
+					cHP: adventure_sim.enemyblueprints[i].stats.hp,
+					mHP: adventure_sim.enemyblueprints[i].stats.hp,
+					cMP: adventure_sim.enemyblueprints[i].stats.mp,
+					mMP: adventure_sim.enemyblueprints[i].stats.mp,
+					attack: adventure_sim.enemyblueprints[i].stats.attack,
+					defense: adventure_sim.enemyblueprints[i].stats.defense,
+					damagedienum: adventure_sim.enemyblueprints[i].stats.damagedienum,
+					damagediesides: adventure_sim.enemyblueprints[i].stats.damagediesides,
+					size: adventure_sim.enemyblueprints[i].stats.Size
+				},
+				abilities: []
+			};
+			for (let j = 0; j < adventure_sim.enemyblueprints[i].abilities.length; j++)
+			{
+				enemy.abilities.push(getAbilityByID(adventure_sim.enemyblueprints[i].abilities[j]));
+			}
+			
+			return enemy;
+		}
+	}
+	return null;
+}
+
+function findAppropriateAttackTarget(possibleTargets, ignoreTaunt = false)
+{
+	let currenthp = 9999999;
+	let currentdefense = 9999999
+	let currentattack = -1;
+	let currenttarget = -1;
+	
+	for (let i = 0; i < possibleTargets.length; i++)
+	{
+		let targetstatus = possibleTargets[i].cstatus.split(" ");
+		if (possibleTargets[i].cstatus != "dead" && !targetstatus.includes("fled"))
+		{
+			if (targetstatus.includes("taunt") && !ignoreTaunt)
+			{
+				currenttarget = i;
+			}
+			else if (possibleTargets[i].stats.cHP < currenthp)
+			{
+				currenthp = possibleTargets[i].stats.cHP;
+				currentdefense = possibleTargets[i].stats.defense;
+				currentattack = possibleTargets[i].stats.attack;
+				currenttarget = i;
+			}
+			else if (possibleTargets[i].stats.cHP == currenthp && possibleTargets[i].stats.defense < currentdefense)
+			{
+				currenthp = possibleTargets[i].stats.cHP;
+				currentdefense = possibleTargets[i].stats.defense;
+				currentattack = possibleTargets[i].stats.attack;
+				currenttarget = i;
+			}
+			else if (possibleTargets[i].stats.cHP == currenthp && possibleTargets[i].stats.defense == currentdefense && possibleTargets[i].stats.attack > currentattack)
+			{
+				currenthp = possibleTargets[i].stats.cHP;
+				currentdefense = possibleTargets[i].stats.defense;
+				currentattack = possibleTargets[i].stats.attack;
+				currenttarget = i;
+			}
+		}
+	}
+	if (currenttarget == -1)
+		return null;
+	return possibleTargets[currenttarget];
+}
+
+function findAppropriateHealTarget(possibleTargets)
+{
+	let currenthp = 0;
+	let currentdefense = 0
+	let currenttarget = -1;
+	
+	for (let i = 0; i < possibleTargets.length; i++)
+	{
+		let targetstatus = possibleTargets[i].cstatus.split(" ");
+		if (possibleTargets[i].cstatus != "dead" && !targetstatus.includes("fled"))
+		{
+			let missingHP = possibleTargets[i].stats.mHP - possibleTargets[i].stats.cHP;
+			if (missingHP > currenthp)
+			{
+				currenthp = missingHP;
+				currentdefense = possibleTargets[i].stats.defense;
+				currenttarget = i;
+			}
+			else if (missingHP == currenthp && possibleTargets[i].stats.defense < currentdefense)
+			{
+				currenthp = missingHP
+				currentdefense = possibleTargets[i].stats.defense;
+				currenttarget = i;
+			}
+		}
+	}
+	if (currenttarget == -1)
+		return null;
+	return possibleTargets[currenttarget];
+}
+
+
+
+function attackTarget(party, attacker, target)
+{
+	let attackroll = Math.floor(Math.random()*100)+1;
+	if (attackroll + attacker.stats.attack > target.stats.defense)
+	{
+		let damageroll = 0;
+		for (let i = 0; i < Math.floor(attacker.stats.damagedienum); i++)
+		{
+			damageroll += Math.floor(Math.random()*Math.floor(attacker.stats.damagediesides))+1;
+		}
+		
+		changeStatusAmountOn(target, "taunt", -1);
+		
+		target.stats.cHP -= damageroll;
+		if (target.stats.cHP <= 0)
+		{
+			target.cstatus = "dead";
+			if (addToPersonalLog(target,"Killed by " + grammarAorAn(attacker.name) + " " + attacker.name))
+			{
+				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(attacker.name) + " " + attacker.name);
+			}
+		}
+		return damageroll;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+function getAbilityByID(abilityid)
+{
+	for (let i = 0; i < adventure_sim.abilityblueprints.length; i++)
+	{
+		if (adventure_sim.abilityblueprints[i].id == abilityid)
+		{
+			let ability = {
+				id: adventure_sim.abilityblueprints[i].id,
+				name: adventure_sim.abilityblueprints[i].name,
+				mpcost: adventure_sim.abilityblueprints[i].mpcost,
+				target: adventure_sim.abilityblueprints[i].target,
+				effecttype: adventure_sim.abilityblueprints[i].effecttype,
+				effectdienum: adventure_sim.abilityblueprints[i].effectdienum,
+				effectdiesides: adventure_sim.abilityblueprints[i].effectdiesides
+			};
+			return ability;
+		}
+	}
+	return null;
+}
+
+function useAbility(party, caster, ability, target)
+{
+	let effectroll = 0;
+	for (let i = 0; i < ability.effectdienum; i++)
+	{
+		effectroll += Math.floor(Math.random()*ability.effectdiesides)+1;
+	}
+	
+	let maxeffect = 0;
+	
+	if (ability.effecttype == "healing")
+	{
+		maxeffect = target.stats.mHP - target.stats.cHP;
+		effectroll = Math.min(maxeffect, effectroll);
+		target.stats.cHP += effectroll;
+	}
+	
+	if (ability.effecttype == "fire")
+	{
+		maxeffect = target.stats.cHP;
+		effectroll = Math.min(maxeffect, effectroll);
+		target.stats.cHP -= effectroll;
+		if (target.stats.cHP > 0)
+			addStatusTo(target, "burning", ability.effectdienum);
+		else
+		{
+			target.cstatus = "dead"
+			if (addToPersonalLog(target,"Killed by " + grammarAorAn(caster.name) + " " + caster.name))
+				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(caster.name) + " " + caster.name);
+		}
+	}
+	
+	if (ability.effecttype == "taunt")
+	{
+		addStatusTo(target,"taunt",effectroll);
+	}
+	
+	return effectroll;
+}
+
+function copyAbilityList(abilities)
+{
+	let newlist = [];
+	for (let i = 0; i < abilities.length; i++)
+	{
+		let ability = {
+			id: abilities[i].id,
+			name: abilities[i].name,
+			mpcost: abilities[i].mpcost,
+			target: abilities[i].target,
+			effecttype: abilities[i].effecttype,
+			effectdienum: abilities[i].effectdienum,
+			effectdiesides: abilities[i].effectdiesides
+			};
+		newlist.push(ability);
+	}
+	return newlist;
+}
+
+function findAbilityOfEffectType(abilities, effecttype, maxmp)
+{
+	currentmp = -1;
+	currentability = -1;
+	for (let i = 0; i < abilities.length; i++)
+	{
+		if (abilities[i].effecttype == effecttype)
+		{
+			if (abilities[i].mpcost <= maxmp && abilities[i].mpcost > currentmp)
+			{
+				currentmp = abilities[i].mpcost;
+				currentability = i;
+			}
+		}
+	}
+	if (currentability == -1)
+		return null;
+	return abilities[currentability];
+}
+
+function partyMPMonitor(party)
+{
+	let mmp = 0;
+	let tmp = 0;
+	
+	for (let i = 0; i < party.members.length; i++)
+	{
+		tmp += party.members[i].stats.cMP;
+		mmp += party.members[i].stats.mMP;
+	}
+	
+	return (tmp / mmp);
+}
+
+function partyMemberSleep(partymember)
+{
+	let hpgain = partymember.stats.mHP * 0.0625;
+	let mpgain = partymember.stats.mMP * 0.0625;
+	
+	partymember.stats.cHP = Math.min(partymember.stats.mHP, partymember.stats.cHP+Math.ceil(hpgain));
+	partymember.stats.cMP = Math.min(partymember.stats.mMP, partymember.stats.cMP+Math.ceil(mpgain));
+}
+
+function partyHPMonitor(party)
+{
+	let mhp = 0;
+	let thp = 0;
+	
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].stats.cHP > 0)
+		{
+			thp += party.members[i].stats.cHP;
+			mhp += party.members[i].stats.mHP;
+		}
+	}
+	
+	return (thp / mhp);
+}
+
+function encounterTotalLevel(party)
+{
+	let tlevel = 0;
+	for (let i = 0; i <  party.encounterenemies.length; i++)
+	{
+		tlevel += party.encounterenemies[i].stats.level;
+	}
+	
+	return tlevel;
+}
+
+function partyTotalLevel(party)
+{
+	let tlevel = 0;
+	for (let i = 0; i < party.members.length; i++)
+	{
+		tlevel += party.members[i].stats.level;
+	}
+	
+	return tlevel;
+}
+
+function doCombatTurn(party, combatant, side)
+{
+	if (side == 0 && party.encounterlevel > partyTotalLevel(party))
+	{
+		addStatusTo(combatant,"fled");
+	}
+	let target;
+	if (combatant.canheal && partyHPMonitor(party) < combatant.partyhealpoint)
+	{
+		if (side == 0)
+			target = findAppropriateHealTarget(party.members);
+		else if (side == 1)
+			target = findAppropriateHealTarget(party.encounterenemies);
+		
+		if (target != null)
+		{
+			let ability = findAbilityOfEffectType(combatant.abilities, "healing", combatant.stats.cMP);
+			if (ability != null && combatant.stats.cMP >= ability.mpcost)
+			{
+				combatant.stats.cMP -= ability.mpcost;
+				let healingToTarget = useAbility(party, combatant, ability, target);
+				return;
+			}
+		}
+	}
+	
+	let cstatus = combatant.cstatus.split(" ");
+	if (!cstatus.includes("taunt") && countLivingParty(party) > 1)
+	{
+		let ability = findAbilityOfEffectType(combatant.abilities, "taunt", combatant.stats.cMP);
+		if (ability != null && combatant.stats.cMP >= ability.mpcost)
+		{
+			combatant.stats.cMP -= ability.mpcost;
+			useAbility(party, combatant, ability, combatant);
+			return;
+		}
+	}
+	
+	let ability = findAbilityOfEffectType(combatant.abilities, "fire", combatant.stats.cMP);
+	if (ability != null && combatant.stats.cMP >= ability.mpcost)
+	{
+		if (side == 0)
+			targets = party.encounterenemies;
+		else if (side == 1)
+			targets = party.members;
+		
+		target = findAppropriateAttackTarget(targets);
+		
+		if (target != null)
+		{
+			combatant.stats.cMP -= ability.mpcost;
+			if (ability.target == "single")
+			{
+				useAbility(party, combatant, ability, target);
+				return;
+			}
+			else if (ability.target == "all")
+			{
+				for (let i = 0; i < targets.length; i++)
+				{
+					useAbility(party, combatant, ability, targets[i]);
+				}
+				return;
+			}
+		}		
+	}
+	
+	if (side == 0)
+		target = findAppropriateAttackTarget(party.encounterenemies);
+	else if (side == 1)
+		target = findAppropriateAttackTarget(party.members);
+	
+	if (target != null)
+	{
+		let damageToTarget = attackTarget(party, combatant, target);
+	}
+}
+
+function isPartyDead(party)
+{
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead")
+			return false;
+	}
+	return true;
+}
+
+function countLivingParty(party)
+{
+	let count = 0;
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead")
+			count++;
+	}
+	return count;
+}
+
+function hasPartyFled(party)
+{
+	for (let i = 0; i < party.members.length; i++)
+	{
+		partymemberstatus = party.members[i].cstatus.split(" ");
+		if (!partymemberstatus.includes("fled") && !partymemberstatus.includes("dead"))
+			return false;
+	}
+	return true;
+}
+
+function levelUpPartyMember(party, partymember)
+{
+	let charclass = findClassByName(partymember.classname);
+	partymember.stats.level++;
+	partymember.stats.mHP += charclass.levelup.hp;
+	partymember.stats.cHP += charclass.levelup.hp;
+	partymember.stats.mMP += charclass.levelup.mp;
+	partymember.stats.cMP += charclass.levelup.mp;
+	partymember.stats.attack += charclass.levelup.attack;
+	partymember.stats.defense += charclass.levelup.defense;
+	partymember.stats.damagedienum += charclass.levelup.damagedienum;
+	partymember.stats.damagediesides += charclass.levelup.damagediesides;
+	partymember.stats.charisma += charclass.levelup.charisma;
+	addToAdventureSimLog(party, partymember.name + " levels up to level " + partymember.stats.level);
+}
+
+function expLevelUpRequirement(characterlevel)
+{
+	return (1000*characterlevel*characterlevel/2);
+}
+
+
+function removeStatusFrom(p, statustoremove)
+{
+	let currentstatus = p.cstatus.split(" ");
+	let position = -1;
+	for (let i = 0; i < currentstatus.length; i++)
+	{
+		if (currentstatus[i] == statustoremove)
+			position = i;
+	}
+	if (isNaN(parseInt(currentstatus[position+1])))
+	{
+		p.cstatus = argumentsbacktostring(currentstatus,0,position) + " " + argumentsbacktostring(currentstatus,position+1);
+	}
+	else
+	{
+		p.cstatus = argumentsbacktostring(currentstatus,0,position) + " " + argumentsbacktostring(currentstatus,position+2);
+	}
+	p.cstatus = p.cstatus.trim();
+}
+
+function changeStatusAmountOn(p, statustodecrease, change)
+{
+	let currentstatus = p.cstatus.split(" ");
+	let position = -1;
+	for (let i = 0; i < currentstatus.length; i++)
+	{
+		if (currentstatus[i] == statustodecrease)
+			position = i;
+	}
+	
+	amount = parseInt(currentstatus[position+1]);
+	
+	if (isNaN(amount))
+	{
+		return null;
+	}
+	
+	amount += change;
+	
+	if (amount < 1)
+	{
+		p.cstatus = argumentsbacktostring(currentstatus,0,position) + " " + argumentsbacktostring(currentstatus,position+2);
+	}
+	else
+	{
+		p.cstatus = argumentsbacktostring(currentstatus,0,position) + " " + statustodecrease + " " + amount + " " + argumentsbacktostring(currentstatus,position+2);
+	}
+	p.cstatus = p.cstatus.trim();
+}
+
+function addStatusTo(p, statustoadd, amount = -1)
+{
+	let currentstatus = p.cstatus.split(" ");
+	for (let i = 0; i < currentstatus.length; i++)
+	{
+		if (currentstatus[i] == statustoadd)
+		{
+			if (amount > 0 && amount > currentstatus[i+1])
+			{
+				currentstatus[i+1] = amount;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	p.cstatus += " " + statustoadd;
+	if (amount > 0)
+		p.cstatus += " " + amount;
+	return true;
+}
+
+function givePartyMemberExp(party, partymember, encounterlevel)
+{
+	let expamount = 100*encounterlevel/partymember.stats.level;
+	partymember.stats.exp += expamount;
+	if (partymember.stats.exp >= expLevelUpRequirement(partymember.stats.level))
+		levelUpPartyMember(party, partymember);
+}
+
+function endCombatEffects(party)
+{
+	for (let i = 0; i < party.members.length; i++)
+	{
+		removeStatusFrom(party.members[i],"taunt");
+		removeStatusFrom(party.members[i],"burn");
+	}
+}
+
+function combatRound(party)
+{
+	
+	
+	if (party.currentpartymember > party.members.length && party.currentenemy > party.encounterenemies.length)
+	{
+		party.currentpartymember = 0;
+		party.currentenemy = 0;
+	}
+
+	if ((party.currentpartymember%2 == 0 && party.currentenemy%2 == 0) || (party.currentpartymember%2 == 1 && party.currentenemy%2 == 1))
+	{
+		if (party.currentpartymember < party.members.length)
+		{
+			let partymemberstatus = party.members[party.currentpartymember].cstatus.split(" ");
+			
+			for(let i = 0; i < partymemberstatus.length; i++)
+			{
+				if (partymemberstatus[i] == "burn")
+				{
+					party.members[party.currentpartymember].stats.cHP -= parseInt(partymemberstatus[i+1]);
+					changeStatusAmountOn(party.members[party.currentpartymember], "burn", -1);
+					if (party.members[party.currentpartymember].stats.cHP <= 0)
+					{
+						addToPersonalLog(party.members[party.currentpartymember], "Burned to death");
+						party.members[party.currentpartymember].cstatus = "dead";
+					addToAdventureSimLog(party,party.members[party.currentpartymember].name + " burned to death");
+						
+					}
+				}
+			}
+			
+			if (!partymemberstatus.includes("fled") && party.members[party.currentpartymember].cstatus != "dead")
+			{
+				if (party.members[party.currentpartymember].stats.cHP > 0)
+					doCombatTurn(party, party.members[party.currentpartymember], 0);
+				else
+				{
+					party.members[party.currentpartymember].cstatus = "dead";
+					addToAdventureSimLog(party,party.members[party.currentpartymember].name + " was killed");
+				}
+			}
+		}
+		party.currentpartymember++;
+	}
+	else if ((party.currentpartymember%2 == 1 && party.currentenemy%2 == 0) || (party.currentpartymember%2 == 0 && party.currentenemy%2 == 1))
+	{
+		if (party.currentenemy < party.encounterenemies.length)
+		{
+			let enemystatus = party.encounterenemies[party.currentenemy].cstatus.split(" ");
+			
+			for(let i = 0; i < partymemberstatus.length; i++)
+			{
+				if (enemystatus[i] == "burn")
+				{
+					party.encounterenemies[party.currentenemy].stats.cHP -= parseInt(partymemberstatus[i+1]);
+					changeStatusAmountOn(party.encounterenemies[party.currentenemy], "burn", -1);
+				}
+			}
+			
+			if (!enemystatus.includes("fled") && party.encounterenemies[party.currentenemy].stats.cHP > 0)
+			{
+				doCombatTurn(party, party.encounterenemies[party.currentenemy], 1);
+			}
+			else
+			{
+				party.encounterenemies.splice(party.currentenemy,1);
+				party.currentenemy--;
+			}
+		}
+		party.currentenemy++;
+	}
+	
+	if (party.encounterenemies.length == 0)
+	{
+		if (party.questfight)
+		{
+			addToAdventureSimLog(party,party.name + " defeat the " + party.encountersummary);
+			party.questsucceed = true;
+		}
+		for (let i = 0; i < party.members.length; i++)
+		{
+			if (party.members[i].cstatus != "dead")
+				givePartyMemberExp(party, party.members[i], party.encounterlevel);
+		}
+		endCombatEffects(party);
+		party.currentlyinencounter = false;
+		return;
+	}
+	
+	if (isPartyDead(party))
+	{
+		addToAdventureSimLog(party,party.name + " die in combat against the " + party.encountersummary);
+		party.currentlyinencounter = false;
+		if (party.questfight)
+		{
+			party.questsucceed == false;
+		}
+		return;
+	}
+	
+	if (hasPartyFled(party))
+	{
+		for (let i = 0; i < party.members.length; i++)
+		{
+			cstatus = party.members[i].cstatus.split(" ");
+			if (cstatus.includes("fled"))
+				removeStatusFrom(party.members[i],"fled");
+		}
+		party.encounterenemies = [];
+		endCombatEffects(party);
+		party.currentlyinencounter = false;
+		if (party.questfight)
+		{
+			addToAdventureSimLog(party,party.name + " flee from the " + party.encountersummary);
+			party.questsucceed == false;
+		}
+		return;
+	}
+}
+
+function randomLivingPartyMember(party)
+{
+	let character;
+	do {
+		character = party.members[Math.floor(Math.random()*party.members.length)];
+	}
+	while (character.cstatus == "dead");
+	
+	return character;
+}
+
+function initiateSocialEncounter(party)
+{
+	let encounter = adventure_sim.socialencounters[Math.floor(Math.random()*adventure_sim.socialencounters.length)];
+	let character = randomLivingPartyMember(party);
+	
+	let dieroll = Math.floor(Math.random()*100)+1;
+	let crit = (dieroll%11 == 0);
+	
+	let logmessage = "";
+	
+	if (dieroll + character.stats.charisma >= encounter.chadif)
+	{
+		if (crit)
+		{
+			logmessage = encounter.critsuccess;
+		}
+		else
+		{
+			logmessage = encounter.success;
+		}
+	}
+	else
+	{
+		if (crit)
+		{
+			logmessage = encounter.critfail;
+		}
+		else
+		{
+			logmessage = encounter.fail;
+		}
+	}
+	
+	let position = logmessage.indexOf("\[");
+	let endposition = -1;
+	let logmessagesubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = logmessage.indexOf("\]");
+		logmessagesubstr = logmessage.substring(position+1,endposition);
+		substr_number = randomNumberForText(logmessagesubstr);
+		if (logmessagesubstr == "character")
+		{
+			logmessage = logmessage.substr(0,position) + character.name + logmessage.substr(endposition+1);
+		}
+		else if (substr_number != false)
+		{
+			logmessage = logmessage.substr(0,position) + substr_number.toString() + logmessage.substr(endposition+1);
+		}
+		else
+		{
+			logmessage = logmessage.substr(0,position) + logmessage.substr(endposition+1);
+		}
+		position = logmessage.indexOf("\[");
+	}
+	
+	addToAdventureSimLog(party, logmessage);
+}
+
+function initiateQuestEncounter(party, encounter)
+{
+	let parsedencounter = encounter.split(" ");
+	for (let i = 0; i < parsedencounter.length; i++)
+	{
+		let enemy = getEnemyByBlueprintID(parsedencounter[i]);
+		if (enemy != null)
+			party.encounterenemies.push(enemy);
+	}
+	
+	party.encountersummary = getEnemySummary(party.encounterenemies);
+	party.encounterlevel = encounterTotalLevel(party);
+	party.questfight = true;
+	party.currentlyinencounter = true;
+}
+
+function initiateCombatEncounter(party, biome, climate)
+{
+	let encountertable;
+	if (biome == "jungle")
+	{
+		if (climate == "extremely hot" || climate == "hot")
+			encountertable = getEncounterTableByName("hot jungle");
+		else if (climate == "temperate")
+			encountertable = getEncounterTableByName("temperate jungle");
+		else if (climate == "extremely cold" || climate == "cold")
+			encountertable = getEncounterTableByName("cold jungle");
+	}
+	else if (biome == "forest")
+	{
+		if (climate == "extremely hot" || climate == "hot")
+			encountertable = getEncounterTableByName("hot forest");
+		else if (climate == "temperate")
+			encountertable = getEncounterTableByName("temperate forest");
+		else if (climate == "extremely cold" || climate == "cold")
+			encountertable = getEncounterTableByName("cold forest");
+	}
+	else if (biome == "grasslands")
+	{
+		if (climate == "extremely hot" || climate == "hot")
+			encountertable = getEncounterTableByName("hot grasslands");
+		else if (climate == "temperate")
+			encountertable = getEncounterTableByName("temperate grasslands");
+		else if (climate == "extremely cold" || climate == "cold")
+			encountertable = getEncounterTableByName("cold grasslands");
+	}
+	else if (biome == "plains")
+	{
+		if (climate == "extremely hot" || climate == "hot")
+			encountertable = getEncounterTableByName("hot plains");
+		else if (climate == "temperate")
+			encountertable = getEncounterTableByName("temperate plains");
+		else if (climate == "extremely cold" || climate == "cold")
+			encountertable = getEncounterTableByName("cold plains");
+	}
+	else if (biome == "desolate")
+	{
+		if (climate == "extremely hot" || climate == "hot")
+			encountertable = getEncounterTableByName("hot desolate");
+		else if (climate == "temperate")
+			encountertable = getEncounterTableByName("temperate desolate");
+		else if (climate == "extremely cold" || climate == "cold")
+			encountertable = getEncounterTableByName("cold desolate");
+	}
+	
+	let encounter = encountertable.encounters[Math.floor(Math.random()*encountertable.encounters.length)].split(" ");
+	for (let i = 0; i < encounter.length; i++)
+	{
+		let enemy = getEnemyByBlueprintID(encounter[i]);
+		if (enemy != null)
+			party.encounterenemies.push(enemy);
+	}
+	
+	party.encountersummary = getEnemySummary(party.encounterenemies);
+	party.encounterlevel = encounterTotalLevel(party);
+	party.questfight = false;
+	party.currentlyinencounter = true;
+}
+
+function getNextInQueue(queue)
+{
+	let lowest = 9999999;
+	let found = -1;
+	for(let i = 0; i < queue.length; i++)
+	{
+		if (queue[i].priority < lowest)
+		{
+			lowest = queue[i].priority;
+			found = i;
+		}
+	}
+	
+	return found;
+}
+
+function arrayContainsPosition(array, position)
+{
+	for(let i = 0; i < array.length; i++)
+	{
+		if (array[i].x == position.x && array[i].y == position.y)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+function addToDictionary(dictionary, key, value)
+{
+	for(let i = 0; i < dictionary.length; i++)
+	{
+		if (dictionary[i].key.x == key.x && dictionary[i].key.y == key.y)
+		{
+			dictionary[i].value = value;
+			return;
+		}
+	}
+	
+	dictionary.push({ key: key, value: value });
+}
+
+function getFromDictionary(dictionary, key)
+{
+	for(let i = 0; i < dictionary.length; i++)
+	{
+		if (dictionary[i].key.x == key.x && dictionary[i].key.y == key.y)
+		{
+			return dictionary[i].value;
+		}
+	}
+	
+	return null;
+}
+
+function dictionaryToDirection(dictionary, end, start)
+{
+	let backwards = [];
+	let forwards = [];
+	let current = end;
+	backwards.push(end)
+	while (current.x != start.x || current.y != start.y)
+	{
+		current = getFromDictionary(dictionary, current);
+		backwards.push(current);
+	}
+	
+	for (let i = backwards.length-1; i >= 0; i--)
+	{
+		forwards.push(backwards[i]);
+	}
+	
+	return forwards;
+}
+
+function pathHeuristic(a, b)
+{
+	return Math.ceil(Math.abs(a.x - b.x) + Math.abs(a.y - b.y));
+}
+
+function pathToPosition(start, end)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let closest = { x: start.x, y: start.y };
+	let closestHexHeuristic = 99999999;
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		
+		if (current.x == end.x && current.y == end.y)
+		{
+			console.log("path found");
+			//console.log(dictionaryCameFrom);
+			return dictionaryToDirection(dictionaryCameFrom, end, start);
+		}
+		
+		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+			newcost += 1;
+		}
+		let connection = { x: current.x, y: current.y+1 };
+		if (connection.y < asworld_height && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+		{
+			tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+			if (tempcost != null)
+			{
+				oldcost = tempcost;
+				if (newcost < oldcost)
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			else
+			{
+				addToDictionary(dictionaryCostSoFar, connection, newcost);
+				priority = newcost + pathHeuristic(connection, end);
+				if (priority - newcost < closestHexHeuristic)
+				{
+					closest = connection;
+					closestHexHeuristic = priority - newcost;
+				}
+				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+				addToDictionary(dictionaryCameFrom, connection, current);
+			}
+		}
+		connection = { x: current.x, y: current.y-1 };
+		if (connection.y > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+		{
+			tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+			if (tempcost != null)
+			{
+				oldcost = tempcost;
+				if (newcost < oldcost)
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			else
+			{
+				addToDictionary(dictionaryCostSoFar, connection, newcost);
+				priority = newcost + pathHeuristic(connection, end);
+				if (priority - newcost < closestHexHeuristic)
+				{
+					closest = connection;
+					closestHexHeuristic = priority - newcost;
+				}
+				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+				addToDictionary(dictionaryCameFrom, connection, current);
+			}
+		}
+		if (current.x%2 == 0)
+		{
+			connection = { x: current.x+1, y: current.y };
+			if (connection.x < asworld_width && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+			{
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (newcost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, newcost);
+						priority = newcost + pathHeuristic(connection, end);
+						if (priority - newcost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - newcost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			connection = { x: current.x+1, y: current.y-1 };
+			if (connection.x < asworld_width && connection.y > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+			{
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (newcost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, newcost);
+						priority = newcost + pathHeuristic(connection, end);
+						if (priority - newcost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - newcost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			connection = { x: current.x-1, y: current.y };
+			if (connection.x > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+			{
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (newcost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, newcost);
+						priority = newcost + pathHeuristic(connection, end);
+						if (priority - newcost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - newcost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			connection = { x: current.x-1, y: current.y-1 };
+			if (connection.x > -1 && connection.y > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+			{
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (newcost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, newcost);
+						priority = newcost + pathHeuristic(connection, end);
+						if (priority - newcost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - newcost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+		}
+		else
+		{
+			connection = { x: current.x+1, y: current.y+1 };
+			if (connection.x < asworld_width && connection.y < asworld_height && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+			{
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (newcost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, newcost);
+						priority = newcost + pathHeuristic(connection, end);
+						if (priority - newcost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - newcost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			connection = { x: current.x+1, y: current.y };
+			if (connection.x < asworld_width && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+			{
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (newcost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, newcost);
+						priority = newcost + pathHeuristic(connection, end);
+						if (priority - newcost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - newcost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			connection = { x: current.x-1, y: current.y+1 };
+			if (connection.x > -1 && connection.y < asworld_height && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+			{
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (newcost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, newcost);
+						priority = newcost + pathHeuristic(connection, end);
+						if (priority - newcost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - newcost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			connection = { x: current.x-1, y: current.y };
+			if (connection.x > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
+			{
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (newcost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, newcost);
+						priority = newcost + pathHeuristic(connection, end);
+						if (priority - newcost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - newcost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, newcost);
+					priority = newcost + pathHeuristic(connection, end);
+					if (priority - newcost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - newcost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+		}
+	}
+	console.log("full path not found");
+	return dictionaryToDirection(dictionaryCameFrom, closest, start)
+}
+
+
+function findNearestLandmark(xpos, ypos, landmark, probability = 1)
+{
+	let size = 1951; // radius 24
+	let totalloops = 1;
+	let sizecovered = 7;
+	
+	while (size > sizecovered)
+	{
+		totalloops++;
+		sizecovered += totalloops*6;
+	}
+	
+	let startpos = { x: xpos, y: ypos };
+	let currenthex = { x:0, y:0 };
+	let curdirdur = 0;
+	let dirduration = 1;
+	let loopend = 6;
+	let sizereached = 1;
+	for(let j = 0; j < totalloops && sizereached < size; j++)
+	{
+		let direction = 3;
+		if (startpos.x  % 2 == 1)
+		{
+			startpos.x = startpos.x+1;
+		}
+		else
+		{
+			startpos.x = startpos.x+1;
+			startpos.y = startpos.y-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let i = 0; i < loopend && sizereached < size; i++)
+		{
+			if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1 && asworldmap[currenthex.x + (currenthex.y*asworld_width)].landmark == landmark)
+			{
+				if (Math.random() < probability)
+				{
+					let start = { x: xpos, y: ypos };
+					let end = { x: currenthex.x, y: currenthex.y };
+					let pathToTown = pathToPosition(start, end);
+					
+					if (pathToTown[pathToTown.length-1].x == end.x && pathToTown[pathToTown.length-1].y == end.y)
+						return { x: currenthex.x, y: currenthex.y };
+				}
+			}
+			
+			if (currenthex.x%2 == 1)
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+					currenthex.y++;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+					currenthex.y++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			} 
+			else
+			{
+				if (direction == 5)
+				{
+					currenthex.x--;
+					currenthex.y--;
+				}
+				else if (direction == 4)
+				{
+					currenthex.x--;
+				}
+				else if (direction == 3)
+				{
+					currenthex.y++;
+				}
+				else if (direction == 2)
+				{
+					currenthex.x++;
+				}
+				else if (direction == 1)
+				{
+					currenthex.x++;
+					currenthex.y--;
+				}
+				else if (direction == 0)
+				{
+					currenthex.y--;
+				}
+			}
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+				if (direction == 6)
+					direction = 0;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	return null;
+}
+
+function getEnemySummary(enemies)
+{
+	let enemycounts = []
+	let found = false;
+	for (let i = 0; i < enemies.length; i++)
+	{
+		for (let j = 0; j < enemycounts.length; j++)
+		{
+			if (enemies[i].id == enemycounts[j].id)
+			{
+				found = true;
+				enemycounts[j].count++;
+				j += enemycounts.length;
+			}
+		}
+		if (!found)
+		{
+			enemycounts.push({ id: enemies[i].id, count: 1 });
+		}
+	}
+	
+	let summary = "";
+	for (let i = 0; i < enemycounts.length; i++)
+	{
+		let enemy = getEnemyByBlueprintID(enemycounts[i].id);
+		if (enemycounts[i].count > 1)
+			summary += enemy.plural;
+		else
+			summary += enemy.name;
+		
+		if (i < enemycounts.length-2)
+			summary += ", ";
+		else if (i == enemycounts.length-2)
+			summary += " and ";
+	}
+	
+	return summary;
+}
+
+function partyActionAdventure(party)
+{
+	if (party.questlocation < party.questpath.length-1)
+	{
+		party.questlocation++;
+		party.xpos = party.questpath[party.questlocation].x;
+		party.ypos = party.questpath[party.questlocation].y;
+	}
+	
+	let positionbiome = asworldmap[party.xpos+(party.ypos*asworld_width)].biome;
+	let positionclimate = asworldmap[party.xpos+(party.ypos*asworld_width)].climate;
+	let positionlandmark = asworldmap[party.xpos+(party.ypos*asworld_width)].landmark;
+	
+	// encounter logic
+	if (party.questlocation > 0 && Math.random() < 0.1)
+	{
+		if (positionlandmark != "town" && positionlandmark != "city" && positionlandmark != "village")
+		{
+			party.questfight = false;
+			initiateCombatEncounter(party, positionbiome, positionclimate);
+		}
+		else
+		{
+			initiateSocialEncounter(party);
+		}
+	}
+	else if (party.questlocation == party.questpath.length-1)
+	{
+		addToAdventureSimLog(party, party.name + " make it to the " + positionlandmark);
+		clearPriority(party.priorities,"adventure");
+		addPriority(party.priorities,"town");
+		initiateQuestEncounter(party, party.quest.encounters[Math.floor(Math.random()*party.quest.encounters.length)]);
+	}
+}
+
+function partyActionSleep(party)
+{
+	party.cstamina = Math.min(1, party.cstamina + 0.05);
+	addStatusTo(party, "asleep");
+	
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members.cstatus != "dead")
+			partyMemberSleep(party.members[i]);
+	}
+	
+	addToAdventureSimLog(party, party.name + " set up camp and rest");
+}
+
+function partyActionAsleep(party)
+{
+	party.cstamina = Math.min(1, party.cstamina + 0.05);
+	
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members.cstatus != "dead")
+			partyMemberSleep(party.members[i]);
+	}
+	
+	if (party.cstamina > 0.95  && partyHPMonitor(party) > 0.98 && partyMPMonitor(party) > 0.96)
+	{
+		removeStatusFrom(party, "asleep");
+	}
+}
+
+function partyActionGoToTown(party)
+{
+	
+	if (party.questlocation > 0)
+	{
+		party.questlocation--;
+		party.xpos = party.questpath[party.questlocation].x;
+		party.ypos = party.questpath[party.questlocation].y;
+	}
+	
+	
+	let positionbiome = asworldmap[party.xpos+(party.ypos*asworld_width)].biome;
+	let positionclimate = asworldmap[party.xpos+(party.ypos*asworld_width)].climate;
+	let positionlandmark = asworldmap[party.xpos+(party.ypos*asworld_width)].landmark;
+	
+	// encounter logic
+	if (party.questlocation > 0 && Math.random() < 0.1)
+	{
+		if (positionlandmark != "town" && positionlandmark != "city" && positionlandmark != "village")
+		{
+			party.questfight = false;
+			initiateCombatEncounter(party, positionbiome, positionclimate);
+		}
+		else
+		{
+			initiateSocialEncounter(party);
+		}
+	}
+	else if (party.questlocation == 0)
+	{
+		// in town stuff TO DO
+		addToAdventureSimLog(party, party.name + " return to the " + positionlandmark);
+		onReturnToTown(party);
+		party.cstatus = "intown";
+	}
+}
+
+function partyGetAction(party)
+{
+	let tempprioritylist = copyPrioritiesList(party.priorities);
+	let currentHighestPriority = getHighestPriority(tempprioritylist);
+	
+	let keywords = getLandmarkKeywords(party.xpos, party.ypos);
+	let action = "";
+	while (action == "" && currentHighestPriority != null)
+	{
+		if (keywords.includes(currentHighestPriority))
+		{
+			action = currentHighestPriority;
+		}
+		else
+		{
+			clearPriority(tempprioritylist, currentHighestPriority);
+			currentHighestPriority = getHighestPriority(tempprioritylist);
+		}
+	}
+	
+	if (currentHighestPriority == null)
+		console.log("Error, no action available");
+	
+	let currentstatus = party.cstatus.split(" ");
+	
+	if (currentstatus.includes("asleep"))
+		partyActionAsleep(party);
+	else if (action == "adventure")
+		partyActionAdventure(party);
+	else if (action == "town")
+		partyActionGoToTown(party);
+	else if (action == "sleep")
+		partyActionSleep(party);
+}
+
+function simulateAdventuring(party)
+{
+	if (!party.currentlyinencounter && !isPartyDead(party))
+	{
+		party.cstamina -= 0.02;
+		stateBasedPriorities(party);
+		
+		partyGetAction(party);
+	}
+	
+	while (party.currentlyinencounter)
+	{
+		combatRound(party);
+	}
+}
+
+function fullyRecuperateParty(party)
+{
+	for (let i = 0; i <  party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead")
+		{
+			party.members[i].stats.cHP = party.members[i].stats.mHP;
+			party.members[i].stats.cMP = party.members[i].stats.mMP;
+			party.members[i].cstatus = "good";
+		}
+	}
+}
+
+function filterByItLvl(itemproperty)
+{
+	if (itemproperty.itlvl <= this)
+			return true;
+	return false;
+}
+
+function getItemPropertyById(itempropertyid)
+{
+	for (let i = 0; i < adventure_sim.itemproperties.length; i++)
+	{
+		if (adventure_sim.itemproperties[i].id == itempropertyid)
+			return adventure_sim.itemproperties[i];
+	}
+	return null;
+}
+
+function addItemEnchant(enchantlist, enchantment)
+{
+	for (let i = 0; i < enchantlist.length; i++)
+	{
+		if (enchantlist[i].id == enchantment.id)
+		{
+			let enchantmentid = enchantment.id.split(" ");
+			enchantmentid[1] = parseInt(enchantmentid[1]);
+			enchantmentid++;
+			let upgrade = getItemPropertyById(argumentsbacktostring(enchantmentid));
+			if (upgrade != null)
+			{
+				enchantlist.splice(i,1);
+				enchantlist.push(upgrade);
+			}
+			else
+			{
+				enchantlist.push(enchantment);
+			}
+			return;
+		}
+	}
+	enchantlist.push(enchantment);
+}
+
+function classifyItem(item)
+{
+	let total = item.effects.hp + item.effects.mp + item.effects.attack + item.effects.defense + item.effects.damagedienum*5;
+	let hpprop = item.effects.hp / total;
+	let mpprop = item.effects.mp / total;
+	let attackprop = item.effects.attack / total;
+	let defenseprop = item.effects.defense / total;
+	let damageprop = item.effects.damagedienum*5 / total;
+	
+	let values = [
+		{key: "hp", value: hpprop},
+		{key: "mp", value: mpprop}, 
+		{key: "attack", value: attackprop},
+		{key: "defense", value: defenseprop}, 
+		{key: "damage", value: damageprop}
+		];
+	let sortedvalues = [];
+	let highestval = -1;
+	let highesti = -1;
+	let curindex = 0;
+	while (values.length > 0)
+	{
+		if (values[curindex].value > highestval)
+		{
+			highestval = values[curindex].value;
+			highesti = curindex;
+		}
+		curindex++;
+		if (curindex == values.length)
+		{
+			sortedvalues.push(values[highesti]);
+			values.splice(highesti,1);
+			highestval = -1;
+			highesti = -1;
+			curindex = 0;
+		}
+	}
+	if (sortedvalues[0].key == "hp")
+	{
+		if (sortedvalues[1].key == "mp")
+		{
+			item.classification = "sustain";
+		}
+		else if (sortedvalues[1].key == "attack")
+		{
+			item.classification = "defense";
+		}
+		else if (sortedvalues[1].key == "defense")
+		{
+			item.classification = "defense";
+		}
+		else if (sortedvalues[1].key == "damage")
+		{
+			item.classification = "defense";
+		}
+	}
+	else if (sortedvalues[0].key == "mp")
+	{
+		if (sortedvalues[1].key == "hp")
+		{
+			item.classification = "sustain";
+		}
+		else if (sortedvalues[1].key == "attack")
+		{
+			item.classification = "offense";
+		}
+		else if (sortedvalues[1].key == "defense")
+		{
+			item.classification = "defense";
+		}
+		else if (sortedvalues[1].key == "damage")
+		{
+			item.classification = "offense";
+		}
+	}
+	else if (sortedvalues[0].key = "attack" )
+	{
+		if (sortedvalues[1].key == "hp")
+		{
+			item.classification = "offense";
+		}
+		else if (sortedvalues[1].key == "mp")
+		{
+			item.classification = "offense";
+		}
+		else if (sortedvalues[1].key == "defense")
+		{
+			item.classification = "offense";
+		}
+		else if (sortedvalues[1].key == "damage")
+		{
+			item.classification = "offense";
+		}
+	}
+	else if (sortedvalues[0].key = "defense" )
+	{
+		if (sortedvalues[1].key == "hp")
+		{
+			item.classification = "defense";
+		}
+		else if (sortedvalues[1].key == "mp")
+		{
+			item.classification = "defense";
+		}
+		else if (sortedvalues[1].key == "attack")
+		{
+			item.classification = "defense";
+		}
+		else if (sortedvalues[1].key == "damage")
+		{
+			item.classification = "defense";
+		}
+	}
+	else if (sortedvalues[0].key = "damage" )
+	{
+		if (sortedvalues[1].key == "hp")
+		{
+			item.classification = "offense";
+		}
+		else if (sortedvalues[1].key == "mp")
+		{
+			item.classification = "offense";
+		}
+		else if (sortedvalues[1].key == "attack")
+		{
+			item.classification = "offense";
+		}
+		else if (sortedvalues[1].key == "defense")
+		{
+			item.classification = "offense";
+		}
+	}
+}
+
+function createAdventureSimItem(itemlevel)
+{
+	let tempitemproperties = adventure_sim.itemproperties.filter(filterByItLvl,itemlevel);
+	
+	let itemname;
+	let baserand  = Math.random();
+	if (baserand < 0.12) // single first word name
+	{
+		itemname = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))];
+	}
+	else if (baserand < 0.24) // single last word name
+	{
+		itemname = "the " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))];
+	}
+	else
+	{
+		itemname = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))] + " " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))];
+	}
+	let item = { 
+		name: itemname,
+		effects: {
+			hp: 0,
+			mp: 0,
+			attack: 0,
+			defense: 0,
+			damagedienum: 0
+			},
+		classification: ""
+		};
+	
+	let itemcurlevel = 0;
+	let itemenchants = [];
+	let newenchant;
+	
+	while (itemcurlevel < itemlevel) // && tempitemproperties.length > 0)
+	{
+		newenchant = tempitemproperties[Math.floor(Math.random()*tempitemproperties.length)];
+		itemcurlevel += newenchant.itlvl;
+		addItemEnchant(itemenchants,newenchant);
+		tempitemproperties = tempitemproperties.filter(filterByItLvl,itemlevel - itemcurlevel);
+	}
+	
+	for (let i = 0; i < itemenchants.length; i++)
+	{
+		item.effects.hp += itemenchants[i].effects.hp;
+		item.effects.mp += itemenchants[i].effects.mp;
+		item.effects.attack += itemenchants[i].effects.attack;
+		item.effects.defense += itemenchants[i].effects.defense;
+		item.effects.damagedienum += itemenchants[i].effects.damagedienum;
+	}
+	
+	classifyItem(item);
+	
+	return item;
+}
+
+function getPartyTank(party)
+{
+	let hp = 0;
+	let defense = 0;
+	let items = 9999;
+	let chosen = -1;
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead" && findAbilityOfEffectType(party.members[i].abilities, "taunt", 999) != null)
+		{
+			if (party.members[i].magicitems.length <= items)
+			{
+				if (party.members[i].stats.mHP > hp)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (party.members[i].stats.mHP == hp && party.members[i].stats.defense > defense)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+			}
+		}
+	}
+	if (chosen == -1)
+		return null;
+	return party.members[chosen];
+}
+
+function getPartyHealer(party)
+{
+	let hp = 999999;
+	let defense = 999999;
+	let items = 9999;
+	let chosen = -1;
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead" && findAbilityOfEffectType(party.members[i].abilities, "healing", 999) != null)
+		{
+			if (party.members[i].magicitems.length <= items)
+			{
+				if (party.members[i].stats.mHP < hp)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (party.members[i].stats.mHP == hp && party.members[i].stats.defense < defense)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+			}
+		}
+	}
+	if (chosen == -1)
+		return null;
+	return party.members[chosen];
+}
+
+function getPartyDefender(party)
+{
+	let hp = -1;
+	let defense = -1;
+	let items = 9999;
+	let chosen = -1;
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead")
+		{
+			if (party.members[i].magicitems.length <= items)
+			{
+				if (party.members[i].stats.mHP > hp)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (party.members[i].stats.mHP == hp && party.members[i].stats.defense > defense)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+			}
+		}
+	}
+	if (chosen == -1)
+		return null;
+	return party.members[chosen];
+}
+
+function getPartyAttacker(party)
+{
+	let damage = 0;
+	let attack = 999999;
+	let defense = 999999;
+	let items = 9999;
+	let chosen = -1;
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead")
+		{
+			if (party.members[i].magicitems.length <= items)
+			{
+				let pmemdam = party.members[i].stats.damagedienum*party.members[i].stats.damagediesides;
+				if (pmemdam > damage)
+				{
+					damage = pmemdam;
+					attack = party.members[i].stats.attack;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (pmemdam == damage && party.members[i].stats.attack < attack)
+				{
+					damage = pmemdam;
+					attack = party.members[i].stats.attack;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (pmemdam == damage && party.members[i].stats.attack == attack && party.members[i].stats.defense < defense)
+				{
+					damage = pmemdam;
+					attack = party.members[i].stats.attack;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+			}
+		}
+	}
+	if (chosen == -1)
+		return null;
+	return party.members[chosen];
+}
+
+function getIndexOfMagicItem(adventurer, item)
+{
+	for (let i = 0; i < adventurer.magicitems.length; i++)
+	{
+		if (item === adventurer.magicitems[i])
+			return i;
+	}
+	return -1;
+}
+
+function unequipAdventurerWithItem(adventurer, item)
+{
+	adventurer.stats.mHP -= item.effects.hp
+	adventurer.stats.mMP -= item.effects.mp
+	adventurer.stats.attack -= item.effects.attack
+	adventurer.stats.defense -= item.effects.defense
+	adventurer.stats.damagedienum -= item.effects.damagedienum
+	let index = getIndexOfMagicItem(adventurer,item);
+	adventurer.magicitems.splice(index,1);
+}
+
+function equipAdventurerWithItem(adventurer, item)
+{
+	adventurer.magicitems.push(item);
+	adventurer.stats.mHP += item.effects.hp
+	adventurer.stats.mMP += item.effects.mp
+	adventurer.stats.attack += item.effects.attack
+	adventurer.stats.defense += item.effects.defense
+	adventurer.stats.damagedienum += item.effects.damagedienum
+	
+}
+
+function equipPartyWithItems(party, items)
+{
+	let partymember;
+	for (let i = 0; i < items.length; i++)
+	{
+		if (items[i].classification == "offense")
+		{
+			partymember = getPartyAttacker(party);
+			equipAdventurerWithItem(partymember, items[i]);
+			addToAdventureSimLog(party, partymember.name + " received " + items[i].name);
+		}
+		else if (items[i].classification == "defense")
+		{
+			partymember = getPartyDefender(party);
+			equipAdventurerWithItem(partymember, items[i]);
+			addToAdventureSimLog(party, partymember.name + " received " + items[i].name);
+		}
+		else if (items[i].classification == "sustain")
+		{
+			partymember = getPartyHealer(party);
+			if (partymember != null)
+			{
+				equipAdventurerWithItem(partymember, items[i]);
+				addToAdventureSimLog(party, partymember.name + " received " + items[i].name);
+			}
+			else
+			{
+				partymember = getPartyDefender(party);
+				equipAdventurerWithItem(partymember, items[i]);
+				addToAdventureSimLog(party, partymember.name + " received " + items[i].name);
+			}
+		}
+	}
+	
+}
+
+function getItemBlueprintFromId(id)
+{
+	for (let i = 0; i < adventure_sim.items.length; i++)
+	{
+		if (adventure_sim.items[i].id == id)
+			return adventure_sim.items[i];
+	}
+	return null;
+}
+
+function questComplete(party)
+{
+	party.silverpieces += party.quest.reward.silverpieces;
+	let itemcount = Math.floor(Math.random()*(party.quest.reward.itemrandom+1))+party.quest.reward.itemmin;
+	let itemstobe = [];
+	for (let i = 0; i < itemcount; i++)
+	{
+		itemstobe.push(getItemBlueprintFromId(party.quest.reward.items[Math.floor(Math.random()*party.quest.reward.items.length)]));
+	}
+	let items = [];
+	for (let i = 0; i < itemstobe.length; i++)
+	{
+		let itlvl = itemstobe[i].itlvlmin + Math.floor(Math.random()*(itemstobe[i].itlvlrandom+1));
+		items.push(createAdventureSimItem(itlvl));
+	}
+	equipPartyWithItems(party, items);
+}
+
+var MAX_QUEST_LEVEL = 5;
+
+//filter where a quests level is equal to the passed 'this' variable
+function filterQuestsByLevel(quest)
+{
+	if (quest.level == this)
+			return true;
+	return false;
+}
+
+function getRandomQuestOfLevel(level = -1)
+{
+	if (level = -1)
+		level = Math.floor(Math.random()*MAX_QUEST_LEVEL)+1;
+	
+	availableQuests = adventure_sim.quests.filter(filterQuestsByLevel,level);
+	
+	return availableQuests[Math.floor(Math.random()*availableQuests.length)];
+}
+
+var REVIVE_COST = 7500;
+
+function onReturnToTown(party)
+{
+	if (party.questsucceed)
+	{
+		questComplete(party);
+	}
+	
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus == "dead" && party.silverpieces >= REVIVE_COST)
+		{
+			party.members[i].cstatus = "good";
+			party.silverpieces -= REVIVE_COST;
+			addToAdventureSimLog(party, party.members[i].name + " was revived");
+			addToPersonalLog(party.members[i], "Revived");
+		}
+	}
+	
+	saveAdventuringParties();
+}
+
+function startAdventure(partyid, questlevel)
+{
+	party = getPartyById(partyid);
+	
+	if (party == null)
+		return "invalid party id";
+	
+	if (isPartyDead(party))
+		return party.name + " are all dead";
+	
+	party.cstatus = "good";
+	party.quest = getRandomQuestOfLevel(questlevel);
+	party.questcomplete = false;
+	party.questsucceed = false;
+	party.questlocation = 0;
+	party.log = [];
+	clearPriority(party.priorities,"town");
+	addPriority(party.priorities,"adventure");
+	fullyRecuperateParty(party);
+	let nearestquestsite = findNearestLandmark(party.xpos, party.ypos, party.quest.landmark, 0.667);
+	let start = { x: party.xpos, y: party.ypos };
+	party.questpath = pathToPosition(start, nearestquestsite);
+	
+	while (party.cstatus != "intown" && !isPartyDead(party))
+	{
+		simulateAdventuring(party);
+	}
+	let arguments = [];
+	arguments.push(partyid);
+	return outputAdventureSimLog(arguments); //output to discord
+}
+
+function saveAdventuringParties()
+{
+	let file = 'savedadventuringparties.json';
+	let path = './' + file;
+	let data = JSON.stringify(adventuringparties);
+	
+	fs.writeFile(path, data, (err) => {
+		if (err) throw err;
+		console.log('adventuring parties saved');
+		});
+}
+
+function loadAdventuringParties()
+{
+	try
+	{
+		adventuringparties = JSON.parse(fs.readFileSync('savedadventuringparties.json'));
+		console.log('adventuring parties loaded');
+		for (let i = 0; i < adventuringparties.length; i++)
+		{
+			let nearestCity = findNearestLandmark(64, 36, "city", 0.667);
+			adventuringparties[i].xpos = nearestCity.x;
+			adventuringparties[i].ypos = nearestCity.y;
+		}
+	}
+	catch (err)
+	{
+		console.log('no adventuring parties to load');
+	}
+}
+
+function initializeAndStartAdventureSim()
+{
+	generateSimWorldMap();
+	loadAdventuringParties();
+}
+
+
+//
 // handle errors??? no
 
 client.on('error', console.error);
@@ -7051,3 +10047,5 @@ client.on('error', console.error);
 // engage ALLIDROID
 
 client.login(logintoken); //allidroid logon
+
+initializeAndStartAdventureSim();
