@@ -7543,7 +7543,7 @@ function outputPartyMemberSummary(arguments)
 		return "there is no party member with that name in this party";
 	
 	let output = partymember.name + " the " + partymember.species + " " + partymember.classname + "\n"
-		+ "Status: " + partymember.cstatus + "\n"
+		+ "Level: " + partymember.stats.level + ", Status: " + partymember.cstatus + "\n"
 		+ "HP: " + partymember.stats.mHP + ", MP: " + partymember.stats.mMP + "\n"
 		+ "Attack: " + partymember.stats.attack + ", Defense: " + partymember.stats.defense + "\n"
 		+ "Damage: " + Math.floor(partymember.stats.damagedienum) + "d" + Math.floor(partymember.stats.damagediesides) + "\n"
@@ -7591,16 +7591,12 @@ function outputPartySummary(arguments)
 		return "There is no party with that id currently";
 	
 	let output = "id: " + party.id + ", name: " + party.name + "\n"
-		+ "members: " + party.members.length + ", ";
+		+ "members: " + party.members.length + "\;\n";
 	for (let i = 0; i < party.members.length; i++)
 	{
-		output += party.members[i].name + " (" + party.members[i].cstatus + ")";
-		if (i < party.members.length-2)
-			output += ", ";
-		else if (i == party.members.length-2)
-			output += " and ";
+		output += party.members[i].name + " the level " + party.members[i].stats.level + " " + party.members[i].species + " " + party.members[i].classname + " (" + party.members[i].cstatus + ")\n";
 	}
-	output += "\nSilverpieces: " + party.silverpieces;
+	output += "Silverpieces: " + party.silverpieces;
 	
 	return output;
 }
@@ -7918,6 +7914,7 @@ function findAppropriateAttackTarget(possibleTargets, ignoreTaunt = false)
 			if (targetstatus.includes("taunt") && !ignoreTaunt)
 			{
 				currenttarget = i;
+				return possibleTargets[currenttarget];
 			}
 			else if (possibleTargets[i].stats.cHP < currenthp)
 			{
@@ -8054,7 +8051,7 @@ function useAbility(party, caster, ability, target)
 		effectroll = Math.min(maxeffect, effectroll);
 		target.stats.cHP -= effectroll;
 		if (target.stats.cHP > 0)
-			addStatusTo(target, "burning", ability.effectdienum);
+			addStatusTo(target, "burn", ability.effectdienum);
 		else
 		{
 			target.cstatus = "dead"
@@ -8232,7 +8229,8 @@ function doCombatTurn(party, combatant, side)
 			{
 				for (let i = 0; i < targets.length; i++)
 				{
-					useAbility(party, combatant, ability, targets[i]);
+					if (target.cstatus != "dead")
+						useAbility(party, combatant, ability, targets[i]);
 				}
 				return;
 			}
@@ -8446,11 +8444,11 @@ function combatRound(party)
 		{
 			let enemystatus = party.encounterenemies[party.currentenemy].cstatus.split(" ");
 			
-			for(let i = 0; i < partymemberstatus.length; i++)
+			for(let i = 0; i < enemystatus.length; i++)
 			{
 				if (enemystatus[i] == "burn")
 				{
-					party.encounterenemies[party.currentenemy].stats.cHP -= parseInt(partymemberstatus[i+1]);
+					party.encounterenemies[party.currentenemy].stats.cHP -= parseInt(enemystatus[i+1]);
 					changeStatusAmountOn(party.encounterenemies[party.currentenemy], "burn", -1);
 				}
 			}
@@ -8482,10 +8480,8 @@ function combatRound(party)
 		}
 		endCombatEffects(party);
 		party.currentlyinencounter = false;
-		return;
 	}
-	
-	if (isPartyDead(party))
+	else if (isPartyDead(party))
 	{
 		addToAdventureSimLog(party,party.name + " die in combat against the " + party.encountersummary);
 		party.currentlyinencounter = false;
@@ -8493,10 +8489,8 @@ function combatRound(party)
 		{
 			party.questsucceed == false;
 		}
-		return;
 	}
-	
-	if (hasPartyFled(party))
+	else if (hasPartyFled(party))
 	{
 		for (let i = 0; i < party.members.length; i++)
 		{
@@ -8512,7 +8506,6 @@ function combatRound(party)
 			addToAdventureSimLog(party,party.name + " flee from the " + party.encountersummary);
 			party.questsucceed == false;
 		}
-		return;
 	}
 }
 
@@ -9692,7 +9685,14 @@ function getPartyTank(party)
 		{
 			if (party.members[i].magicitems.length <= items)
 			{
-				if (party.members[i].stats.mHP > hp)
+				if (party.members[i].magicitems.length < items)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (party.members[i].stats.mHP > hp)
 				{
 					hp = party.members[i].stats.mHP;
 					defense = party.members[i].stats.defense;
@@ -9726,7 +9726,14 @@ function getPartyHealer(party)
 		{
 			if (party.members[i].magicitems.length <= items)
 			{
-				if (party.members[i].stats.mHP < hp)
+				if (party.members[i].magicitems.length < items)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (party.members[i].stats.mHP < hp)
 				{
 					hp = party.members[i].stats.mHP;
 					defense = party.members[i].stats.defense;
@@ -9760,7 +9767,14 @@ function getPartyDefender(party)
 		{
 			if (party.members[i].magicitems.length <= items)
 			{
-				if (party.members[i].stats.mHP > hp)
+				if (party.members[i].magicitems.length < items)
+				{
+					hp = party.members[i].stats.mHP;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (party.members[i].stats.mHP > hp)
 				{
 					hp = party.members[i].stats.mHP;
 					defense = party.members[i].stats.defense;
@@ -9796,7 +9810,15 @@ function getPartyAttacker(party)
 			if (party.members[i].magicitems.length <= items)
 			{
 				let pmemdam = party.members[i].stats.damagedienum*party.members[i].stats.damagediesides;
-				if (pmemdam > damage)
+				if (party.members[i].magicitems.length < items)
+				{
+					damage = pmemdam;
+					attack = party.members[i].stats.attack;
+					defense = party.members[i].stats.defense;
+					items = party.members[i].magicitems.length;
+					chosen = i;
+				}
+				else if (pmemdam > damage)
 				{
 					damage = pmemdam;
 					attack = party.members[i].stats.attack;
@@ -9909,6 +9931,7 @@ function getItemBlueprintFromId(id)
 function questComplete(party)
 {
 	party.silverpieces += party.quest.reward.silverpieces;
+	addToAdventureSimLog(party, party.name + " are awarded " +  party.quest.reward.silverpieces + " silver pieces");
 	let itemcount = Math.floor(Math.random()*(party.quest.reward.itemrandom+1))+party.quest.reward.itemmin;
 	let itemstobe = [];
 	for (let i = 0; i < itemcount; i++)

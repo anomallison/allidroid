@@ -1823,7 +1823,7 @@
 			{
 				"level": 1,
 				"hp": 21,
-				"mp": 16,
+				"mp": 4,
 				"attack": 19,
 				"defense": 24,
 				"damagedienum": 1,
@@ -1851,7 +1851,7 @@
 			},
 			"abilities":
 			[
-				"fireball"
+				"blaze"
 			]
 		}
 	],
@@ -1876,10 +1876,19 @@
 			"effectdiesides": 1
 		},
 		{
+			"id": "blaze",
+			"name": "blaze",
+			"target": "all",
+			"mpcost": 6,
+			"effecttype": "fire",
+			"effectdienum": 1,
+			"effectdiesides": 10
+		},
+		{
 			"id": "fireball",
 			"name": "fireball",
 			"target": "all",
-			"mpcost": 6,
+			"mpcost": 10,
 			"effecttype": "fire",
 			"effectdienum": 5,
 			"effectdiesides": 6
