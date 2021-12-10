@@ -22,3 +22,6 @@ Examples:
 ``!retirepartymember basic Allison Goku``
 ``!disbandparty basic``
 
+Classes:
+
+fighter, martial-artist, necromancer, wizard, rogue, thief, summoner, psychic-warrior, blackguard, bounty-hunter, vampire-slayer, witch, druid, cleric, paladin, berserker, alchemist, warlock, pirate, psion, samurai, twink, himbo

@@ -28,3 +28,4 @@ There are the following commands:
 ``!howtoinitiate``
 ``!room``
 ``!alienlanguage``
+``!adventure``

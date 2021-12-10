@@ -8060,6 +8060,20 @@ function useAbility(party, caster, ability, target)
 		}
 	}
 	
+	if (ability.effecttype == "hpsteal")
+	{
+		maxeffect = target.stats.cHP;
+		effectroll = Math.min(maxeffect, effectroll);
+		target.stats.cHP -= effectroll;
+		if (target.stats.cHP <= 0)
+		{
+			target.cstatus = "dead"
+			if (addToPersonalLog(target,"Killed by " + grammarAorAn(caster.name) + " " + caster.name))
+				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(caster.name) + " " + caster.name);
+		}
+		caster.stats.cHP = Math.min(caster.stats.mHP, caster.stats.cHP + ability.effectdienum);
+	}
+	
 	if (ability.effecttype == "taunt")
 	{
 		addStatusTo(target,"taunt",effectroll);
@@ -8234,7 +8248,40 @@ function doCombatTurn(party, combatant, side)
 				}
 				return;
 			}
-		}		
+		}
+	}
+	
+	if (combatant.stats.cHP < combatant.stats.mHP)
+	{
+		ability = findAbilityOfEffectType(combatant.abilities, "hpsteal", combatant.stats.cMP);
+		if (ability != null && combatant.stats.cMP >= ability.mpcost)
+		{
+			if (side == 0)
+				targets = party.encounterenemies;
+			else if (side == 1)
+				targets = party.members;
+			
+			target = findAppropriateAttackTarget(targets);
+			
+			if (target != null)
+			{
+				combatant.stats.cMP -= ability.mpcost;
+				if (ability.target == "single")
+				{
+					useAbility(party, combatant, ability, target);
+					return;
+				}
+				else if (ability.target == "all")
+				{
+					for (let i = 0; i < targets.length; i++)
+					{
+						if (target.cstatus != "dead")
+							useAbility(party, combatant, ability, targets[i]);
+					}
+					return;
+				}
+			}
+		}
 	}
 	
 	if (side == 0)
@@ -9947,7 +9994,7 @@ function questComplete(party)
 	equipPartyWithItems(party, items);
 }
 
-var MAX_QUEST_LEVEL = 5;
+var MAX_QUEST_LEVEL = 7;
 
 //filter where a quests level is equal to the passed 'this' variable
 function filterQuestsByLevel(quest)
