@@ -501,7 +501,7 @@ function processCommand(receivedMessage)
 		}
     } else if (normalizedCommand == "adventure") 
 	{
-		output = startAdventure(arguments);
+		output = startAdventure(arguments[0],parseInt(arguments[1]));
 		
 		if (output == null)
 		{
@@ -7619,7 +7619,7 @@ function makeParty(arguments)
 	if (!checkIdIsUnique(arguments[0]))
 		return "Sorry, that party id is already in use!";
 	
-	let partyname = "";
+	let partyname = arguments[0];
 	let partymemberclass = [];
 	
 	for (let i = 1; i < arguments.length; i++)
@@ -10006,7 +10006,7 @@ function filterQuestsByLevel(quest)
 
 function getRandomQuestOfLevel(level = -1)
 {
-	if (level = -1)
+	if (level == -1)
 		level = Math.floor(Math.random()*MAX_QUEST_LEVEL)+1;
 	
 	availableQuests = adventure_sim.quests.filter(filterQuestsByLevel,level);
@@ -10046,6 +10046,9 @@ function startAdventure(partyid, questlevel)
 	
 	if (isPartyDead(party))
 		return party.name + " are all dead";
+	
+	if (questlevel == null || isNaN(questlevel))
+		questlevel = -1;
 	
 	party.cstatus = "good";
 	party.quest = getRandomQuestOfLevel(questlevel);
