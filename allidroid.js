@@ -10008,6 +10008,8 @@ function getRandomQuestOfLevel(level = -1)
 {
 	if (level == -1)
 		level = Math.floor(Math.random()*MAX_QUEST_LEVEL)+1;
+	if (level > MAX_QUEST_LEVEL)
+		level = MAX_QUEST_LEVEL;
 	
 	availableQuests = adventure_sim.quests.filter(filterQuestsByLevel,level);
 	
