@@ -135,16 +135,6 @@ client.on('message', (receivedMessage) => {
         return
     }
 	
-	/*
-	if (receivedMessage.guild != null) { // Don't respond to banned users in channels
-        let tempmember = receivedMessage.guild.members.get(receivedMessage.author.id);
-		if (tempmember == null || hasName(tempmember.roles,'Bot Banned'))
-		{
-			return
-		}
-    }
-	*/
-	
     if (receivedMessage.content.startsWith("!")) {
         processCommand(receivedMessage)
     }
@@ -7411,6 +7401,7 @@ function makeAdventurer(classname)
 			mHP: species.stats.HP + adventurerclass.stats.HP,
 			cMP: species.stats.MP + adventurerclass.stats.MP,
 			mMP: species.stats.MP + adventurerclass.stats.MP,
+			initiative: species.stats.initiative + adventurerclass.stats.initiative,
 			attack: species.stats.Attack + adventurerclass.stats.Attack,
 			defense: species.stats.Defense + adventurerclass.stats.Defense,
 			damagedienum: adventurerclass.stats.DamageDieNum,
@@ -7418,6 +7409,7 @@ function makeAdventurer(classname)
 			charisma: species.stats.Charisma + adventurerclass.stats.Charisma,
 			size: species.stats.Size + adventurerclass.stats.Size,
 		},
+		side: 0,
 		magicitems: [],
 		canheal: adventurerclass.canheal,
 		partyhealpoint: adventurerclass.partyhealpoint,
@@ -7671,7 +7663,10 @@ function makeParty(arguments)
 		inventory: [],
 		priorities: [{name: "adventure", count: 1}],
 		currentlyinencounter: false,
+		encounterinitiative: [],
+		currentinitiative: 0,
 		currentpartymember: 0,
+		encounterallies:[],
 		encounterenemies: [],
 		encountersummary: "",
 		encounterlevel: 0,
@@ -7862,13 +7857,13 @@ function getEncounterTableByName(tablename)
 	return null;
 }
 
-function getEnemyByBlueprintID(enemyid)
+function getCreatureByBlueprintID(creatureid)
 {
 	for (let i = 0; i < adventure_sim.enemyblueprints.length; i++)
 	{
-		if (adventure_sim.enemyblueprints[i].id == enemyid)
+		if (adventure_sim.enemyblueprints[i].id == creatureid)
 		{
-			let enemy = {
+			let creature = {
 				id: adventure_sim.enemyblueprints[i].id,
 				name: adventure_sim.enemyblueprints[i].name,
 				plural: adventure_sim.enemyblueprints[i].plural,
@@ -7880,20 +7875,22 @@ function getEnemyByBlueprintID(enemyid)
 					mHP: adventure_sim.enemyblueprints[i].stats.hp,
 					cMP: adventure_sim.enemyblueprints[i].stats.mp,
 					mMP: adventure_sim.enemyblueprints[i].stats.mp,
+					initiative: adventure_sim.enemyblueprints[i].stats.initiative,
 					attack: adventure_sim.enemyblueprints[i].stats.attack,
 					defense: adventure_sim.enemyblueprints[i].stats.defense,
 					damagedienum: adventure_sim.enemyblueprints[i].stats.damagedienum,
 					damagediesides: adventure_sim.enemyblueprints[i].stats.damagediesides,
 					size: adventure_sim.enemyblueprints[i].stats.Size
 				},
+				side: 1,
 				abilities: []
 			};
 			for (let j = 0; j < adventure_sim.enemyblueprints[i].abilities.length; j++)
 			{
-				enemy.abilities.push(getAbilityByID(adventure_sim.enemyblueprints[i].abilities[j]));
+				creature.abilities.push(getAbilityByID(adventure_sim.enemyblueprints[i].abilities[j]));
 			}
 			
-			return enemy;
+			return creature;
 		}
 	}
 	return null;
@@ -8028,6 +8025,22 @@ function getAbilityByID(abilityid)
 	return null;
 }
 
+function filterByCreatureLevel(creature)
+{
+	if (creature.stats.level <= this)
+			return true;
+	return false;
+}
+
+function getRandomCreatureOfLevel(creaturelevel)
+{
+	let tempcreaturelist = adventure_sim.enemyblueprints.filter(filterByCreatureLevel,creaturelevel);
+	
+	let creature = getCreatureByBlueprintID(tempcreaturelist[Math.floor(Math.random()*tempcreaturelist.length)].id);
+	
+	return creature;
+}
+
 function useAbility(party, caster, ability, target)
 {
 	let effectroll = 0;
@@ -8060,6 +8073,36 @@ function useAbility(party, caster, ability, target)
 		}
 	}
 	
+	if (ability.effecttype == "poison")
+	{
+		maxeffect = target.stats.cHP;
+		effectroll = Math.min(maxeffect, effectroll);
+		target.stats.cHP -= effectroll;
+		if (target.stats.cHP > 0)
+			addStatusTo(target, "poison", ability.effectdienum);
+		else
+		{
+			target.cstatus = "dead"
+			if (addToPersonalLog(target,"Killed by " + grammarAorAn(caster.name) + " " + caster.name))
+				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(caster.name) + " " + caster.name);
+		}
+	}
+	
+	if (ability.effecttype == "stun")
+	{
+		maxeffect = target.stats.cHP;
+		effectroll = Math.min(maxeffect, effectroll);
+		target.stats.cHP -= effectroll;
+		if (target.stats.cHP > 0)
+			addStatusTo(target, "stun", 1);
+		else
+		{
+			target.cstatus = "dead"
+			if (addToPersonalLog(target,"Killed by " + grammarAorAn(caster.name) + " " + caster.name))
+				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(caster.name) + " " + caster.name);
+		}
+	}
+	
 	if (ability.effecttype == "hpsteal")
 	{
 		maxeffect = target.stats.cHP;
@@ -8074,12 +8117,38 @@ function useAbility(party, caster, ability, target)
 		caster.stats.cHP = Math.min(caster.stats.mHP, caster.stats.cHP + ability.effectdienum);
 	}
 	
+	if (ability.effecttype == "regeneration")
+	{
+		addStatusTo(target,"regeneration",effectroll);
+	}
+	
 	if (ability.effecttype == "taunt")
 	{
 		addStatusTo(target,"taunt",effectroll);
 	}
 	
+	if (ability.effecttype == "summon")
+	{
+		let creature = getRandomCreatureOfLevel(effectroll);
+		creature.side = caster.side;
+		addToInitiativeList(party, creature, caster.side);
+	}
+	
 	return effectroll;
+}
+
+function addToInitiativeList(party, creature, side)
+{
+	if (side == 0)
+	{
+		party.encounterallies.push(creature);
+		party.encounterinitiative.push({ combatant: creature, initiative: 0 });
+	}
+	else
+	{
+		party.encounterenemies.push(creature);
+		party.encounterinitiative.push({ combatant: creature, initiative: 0 });
+	}
 }
 
 function copyAbilityList(abilities)
@@ -8190,6 +8259,7 @@ function doCombatTurn(party, combatant, side)
 		addStatusTo(combatant,"fled");
 	}
 	let target;
+	let ability = null;
 	if (combatant.canheal && partyHPMonitor(party) < combatant.partyhealpoint)
 	{
 		if (side == 0)
@@ -8199,7 +8269,7 @@ function doCombatTurn(party, combatant, side)
 		
 		if (target != null)
 		{
-			let ability = findAbilityOfEffectType(combatant.abilities, "healing", combatant.stats.cMP);
+			ability = findAbilityOfEffectType(combatant.abilities, "healing", combatant.stats.cMP);
 			if (ability != null && combatant.stats.cMP >= ability.mpcost)
 			{
 				combatant.stats.cMP -= ability.mpcost;
@@ -8210,9 +8280,9 @@ function doCombatTurn(party, combatant, side)
 	}
 	
 	let cstatus = combatant.cstatus.split(" ");
-	if (!cstatus.includes("taunt") && countLivingParty(party) > 1)
+	if (!cstatus.includes("taunt") && (side == 0 && countLivingParty(party) > 1))
 	{
-		let ability = findAbilityOfEffectType(combatant.abilities, "taunt", combatant.stats.cMP);
+		ability = findAbilityOfEffectType(combatant.abilities, "taunt", combatant.stats.cMP);
 		if (ability != null && combatant.stats.cMP >= ability.mpcost)
 		{
 			combatant.stats.cMP -= ability.mpcost;
@@ -8221,7 +8291,32 @@ function doCombatTurn(party, combatant, side)
 		}
 	}
 	
-	let ability = findAbilityOfEffectType(combatant.abilities, "fire", combatant.stats.cMP);
+	if (!cstatus.includes("regeneration") && combatant.stats.cHP < combatant.stats.mHP)
+	{
+		let ability = findAbilityOfEffectType(combatant.abilities, "regeneration", combatant.stats.cMP);
+		if (ability != null && combatant.stats.cMP >= ability.mpcost)
+		{
+			combatant.stats.cMP -= ability.mpcost;
+			useAbility(party, combatant, ability, combatant);
+			return;
+		}
+	}
+	
+	if (combatant.stats.cHP < combatant.stats.mHP)
+		ability = findAbilityOfEffectType(combatant.abilities, "hpsteal", combatant.stats.cMP);
+	
+	if (ability == null)
+		ability = findAbilityOfEffectType(combatant.abilities, "summon", combatant.stats.cMP);
+
+	if (ability == null)
+		ability = findAbilityOfEffectType(combatant.abilities, "fire", combatant.stats.cMP);
+
+	if (ability == null)
+		ability = findAbilityOfEffectType(combatant.abilities, "stun", combatant.stats.cMP);
+	
+	if (ability == null)
+		ability = findAbilityOfEffectType(combatant.abilities, "poison", combatant.stats.cMP);
+	
 	if (ability != null && combatant.stats.cMP >= ability.mpcost)
 	{
 		if (side == 0)
@@ -8247,39 +8342,6 @@ function doCombatTurn(party, combatant, side)
 						useAbility(party, combatant, ability, targets[i]);
 				}
 				return;
-			}
-		}
-	}
-	
-	if (combatant.stats.cHP < combatant.stats.mHP)
-	{
-		ability = findAbilityOfEffectType(combatant.abilities, "hpsteal", combatant.stats.cMP);
-		if (ability != null && combatant.stats.cMP >= ability.mpcost)
-		{
-			if (side == 0)
-				targets = party.encounterenemies;
-			else if (side == 1)
-				targets = party.members;
-			
-			target = findAppropriateAttackTarget(targets);
-			
-			if (target != null)
-			{
-				combatant.stats.cMP -= ability.mpcost;
-				if (ability.target == "single")
-				{
-					useAbility(party, combatant, ability, target);
-					return;
-				}
-				else if (ability.target == "all")
-				{
-					for (let i = 0; i < targets.length; i++)
-					{
-						if (target.cstatus != "dead")
-							useAbility(party, combatant, ability, targets[i]);
-					}
-					return;
-				}
 			}
 		}
 	}
@@ -8322,6 +8384,17 @@ function hasPartyFled(party)
 	{
 		partymemberstatus = party.members[i].cstatus.split(" ");
 		if (!partymemberstatus.includes("fled") && !partymemberstatus.includes("dead"))
+			return false;
+	}
+	return true;
+}
+
+function isEnemyRouted(party)
+{
+	for (let i = 0; i < party.encounterenemies.length; i++)
+	{
+		enemystatus = party.encounterenemies[i].cstatus.split(" ");
+		if (!enemystatus.includes("fled") && !enemystatus.includes("dead"))
 			return false;
 	}
 	return true;
@@ -8431,106 +8504,114 @@ function givePartyMemberExp(party, partymember, encounterlevel)
 		levelUpPartyMember(party, partymember);
 }
 
+function clearCombatEncounterAlliesEnemies(party)
+{
+	party.encounterenemies = [];
+	party.encounterallies = [];
+}
+
+function removeEffectsOnDeath(combatant)
+{
+	removeStatusFrom(combatant,"taunt");
+	removeStatusFrom(combatant,"burn");
+	removeStatusFrom(combatant,"stun");
+	removeStatusFrom(combatant,"poison");
+	removeStatusFrom(combatant,"regeneration");
+}
+
 function endCombatEffects(party)
 {
 	for (let i = 0; i < party.members.length; i++)
 	{
 		removeStatusFrom(party.members[i],"taunt");
 		removeStatusFrom(party.members[i],"burn");
+		removeStatusFrom(party.members[i],"stun");
+		removeStatusFrom(party.members[i],"poison");
+		removeStatusFrom(party.members[i],"regeneration");
 	}
 }
 
 function combatRound(party)
 {
+	if (party.currentinitiative >= party.encounterinitiative.length)
+		party.currentinitiative = 0;
 	
+	//console.log("combat " + party.currentinitiative);
 	
-	if (party.currentpartymember > party.members.length && party.currentenemy > party.encounterenemies.length)
+	let combatant = party.encounterinitiative[party.currentinitiative].combatant;
+	
+	if (isNaN(combatant.stats.cHP))
 	{
-		party.currentpartymember = 0;
-		party.currentenemy = 0;
+		combatant.stats.cHP = 0;
+		console.log("WARNING: NaN HP on " + combatant.name);
 	}
-
-	if ((party.currentpartymember%2 == 0 && party.currentenemy%2 == 0) || (party.currentpartymember%2 == 1 && party.currentenemy%2 == 1))
+	
+	if (combatant.stats.cHP <= 0)
+		combatant.cstatus = "dead";
+	
+	let combatantstatus = combatant.cstatus.split(" ");
+	for(let i = 0; i < combatantstatus.length; i++)
 	{
-		if (party.currentpartymember < party.members.length)
+		if (combatantstatus[i] == "burn")
 		{
-			let partymemberstatus = party.members[party.currentpartymember].cstatus.split(" ");
-			
-			for(let i = 0; i < partymemberstatus.length; i++)
+			combatant.stats.cHP -= parseInt(combatantstatus[i+1]);
+			changeStatusAmountOn(combatant, "burn", -1);
+			if (combatant.stats.cHP <= 0)
 			{
-				if (partymemberstatus[i] == "burn")
-				{
-					party.members[party.currentpartymember].stats.cHP -= parseInt(partymemberstatus[i+1]);
-					changeStatusAmountOn(party.members[party.currentpartymember], "burn", -1);
-					if (party.members[party.currentpartymember].stats.cHP <= 0)
-					{
-						addToPersonalLog(party.members[party.currentpartymember], "Burned to death");
-						party.members[party.currentpartymember].cstatus = "dead";
-					addToAdventureSimLog(party,party.members[party.currentpartymember].name + " burned to death");
-						
-					}
-				}
-			}
-			
-			if (!partymemberstatus.includes("fled") && party.members[party.currentpartymember].cstatus != "dead")
-			{
-				if (party.members[party.currentpartymember].stats.cHP > 0)
-					doCombatTurn(party, party.members[party.currentpartymember], 0);
-				else
-				{
-					party.members[party.currentpartymember].cstatus = "dead";
-					addToAdventureSimLog(party,party.members[party.currentpartymember].name + " was killed");
-				}
+				if (addToPersonalLog(combatant, "Burned to death"))
+					addToAdventureSimLog(party,combatant.name + " burned to death");
+				combatant.cstatus = "dead";	
 			}
 		}
-		party.currentpartymember++;
-	}
-	else if ((party.currentpartymember%2 == 1 && party.currentenemy%2 == 0) || (party.currentpartymember%2 == 0 && party.currentenemy%2 == 1))
-	{
-		if (party.currentenemy < party.encounterenemies.length)
+		else if (combatantstatus[i] == "poison")
 		{
-			let enemystatus = party.encounterenemies[party.currentenemy].cstatus.split(" ");
-			
-			for(let i = 0; i < enemystatus.length; i++)
+			combatant.stats.cHP -= parseInt(combatantstatus[i+1]);
+			changeStatusAmountOn(combatant, "poison", -1);
+			if (combatant.stats.cHP <= 0)
 			{
-				if (enemystatus[i] == "burn")
-				{
-					party.encounterenemies[party.currentenemy].stats.cHP -= parseInt(enemystatus[i+1]);
-					changeStatusAmountOn(party.encounterenemies[party.currentenemy], "burn", -1);
-				}
-			}
-			
-			if (!enemystatus.includes("fled") && party.encounterenemies[party.currentenemy].stats.cHP > 0)
-			{
-				doCombatTurn(party, party.encounterenemies[party.currentenemy], 1);
-			}
-			else
-			{
-				party.encounterenemies.splice(party.currentenemy,1);
-				party.currentenemy--;
+				if (addToPersonalLog(combatant, "Died to poison"))
+					addToAdventureSimLog(party,combatant.name + " died to poison");
+				combatant.cstatus = "dead";	
 			}
 		}
-		party.currentenemy++;
+		else if (combatantstatus[i] == "regeneration" && combatant.stats.cHP > 0)
+		{
+			combatant.stats.cHP = Math.min(combatant.stats.mHP, combatant.stats.cHP + parseInt(partymemberstatus[i+1]));
+			changeStatusAmountOn(combatant, "regeneration", -1);
+		}
+	}
+			
+	if (!combatantstatus.includes("fled") && combatant.cstatus != "dead" && !combatantstatus.includes("stun"))
+	{
+		doCombatTurn(party, combatant, combatant.side);
+	}
+	else if (combatantstatus.includes("stun"))
+	{
+		changeStatusAmountOn(combatant, "stun", -1);
 	}
 	
-	if (party.encounterenemies.length == 0)
+	party.currentinitiative++;
+	
+	if (isEnemyRouted(party))
 	{
 		if (party.questfight)
 		{
 			addToAdventureSimLog(party,party.name + " defeat the " + party.encountersummary);
 			party.questsucceed = true;
 		}
+		endCombatEffects(party);
 		for (let i = 0; i < party.members.length; i++)
 		{
 			if (party.members[i].cstatus != "dead")
 				givePartyMemberExp(party, party.members[i], party.encounterlevel);
 		}
-		endCombatEffects(party);
+		clearCombatEncounterAlliesEnemies(party);
 		party.currentlyinencounter = false;
 	}
 	else if (isPartyDead(party))
 	{
 		addToAdventureSimLog(party,party.name + " die in combat against the " + party.encountersummary);
+		clearCombatEncounterAlliesEnemies(party);
 		party.currentlyinencounter = false;
 		if (party.questfight)
 		{
@@ -8547,6 +8628,7 @@ function combatRound(party)
 		}
 		party.encounterenemies = [];
 		endCombatEffects(party);
+		clearCombatEncounterAlliesEnemies(party);
 		party.currentlyinencounter = false;
 		if (party.questfight)
 		{
@@ -8632,9 +8714,32 @@ function initiateQuestEncounter(party, encounter)
 	let parsedencounter = encounter.split(" ");
 	for (let i = 0; i < parsedencounter.length; i++)
 	{
-		let enemy = getEnemyByBlueprintID(parsedencounter[i]);
+		let enemy = getCreatureByBlueprintID(parsedencounter[i]);
 		if (enemy != null)
 			party.encounterenemies.push(enemy);
+	}
+	
+	tempinitlist = [];
+	party.encounterinitiative = [];
+	for (let i = 0; i < party.members.length; i++)
+	{
+		tempinitlist.push({ combatant: party.members[i], initiative: party.members[i].stats.initiative + Math.random()*10+1 });
+	}
+	for (let i = 0; i < party.encounterenemies.length; i++)
+	{
+		tempinitlist.push({ combatant: party.encounterenemies[i], initiative: party.encounterenemies[i].stats.initiative + Math.random()*10+1 });
+	}
+	while (tempinitlist.length > 0)
+	{
+		let highest = 0;
+		let selected = -1;
+		for (let i = 0; i < tempinitlist.length; i++)
+		{
+			if (tempinitlist[i].initiative > highest)
+				selected = i;
+		}
+		party.encounterinitiative.push(tempinitlist[selected]);
+		tempinitlist.splice(selected,1);
 	}
 	
 	party.encountersummary = getEnemySummary(party.encounterenemies);
@@ -8695,11 +8800,34 @@ function initiateCombatEncounter(party, biome, climate)
 	let encounter = encountertable.encounters[Math.floor(Math.random()*encountertable.encounters.length)].split(" ");
 	for (let i = 0; i < encounter.length; i++)
 	{
-		let enemy = getEnemyByBlueprintID(encounter[i]);
+		let enemy = getCreatureByBlueprintID(encounter[i]);
 		if (enemy != null)
 			party.encounterenemies.push(enemy);
 	}
 	
+	
+	tempinitlist = [];
+	party.encounterinitiative = [];
+	for (let i = 0; i < party.members.length; i++)
+	{
+		tempinitlist.push({ combatant: party.members[i], initiative: party.members[i].stats.initiative + Math.random()*10+1 });
+	}
+	for (let i = 0; i < party.encounterenemies.length; i++)
+	{
+		tempinitlist.push({ combatant: party.encounterenemies[i], initiative: party.encounterenemies[i].stats.initiative + Math.random()*10+1 });
+	}
+	while (tempinitlist.length > 0)
+	{
+		let highest = 0;
+		let selected = -1;
+		for (let i = 0; i < tempinitlist.length; i++)
+		{
+			if (tempinitlist[i].initiative > highest)
+				selected = i;
+		}
+		party.encounterinitiative.push(tempinitlist[selected]);
+		tempinitlist.splice(selected,1);
+	}
 	party.encountersummary = getEnemySummary(party.encounterenemies);
 	party.encounterlevel = encounterTotalLevel(party);
 	party.questfight = false;
@@ -9307,7 +9435,7 @@ function getEnemySummary(enemies)
 	let summary = "";
 	for (let i = 0; i < enemycounts.length; i++)
 	{
-		let enemy = getEnemyByBlueprintID(enemycounts[i].id);
+		let enemy = getCreatureByBlueprintID(enemycounts[i].id);
 		if (enemycounts[i].count > 1)
 			summary += enemy.plural;
 		else
