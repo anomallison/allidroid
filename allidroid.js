@@ -218,7 +218,7 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "roll") 
 	{
-		receivedMessage.channel.send(dieRoll(arguments[0]));
+		receivedMessage.channel.send(rollManyDice(arguments[0]));
 		return;
     } else if (normalizedCommand == "gay") 
 	{
@@ -1815,6 +1815,109 @@ function generateKeysmash(length = -1)
 //
 //
 
+function rollManyDice(r)
+{
+	let fulldicestring = r;
+	let dice = []
+	let positionu43 = fulldicestring.indexOf("+");
+	let positionu45 = fulldicestring.indexOf("-");
+	let position = -1;
+	
+	if (positionu43 == -1)
+	{
+		position = positionu45;
+	}
+	else if (positionu45 == -1)
+	{
+		position = positionu43;
+	}
+	else
+	{
+		position = Math.min(positionu43, positionu45);
+	}
+	
+	if (position != -1)
+	{
+		dice.push({ die: fulldicestring.substr(0,position), operation: "+"});
+		fulldicestring = fulldicestring.substring(position);
+	}
+	else
+	{
+		dice.push({ die: fulldicestring, operation: "+" });
+		fulldicestring = "";
+	}
+	
+	let charat = fulldicestring.charAt(0);
+	while (charat != "")
+	{
+		let positionu43 = fulldicestring.substr(1).indexOf("+");
+		let positionu45 = fulldicestring.substr(1).indexOf("-");
+		let end = -1;
+		if (positionu43 == -1)
+		{
+			end = positionu45;
+		}
+		else if (positionu45 == -1)
+		{
+			end = positionu43;
+		}
+		else
+		{
+			end = Math.min(positionu43, positionu45);
+		}
+		
+		if (end == -1)
+			end = fulldicestring.length-1;
+		
+		
+		if (charat == "+")
+			dice.push({ die: fulldicestring.substr(1,end), operation: "+"});
+		else if (charat == "-")
+			dice.push({ die: fulldicestring.substr(1,end), operation: "-" });
+		
+		if (end != -1)
+			fulldicestring = fulldicestring.substring(end+1);
+		else
+			fulldicestring = "";
+		console.log(fulldicestring);
+		charat = fulldicestring.charAt(0);
+	}
+	
+	total = 0;
+	resultstring = "(";
+	let current;
+	for (let i= 0; i < dice.length; i++)
+	{
+		current = dieRoll(dice[i].die);
+		if (current.result !== undefined)
+		{
+			if (dice[i].operation == "+")
+			{
+				total += current.result;
+				if (i == 0)
+					resultstring += current.details;
+				else
+					resultstring += " + " + current.details;
+			}
+			else if (dice[i].operation == "-")
+			{
+				total -= current.result;
+				if (i == 0)
+					resultstring += current.details;
+				else
+					resultstring += " - " + current.details;
+			}
+		}
+	}
+	
+	resultstring += ")";
+	
+	if (dice.length == 1)
+		return "**" + current.result + "** " + current.details;
+	
+	return "**" + total + "** " + resultstring;
+}
+
 function dieRoll(r)
 {
 	if (r == null || r.length == 0)
@@ -1935,13 +2038,19 @@ function dieRoll(r)
 		resultString = resultString.substr(0,resultString.length-3) + ")";
 	}
 	
+	if (diceSides == 0)
+	{
+		return { result: totalroll, details: totalroll };
+	}
 	
-	resultString = "**" + totalroll + "** " + resultString;
-	if (resultString.length > 2000)
-		return totalroll + ", I will not be fielding any questions, thank you."
-	if (numberOfDice < 2 && diceMod == 0)
-		return totalroll;
-	return resultString;
+	
+	
+	//resultString = "**" + totalroll + "** " + resultString;
+	//if (resultString.length > 2000)
+	//	return totalroll + ", I will not be fielding any questions, thank you."
+	//if (numberOfDice < 2 && diceMod == 0)
+	//	return totalroll;
+	return { result: totalroll, details: resultString };
 }
 
 //
