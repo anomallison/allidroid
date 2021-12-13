@@ -1,14 +1,19 @@
 ////////
 //
 // written by AnomAllison
-// last updated 15/11/2021
+// last updated 13/12/2021
 //
 // I hope Allidroid can bring people some humour and entertainment
 //
 ////////
 
-const Discord = require('discord.js')
-const client = new Discord.Client()
+//const Discord = require('discord.js')
+//const client = new Discord.Client()
+
+const { Client, Intents } = require('discord.js');
+
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+
 
 const mergeImages = require('merge-images');
 const { Canvas, Image } = require('canvas');
@@ -130,7 +135,7 @@ const KEYSMASH_DEFAULT_MIN = 18;
 //
 //
 
-client.on('message', (receivedMessage) => {
+client.on('messageCreate', (receivedMessage) => {
     if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
         return
     }
@@ -7580,9 +7585,13 @@ function recruitPartyMembers(arguments)
 	if (arguments.length < 1)
 		return "you must specify at least one class, or put \"any\" for any class";
 	
+	if (party.members.length+1 >= MAX_PARTY_MEMBERS)
+	{
+		return party.name + " are full";
+	}
 	
 	let output = "";
-	for (let i = 1; i < arguments.length; i++)
+	for (let i = 1; i < arguments.length && party.members.length+1 < MAX_PARTY_MEMBERS; i++)
 	{
 		let adventurer = makeAdventurer(arguments[i]);
 		party.members.push(adventurer);
@@ -7699,6 +7708,9 @@ function outputPartySummary(arguments)
 	}
 	output += "Silverpieces: " + party.silverpieces;
 	
+	if (output.length > 2000)
+		return "sorry, party summary too long to display";
+	
 	return output;
 }
 
@@ -7711,6 +7723,8 @@ function checkIdIsUnique(id)
 	}
 	return true;
 }
+
+var MAX_PARTY_MEMBERS = 12;
 
 function makeParty(arguments)
 {
@@ -7788,7 +7802,7 @@ function makeParty(arguments)
 		log: []
 	};
 	
-	for (let i = 0; i < partymemberclass.length; i++)
+	for (let i = 0; i < partymemberclass.length && i < MAX_PARTY_MEMBERS; i++)
 	{
 		adventuringparty.members.push(makeAdventurer(partymemberclass[i]));
 	}
