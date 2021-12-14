@@ -7476,6 +7476,7 @@ function generateSimWorldMap()
 	}
 	
 	console.log("adventuresim world generated");
+	saveSimWorldMap();
 }
 
 function findClassByName(classname)
@@ -7585,13 +7586,13 @@ function recruitPartyMembers(arguments)
 	if (arguments.length < 1)
 		return "you must specify at least one class, or put \"any\" for any class";
 	
-	if (party.members.length+1 >= MAX_PARTY_MEMBERS)
+	if (party.members.length >= MAX_PARTY_MEMBERS)
 	{
 		return party.name + " are full";
 	}
 	
 	let output = "";
-	for (let i = 1; i < arguments.length && party.members.length+1 < MAX_PARTY_MEMBERS; i++)
+	for (let i = 1; i < arguments.length && party.members.length < MAX_PARTY_MEMBERS; i++)
 	{
 		let adventurer = makeAdventurer(arguments[i]);
 		party.members.push(adventurer);
@@ -7654,7 +7655,7 @@ function outputPartyMemberSummary(arguments)
 	
 	let output = partymember.name + " the " + partymember.species + " " + partymember.classname + "\n"
 		+ "Level: " + partymember.stats.level + ", Status: " + partymember.cstatus + "\n"
-		+ "HP: " + partymember.stats.mHP + ", MP: " + partymember.stats.mMP + "\n"
+		+ "HP: " + partymember.stats.mHP + ", MP: " + partymember.stats.mMP + ", Initiative: " + partymember.stats.initiative + "\n"
 		+ "Attack: " + partymember.stats.attack + ", Defense: " + partymember.stats.defense + "\n"
 		+ "Damage: " + Math.floor(partymember.stats.damagedienum) + "d" + Math.floor(partymember.stats.damagediesides) + "\n"
 		+ "Magic Items: ";
@@ -8382,6 +8383,7 @@ function doCombatTurn(party, combatant, side)
 		addStatusTo(combatant,"fled");
 	}
 	let target;
+	let targetstatus;
 	let ability = null;
 	if (combatant.canheal && partyHPMonitor(party) < combatant.partyhealpoint)
 	{
@@ -8448,7 +8450,6 @@ function doCombatTurn(party, combatant, side)
 			targets = party.members;
 		
 		target = findAppropriateAttackTarget(targets);
-		
 		if (target != null)
 		{
 			combatant.stats.cMP -= ability.mpcost;
@@ -8461,7 +8462,7 @@ function doCombatTurn(party, combatant, side)
 			{
 				for (let i = 0; i < targets.length; i++)
 				{
-					if (target.cstatus != "dead")
+					if (targets[i].cstatus != "dead")
 						useAbility(party, combatant, ability, targets[i]);
 				}
 				return;
@@ -10381,12 +10382,6 @@ function loadAdventuringParties()
 	{
 		adventuringparties = JSON.parse(fs.readFileSync('savedadventuringparties.json'));
 		console.log('adventuring parties loaded');
-		for (let i = 0; i < adventuringparties.length; i++)
-		{
-			let nearestCity = findNearestLandmark(64, 36, "city", 0.667);
-			adventuringparties[i].xpos = nearestCity.x;
-			adventuringparties[i].ypos = nearestCity.y;
-		}
 	}
 	catch (err)
 	{
@@ -10394,10 +10389,43 @@ function loadAdventuringParties()
 	}
 }
 
+function saveSimWorldMap()
+{
+	let file = 'savedadventureworldmap.json';
+	let path = './' + file;
+	let data = JSON.stringify(asworldmap);
+	
+	fs.writeFile(path, data, (err) => {
+		if (err) throw err;
+		console.log('adventure world map saved');
+		});
+}
+
+function loadSimWorldMap()
+{
+	try
+	{
+		asworldmap = JSON.parse(fs.readFileSync('savedadventureworldmap.json'));
+		console.log('adventure world map loaded');
+	}
+	catch (err)
+	{
+		generateSimWorldMap();
+		console.log('no adventure world map to load');
+		for (let i = 0; i < adventuringparties.length; i++)
+		{
+			let nearestCity = findNearestLandmark(64, 36, "city", 0.667);
+			adventuringparties[i].xpos = nearestCity.x;
+			adventuringparties[i].ypos = nearestCity.y;
+		}
+	}
+}
+
+
 function initializeAndStartAdventureSim()
 {
-	generateSimWorldMap();
 	loadAdventuringParties();
+	loadSimWorldMap();
 }
 
 
