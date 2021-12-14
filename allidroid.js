@@ -564,13 +564,13 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
-    } else if (normalizedCommand == "recruitpartymembers") 
+    } else if (normalizedCommand == "recruitpartymember") 
 	{
 		output = recruitPartyMembers(arguments);
 		
 		if (output == null)
 		{
-			console.log("failed command: recruitpartymembers");
+			console.log("failed command: recruitpartymember");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -623,7 +623,7 @@ function processCommand(receivedMessage)
 
 function helpCommand(user, arguments)
 {
-	help_string = "";
+	help_string = fs.readFileSync('help_general.txt').toString();
 	if (arguments == null || arguments.length == 0)
 	{
 		help_string = fs.readFileSync('help_general.txt').toString();
@@ -9934,6 +9934,7 @@ function createAdventureSimItem(itemlevel)
 		itemname = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))] + " " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))];
 	}
 	let item = { 
+		itlvl: itemlevel,
 		name: itemname,
 		effects: {
 			hp: 0,
@@ -10158,6 +10159,8 @@ function getIndexOfMagicItem(adventurer, item)
 	return -1;
 }
 
+var MAX_EQUIPPED_ITEMS = 12;
+
 function unequipAdventurerWithItem(adventurer, item)
 {
 	adventurer.stats.mHP -= item.effects.hp
@@ -10180,6 +10183,41 @@ function equipAdventurerWithItem(adventurer, item)
 	
 }
 
+function smartEquipUnequipAdventurer(adventurer, item)
+{
+	if (adventurer.magicitems.length < MAX_EQUIPPED_ITEMS)
+	{
+		equipAdventurerWithItem(adventurer, item);
+		return adventurer.name + " received " + item.name;
+	}
+	else
+	{
+		let smallest = 999999;
+		let smallesti = -1;
+		for (let i = 0; i < adventurer.magicitems.length; i++)
+		{
+			if (adventurer.magicitems[i].itlvl === undefined || adventurer.magicitems[i].itlvl < smallest)
+			{
+				if (adventurer.magicitems[i].itlvl !== undefined)
+					smallest = adventurer.magicitems[i].itlvl;
+				smallesti = i;
+			}
+		}
+		if (adventurer.magicitems[smallesti].itlvl === undefined || adventurer.magicitems[smallesti].itlvl < item.itlvl)
+		{
+			let lostitem = adventurer.magicitems[smallesti];
+			unequipAdventurerWithItem(adventurer, adventurer.magicitems[smallesti]);
+			equipAdventurerWithItem(adventurer, item)
+			return adventurer.name + " discarded " + lostitem.name + "\n" 
+				+ adventurer.name + " received " + item.name;
+		}
+		else
+		{
+			return adventurer.name + " discarded " + item.name;
+		}
+	}
+}
+
 function equipPartyWithItems(party, items)
 {
 	let partymember;
@@ -10188,28 +10226,28 @@ function equipPartyWithItems(party, items)
 		if (items[i].classification == "offense")
 		{
 			partymember = getPartyAttacker(party);
-			equipAdventurerWithItem(partymember, items[i]);
-			addToAdventureSimLog(party, partymember.name + " received " + items[i].name);
+			//equipAdventurerWithItem(partymember, items[i]);
+			addToAdventureSimLog(party, smartEquipUnequipAdventurer(partymember, items[i]));
 		}
 		else if (items[i].classification == "defense")
 		{
 			partymember = getPartyDefender(party);
-			equipAdventurerWithItem(partymember, items[i]);
-			addToAdventureSimLog(party, partymember.name + " received " + items[i].name);
+			//equipAdventurerWithItem(partymember, items[i]);
+			addToAdventureSimLog(party, smartEquipUnequipAdventurer(partymember, items[i]));
 		}
 		else if (items[i].classification == "sustain")
 		{
 			partymember = getPartyHealer(party);
 			if (partymember != null)
 			{
-				equipAdventurerWithItem(partymember, items[i]);
-				addToAdventureSimLog(party, partymember.name + " received " + items[i].name);
+				//equipAdventurerWithItem(partymember, items[i]);
+				addToAdventureSimLog(party, smartEquipUnequipAdventurer(partymember, items[i]));
 			}
 			else
 			{
 				partymember = getPartyDefender(party);
-				equipAdventurerWithItem(partymember, items[i]);
-				addToAdventureSimLog(party, partymember.name + " received " + items[i].name);
+				//equipAdventurerWithItem(partymember, items[i]);
+				addToAdventureSimLog(party, smartEquipUnequipAdventurer(partymember, items[i]));
 			}
 		}
 	}
