@@ -12,7 +12,7 @@
 
 const { Client, Intents } = require('discord.js');
 
-const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
+const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES"] });
 
 
 const mergeImages = require('merge-images');
@@ -137,7 +137,7 @@ const KEYSMASH_DEFAULT_MIN = 18;
 
 client.on('messageCreate', (receivedMessage) => {
     if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
-        return
+       return
     }
 	
     if (receivedMessage.content.startsWith("!")) {
