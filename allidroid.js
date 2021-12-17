@@ -140,6 +140,13 @@ client.on('messageCreate', (receivedMessage) => {
        return
     }
 	
+	if (receivedMessage.guild != null)
+	{
+		roles = receivedMessage.guild.members.cache.get(receivedMessage.author.id).roles.cache;
+		if (hasName(roles, "bot banned")) // warning: hasName always checks against lowercase names
+			return;
+	}
+	
     if (receivedMessage.content.startsWith("!")) {
         processCommand(receivedMessage)
     }
@@ -1053,7 +1060,7 @@ function sendReminder(message, target_channel, reminderid)
 		console.log("sendReminder failure: target_channel is null")
 		return;
 	}
-	client.channels.get(target_channel).send(message);
+	client.channels.cache.get(target_channel).send(message);
 	//target_channel.send(message);
 	if (reminderid != null) //remove reminder only if its an actual reminder
 	{
@@ -1261,7 +1268,7 @@ function hasName(arr, val)
 		return false;
 	return arr.some(function(arrVal)
 	{
-		return val == arrVal.name;
+		return val == arrVal.name.toLowerCase();
 	});
 }
 
@@ -7493,6 +7500,8 @@ function makeAdventurer(classname)
 {
 	let species = adventure_sim.adventurers.species[Math.floor(Math.random()*adventure_sim.adventurers.species.length)];
 	let adventurerclass = adventure_sim.adventurers.classes[Math.floor(Math.random()*adventure_sim.adventurers.classes.length)];
+	
+	classname = classname.toLowerCase();
 	
 	if (classname != null && classname != "")
 	{
