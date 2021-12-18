@@ -142,9 +142,17 @@ client.on('messageCreate', (receivedMessage) => {
 	
 	if (receivedMessage.guild != null)
 	{
-		roles = receivedMessage.guild.members.cache.get(receivedMessage.author.id).roles.cache;
-		if (hasName(roles, "bot banned")) // warning: hasName always checks against lowercase names
-			return;
+		member = receivedMessage.guild.members.cache.get(receivedMessage.author.id);
+		if (member !== undefined)
+		{
+			roles = receivedMessage.guild.members.cache.get(receivedMessage.author.id).roles.cache;
+			if (hasName(roles, "bot banned")) // warning: hasName always checks against lowercase names
+				return;
+		}
+		else
+		{
+			console.log("WARNING: member undefined");
+		}
 	}
 	
     if (receivedMessage.content.startsWith("!")) {
