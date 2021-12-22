@@ -142,22 +142,25 @@ client.on('messageCreate', (receivedMessage) => {
 	
 	if (receivedMessage.guild != null)
 	{
-		member = receivedMessage.guild.members.cache.get(receivedMessage.author.id);
-		if (member !== undefined)
-		{
-			roles = receivedMessage.guild.members.cache.get(receivedMessage.author.id).roles.cache;
-			if (hasName(roles, "bot banned")) // warning: hasName always checks against lowercase names
-				return;
-		}
-		else
-		{
-			console.log("WARNING: member undefined");
-		}
+		receivedMessage.guild.members.fetch(receivedMessage.author.id)
+		.then( member => {
+			roles = member.roles.cache;
+			if (!hasName(roles, "bot banned")) // warning: hasName always checks against lowercase names
+			{
+				if (receivedMessage.content.startsWith("!")) {
+					processCommand(receivedMessage)
+				}
+			}
+			else
+			{
+				console.log("Command ignored, due to ban");
+			}
+		})
+		.catch(console.error);
 	}
-	
-    if (receivedMessage.content.startsWith("!")) {
-        processCommand(receivedMessage)
-    }
+	else if (receivedMessage.content.startsWith("!")) {
+		processCommand(receivedMessage)
+	}
 })
 
 //
@@ -168,16 +171,16 @@ client.on('messageCreate', (receivedMessage) => {
 
 function processCommand(receivedMessage) 
 {
-    let fullCommand = receivedMessage.content.substr(1) // Remove the leading exclamation mark
-    let splitCommand = fullCommand.split(" ") // Split the message up in to pieces for each space
-    let primaryCommand = splitCommand[0] // The first word directly after the exclamation is the command
+    let fullCommand = receivedMessage.content.substr(1); // Remove the leading exclamation mark
+    let splitCommand = fullCommand.split(" "); // Split the message up in to pieces for each space
+    let primaryCommand = splitCommand[0]; // The first word directly after the exclamation is the command
 	let normalizedCommand = primaryCommand.toLowerCase();
-    let arguments = splitCommand.slice(1) // All other words are arguments/parameters/options for the command
+    let arguments = splitCommand.slice(1); // All other words are arguments/parameters/options for the command
 
 	let output;
 	
-    console.log("Command received: " + primaryCommand)
-    console.log("Arguments: " + arguments) // There may not be any arguments
+    console.log("Command received: " + primaryCommand);
+    console.log("Arguments: " + arguments); // There may not be any arguments
 	
 	//currentgay += Math.floor((Math.random() * 100) + 1);
 
