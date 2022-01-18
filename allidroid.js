@@ -2006,7 +2006,7 @@ function dieRoll(r, advantage = false, disadvantage = false)
 	
 	if (diceDropped > numberOfDice)
 	{
-		return "can't drop more dice than you're rolling";
+		return "can't drop (" + diceDropped.toString() +" low) more dice than you're rolling";
 	}
 	
 	let hposition = r.lastIndexOf("h");
@@ -2015,9 +2015,9 @@ function dieRoll(r, advantage = false, disadvantage = false)
 		highDropped = parseInt(r.substr(hposition+1));
 	}
 	
-	if (hposition > numberOfDice)
+	if (highDropped > numberOfDice)
 	{
-		return "can't drop more dice than you're rolling";
+		return "can't drop (" + highdropped.toSTring() +" high) more dice than you're rolling";
 	}
 	
 	for (let i = 0; i < numberOfDice; i++)
