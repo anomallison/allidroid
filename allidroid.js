@@ -241,7 +241,7 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "roll") 
 	{
-		receivedMessage.channel.send(rollManyDice(arguments[0]));
+		receivedMessage.channel.send(rollManyDice(arguments[0], arguments[1]));
 		return;
     } else if (normalizedCommand == "gay") 
 	{
@@ -1838,13 +1838,20 @@ function generateKeysmash(length = -1)
 //
 //
 
-function rollManyDice(r)
+function rollManyDice(r, advDisadv = "")
 {
 	let fulldicestring = r;
 	let dice = []
 	let positionu43 = fulldicestring.indexOf("+");
 	let positionu45 = fulldicestring.indexOf("-");
 	let position = -1;
+	let disadvantage = false;
+	let advantage = false;
+	
+	if (advDisadv == "disadvantage")
+		disadvantage = true;
+	else if (advDisadv == "advantage")
+		advantage = true;
 	
 	if (positionu43 == -1)
 	{
@@ -1911,7 +1918,7 @@ function rollManyDice(r)
 	let current;
 	for (let i= 0; i < dice.length; i++)
 	{
-		current = dieRoll(dice[i].die);
+		current = dieRoll(dice[i].die, advantage, disadvantage);
 		if (current.result !== undefined)
 		{
 			if (dice[i].operation == "+")
@@ -1941,7 +1948,7 @@ function rollManyDice(r)
 	return "**" + total + "** " + resultstring;
 }
 
-function dieRoll(r)
+function dieRoll(r, advantage = false, disadvantage = false)
 {
 	if (r == null || r.length == 0)
 	{
@@ -1955,6 +1962,7 @@ function dieRoll(r)
 	let diceSidesPre;
 	let diceroll = 0;
 	let diceDropped = 0;
+	let highDropped = 0;
 	let stringroll = "";
 	let resultString = "(";
 	let dieresults = [];
@@ -2001,6 +2009,17 @@ function dieRoll(r)
 		return "can't drop more dice than you're rolling";
 	}
 	
+	let hposition = r.lastIndexOf("h");
+	if (hposition != -1)
+	{
+		highDropped = parseInt(r.substr(hposition+1));
+	}
+	
+	if (hposition > numberOfDice)
+	{
+		return "can't drop more dice than you're rolling";
+	}
+	
 	for (let i = 0; i < numberOfDice; i++)
 	{
 		if (isNaN(diceSides))
@@ -2012,7 +2031,24 @@ function dieRoll(r)
 		}
 		else
 		{
-			dieresults.push(Math.floor((Math.random() * diceSides) + 1));
+			if (disadvantage == advantage)
+			{
+				dieresults.push(Math.floor((Math.random() * diceSides) + 1));
+			}
+			else if (disadvantage)
+			{
+				let resulta = (Math.floor((Math.random() * diceSides) + 1));
+				let resultb = (Math.floor((Math.random() * diceSides) + 1));
+				dieresults.push(Math.min(resulta,resultb));
+				droppeddie.push(Math.max(resulta,resultb));
+			}
+			else if (advantage)
+			{
+				let resulta = (Math.floor((Math.random() * diceSides) + 1));
+				let resultb = (Math.floor((Math.random() * diceSides) + 1));
+				dieresults.push(Math.max(resulta,resultb));
+				droppeddie.push(Math.min(resulta,resultb));
+			}
 		}
 	}
 	if (stringroll.length > 0)
@@ -2034,6 +2070,22 @@ function dieRoll(r)
 		}
 		dieresults.splice(lowestDieIndex,1);
 		droppeddie.push(lowestDie);
+	}
+	
+	for (let i = 0; i < highDropped; i++)
+	{
+		let highestDie = 0;
+		let highestDieIndex = -1;
+		for (j in dieresults)
+		{
+			if (dieresults[j] > highestDie)
+			{
+				highestDie = dieresults[j];
+				highestDieIndex = j;
+			}
+		}
+		dieresults.splice(highestDieIndex,1);
+		droppeddie.push(highestDie);
 	}
 	
 	for (i in dieresults)
