@@ -1,9 +1,11 @@
 ``!generatemap`` generates a low resolution hex grid terrain map
 
-``!generatemap`` takes upto 5 arguments currently: the width, the height, grid opacity, the number of landmasses to generate on the map, and the 'hot/cold' cold balance between 0 and upto about 400 (default is 125)
+``!generatemap`` takes upto 5 arguments currently: the width, the height, grid opacity, the number of landmasses to generate on the map, the cold balance between 0 and 100 typically, and the hot balance between 0 and 100 typically
+
+hot and cold balance are by default set to 50 without specification
 
 example
-``!generatemap 40 30 0 8 166``
+``!generatemap 40 30 0 8 50 50``
 ``!generatemap 150 100 0.33 15``
 ``!generatemap 32 18 0.5``
 ``!generatemap``

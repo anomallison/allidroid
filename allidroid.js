@@ -2017,7 +2017,7 @@ function dieRoll(r, advantage = false, disadvantage = false)
 	
 	if (highDropped > numberOfDice)
 	{
-		return "can't drop (" + highdropped.toSTring() +" high) more dice than you're rolling";
+		return "can't drop (" + highdropped.toString() +" high) more dice than you're rolling";
 	}
 	
 	for (let i = 0; i < numberOfDice; i++)
@@ -4458,7 +4458,8 @@ function generateMap(channel, arguments)
 	let MAP_HEIGHT = 18;
 	let MAP_WIDTH = 32;
 	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 5.5);
-	let ClimateBalance = 125;
+	let ColdBalance = 50;
+	let HotBalance = 50;
 	let grid_opacity = 0;
 	
 	if (arguments != null)
@@ -4470,15 +4471,29 @@ function generateMap(channel, arguments)
 		if (!isNaN(arguments[3]))
 			LANDMASSES = Math.floor(arguments[3]);
 		if (!isNaN(arguments[4]))
-			ClimateBalance = arguments[4];;
+			ColdBalance = parseFloat(arguments[4]);
+		if (!isNaN(arguments[5]))
+			HotBalance = parseFloat(arguments[5]);
 		if (!isNaN(arguments[2]))
 			grid_opacity = arguments[2];
 	}
 	
-	PLAINS_LEVEL = PLAINS_LEVEL * ClimateBalance / 150;
-	GRASS_LEVEL = GRASS_LEVEL * ClimateBalance/120;
-	TUNDRA_LEVEL = TUNDRA_LEVEL * ClimateBalance/110;
-	SNOW_LEVEL = SNOW_LEVEL * ClimateBalance/100;
+	PLAINS_LEVEL *= ((HotBalance/50));
+	PLAINS_LEVEL *= ((100-ColdBalance)/50);
+	
+	GRASS_LEVEL *= ((HotBalance/50)+(Math.abs(50-HotBalance)/50)*0.25);
+	GRASS_LEVEL *= ((100-ColdBalance)/50)+(Math.abs(50-ColdBalance)/50*0.25);
+	
+	TUNDRA_LEVEL *= ((95-ColdBalance)/50);
+	TUNDRA_LEVEL *= ((350+HotBalance)/400);
+	
+	SNOW_LEVEL *= ((100-ColdBalance)/50);
+	SNOW_LEVEL *= ((450+HotBalance)/500);
+	
+	console.log(PLAINS_LEVEL);
+	console.log(GRASS_LEVEL);
+	console.log(TUNDRA_LEVEL);
+	console.log(SNOW_LEVEL);
 	
 	if (MAP_WIDTH < 1)
 		return null;
@@ -7381,9 +7396,9 @@ function generateSimWorldMap()
 	noisemapbiome = smoothenMap(noisemapbiome, asworld_height, asworld_width, 0.175);
 	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.25);
 	let noisemapclimate = noiseMap2D(asworld_height,asworld_width, 0.07);
-	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.4);
-	noisemapbiome = smoothenMap(noisemapbiome, asworld_height, asworld_width, 0.175);
-	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.25);
+	noisemapclimate = increaseContrast(noisemapclimate, asworld_height, asworld_width, 0.4);
+	noisemapclimate = smoothenMap(noisemapclimate, asworld_height, asworld_width, 0.175);
+	noisemapclimate = increaseContrast(noisemapclimate, asworld_height, asworld_width, 0.25);
 	let noisemaplandmarks = noiseMap2D(asworld_height,asworld_width, 0.04);
 	noisemaplandmarks = increaseContrast(noisemaplandmarks, asworld_height, asworld_width, 0.6);
 	noisemaplandmarks = smoothenMap(noisemaplandmarks, asworld_height, asworld_width, 0.175);
