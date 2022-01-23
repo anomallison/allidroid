@@ -1967,10 +1967,12 @@ function dieRoll(r, advantage = false, disadvantage = false)
 	let resultString = "(";
 	let dieresults = [];
 	let droppeddie = [];
+	let multiplierPre;
+	let multiplier = 1;
 	
-	if (numberOfDice == "NaN")
+	if (isNaN(numberOfDice))
 	{
-		return "Nani?";
+		numberOfDice = 1;
 	}
 	
 	position = r.indexOf("d");
@@ -1995,6 +1997,13 @@ function dieRoll(r, advantage = false, disadvantage = false)
 		{
 			return "excuse me, no (number too large!)";
 		}
+	}
+	
+	position = r.indexOf("*");
+	if (position != -1)
+	{
+		multiplierPre = r.substr(position+1);
+		multiplier = parseInt(r.substr(position+1));
 	}
 	
 	position = r.indexOf("d");
@@ -2100,6 +2109,7 @@ function dieRoll(r, advantage = false, disadvantage = false)
 	}
 	
 	totalroll += diceMod;
+	totalroll *= multiplier;
 	if (diceMod < 0)
 	{
 		resultString = resultString.substr(0,resultString.length-3) + " - " + Math.abs(diceMod) + ")";
@@ -2111,6 +2121,11 @@ function dieRoll(r, advantage = false, disadvantage = false)
 	else
 	{
 		resultString = resultString.substr(0,resultString.length-3) + ")";
+	}
+	
+	if (multiplier != 1)
+	{
+		resultString += " * " + multiplier;
 	}
 	
 	if (diceSides == 0)
@@ -4489,11 +4504,6 @@ function generateMap(channel, arguments)
 	
 	SNOW_LEVEL *= ((100-ColdBalance)/50);
 	SNOW_LEVEL *= ((450+HotBalance)/500);
-	
-	console.log(PLAINS_LEVEL);
-	console.log(GRASS_LEVEL);
-	console.log(TUNDRA_LEVEL);
-	console.log(SNOW_LEVEL);
 	
 	if (MAP_WIDTH < 1)
 		return null;
