@@ -1,12 +1,12 @@
 [
 	{
 		"phoneme": "iː",
-		"spellings": ["ee","ea"],
+		"spellings": ["ee","ea","y","ie","i"],
 		"lists": ["vowels","monophthongs","close"]
 	},
 	{
 		"phoneme": "ɪ",
-		"spellings": ["i","e"],
+		"spellings": ["i","e","y"],
 		"lists": ["vowels","monophthongs","close"]
 	},
 	{
@@ -56,7 +56,7 @@
 	},
 	{
 		"phoneme": "ɒ",
-		"spellings": ["o"],
+		"spellings": ["o", "oh"],
 		"lists": ["vowels","monophthongs","mid"]
 	},
 	{
@@ -66,7 +66,7 @@
 	},
 	{
 		"phoneme": "eɪ",
-		"spellings": ["ai"],
+		"spellings": ["ai","ay"],
 		"lists": ["vowels","diphthongs","close"]
 	},
 	{
@@ -131,7 +131,7 @@
 	},
 	{
 		"phoneme": "k",
-		"spellings": ["c","k"],
+		"spellings": ["c","k","ch"],
 		"lists": ["consonants"]
 	},
 	{
@@ -141,7 +141,7 @@
 	},
 	{
 		"phoneme": "f",
-		"spellings": ["f"],
+		"spellings": ["f","ph"],
 		"lists": ["consonants"]
 	},
 	{
@@ -171,7 +171,7 @@
 	},
 	{
 		"phoneme": "ʃ",
-		"spellings": ["sh","che"],
+		"spellings": ["sh","ch"],
 		"lists": ["consonants"]
 	},
 	{
@@ -217,6 +217,11 @@
 	{
 		"phoneme": "j",
 		"spellings": ["y"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "ks",
+		"spellings": ["x"],
 		"lists": ["consonants"]
 	}
 ]

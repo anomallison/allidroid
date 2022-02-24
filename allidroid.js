@@ -320,15 +320,18 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "generatename") 
 	{
-		if (arguments.length > 1)
+		if (arguments.length > 2)
 		{
-			output = generatePhonemeName(parseInt(arguments[0]), parseInt(arguments[1]));
-		} else if (arguments.length == 1)
+			output = generatePhonemeNameList(parseInt(arguments[0]), parseInt(arguments[1]), parseInt(arguments[2]));
+		} else if (arguments.length == 2)
 		{
-			output = generatePhonemeName(parseInt(arguments[0]));
+			output = generatePhonemeNameList(parseInt(arguments[0]), parseInt(arguments[1]));
+		}  else if (arguments.length == 1)
+		{
+			output = generatePhonemeNameList(parseInt(arguments[0]));
 		} else
 		{
-			output = generatePhonemeName();
+			output = generatePhonemeNameList();
 		}
 		
 		if (output == null)
@@ -616,7 +619,37 @@ function processCommand(receivedMessage)
 	else if (normalizedCommand == "alienlanguage") 
 	{
 		encodeToAlienLanguage(receivedMessage.channel,arguments);
-    } 
+    }
+	else if (normalizedCommand == "namelist") 
+	{
+		output = MarkovNameGen(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: namelist");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    }
+	else if (normalizedCommand == "markovnamelist") 
+	{
+		output = MarkovPhonemeNameGen(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: namelist");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    }
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -2637,6 +2670,26 @@ function getPhonemeSpelling(object)
 	
 	let random_int = Math.floor(Math.random()*(object.spellings.length));
 	return object.spellings[random_int];
+}
+
+function generatePhonemeNameList(amount = 1, maxsyllables = 5, minimumsyllables = 1)
+{
+	let names = [];
+	
+	names.push(generatePhonemeName(maxsyllables, minimumsyllables));
+	for(let i = 1; i < amount; i++)
+	{
+		names.push(generatePhonemeName(maxsyllables, minimumsyllables));
+	}
+	
+	let textoutput = names[0];
+	
+	for(let i = 1; i < names.length; i++)
+	{
+		textoutput += "\n" + names[i];
+	}
+	
+	return textoutput;
 }
 
 //
@@ -10525,6 +10578,277 @@ function initializeAndStartAdventureSim()
 	loadSimWorldMap();
 }
 
+var markovalphabet = [];
+const markovmaxnamesize = 24;
+
+function MarkovNameGen(arguments)
+{
+	let length = 5;
+	let numberOfNames = 1;
+	if (!isNaN(arguments[0]))
+		length = arguments[0];
+	else if (arguments[0] < 3 || arguments[0] > 24)
+		return "Must specify between 3 and 24 max length of name if specifying";
+	if (!isNaN(arguments[1]))
+		numberOfNames = arguments[1];
+	else if (arguments[1] < 1 || arguments[1] > 20)
+		return "Must specify between 1 and 20 number of names to generate if specifying";
+	
+	let names = [];
+	
+	do
+	{
+		let nextname = MarkovGenerateName();
+		if (nextname.length == length)
+			names.push(grammarCapitalFirstLetter(nextname));
+	} while (names.length < numberOfNames);
+	
+	let output = names[0];
+	for (i = 1; i < names.length; i++)
+	{
+	output += "\n" + names[i];	
+	}
+	
+	return output;
+}
+
+function MarkovGenerateName()
+{
+	let name = "";
+	let diceroll = Math.floor((Math.random() * markovalphabet["START"].length));
+	let nextChar = markovalphabet["START"].charAt(diceroll);
+	
+	for (let i = 0; i < markovmaxnamesize; i++)
+	{
+		if (nextChar == "E")
+		{
+			return name;
+		}
+		else
+		{
+			name += nextChar;
+			diceroll = Math.floor((Math.random() * markovalphabet[nextChar].length));
+			nextChar = markovalphabet[nextChar].charAt(diceroll);
+		}
+	}
+	return name;
+	
+}
+
+function MarkovNameTrain()
+{
+	let trainingnames = JSON.parse(fs.readFileSync('markovnames.json'));
+	let currentchar = "START";
+	markovalphabet["START"] = "";
+	markovalphabet["a"] = "";
+	markovalphabet["b"] = "";
+	markovalphabet["c"] = "";
+	markovalphabet["d"] = "";
+	markovalphabet["e"] = "";
+	markovalphabet["f"] = "";
+	markovalphabet["g"] = "";
+	markovalphabet["h"] = "";
+	markovalphabet["i"] = "";
+	markovalphabet["j"] = "";
+	markovalphabet["k"] = "";
+	markovalphabet["l"] = "";
+	markovalphabet["m"] = "";
+	markovalphabet["n"] = "";
+	markovalphabet["o"] = "";
+	markovalphabet["p"] = "";
+	markovalphabet["q"] = "";
+	markovalphabet["r"] = "";
+	markovalphabet["s"] = "";
+	markovalphabet["t"] = "";
+	markovalphabet["u"] = "";
+	markovalphabet["v"] = "";
+	markovalphabet["w"] = "";
+	markovalphabet["x"] = "";
+	markovalphabet["y"] = "";
+	markovalphabet["z"] = "";
+	markovalphabet["-"] = "";
+	markovalphabet[" "] = "";
+	markovalphabet["\'"] = "";
+	
+	for (let i = 0; i < trainingnames.length; i++)
+	{
+		markovalphabet[currentchar] += trainingnames[i].charAt(0);
+	}
+	
+	for (let j = 0; j < trainingnames.length; j++)
+	{
+		for (let k = 0; k < trainingnames[j].length; k++)
+		{
+			if (k+1 < trainingnames[j].length)
+			{
+				markovalphabet[trainingnames[j].charAt(k).toLowerCase()] += trainingnames[j].charAt(k+1).toLowerCase();
+			}
+			else
+			{
+				markovalphabet[trainingnames[j].charAt(k).toLowerCase()] += "E";
+			}
+		}
+	}
+	console.log('markov name gen training list read');
+}
+
+
+function GetPhonemeByCharacter(character)
+{
+	for(let i = 0; i < phonemes_english.length; i++)
+	{
+		if (phonemes_english[i].phoneme == character)
+			return phonemes_english[i];
+	}
+	
+	return null;
+}
+
+var markovphonemes = [];
+
+function MarkovPhonemeNameGen(arguments)
+{
+	let length = 5;
+	let numberOfNames = 1;
+	if (!isNaN(arguments[0]))
+		length = arguments[0];
+	else if (arguments[0] < 3 || arguments[0] > 24)
+		return "Must specify between 3 and 24 max length of name if specifying";
+	if (!isNaN(arguments[1]))
+		numberOfNames = arguments[1];
+	else if (arguments[1] < 1 || arguments[1] > 20)
+		return "Must specify between 1 and 20 number of names to generate if specifying";
+	
+	let names = [];
+	
+	do
+	{
+		let nextname = MarkovPhonemeGenerateName();
+		if (nextname.length == length)
+		{
+			let ipaname = "";
+			for (let i = 0; i < nextname.length; i++)
+			{
+				ipaname += nextname[i];
+			}
+			let spelledname = "";
+			for (let i = 0; i < nextname.length; i++)
+			{
+				let phonemechar = GetPhonemeByCharacter(nextname[i]);
+				spelledname += getPhonemeSpelling(phonemechar);
+			}
+			names.push("\[" + ipaname + "\] " + grammarCapitalFirstLetter(spelledname));
+		}
+	} while (names.length < numberOfNames);
+	
+	let output = names[0];
+	for (i = 1; i < names.length; i++)
+	{
+		output += "\n" + names[i];	
+	}
+	
+	return output;
+}
+
+function MarkovPhonemeGenerateName()
+{
+	let name = [];
+	let diceroll = Math.floor((Math.random() * markovphonemes["START"].length));
+	let nextChar = markovphonemes["START"][diceroll];
+	
+	for (let i = 0; i < markovmaxnamesize; i++)
+	{
+		if (nextChar === "E")
+		{
+			return name;
+		}
+		else
+		{
+			name.push(nextChar);
+			diceroll = Math.floor((Math.random() * markovphonemes[nextChar].length));
+			nextChar = markovphonemes[nextChar][diceroll];
+		}
+	}
+	return name;
+}
+
+function MarkovPhonemeNameTrain()
+{
+	let trainingnames = JSON.parse(fs.readFileSync('phoneticnames.json'));
+	let currentchar = "START";
+	markovphonemes["START"] = [];
+	markovphonemes["iː"] = [];
+	markovphonemes["ɪ"] = [];
+	markovphonemes["ʊ"] = [];
+	markovphonemes["uː"] = [];
+	markovphonemes["e"] = [];
+	markovphonemes["ə"] = [];
+	markovphonemes["ɜː"] = [];
+	markovphonemes["ɔː"] = [];
+	markovphonemes["æ"] = [];
+	markovphonemes["ʌ"] = [];
+	markovphonemes["ɑː"] = [];
+	markovphonemes["ɒ"] = [];
+	markovphonemes["ɪə"] = [];
+	markovphonemes["eɪ"] = [];
+	markovphonemes["ʊə"] = [];
+	markovphonemes["ɔɪ"] = [];
+	markovphonemes["əʊ"] = [];
+	markovphonemes["eə"] = [];
+	markovphonemes["aɪ"] = [];
+	markovphonemes["aʊ"] = [];
+	markovphonemes["p"] = [];
+	markovphonemes["b"] = [];
+	markovphonemes["t"] = [];
+	markovphonemes["d"] = [];
+	markovphonemes["tʃ"] = [];
+	markovphonemes["dʒ"] = [];
+	markovphonemes["k"] = [];
+	markovphonemes["g"] = [];
+	markovphonemes["f"] = [];
+	markovphonemes["v"] = [];
+	markovphonemes["θ"] = [];
+	markovphonemes["ð"] = [];
+	markovphonemes["s"] = [];
+	markovphonemes["z"] = [];
+	markovphonemes["ʃ"] = [];
+	markovphonemes["ʒ"] = [];
+	markovphonemes["m"] = [];
+	markovphonemes["n"] = [];
+	markovphonemes["ŋ"] = [];
+	markovphonemes["h"] = [];
+	markovphonemes["l"] = [];
+	markovphonemes["r"] = [];
+	markovphonemes["w"] = [];
+	markovphonemes["j"] = [];
+	markovphonemes["ks"] = [];
+	
+	for (let i = 0; i < trainingnames.length; i++)
+	{
+		let temptrainingname = trainingnames[i].split(" ");
+		markovphonemes[currentchar].push(temptrainingname[0]);
+	}
+	
+	for (let j = 0; j < trainingnames.length; j++)
+	{
+		let temptrainingname = trainingnames[j].split(" ");
+		for (let k = 0; k < temptrainingname.length; k++)
+		{
+			if (k+1 < temptrainingname.length)
+			{
+				markovphonemes[temptrainingname[k]].push(temptrainingname[k+1]);
+			}
+			else
+			{
+				markovphonemes[temptrainingname[k]].push("E");
+			}
+		}
+	}
+	
+	console.log('markov phoneme gen training list read');
+	
+}
+
 
 //
 // handle errors??? no
@@ -10538,3 +10862,5 @@ client.on('error', console.error);
 client.login(logintoken); //allidroid logon
 
 initializeAndStartAdventureSim();
+MarkovNameTrain();
+MarkovPhonemeNameTrain();
