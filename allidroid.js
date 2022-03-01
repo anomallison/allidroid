@@ -4498,33 +4498,393 @@ function smoothenMap(map, height, width, amount)
 
 //
 //
-// map generator function
+// map generator functions
 //
 //
 
 
-let MAX_MAP_HEIGHT = 100;
-let MAX_MAP_WIDTH = 150;
+function AdjacentMapHexContiguous(contiguitymap, pointx, pointy, map_width, map_height, contiguityvalue = true)
+{
+	if (pointx%2 == 1)
+	{
+		if (pointy-1 > -1 && contiguitymap[pointx+(pointy-1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx+1 < map_width && contiguitymap[pointx+1+pointy*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx+1 < map_width && pointy+1 < map_height && contiguitymap[pointx+1+(pointy+1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointy+1 < map_height && contiguitymap[pointx+(pointy+1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx-1 > -1 && pointy+1 < map_height && contiguitymap[pointx-1+(pointy+1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx-1 > -1 && contiguitymap[pointx-1+pointy*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+	} 
+	else
+	{
+		if (pointy-1 > -1 && contiguitymap[pointx+(pointy-1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx+1 < map_width && pointy-1 > -1 && contiguitymap[pointx+1+(pointy-1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx+1 < map_width && contiguitymap[pointx+1+pointy*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointy+1 < map_height && contiguitymap[pointx+(pointy+1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx-1 > -1 && contiguitymap[pointx-1+pointy*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx-1 > -1 && pointy-1 > -1 && contiguitymap[pointx-1+(pointy-1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
 
-let SMOOTHING_ITERATIONS = 3;
-let LAND_EROSION = 0.64;
+function SeaLevelContiguousToPoint(sealevelmap, pointx, pointy, map_width, map_height, size)
+{
+	let contiguitymap = []
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x  = 0; x < map_width; x++)
+		{
+			contiguitymap.push( false );
+		}
+	}
+	
+	contiguitymap[pointx+(pointy*map_width)] = true;
+	
+	let newcontigoushexes = 1;
+	
+	while (newcontigoushexes > 0)
+	{
+		newcontigoushexes = 0;
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (size > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: pointx, y: pointy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < size; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < size; k++)
+			{
+				if (currenthex.x < map_width && currenthex.y < map_height && currenthex.x > -1 && currenthex.y > -1)
+				{
+					position = currenthex.x+currenthex.y*map_width;
+					if (!contiguitymap[position] && sealevelmap[position].sealevel == "land")
+					{
+						contiguitymap[position] = AdjacentMapHexContiguous(contiguitymap, currenthex.x, currenthex.y, map_width, map_height);
+						if (contiguitymap[position])
+							newcontigoushexes++;
+					}
+				}
+				
+				if (currenthex.x%2 == 1)
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+						currenthex.y++;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+						currenthex.y++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				} 
+				else
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+						currenthex.y--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+						currenthex.y--;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				}
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		//console.log(newcontigoushexes);
+	}
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x  = 0; x < map_width; x++)
+		{
+			if (!contiguitymap[x+(y*map_width)])
+				sealevelmap[x+(y*map_width)].sealevel = "water";
+		}
+	}
+	
+	return sealevelmap;
+}
+
+function TreesContiguousToPoint(treesmap, value, pointx, pointy, map_width, map_height, size)
+{
+	let contiguitymap = []
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x  = 0; x < map_width; x++)
+		{
+			contiguitymap.push( false );
+		}
+	}
+	
+	contiguitymap[pointx+(pointy*map_width)] = true;
+	
+	let newcontigoushexes = 1;
+	
+	while (newcontigoushexes > 0)
+	{
+		newcontigoushexes = 0;
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (size > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: pointx, y: pointy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < size; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < size; k++)
+			{
+				if (currenthex.x < map_width && currenthex.y < map_height && currenthex.x > -1 && currenthex.y > -1)
+				{
+					position = currenthex.x+currenthex.y*map_width;
+					if (!contiguitymap[position] && treesmap[position] == value)
+					{
+						contiguitymap[position] = AdjacentMapHexContiguous(contiguitymap, currenthex.x, currenthex.y, map_width, map_height);
+						if (contiguitymap[position])
+							newcontigoushexes++;
+					}
+				}
+				
+				if (currenthex.x%2 == 1)
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+						currenthex.y++;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+						currenthex.y++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				} 
+				else
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+						currenthex.y--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+						currenthex.y--;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				}
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		//console.log(newcontigoushexes);
+	}
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x  = 0; x < map_width; x++)
+		{
+			if (!contiguitymap[x+(y*map_width)])
+				treesmap[x+(y*map_width)] = "none";
+		}
+	}
+	
+	return treesmap;
+}
+
+
+let MAX_MAP_HEIGHT = 140;
+let MAX_MAP_WIDTH = 210;
+
+let SMOOTHING_ITERATIONS = 2;
+let LAND_EROSION = 0.08;
 
 function generateMap(channel, arguments)
 {
-	let LAND_LEVEL = 0.39;
-	let HILL_LEVEL = 0.576;
-	let MOUNTAIN_LEVEL = 0.71;
+	let LAND_LEVEL = 0.29;
+	let HILL_LEVEL = 0.681;
+	let MOUNTAIN_LEVEL = 0.716;
+	let SNOW_MOUNTAIN_LEVEL = 0.778; 
 
-	let PLAINS_LEVEL = 0.32;
-	let GRASS_LEVEL = 0.49;
-	let TUNDRA_LEVEL = 0.685;
-	let SNOW_LEVEL = 0.855;
+	let PLAINS_LEVEL = 0.16;
+	let GRASS_LEVEL = 0.32;
+	let TUNDRA_LEVEL = 0.794;
+	let SNOW_LEVEL = 0.825;
 
-	let FOREST_LEVEL = 0.64;
-	let JUNGLE_LEVEL = 0.89;
+	let FOREST_LEVEL = 0.007;
+	let JUNGLE_LEVEL = 0.0042;
 
-	let MAP_HEIGHT = 18;
-	let MAP_WIDTH = 32;
+	let MAP_HEIGHT = 24;
+	let MAP_WIDTH = 36;
 	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 5.5);
 	let ColdBalance = 50;
 	let HotBalance = 50;
@@ -4594,29 +4954,165 @@ function generateMap(channel, arguments)
 	
 	for (let i = 0; i < LANDMASSES; i++)
 	{
-		let randomwidth = Math.floor(Math.random()*Math.ceil(MAP_WIDTH*0.58))+8;
-		let randomheight = Math.floor(Math.random()*Math.ceil(MAP_HEIGHT*0.58))+8;
-		let randomx = Math.floor(Math.random()*(MAP_WIDTH - randomwidth-4))+2;
-		let randomy = Math.floor(Math.random()*(MAP_HEIGHT - randomheight-4))+2;
-		
-		let midpointx = Math.floor(randomwidth/2);
-		let midpointy = Math.floor(randomheight/2);
-		
-		for (let x = randomx; x < randomwidth+randomx; x++)
+		let temppremap = [];
+		//initialize the temppremap
+		for (let y = 0; y < MAP_HEIGHT; y++)
 		{
-			for (let y = randomy; y < randomheight+randomy; y++)
+			for (let x  = 0; x < MAP_WIDTH; x++)
 			{
-				let probx = Math.abs(1 - ((x - randomx) / midpointx));
-				let proby = Math.abs(1 - ((y - randomy) / midpointy));
-				let probability = probx * proby * LAND_EROSION;
-				if (Math.random() < probability)
+				temppremap.push({ sealevel: "water", terrain: "grass", trees: "none" });
+			}
+		}
+		
+		let randomsize = Math.floor(Math.random()*(MAP_HEIGHT*MAP_WIDTH/6)+MAP_HEIGHT+MAP_WIDTH);
+		let randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		
+		temppremap[randomx+(randomy*MAP_WIDTH)].sealevel = "land";
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < MAP_WIDTH && currenthex.y < MAP_HEIGHT && currenthex.x > -1 && currenthex.y > -1)
 				{
-					if (x+(y*MAP_WIDTH) > -1 && x+(y*MAP_WIDTH) < MAP_HEIGHT*MAP_WIDTH)
-						premapmap[x+(y*MAP_WIDTH)].sealevel = "land";
+					let position = currenthex.x+(currenthex.y*MAP_WIDTH);
+					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+					let probability = LAND_EROSION * Math.sqrt(randomsize);
+					
+					if (Math.random()*distance < probability)
+					{
+						temppremap[position].sealevel = "land";
+					}
 				}
+				
+				
+				if (currenthex.x%2 == 1)
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+						currenthex.y++;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+						currenthex.y++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				} 
+				else
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+						currenthex.y--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+						currenthex.y--;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				}
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		
+		temppremap = SeaLevelContiguousToPoint(temppremap, randomx, randomy, MAP_WIDTH, MAP_HEIGHT, randomsize);
+		
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				if (temppremap[x+(y*MAP_WIDTH)].sealevel == "land")
+					premapmap[x+(y*MAP_WIDTH)].sealevel = "land";
+			}
+		}
+		
+	}
+	
+	/*
+	for (let x = 0; x < MAP_WIDTH; x++)
+	{
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			if (heightmap[x+(y*MAP_WIDTH)] >= LAND_LEVEL)
+			{
+				premapmap[x+(y*MAP_WIDTH)].sealevel = "land";
 			}
 		}
 	}
+	*/
 	
 	for (let i = 0; i < SMOOTHING_ITERATIONS; i++)
 	{
@@ -4671,7 +5167,13 @@ function generateMap(channel, arguments)
 		{
 			if (premapmap[x+(y*MAP_WIDTH)].sealevel == "land")
 			{
-				if (heightmap[x+(y*MAP_WIDTH)] > MOUNTAIN_LEVEL)
+				if (heightmap[x+(y*MAP_WIDTH)] > SNOW_MOUNTAIN_LEVEL)
+				{
+					premapmap[x+(y*MAP_WIDTH)].sealevel = "mountain";
+					premapmap[x+(y*MAP_WIDTH)].terrain = "snow";
+					
+				}
+				else if (heightmap[x+(y*MAP_WIDTH)] > MOUNTAIN_LEVEL)
 				{
 					if (terrainmap[x+(y*MAP_WIDTH)] > SNOW_LEVEL)
 					{
@@ -4691,7 +5193,7 @@ function generateMap(channel, arguments)
 					else if (terrainmap[x+(y*MAP_WIDTH)] > PLAINS_LEVEL)
 					{
 						premapmap[x+(y*MAP_WIDTH)].sealevel = "mountain";
-						premapmap[x+(y*MAP_WIDTH)].terrain = "plains";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "tundra";
 					}
 					else
 					{
@@ -4721,7 +5223,7 @@ function generateMap(channel, arguments)
 					{
 						
 						premapmap[x+(y*MAP_WIDTH)].sealevel = "hill";
-						premapmap[x+(y*MAP_WIDTH)].terrain = "plains";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "tundra";
 					}
 					else
 					{
@@ -4746,7 +5248,7 @@ function generateMap(channel, arguments)
 					}
 					else if (terrainmap[x+(y*MAP_WIDTH)] > PLAINS_LEVEL)
 					{
-						premapmap[x+(y*MAP_WIDTH)].terrain = "plains";
+						premapmap[x+(y*MAP_WIDTH)].terrain = "tundra";
 					}
 					else
 					{
@@ -4756,6 +5258,325 @@ function generateMap(channel, arguments)
 			}
 		}
 	}
+	
+	//do jungles
+	let jungle_count = Math.floor(LANDMASSES * Math.sqrt(LANDMASSES)/4);
+	for (let i = 0; i < jungle_count; i++)
+	{
+		let temptreemap = [];
+		//initialize the tempmap
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				temptreemap.push("none");
+			}
+		}
+		
+		let randomsize = Math.floor((Math.random()*(MAP_HEIGHT*MAP_WIDTH/6)+MAP_HEIGHT+MAP_WIDTH)*2/3);
+		let randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		while (premapmap[randomx+randomy*MAP_WIDTH].sealevel == "water" || premapmap[randomx+randomy*MAP_WIDTH].sealevel == "mountain" || premapmap[randomx+randomy*MAP_WIDTH].terrain == "desert")
+		{
+			randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+			randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		}
+		
+		temptreemap[randomx+(randomy*MAP_WIDTH)] = "jungle";
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < MAP_WIDTH && currenthex.y < MAP_HEIGHT && currenthex.x > -1 && currenthex.y > -1)
+				{
+					let position = currenthex.x+(currenthex.y*MAP_WIDTH);
+					if ((premapmap[position].sealevel == "land" || premapmap[position].sealevel == "hill") && premapmap[position].terrain != "desert")
+					{
+						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+						let probability = JUNGLE_LEVEL * Math.sqrt(randomsize);
+						
+						if (Math.random()*distance < probability)
+						{
+							temptreemap[position] = "jungle";
+						}
+					}
+				}
+				
+				
+				if (currenthex.x%2 == 1)
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+						currenthex.y++;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+						currenthex.y++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				} 
+				else
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+						currenthex.y--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+						currenthex.y--;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				}
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		
+		temptreemap = TreesContiguousToPoint(temptreemap, "jungle", randomx, randomy, MAP_WIDTH, MAP_HEIGHT, randomsize);
+		
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				if (temptreemap[x+(y*MAP_WIDTH)] == "jungle")
+					premapmap[x+(y*MAP_WIDTH)].trees = "jungle";
+			}
+		}
+		
+	}
+	
+	//do forests
+	let forest_count = Math.floor(LANDMASSES * Math.sqrt(LANDMASSES)/3);
+	for (let i = 0; i < forest_count; i++)
+	{
+		let temptreemap = [];
+		//initialize the tempmap
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				temptreemap.push("none");
+			}
+		}
+		
+		let randomsize = Math.floor((Math.random()*(MAP_HEIGHT*MAP_WIDTH/6)+MAP_HEIGHT+MAP_WIDTH)*3/4);
+		let randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		while (premapmap[randomx+randomy*MAP_WIDTH].sealevel == "water" || premapmap[randomx+randomy*MAP_WIDTH].sealevel == "mountain" || premapmap[randomx+randomy*MAP_WIDTH].terrain == "desert")
+		{
+			randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+			randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		}
+		
+		temptreemap[randomx+(randomy*MAP_WIDTH)] = "forest";
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < MAP_WIDTH && currenthex.y < MAP_HEIGHT && currenthex.x > -1 && currenthex.y > -1)
+				{
+					let position = currenthex.x+(currenthex.y*MAP_WIDTH);
+					if ((premapmap[position].sealevel == "land" || premapmap[position].sealevel == "hill") && premapmap[position].terrain != "desert")
+					{
+						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+						let probability = FOREST_LEVEL * Math.sqrt(randomsize);
+						
+						if (Math.random()*distance < probability)
+						{
+							temptreemap[position] = "forest";
+						}
+					}
+				}
+				
+				
+				if (currenthex.x%2 == 1)
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+						currenthex.y++;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+						currenthex.y++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				} 
+				else
+				{
+					if (direction == 5)
+					{
+						currenthex.x--;
+						currenthex.y--;
+					}
+					else if (direction == 4)
+					{
+						currenthex.x--;
+					}
+					else if (direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (direction == 2)
+					{
+						currenthex.x++;
+					}
+					else if (direction == 1)
+					{
+						currenthex.x++;
+						currenthex.y--;
+					}
+					else if (direction == 0)
+					{
+						currenthex.y--;
+					}
+				}
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		
+		temptreemap = TreesContiguousToPoint(temptreemap, "forest", randomx, randomy, MAP_WIDTH, MAP_HEIGHT, randomsize);
+		
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				if (temptreemap[x+(y*MAP_WIDTH)] == "forest")
+					premapmap[x+(y*MAP_WIDTH)].trees = "forest";
+			}
+		}
+		
+	}
+	
 	
 	let mapmap = [];
 	for (let y = 0; y < MAP_HEIGHT; y++)
@@ -4812,19 +5633,6 @@ function generateMap(channel, arguments)
 					trees = false;
 					mapmap.push({ src: './terrain_tiles_desert_hills.png', x: xpos, y: ypos});
 				}
-				
-				if (trees)
-				{
-					let baserand = Math.random();
-					if (baserand > JUNGLE_LEVEL)
-					{
-						mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
-					}
-					else if (baserand > FOREST_LEVEL)
-					{
-						mapmap.push({ src: './terrain_tiles_forest.png', x: xpos, y: ypos});
-					}
-				}
 			}
 			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "land")
 			{
@@ -4838,7 +5646,7 @@ function generateMap(channel, arguments)
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass")
 				{
-					if (Math.random() < 0.125)
+					if (Math.random() < 0.02)
 					{
 						mapmap.push({ src: './terrain_tiles_marsh.png', x: xpos, y: ypos});
 						trees = false;
@@ -4855,7 +5663,7 @@ function generateMap(channel, arguments)
 				else
 				{
 					trees = false;
-					if (Math.random() < 0.033)
+					if (Math.random() < 0.011)
 					{
 						mapmap.push({ src: './terrain_tiles_oasis.png', x: xpos, y: ypos});
 					}
@@ -4864,22 +5672,22 @@ function generateMap(channel, arguments)
 						mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
 					}
 				}
-				if (trees)
-				{
-					let baserand = Math.random();
-					if (baserand > JUNGLE_LEVEL)
-					{
-						mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
-					}
-					else if (baserand > FOREST_LEVEL)
-					{
-						mapmap.push({ src: './terrain_tiles_forest.png', x: xpos, y: ypos});
-					}
-				}
 					
 			}
 			else
 				mapmap.push({ src: './terrain_tiles_water.png', x: xpos, y: ypos});
+			
+			if (trees)
+			{
+				if (premapmap[x+(y*MAP_WIDTH)].trees == "forest")
+				{
+					mapmap.push({ src: './terrain_tiles_forest.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].trees == "jungle")
+				{
+					mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
+				}
+			}
 			
 			if (grid_opacity > 0)
 				mapmap.push({ src: './terrain_tiles_whitegrid.png', x: xpos, y: ypos, opacity: grid_opacity });
