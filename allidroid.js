@@ -158,8 +158,16 @@ client.on('messageCreate', (receivedMessage) => {
 		})
 		.catch(console.error);
 	}
-	else if (receivedMessage.content.startsWith("!")) {
-		processCommand(receivedMessage)
+	else if (receivedMessage.content.startsWith("!")) 
+	{
+		try
+		{
+			processCommand(receivedMessage);
+		}
+		catch (err)
+		{
+			console.log(Date.now() + ", error: " + err.message);
+		}
 	}
 })
 
@@ -5058,8 +5066,8 @@ function TreesContiguousToPoint(treesmap, value, pointx, pointy, map_width, map_
 }
 
 
-let MAX_MAP_HEIGHT = 140;
-let MAX_MAP_WIDTH = 210;
+let MAX_MAP_HEIGHT = 120;
+let MAX_MAP_WIDTH = 180;
 
 let SMOOTHING_ITERATIONS = 2;
 let LAND_EROSION = 0.08;
@@ -5076,8 +5084,8 @@ function generateMap(channel, arguments)
 	let TUNDRA_LEVEL = 0.794;
 	let SNOW_LEVEL = 0.825;
 
-	let FOREST_LEVEL = 0.007;
-	let JUNGLE_LEVEL = 0.0042;
+	let FOREST_LEVEL = 0.011;
+	let JUNGLE_LEVEL = 0.0076;
 
 	let MAP_HEIGHT = 24;
 	let MAP_WIDTH = 36;
