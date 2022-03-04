@@ -5070,7 +5070,8 @@ let MAX_MAP_HEIGHT = 120;
 let MAX_MAP_WIDTH = 180;
 
 let SMOOTHING_ITERATIONS = 2;
-let LAND_EROSION = 0.08;
+let LAND_EROSION = 0.0133;
+let MOUNTAIN_EROSION = 0.0033;
 
 function generateMap(channel, arguments)
 {
@@ -5084,15 +5085,16 @@ function generateMap(channel, arguments)
 	let TUNDRA_LEVEL = 0.794;
 	let SNOW_LEVEL = 0.825;
 
-	let FOREST_LEVEL = 0.011;
-	let JUNGLE_LEVEL = 0.0076;
+	let FOREST_LEVEL = 0.006;
+	let JUNGLE_LEVEL = 0.0039;
 
 	let MAP_HEIGHT = 24;
 	let MAP_WIDTH = 36;
-	let LANDMASSES = Math.floor(MAP_HEIGHT + MAP_WIDTH / 5.5);
 	let ColdBalance = 50;
 	let HotBalance = 50;
 	let grid_opacity = 0;
+	
+	let LANDMASSES = 1;
 	
 	if (arguments != null)
 	{
@@ -5101,7 +5103,13 @@ function generateMap(channel, arguments)
 		if (!isNaN(arguments[0]))
 			MAP_WIDTH = Math.floor(arguments[0]);
 		if (!isNaN(arguments[3]))
+		{
 			LANDMASSES = Math.floor(arguments[3]);
+		}
+		else
+		{
+			LANDMASSES = Math.ceil(Math.log2(Map_Size)*Math.log2(Map_Size)/2);
+		}
 		if (!isNaN(arguments[4]))
 			ColdBalance = parseFloat(arguments[4]);
 		if (!isNaN(arguments[5]))
@@ -5109,6 +5117,9 @@ function generateMap(channel, arguments)
 		if (!isNaN(arguments[2]))
 			grid_opacity = arguments[2];
 	}
+	
+	let Map_Size = MAP_HEIGHT+MAP_WIDTH;
+	
 	
 	PLAINS_LEVEL *= ((HotBalance/50));
 	PLAINS_LEVEL *= ((100-ColdBalance)/50);
@@ -5129,6 +5140,7 @@ function generateMap(channel, arguments)
 	
 	grid_opacity = Math.min(grid_opacity,1);
 	grid_opacity = Math.max(grid_opacity,0);
+	
 	
 	MAP_HEIGHT = Math.min(MAP_HEIGHT,MAX_MAP_HEIGHT);
 	MAP_WIDTH = Math.min(MAP_WIDTH,MAX_MAP_WIDTH);
@@ -5200,9 +5212,9 @@ function generateMap(channel, arguments)
 			}
 		}
 		
-		let randomsize = Math.floor(Math.random()*(MAP_HEIGHT*MAP_WIDTH/6)+MAP_HEIGHT+MAP_WIDTH);
-		let randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
-		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		let randomsize = Math.floor(Math.random()*(MAP_HEIGHT*MAP_WIDTH/6)+Map_Size);
+		let randomx = Math.floor(Math.random()*(MAP_WIDTH*3/4)+(MAP_WIDTH/8));
+		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*3/4)+(MAP_HEIGHT/8));
 		
 		temppremap[randomx+(randomy*MAP_WIDTH)].sealevel = "land";
 		tempcontigmap[randomx+(randomy*MAP_WIDTH)] = true;
@@ -5243,7 +5255,7 @@ function generateMap(channel, arguments)
 				{
 					let position = currenthex.x+(currenthex.y*MAP_WIDTH);
 					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-					let probability = LAND_EROSION * Math.sqrt(randomsize);
+					let probability = LAND_EROSION * Math.log2(Map_Size) * Math.sqrt(randomsize);
 					
 					if (Math.random()*distance < probability)
 					{
@@ -5353,7 +5365,7 @@ function generateMap(channel, arguments)
 	
 	//do mountains
 	
-	let mountain_count = LANDMASSES;
+	let mountain_count = Math.floor(LANDMASSES*9/13);
 	
 	for (let i = 0; i < mountain_count; i++)
 	{
@@ -5430,7 +5442,7 @@ function generateMap(channel, arguments)
 				{
 					let position = currenthex.x+(currenthex.y*MAP_WIDTH);
 					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-					let probability = LAND_EROSION * Math.sqrt(randomsize);
+					let probability = MOUNTAIN_EROSION * Math.log2(Map_Size) * Math.sqrt(randomsize);
 					let ddh = 0.028;
 					let dh = Math.random()*(0.0901-ddh);
 					let nextheight = 0;
@@ -5705,7 +5717,7 @@ function generateMap(channel, arguments)
 	}
 	
 	//do jungles
-	let jungle_count = Math.floor(LANDMASSES * Math.sqrt(LANDMASSES)/9);
+	let jungle_count = Math.floor(Math.random()* LANDMASSES * (Math.sqrt(Map_Size)/9 +1)) +1;
 	for (let i = 0; i < jungle_count; i++)
 	{
 		let temptreemap = [];
@@ -5767,7 +5779,7 @@ function generateMap(channel, arguments)
 					if ((premapmap[position].sealevel == "land" || premapmap[position].sealevel == "hill") && premapmap[position].terrain != "desert")
 					{
 						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-						let probability = JUNGLE_LEVEL * Math.sqrt(randomsize);
+						let probability = JUNGLE_LEVEL * Math.log2(Map_Size) * Math.sqrt(randomsize);
 						
 						if (Math.random()*distance < probability)
 						{
@@ -5864,7 +5876,7 @@ function generateMap(channel, arguments)
 	}
 	
 	//do forests
-	let forest_count = Math.floor(LANDMASSES * Math.sqrt(LANDMASSES)/7);
+	let forest_count = Math.floor(Math.random()* LANDMASSES * (Math.sqrt(Map_Size)/7 +1)) +1;
 	for (let i = 0; i < forest_count; i++)
 	{
 		let temptreemap = [];
@@ -5926,7 +5938,7 @@ function generateMap(channel, arguments)
 					if ((premapmap[position].sealevel == "land" || premapmap[position].sealevel == "hill") && premapmap[position].terrain != "desert")
 					{
 						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-						let probability = FOREST_LEVEL * Math.sqrt(randomsize);
+						let probability = FOREST_LEVEL * Math.log2(Map_Size) * Math.sqrt(randomsize);
 						
 						if (Math.random()*distance < probability)
 						{
@@ -6044,6 +6056,10 @@ function generateMap(channel, arguments)
 		}
 		
 		let nearestWaterBody = NearestWaterbodyToPoint(premapmap, randomx, randomy, MAP_WIDTH, MAP_HEIGHT);
+		
+		if (nearestWaterBody == null)
+			break;
+		
 		let vectorToWaterBody = { x: nearestWaterBody.x - randomx, y: nearestWaterBody.y - randomy };
 		
 		
@@ -6058,7 +6074,7 @@ function generateMap(channel, arguments)
 		
 		let currenthex = { x: randomx, y:randomy };
 		
-		while (premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
+		while (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT && premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
 		{
 			if (currenthex.x%2 == 1)
 			{
@@ -6131,8 +6147,11 @@ function generateMap(channel, arguments)
 			else if (river_direction > 5)
 				river_direction -= 6;
 			
-			if (premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
-				rivers.push({ direction: river_direction, x: currenthex.x, y: currenthex.y });
+			if (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT)
+			{
+				if (premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
+					rivers.push({ direction: river_direction, x: currenthex.x, y: currenthex.y });
+			}
 		}
 	}
 	
