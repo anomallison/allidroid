@@ -5095,6 +5095,7 @@ function generateMap(channel, arguments)
 	let grid_opacity = 0;
 	
 	let LANDMASSES = 1;
+	let Map_Size = MAP_HEIGHT+MAP_WIDTH;
 	
 	if (arguments != null)
 	{
@@ -5102,6 +5103,7 @@ function generateMap(channel, arguments)
 			MAP_HEIGHT = Math.floor(arguments[1]);
 		if (!isNaN(arguments[0]))
 			MAP_WIDTH = Math.floor(arguments[0]);
+		Map_Size = MAP_HEIGHT+MAP_WIDTH;
 		if (!isNaN(arguments[3]))
 		{
 			LANDMASSES = Math.floor(arguments[3]);
@@ -5118,7 +5120,6 @@ function generateMap(channel, arguments)
 			grid_opacity = arguments[2];
 	}
 	
-	let Map_Size = MAP_HEIGHT+MAP_WIDTH;
 	
 	
 	PLAINS_LEVEL *= ((HotBalance/50));
