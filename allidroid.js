@@ -4591,6 +4591,124 @@ function AdjacentMapHexContiguous(contiguitymap, pointx, pointy, map_width, map_
 	return false;
 }
 
+function OnlyWaterAdjacent(sealevelmap, pointx, pointy, map_width, map_height)
+{
+	if (pointx%2 == 1)
+	{
+		if (pointy-1 > -1 && sealevelmap[pointx+(pointy-1)*map_width].sealevel != "water" && sealevelmap[pointx+(pointy-1)*map_width].sealevel != "deepwater" && sealevelmap[pointx+(pointy-1)*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointx+1 < map_width && sealevelmap[pointx+1+pointy*map_width].sealevel != "water" && sealevelmap[pointx+1+pointy*map_width].sealevel != "deepwater" && sealevelmap[pointx+1+pointy*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointx+1 < map_width && pointy+1 < map_height && sealevelmap[pointx+1+(pointy+1)*map_width].sealevel != "water" && sealevelmap[pointx+1+(pointy+1)*map_width].sealevel != "deepwater" && sealevelmap[pointx+1+(pointy+1)*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointy+1 < map_height && sealevelmap[pointx+(pointy+1)*map_width].sealevel != "water" && sealevelmap[pointx+(pointy+1)*map_width].sealevel != "deepwater" && sealevelmap[pointx+(pointy+1)*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointx-1 > -1 && pointy+1 < map_height && sealevelmap[pointx-1+(pointy+1)*map_width].sealevel != "water" && sealevelmap[pointx-1+(pointy+1)*map_width].sealevel != "deepwater" && sealevelmap[pointx-1+(pointy+1)*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointx-1 > -1 && sealevelmap[pointx-1+pointy*map_width].sealevel != "water" && sealevelmap[pointx-1+pointy*map_width].sealevel != "deepwater" && sealevelmap[pointx-1+pointy*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+	} 
+	else
+	{
+		if (pointy-1 > -1 && sealevelmap[pointx+(pointy-1)*map_width].sealevel != "water" && sealevelmap[pointx+(pointy-1)*map_width].sealevel != "deepwater" && sealevelmap[pointx+(pointy-1)*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointx+1 < map_width && pointy-1 > -1 && sealevelmap[pointx+1+(pointy-1)*map_width].sealevel != "water" && sealevelmap[pointx+1+(pointy-1)*map_width].sealevel != "deepwater" && sealevelmap[pointx+1+(pointy-1)*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointx+1 < map_width && sealevelmap[pointx+1+pointy*map_width].sealevel != "water" && sealevelmap[pointx+1+pointy*map_width].sealevel != "deepwater" && sealevelmap[pointx+1+pointy*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointy+1 < map_height && sealevelmap[pointx+(pointy+1)*map_width].sealevel != "water" && sealevelmap[pointx+(pointy+1)*map_width].sealevel != "deepwater" && sealevelmap[pointx+(pointy+1)*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointx-1 > -1 && sealevelmap[pointx-1+pointy*map_width].sealevel != "water" && sealevelmap[pointx-1+pointy*map_width].sealevel != "deepwater" && sealevelmap[pointx-1+pointy*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+		if (pointx-1 > -1 && pointy-1 > -1 && sealevelmap[pointx-1+(pointy-1)*map_width].sealevel != "water" && sealevelmap[pointx-1+(pointy-1)*map_width].sealevel != "deepwater" && sealevelmap[pointx-1+(pointy-1)*map_width].sealevel != "lake")
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+function IsConnectedToEdge(contiguitymap, pointx, pointy, map_width, map_height, contiguityvalue)
+{
+	if (pointx%2 == 1)
+	{
+		if (pointy-1 <= -1 || contiguitymap[pointx+(pointy-1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx+1 >= map_width || contiguitymap[pointx+1+pointy*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if ((pointx+1 >= map_width && pointy+1 >= map_height) || contiguitymap[pointx+1+(pointy+1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointy+1 >= map_height || contiguitymap[pointx+(pointy+1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if ((pointx-1 >= -1 && pointy+1 >= map_height) || contiguitymap[pointx-1+(pointy+1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx-1 <= -1 || contiguitymap[pointx-1+pointy*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+	} 
+	else
+	{
+		if (pointy-1 <= -1 || contiguitymap[pointx+(pointy-1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if ((pointx+1 >= map_width && pointy-1 <= -1) || contiguitymap[pointx+1+(pointy-1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx+1 >= map_width || contiguitymap[pointx+1+pointy*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointy+1 >= map_height || contiguitymap[pointx+(pointy+1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if (pointx-1 <= -1 || contiguitymap[pointx-1+pointy*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+		if ((pointx-1 <= -1 && pointy-1 <= -1) || contiguitymap[pointx-1+(pointy-1)*map_width] == contiguityvalue)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 function SeaLevelContiguousToPoint(sealevelmap, pointx, pointy, map_width, map_height, size)
 {
 	let contiguitymap = []
@@ -4734,6 +4852,73 @@ function SeaLevelContiguousToPoint(sealevelmap, pointx, pointy, map_width, map_h
 		{
 			if (!contiguitymap[x+(y*map_width)])
 				sealevelmap[x+(y*map_width)].sealevel = "water";
+		}
+	}
+	
+	return sealevelmap;
+}
+
+function LakeWaterDetection(sealevelmap, map_width, map_height)
+{
+	let contiguitymap = []
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x  = 0; x < map_width; x++)
+		{
+			contiguitymap.push( false );
+		}
+	}
+	
+	let newcontigoushexes = 1;
+
+	
+	while (newcontigoushexes > 0)
+	{
+		newcontigoushexes = 0;
+		
+		for (let y = 0; y < map_height; y++)
+		{
+			for (let x  = 0; x < map_width; x++)
+			{
+				if (x < map_width && y < map_height && x > -1 && y > -1)
+				{
+					position = x+y*map_width;
+					if (!contiguitymap[position] && sealevelmap[position].sealevel == "water")
+					{
+						contiguitymap[position] = IsConnectedToEdge(contiguitymap, x, y, map_width, map_height, true);
+						if (contiguitymap[position])
+							newcontigoushexes++;
+					}
+				}
+			}
+		}
+		
+		for (let y = map_height-1; y > -1; y--)
+		{
+			for (let x  = map_width-1; x > -1; x--)
+			{
+				if (x < map_width && y < map_height && x > -1 && y > -1)
+				{
+					position = x+y*map_width;
+					if (!contiguitymap[position] && sealevelmap[position].sealevel == "water")
+					{
+						contiguitymap[position] = IsConnectedToEdge(contiguitymap, x, y, map_width, map_height);
+						if (contiguitymap[position])
+							newcontigoushexes++;
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x  = 0; x < map_width; x++)
+		{
+			if (!contiguitymap[x+(y*map_width)] && sealevelmap[x+(y*map_width)].sealevel == "water" )
+				sealevelmap[x+(y*map_width)].sealevel = "lake";
 		}
 	}
 	
@@ -5090,8 +5275,8 @@ function generateMap(channel, arguments)
 
 	let MAP_HEIGHT = 24;
 	let MAP_WIDTH = 36;
-	let ColdBalance = 50;
-	let HotBalance = 50;
+	let ColdBalance = 25;
+	let HotBalance = 25;
 	let grid_opacity = 0;
 	
 	let LANDMASSES = 1;
@@ -6036,7 +6221,7 @@ function generateMap(channel, arguments)
 	}
 	
 	
-	//do Rivers
+	//do land Rivers
 	let rivers = [];
 	
 	let river_count = Math.ceil(Math.sqrt(mountain_count)*Math.sqrt(LANDMASSES)*3/2);
@@ -6048,12 +6233,12 @@ function generateMap(channel, arguments)
 	for (let i = 0; i < river_count; i++)
 	{
 		//river starting point
-		let randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
-		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		let randomx = Math.floor(Math.random()*MAP_WIDTH);
+		let randomy = Math.floor(Math.random()*MAP_HEIGHT);
 		while (premapmap[randomx+randomy*MAP_WIDTH].sealevel != "mountain" && premapmap[randomx+randomy*MAP_WIDTH].sealevel != "hill")
 		{
-			randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
-			randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+			randomx = Math.floor(Math.random()*MAP_WIDTH);
+			randomy = Math.floor(Math.random()*MAP_HEIGHT);
 		}
 		
 		let nearestWaterBody = NearestWaterbodyToPoint(premapmap, randomx, randomy, MAP_WIDTH, MAP_HEIGHT);
@@ -6158,6 +6343,154 @@ function generateMap(channel, arguments)
 	
 	//console.log(rivers);
 	
+	
+	// do lakes
+	
+	premapmap = LakeWaterDetection(premapmap, MAP_WIDTH, MAP_HEIGHT);
+	let lake_tile_count = 0;
+	//do deep water
+	
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			if ((premapmap[x+(y*MAP_WIDTH)].sealevel == "water" || premapmap[x+(y*MAP_WIDTH)].sealevel == "lake") && OnlyWaterAdjacent(premapmap,x,y,MAP_WIDTH, MAP_HEIGHT))
+			{
+				premapmap[x+(y*MAP_WIDTH)].sealevel = "deepwater";
+			}
+			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "lake")
+			{
+				lake_tile_count++;
+			}
+		}
+	}
+	
+	// do lake rivers
+	
+	river_count = Math.ceil(river_count/3);
+	
+	//let river_count = 1
+
+	//console.log("lake river counter: " + river_count);
+	
+	if (lake_tile_count > 0)
+	{
+		for (let i = 0; i < river_count; i++)
+		{
+			//river starting point
+			let randomx = Math.floor(Math.random()*MAP_WIDTH);
+			let randomy = Math.floor(Math.random()*MAP_HEIGHT);
+			//let placeattempts = 0;
+			while (premapmap[randomx+randomy*MAP_WIDTH].sealevel != "lake" || OnlyWaterAdjacent(premapmap,randomx,randomy,MAP_WIDTH,MAP_HEIGHT))
+			{
+				randomx = Math.floor(Math.random()*MAP_WIDTH);
+				randomy = Math.floor(Math.random()*MAP_HEIGHT);
+				//placeattempts++
+				//console.log("river placement attempts: " + placeattempts + ", " + premapmap[randomx+randomy*MAP_WIDTH].sealevel + ", " + OnlyWaterAdjacent(premapmap,randomx,randomy,MAP_WIDTH,MAP_HEIGHT));
+			}
+			
+			let nearestWaterBody = NearestWaterbodyToPoint(premapmap, randomx, randomy, MAP_WIDTH, MAP_HEIGHT);
+			
+			if (nearestWaterBody == null)
+				break;
+			
+			let vectorToWaterBody = { x: nearestWaterBody.x - randomx, y: nearestWaterBody.y - randomy };
+			
+			
+			//console.log(nearestWaterBody);
+			
+			let river_direction = VectorToDirection(MapCoordinationsToVector(nearestWaterBody, { x: randomx, y: randomy }));
+			
+			if (river_direction == -1)
+				console.log("river error");
+			else
+				rivers.push({ direction: river_direction, x: randomx, y: randomy });
+			
+			let currenthex = { x: randomx, y:randomy };
+			
+			while (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT && premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
+			{
+				if (currenthex.x%2 == 1)
+				{
+					if (river_direction == 5)
+					{
+						currenthex.x--;
+					}
+					else if (river_direction == 4)
+					{
+						currenthex.x--;
+						currenthex.y++;
+					}
+					else if (river_direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (river_direction == 2)
+					{
+						currenthex.x++;
+						currenthex.y++;
+					}
+					else if (river_direction == 1)
+					{
+						currenthex.x++;
+					}
+					else if (river_direction == 0)
+					{
+						currenthex.y--;
+					}
+				} 
+				else
+				{
+					if (river_direction == 5)
+					{
+						currenthex.x--;
+						currenthex.y--;
+					}
+					else if (river_direction == 4)
+					{
+						currenthex.x--;
+					}
+					else if (river_direction == 3)
+					{
+						currenthex.y++;
+					}
+					else if (river_direction == 2)
+					{
+						currenthex.x++;
+					}
+					else if (river_direction == 1)
+					{
+						currenthex.x++;
+						currenthex.y--;
+					}
+					else if (river_direction == 0)
+					{
+						currenthex.y--;
+					}
+				}
+				
+				river_direction = VectorToDirection(MapCoordinationsToVector(nearestWaterBody, currenthex));
+				
+				if (Math.random() < 0.33)
+					river_direction += Math.floor(Math.random()*3)-1;
+				
+				//river_direction = river_direction%6;
+				
+				if (river_direction < 0)
+					river_direction += 6;
+				else if (river_direction > 5)
+					river_direction -= 6;
+				
+				if (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT)
+				{
+					if (premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
+						rivers.push({ direction: river_direction, x: currenthex.x, y: currenthex.y });
+				}
+			}
+		}
+	}
+	
+	
 	let mapmap = [];
 	for (let y = 0; y < MAP_HEIGHT; y++)
 	{
@@ -6254,8 +6587,12 @@ function generateMap(channel, arguments)
 				}
 					
 			}
-			else
+			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "lake")
+				mapmap.push({ src: './terrain_tiles_lake.png', x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "water")
 				mapmap.push({ src: './terrain_tiles_water.png', x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "deepwater")
+				mapmap.push({ src: './terrain_tiles_deepwater.png', x: xpos, y: ypos});
 			
 			if (trees)
 			{
@@ -6270,8 +6607,6 @@ function generateMap(channel, arguments)
 			}
 			
 			/* MOVE GRID LAYERING TO AFTER
-			if (grid_opacity > 0)
-				mapmap.push({ src: './terrain_tiles_whitegrid.png', x: xpos, y: ypos, opacity: grid_opacity });
 			*/
 		}
 	}
@@ -6315,6 +6650,26 @@ function generateMap(channel, arguments)
 		mapmap.push({ src: tile, x: xpos, y: ypos });
 	}
 	
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			let xpos = (12*x);
+			let ypos = (16*y+((x%2)*8));
+			
+			if (premapmap[x+(y*MAP_WIDTH)].sealevel == "lake")
+				mapmap.push({ src: './terrain_tiles_lake.png', x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "water")
+				mapmap.push({ src: './terrain_tiles_water.png', x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "deepwater")
+				mapmap.push({ src: './terrain_tiles_deepwater.png', x: xpos, y: ypos});
+			
+			if (grid_opacity > 0)
+			{
+				mapmap.push({ src: './terrain_tiles_whitegrid.png', x: xpos, y: ypos, opacity: grid_opacity });
+			}
+		}
+	}
 	
 	let file = 'generatedmap.png';
 	let path = './' + file;
