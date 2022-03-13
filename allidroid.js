@@ -12377,7 +12377,7 @@ function MarkovPhonemeNameGen(arguments)
 	let maxlength = 6
 	let numberOfNames = 1;
 	if (!isNaN(arguments[1]) && arguments[1] > 0 && arguments[1] < 25)
-		minlength = arguments[0];
+		minlength = arguments[1];
 	else if (arguments[1] < 1 || arguments[1] > 24)
 		return "Must specify between 3 and 24 min length of name if specifying";
 	if (!isNaN(arguments[2]) && arguments[2] > 0 && arguments[2] < 25)
