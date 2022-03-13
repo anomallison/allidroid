@@ -1,7 +1,7 @@
-``!generatename`` generates names from a variety of phonemes and probabilities
+``!generatename`` generates names from a markov chain based on phonemes of names
 
-``!generatename`` takes two arguments, the first being maximum syllables, the second being minimum syllables, it only accepts arguments between 0 and 100
+``!generatename`` takes upto 3 arguments: minimum phonemes, maximum phonemes, and number of names to generate
 
 examples:
-``!generatename 6 2``
-``!generatename 12 6``
+``!generatename 4 6``
+``!generatename 5 9 10``

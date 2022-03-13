@@ -326,7 +326,7 @@ function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    } else if (normalizedCommand == "generatename") 
+    } else if (normalizedCommand == "legacygeneratename") 
 	{
 		if (arguments.length > 2)
 		{
@@ -344,7 +344,7 @@ function processCommand(receivedMessage)
 		
 		if (output == null)
 		{
-			console.log("failed command: generatename");
+			console.log("failed command: legacygeneratename");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		}
@@ -628,28 +628,13 @@ function processCommand(receivedMessage)
 	{
 		encodeToAlienLanguage(receivedMessage.channel,arguments);
     }
-	else if (normalizedCommand == "namelist") 
-	{
-		output = MarkovNameGen(arguments);
-		
-		if (output == null)
-		{
-			console.log("failed command: namelist");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
-    }
-	else if (normalizedCommand == "markovnamelist") 
+	else if (normalizedCommand == "generatename") 
 	{
 		output = MarkovPhonemeNameGen(arguments);
 		
 		if (output == null)
 		{
-			console.log("failed command: namelist");
+			console.log("failed command: generatename");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -657,7 +642,15 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
-    }
+    }/*
+	else if (normalizedCommand == "drawsquares")
+	{
+		DrawSquares(receivedMessage.channel,arguments);
+	}
+	else if (normalizedCommand == "townmap")
+	{
+		DrawTownMap(receivedMessage.channel,arguments);
+	}*/
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -12363,121 +12356,6 @@ function initializeAndStartAdventureSim()
 	loadSimWorldMap();
 }
 
-var markovalphabet = [];
-const markovmaxnamesize = 24;
-
-function MarkovNameGen(arguments)
-{
-	let length = 5;
-	let numberOfNames = 1;
-	if (!isNaN(arguments[0]))
-		length = arguments[0];
-	else if (arguments[0] < 3 || arguments[0] > 24)
-		return "Must specify between 3 and 24 max length of name if specifying";
-	if (!isNaN(arguments[1]))
-		numberOfNames = arguments[1];
-	else if (arguments[1] < 1 || arguments[1] > 20)
-		return "Must specify between 1 and 20 number of names to generate if specifying";
-	
-	let names = [];
-	
-	do
-	{
-		let nextname = MarkovGenerateName();
-		if (nextname.length == length)
-			names.push(grammarCapitalFirstLetter(nextname));
-	} while (names.length < numberOfNames);
-	
-	let output = names[0];
-	for (i = 1; i < names.length; i++)
-	{
-	output += "\n" + names[i];	
-	}
-	
-	return output;
-}
-
-function MarkovGenerateName()
-{
-	let name = "";
-	let diceroll = Math.floor((Math.random() * markovalphabet["START"].length));
-	let nextChar = markovalphabet["START"].charAt(diceroll);
-	
-	for (let i = 0; i < markovmaxnamesize; i++)
-	{
-		if (nextChar == "E")
-		{
-			return name;
-		}
-		else
-		{
-			name += nextChar;
-			diceroll = Math.floor((Math.random() * markovalphabet[nextChar].length));
-			nextChar = markovalphabet[nextChar].charAt(diceroll);
-		}
-	}
-	return name;
-	
-}
-
-function MarkovNameTrain()
-{
-	let trainingnames = JSON.parse(fs.readFileSync('markovnames.json'));
-	let currentchar = "START";
-	markovalphabet["START"] = "";
-	markovalphabet["a"] = "";
-	markovalphabet["b"] = "";
-	markovalphabet["c"] = "";
-	markovalphabet["d"] = "";
-	markovalphabet["e"] = "";
-	markovalphabet["f"] = "";
-	markovalphabet["g"] = "";
-	markovalphabet["h"] = "";
-	markovalphabet["i"] = "";
-	markovalphabet["j"] = "";
-	markovalphabet["k"] = "";
-	markovalphabet["l"] = "";
-	markovalphabet["m"] = "";
-	markovalphabet["n"] = "";
-	markovalphabet["o"] = "";
-	markovalphabet["p"] = "";
-	markovalphabet["q"] = "";
-	markovalphabet["r"] = "";
-	markovalphabet["s"] = "";
-	markovalphabet["t"] = "";
-	markovalphabet["u"] = "";
-	markovalphabet["v"] = "";
-	markovalphabet["w"] = "";
-	markovalphabet["x"] = "";
-	markovalphabet["y"] = "";
-	markovalphabet["z"] = "";
-	markovalphabet["-"] = "";
-	markovalphabet[" "] = "";
-	markovalphabet["\'"] = "";
-	
-	for (let i = 0; i < trainingnames.length; i++)
-	{
-		markovalphabet[currentchar] += trainingnames[i].charAt(0);
-	}
-	
-	for (let j = 0; j < trainingnames.length; j++)
-	{
-		for (let k = 0; k < trainingnames[j].length; k++)
-		{
-			if (k+1 < trainingnames[j].length)
-			{
-				markovalphabet[trainingnames[j].charAt(k).toLowerCase()] += trainingnames[j].charAt(k+1).toLowerCase();
-			}
-			else
-			{
-				markovalphabet[trainingnames[j].charAt(k).toLowerCase()] += "E";
-			}
-		}
-	}
-	console.log('markov name gen training list read');
-}
-
-
 function GetPhonemeByCharacter(character)
 {
 	for(let i = 0; i < phonemes_english.length; i++)
@@ -12489,19 +12367,26 @@ function GetPhonemeByCharacter(character)
 	return null;
 }
 
+const markovmaxnamesize = 24;
+
 var markovphonemes = [];
 
 function MarkovPhonemeNameGen(arguments)
 {
-	let length = 5;
+	let minlength = 3;
+	let maxlength = 6
 	let numberOfNames = 1;
-	if (!isNaN(arguments[0]))
-		length = arguments[0];
-	else if (arguments[0] < 3 || arguments[0] > 24)
+	if (!isNaN(arguments[1]) && arguments[1] > 0 && arguments[1] < 25)
+		minlength = arguments[0];
+	else if (arguments[1] < 1 || arguments[1] > 24)
+		return "Must specify between 3 and 24 min length of name if specifying";
+	if (!isNaN(arguments[2]) && arguments[2] > 0 && arguments[2] < 25)
+		maxlength = arguments[2];
+	else if (arguments[2] < 1 || arguments[2] > 24 && minlength > maxlength)
 		return "Must specify between 3 and 24 max length of name if specifying";
-	if (!isNaN(arguments[1]))
-		numberOfNames = arguments[1];
-	else if (arguments[1] < 1 || arguments[1] > 20)
+	if (!isNaN(arguments[0]))
+		numberOfNames = arguments[0];
+	else if (arguments[0] < 1 || arguments[0] > 20)
 		return "Must specify between 1 and 20 number of names to generate if specifying";
 	
 	let names = [];
@@ -12509,7 +12394,7 @@ function MarkovPhonemeNameGen(arguments)
 	do
 	{
 		let nextname = MarkovPhonemeGenerateName();
-		if (nextname.length == length)
+		if (nextname.length <= maxlength && nextname.length >= minlength)
 		{
 			let ipaname = "";
 			for (let i = 0; i < nextname.length; i++)
@@ -12634,6 +12519,976 @@ function MarkovPhonemeNameTrain()
 	
 }
 
+function DrawSquares(channel ,arguments)
+{
+	var tempcanvas = new Canvas();
+	tempcanvas.width = 100;
+	tempcanvas.height = 100;
+	if (tempcanvas.getContext)
+	{
+		var ctx = tempcanvas.getContext('2d');
+
+		ctx.fillStyle = 'rgb(200, 0, 0)';
+		ctx.fillRect(10, 10, 50, 50);
+
+		ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
+		ctx.fillRect(30, 30, 50, 50);
+		
+		
+		let file = 'drawnsquares.png';
+		let path = './' + file;
+		
+		let b64 = tempcanvas.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			console.log('The file has been saved!');
+			channel.send({ files: [{ attachment: path, name: file }] });
+		})
+	}
+	else
+	{
+		console.log("getContext failed");
+	}
+	
+}
+
+function DrawTownMap(channel, arguments)
+{
+	let wallvisibility = true;
+	if (arguments.includes("-nowalls"))
+		wallvisibility = false;
+	var tempcanvas = new Canvas();
+	tempcanvas.width = 2000;
+	tempcanvas.height = 2000;
+	
+	var town = GenerateTown(arguments);
+	var wallcapradius = 35;
+	var wallthickness = wallcapradius*4/5;
+	var roadthickness = 24;
+	var sroadthickness = 12;
+	
+	if (tempcanvas.getContext)
+	{
+		var ctx = tempcanvas.getContext('2d');
+		
+		ctx.fillStyle = "#DDCC99";
+		ctx.fillRect(0,0,2000,2000);
+		
+		
+		// draw roads
+		ctx.fillStyle = "#FFFFFF";
+		ctx.strokeStyle = "#FFFFFF"
+		
+		for (let i = 0; i < town.roads.length; i++)
+		{
+			ctx.beginPath();
+			ctx.moveTo(town.roads[i].start.x, town.roads[i].start.y);
+			let dir = { x: town.roads[i].end.x - town.roads[i].start.x, y: town.roads[i].end.y - town.roads[i].start.y };
+			dir = NormalizeVector(NintyDegreeTurn(dir));
+			
+			ctx.lineTo(town.roads[i].start.x + dir.x*roadthickness/2, town.roads[i].start.y + dir.y*roadthickness/2);
+			ctx.lineTo(town.roads[i].end.x + dir.x*roadthickness/2, town.roads[i].end.y + dir.y*roadthickness/2);
+			ctx.lineTo(town.roads[i].end.x + dir.x*roadthickness*-1/2, town.roads[i].end.y + dir.y*roadthickness*-1/2);
+			ctx.lineTo(town.roads[i].start.x + dir.x*roadthickness*-1/2, town.roads[i].start.y + dir.y*roadthickness*-1/2);
+			
+			ctx.closePath();
+			//ctx.stroke();
+			ctx.fill()
+		}
+		
+		for (let i = 0; i < town.smallroads.length; i++)
+		{
+			ctx.beginPath();
+			ctx.moveTo(town.smallroads[i].start.x, town.smallroads[i].start.y);
+			let dir = { x: town.smallroads[i].end.x - town.smallroads[i].start.x, y: town.smallroads[i].end.y - town.smallroads[i].start.y };
+			dir = NormalizeVector(NintyDegreeTurn(dir));
+			
+			ctx.lineTo(town.smallroads[i].start.x + dir.x*sroadthickness/2, town.smallroads[i].start.y + dir.y*sroadthickness/2);
+			ctx.lineTo(town.smallroads[i].end.x + dir.x*sroadthickness/2, town.smallroads[i].end.y + dir.y*sroadthickness/2);
+			ctx.lineTo(town.smallroads[i].end.x + dir.x*sroadthickness*-1/2, town.smallroads[i].end.y + dir.y*sroadthickness*-1/2);
+			ctx.lineTo(town.smallroads[i].start.x + dir.x*sroadthickness*-1/2, town.smallroads[i].start.y + dir.y*sroadthickness*-1/2);
+			
+			ctx.closePath();
+			//ctx.stroke();
+			ctx.fill()
+		}
+		
+		
+		ctx.fillStyle = "#776633";
+		ctx.strokeStyle = "#000000"
+		
+		for (let i = 0; i < town.buildings.length; i++)
+		{
+			/*
+			ctx.beginPath();
+			ctx.moveTo(town.buildings[i].position.x, town.buildings[i].position.y);
+			ctx.arc(town.buildings[i].position.x, town.buildings[i].position.y, 6, 0, 2 * Math.PI);
+			ctx.closePath();
+			//ctx.stroke();
+			ctx.fill();
+			*/
+			
+			//building
+			
+			ctx.beginPath();
+			
+			for (let j = 0; j < town.buildings[i].sides.length; j++)
+			{
+				let temproad = GetBuildingWall(town.buildings[i], j);
+				if (j == 0)
+				{
+					ctx.moveTo(temproad.start.x, temproad.start.y)
+					//ctx.lineTo(temproad.start.x, temproad.start.y);
+				}
+				ctx.lineTo(temproad.end.x, temproad.end.y);
+			}
+			//ctx.closePath();
+			ctx.fill()
+			ctx.stroke();
+			
+		}
+		
+		
+		if (wallvisibility)
+		{
+			// draw walls
+			ctx.fillStyle = "#000000";
+			
+			for (let i = 0; i < town.walls.length; i++)
+			{
+				//wall segment
+				ctx.beginPath();
+				ctx.moveTo(town.walls[i].start.x, town.walls[i].start.y);
+				let dir = { x: town.walls[i].end.x - town.walls[i].start.x, y: town.walls[i].end.y - town.walls[i].start.y };
+				dir = NormalizeVector(NintyDegreeTurn(dir));
+				ctx.lineTo(town.walls[i].start.x + dir.x*wallthickness/2, town.walls[i].start.y + dir.y*wallthickness/2);
+				ctx.lineTo(town.walls[i].end.x + dir.x*wallthickness/2, town.walls[i].end.y + dir.y*wallthickness/2);
+				ctx.lineTo(town.walls[i].end.x + dir.x*wallthickness*-1/2, town.walls[i].end.y + dir.y*wallthickness*-1/2);
+				ctx.lineTo(town.walls[i].start.x + dir.x*wallthickness*-1/2, town.walls[i].start.y + dir.y*wallthickness*-1/2);
+				ctx.closePath();
+				//ctx.stroke();
+				ctx.fill()
+			}
+			
+			for (let i = 0; i < town.towers.length; i++)
+			{
+				//wall corner/tower
+				ctx.beginPath();
+				if (town.towers[i].type == "circle")
+				{
+					ctx.moveTo(town.towers[i].x, town.towers[i].y);
+					ctx.arc(town.towers[i].x, town.towers[i].y, wallcapradius, 0, 2 * Math.PI);
+					ctx.closePath();
+					//ctx.stroke();
+					ctx.fill();
+				}
+				else if (town.towers[i].type == "entry")
+				{
+					let dir = town.towers[i].facing;
+					let rightangledir = NintyDegreeTurn(dir);
+					ctx.moveTo(town.towers[i].x + dir.x*wallcapradius*3, town.towers[i].y + dir.y*wallcapradius*3);
+					
+					ctx.lineTo(town.towers[i].x + dir.x*wallcapradius*3, town.towers[i].y + dir.y*wallcapradius*3);
+					ctx.lineTo(town.towers[i].x + rightangledir.x*wallcapradius*3, town.towers[i].y + rightangledir.y*wallcapradius*3);
+					ctx.lineTo(town.towers[i].x + dir.x*wallcapradius*-3, town.towers[i].y + dir.y*wallcapradius*-3);
+					ctx.lineTo(town.towers[i].x + rightangledir.x*wallcapradius*-3, town.towers[i].y + rightangledir.y*wallcapradius*-3);
+					
+					ctx.closePath();
+					//ctx.stroke();
+					ctx.fill();
+				}
+			}
+		}
+		
+		//output file
+		let file = 'drawntown.png';
+		let path = './' + file;
+		
+		let b64 = tempcanvas.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			console.log('The file has been saved!');
+			channel.send({ files: [{ attachment: path, name: file }] });
+		})
+	}
+	else
+	{
+		console.log("getContext failed");
+	}
+}
+
+function NormalizeVector(vector)
+{
+	length = Math.sqrt((vector.x*vector.x) + (vector.y*vector.y));
+	x = vector.x / length;
+	y = vector.y / length;
+	
+	return { x, y };
+}
+
+function NintyDegreeTurn(vector)
+{
+	y = vector.x*-1;
+	x = vector.y;
+	
+	return { x, y };
+}
+
+function FindCirclePoint(d, radius, length)
+{
+	let circlepoint = { x: 0, y: 0 };
+	
+	circlepoint.x = (Math.sin(d / radius) * length);
+	circlepoint.y = (Math.cos(d / radius) * length);
+
+	return circlepoint;
+}
+
+function FindShapePoint(t, radius)
+{
+	let shapepoint = { x: 0, y: 0 };
+	
+	shapepoint.x = (Math.sin(t) * radius);
+	shapepoint.y = (Math.cos(t) * radius);
+	
+	return shapepoint;
+}
+
+
+function RandomPoint(xmax, xmin, ymax, ymin)
+{
+	let randompoint = { x: Math.random()*(xmax-xmin)+xmin, y: Math.random()*(ymax-ymin)+ymin };
+	
+	return randompoint;
+}
+
+
+function LengthBetweenPoints(a, b)
+{
+		let dVector = { x: b.x - a.x, y: b.y - a.y };
+		let distance = Math.sqrt((dVector.x*dVector.x) + (dVector.y*dVector.y))
+		
+		return distance;
+}
+
+function PointWithinCircle(point, circle)
+{
+	let distance = LengthBetweenPoints(point, circle);
+	if (distance < circle.radius)
+		return true;
+	else
+		return false;
+}
+
+function AdjacentContentContains(map, width, height, point, content)
+{
+	if (point.x-1 > -1 && map[x-1+(y*height)].content == content)
+		return true;
+	else if (point.x+1 < width && map[x+1+(y*height)].content == content)
+		return true;
+	else if (point.y-1 > -1 && map[x+((y-1)*height)].content == content)
+		return true;
+	else if (point.y+1 < height && map[x+((y+1)*height)].content == content)
+		return true;
+	
+	return false;
+}
+
+function ContainsIdenticalXY(array, point)
+{
+	for (let i in array)
+	{
+		if (array[i].x == point.x && array[i].y == point.y)
+			return true;
+	}
+	
+	return false;
+}
+
+function DirectionVector(a, b)
+{
+	d = { x: b.x - a.x, y: b.y - a.y };
+	
+	return NormalizeVector(d);
+}
+
+function GetBuildingWall(building, wallno)
+{
+	let wall = 
+		{ 
+			start: { x: building.sides[wallno].start.x, y: building.sides[wallno].start.y },
+			end: { x: building.sides[wallno].end.x, y: building.sides[wallno].end.y }
+		};
+	
+	wall.start.x += building.position.x;
+	wall.start.y += building.position.y;
+	wall.end.x += building.position.x;
+	wall.end.y += building.position.y;
+	
+	return wall;
+}
+
+function OnSegment(p, q, r)
+{
+	if (q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) && q.y <= Math.max(p.y, r.y) && q.y >= Math.min (p.y, r.y))
+		return true;
+	
+	return false;
+}
+
+function Orientation(p, q, r)
+{
+	let val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+	
+	if (val == 0)
+		return 0;
+	
+	return (val > 0) ? 1 : 2;
+}
+
+
+function RoadIntersects(mainroad, intersectingroad)
+{
+	let o1 = Orientation(mainroad.start, mainroad.end, intersectingroad.start);
+	let o2 = Orientation(mainroad.start, mainroad.end, intersectingroad.end);
+	let o3 = Orientation(intersectingroad.start, intersectingroad.end, mainroad.start);
+	let o4 = Orientation(intersectingroad.start, intersectingroad.end, mainroad.end);
+	
+	if (o1 != o2 && o3 != o4)
+		return true;
+	
+	if (o1 = 0 && OnSegment(mainroad.start, intersectingroad.start, mainroad.end))
+		return true;
+	
+	if (o2 = 0 && OnSegment(mainroad.start, intersectingroad.end, mainroad.end))
+		return true;
+	
+	if (o3 = 0 && OnSegment(intersectingroad.start, mainroad.start, intersectingroad.end))
+		return true;
+	
+	if (o4 = 0 && OnSegment(intersectingroad.start, mainroad.end, intersectingroad.end))
+		return true;
+	
+	return false;
+}
+
+//returns collision point if collides, else returns false
+function RoadIntersectsAtPoint(road1, road2)
+{
+	let s1 = { x: road1.end.x - road1.start.x, y: road1.end.y - road1.start.y };
+	let s2 = { x: road2.end.x - road2.start.x, y: road2.end.y - road2.start.y };
+	
+	if ((-s2.x * s1.y + s1.x * s2.y) == 0)
+		return NaN;
+	
+	let s = (-s1.y * (road1.start.x - road2.start.x) + s1.x * (road1.start.y - road2.start.y)) / (-s2.x * s1.y + s1.x * s2.y);
+	let t = (s2.x * (road1.start.y - road2.start.y) - s2.y * (road1.start.x - road2.start.x)) / (-s2.x * s1.y + s1.x * s2.y);
+	
+	if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+	{
+		//collision detected, returning
+		let collisionpoint = { x: road1.start.x + (t * s1.x), y: road1.start.y + (t * s1.y) };
+		return collisionpoint;
+	}
+	
+	return false; // no collision
+}
+
+
+function GenerateTown(arguments)
+{
+	let xoffset = 1000;
+	let yoffset = 1000;
+	let variance = 50;
+	let wallsSides = Math.floor(Math.random()*8+9);
+	let wallsRadius = Math.floor(Math.random()*250+500);
+	
+	let towncenter = { x: xoffset, y: yoffset };
+	towncenter.x += Math.random()*variance - variance/2;
+	towncenter.y += Math.random()*variance - variance/2;
+	
+	
+	// make walls and towers
+	let walls = [];
+	let towers = [];
+	
+	let wallPoint1;
+	let wallPoint2;
+	let wallStart;
+	
+	let newwall = 
+		{ 
+			start: { x: 0, y: 0 },
+			end: { x: 1, y: 1 }
+		};
+	
+	for (let i = 0; i < wallsSides; i++)
+	{
+		let intersectFound = false;
+		if (i > 0)
+			wallPoint1 = { x: wallPoint2.x, y:wallPoint2.y };
+		else
+		{
+			wallPoint1 = FindShapePoint(Math.PI*2*i/wallsSides, wallsRadius);
+			wallPoint1.x += xoffset + Math.random()*variance - variance/2;
+			wallPoint1.y += yoffset + Math.random()*variance - variance/2;
+			wallStart = { x: wallPoint1.x, y:wallPoint1.y };
+		}
+		if (i == wallsSides-1)
+		{
+			wallPoint2 = { x: wallStart.x, y:wallStart.y };
+		}
+		else
+		{
+			wallPoint2 = FindShapePoint(Math.PI*2*(i+1)/wallsSides, wallsRadius);
+			wallPoint2.x += xoffset + Math.random()*variance - variance/2;
+			wallPoint2.y += yoffset + Math.random()*variance - variance/2;
+		}
+		newwall = 
+			{ 
+				start: { x: wallPoint1.x, y: wallPoint1.y },
+				end: { x: wallPoint2.x, y: wallPoint2.y }
+			};
+		
+		walls.push(newwall);
+		if (!ContainsIdenticalXY(towers, wallPoint1))
+		{
+			let newtower = { x: wallPoint1.x, y: wallPoint1.y };
+			newtower.type = "circle";
+			towers.push(newtower);
+		}
+	} 
+	
+	
+	// make roads
+	let roads = [];
+	let newroad = 
+		{ 
+			start: { x: 0, y: 0 },
+			end: { x: 1, y: 1 }
+		};
+	let newartery = 
+		{ 
+			start: { x: 0, y: 0 },
+			end: { x: 1, y: 1 }
+		};
+	
+	let arterystarts = [];
+	// main roads;
+	let mainroadcount = Math.floor(Math.random()*3+2);
+	for (let i = 0; i < mainroadcount; i++)
+	{
+		let intersectFound = false;
+		let intersectPoint;
+		let	currentpos = { x: towncenter.x, y: towncenter.y };
+		let roaddir = FindShapePoint(Math.random()*Math.PI*2, 1);
+		let pastwall = false;
+		while (currentpos.x > -1 && currentpos.x < 2000 && currentpos.y > -1 && currentpos.y < 2000)
+		{
+			let stretchOfRoad = Math.floor(Math.random()*120+120);
+			let arteryPoint = Math.floor(Math.random()*80+80);
+			newartery = 
+			{ 
+				start: { x: currentpos.x, y: currentpos.y },
+				end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
+				dir: -1
+			};
+			newroad = 
+			{ 
+				start: { x: currentpos.x, y: currentpos.y },
+				end: { x: currentpos.x + roaddir.x*stretchOfRoad, y: currentpos.y + roaddir.y*stretchOfRoad }
+			};
+			newroad.end.x += Math.random()*variance - variance/2;
+			newroad.end.y += Math.random()*variance - variance/2;
+		
+			for (let j = 0; j < walls.length && !intersectFound; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, walls[j]);
+				if (intersectPoint != false)
+				{
+					intersectFound = true;
+					let facingradians = Math.atan2(roaddir.x,roaddir.y);
+					facingradians += Math.PI/4;
+					let newtower = intersectPoint;
+					newtower.type = "entry";
+					newtower.facing = NormalizeVector(FindShapePoint(facingradians, 1));
+					towers.push(newtower);
+					pastwall = true;
+				}
+			}
+			
+			if (!pastwall)
+			{
+				if (Math.random() < 0.334)
+					arterystarts.push(newartery);
+				else
+				{
+					newartery.dir = 0;
+					arterystarts.push(newartery);
+					newartery = 
+					{ 
+						start: { x: currentpos.x, y: currentpos.y },
+						end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
+						dir: 1
+					};
+					arterystarts.push(newartery);
+				}
+			}
+			
+			roads.push(newroad);
+			currentpos.x = newroad.end.x;
+			currentpos.y = newroad.end.y;
+		}
+	}
+	
+	let arteryroads = [];
+	let subarterystarts = [];
+	
+	for (let i = 0; i < arterystarts.length; i++)
+	{
+		let	currentpos = { x: arterystarts[i].end.x, y: arterystarts[i].end.y };
+		let roaddir = NintyDegreeTurn(DirectionVector(arterystarts[i].start, arterystarts[i].end));
+		
+		roadsubarr = [];
+		if (arterystarts[i].dir == 1 || (arterystarts[i].dir == -1 && Math.random() < 0.5))
+		{
+			roaddir.x *= -1;
+			roaddir.y *= -1;
+		}
+		
+		while (currentpos.x > -1 && currentpos.x < 2000 && currentpos.y > -1 && currentpos.y < 2000)
+		{
+			let stretchOfRoad = Math.floor(Math.random()*80+80);
+			let arteryPoint = Math.floor(Math.random()*50+50);
+			newartery = 
+			{ 
+				start: { x: currentpos.x, y: currentpos.y },
+				end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
+				dir: -1
+			};
+			newroad = 
+			{
+				start: { x: currentpos.x, y: currentpos.y },
+				end: { x: currentpos.x + roaddir.x*stretchOfRoad, y: currentpos.y + roaddir.y*stretchOfRoad }
+			};
+			newroad.end.x += Math.random()*variance/2 - variance/4;
+			newroad.end.y += Math.random()*variance/2 - variance/4;
+			
+			let intersectPoint;
+			let intersectFound = false;
+			
+			for (let j = 0; j < walls.length && !intersectFound; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, walls[j]);
+				if (intersectPoint != false)
+				{
+					intersectFound = true;
+					newroad.end.x = intersectPoint.x;
+					newroad.end.y = intersectPoint.y;
+				}
+			}
+			
+			for (let j = 0; j < roads.length && !intersectFound; j++)
+			{
+				if (i != j)
+				{
+					intersectPoint = RoadIntersectsAtPoint(newroad, roads[j]);
+					if (intersectPoint != false)
+					{
+						intersectFound = true;
+						newroad.end.x = intersectPoint.x;
+						newroad.end.y = intersectPoint.y;
+					}
+				}
+			}
+			
+			for (let j = 0; j < arteryroads.length && !intersectFound; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, arteryroads[j]);
+				if (intersectPoint != false)
+				{
+					if (LengthBetweenPoints(newroad.start, intersectPoint) > 1)
+					{
+						intersectFound = true;
+						newroad.end.x = intersectPoint.x;
+						newroad.end.y = intersectPoint.y;
+					}
+				}
+			}
+			
+			if (LengthBetweenPoints(newroad.start, newroad.end) > LengthBetweenPoints(newartery.start, newartery.end))
+			{
+				subarterystarts.push(newartery);
+			}
+			
+			roadsubarr.push(newroad);
+			currentpos.x = newroad.end.x;
+			currentpos.y = newroad.end.y;
+			if (intersectFound)
+			{
+				currentpos.x = 25000;
+				currentpos.y = 25000;
+			}
+			else
+			{
+				roaddir = DirectionVector(newroad.start, newroad.end)
+			}
+		}
+		arteryroads = arteryroads.concat(roadsubarr);
+	}
+	
+	for (let i = 0; i < subarterystarts.length; i++)
+	{
+		let	currentpos = { x: subarterystarts[i].end.x, y: subarterystarts[i].end.y };
+		let roaddir = NintyDegreeTurn(DirectionVector(subarterystarts[i].start, subarterystarts[i].end));
+		
+		roadsubarr = [];
+		
+		if (Math.random() < 0.5)
+		{
+			roaddir.x *= -1;
+			roaddir.y *= -1;
+		}
+		while (currentpos.x > -1 && currentpos.x < 2000 && currentpos.y > -1 && currentpos.y < 2000)
+		{
+			let stretchOfRoad = Math.floor(Math.random()*80+80);
+			let arteryPoint = Math.floor(Math.random()*50+50);
+			newartery = 
+			{ 
+				start: { x: currentpos.x, y: currentpos.y },
+				end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint }
+			};
+			newroad = 
+			{
+				start: { x: currentpos.x, y: currentpos.y },
+				end: { x: currentpos.x + roaddir.x*stretchOfRoad, y: currentpos.y + roaddir.y*stretchOfRoad }
+			};
+			newroad.end.x += Math.random()*variance/2 - variance/4;
+			newroad.end.y += Math.random()*variance/2 - variance/4;
+			
+			let intersectPoint;
+			let intersectFound = false;
+			
+			for (let j = 0; j < walls.length && !intersectFound; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, walls[j]);
+				if (intersectPoint != false)
+				{
+					intersectFound = true;
+					newroad.end.x = intersectPoint.x;
+					newroad.end.y = intersectPoint.y;
+				}
+			}
+			
+			for (let j = 0; j < roads.length && !intersectFound; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, roads[j]);
+				if (intersectPoint != false)
+				{
+					intersectFound = true;
+					newroad.end.x = intersectPoint.x;
+					newroad.end.y = intersectPoint.y;
+				}
+			}
+			
+			for (let j = 0; j < arteryroads.length && !intersectFound; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, arteryroads[j]);
+				if (intersectPoint != false)
+				{
+					intersectFound = true;
+					newroad.end.x = intersectPoint.x;
+					newroad.end.y = intersectPoint.y;
+				}
+			}
+			
+			if (Math.random() < 0.667 && LengthBetweenPoints(newroad.start, newroad.end) > LengthBetweenPoints(newartery.start, newartery.end))
+			{
+				subarterystarts.push(newartery);
+			}
+			
+			roadsubarr.push(newroad);
+			currentpos.x = newroad.end.x;
+			currentpos.y = newroad.end.y;
+			if (intersectFound)
+			{
+				currentpos.x = 25000;
+				currentpos.y = 25000;
+			}
+			else
+			{
+				roaddir = DirectionVector(newroad.start, newroad.end)
+			}
+		}
+		arteryroads = arteryroads.concat(roadsubarr);
+	}
+	
+	
+	// make buildings
+	let buildings = [];
+	
+	for (let i in roads)
+	{
+		let buildingsCount = Math.floor(Math.random()*4+4);
+		
+		
+		for (let j = 0; j <  buildingsCount; j++)
+		{
+			let attempts = 0;
+			let buildingSides = 4;
+			let buildingRadius = Math.floor(Math.random()*5+6)*3;
+			let buildingpos = DirectionVector(roads[i].start, roads[i].end);
+			let roaddir = { x: buildingpos.x, y: buildingpos.y };
+			let roadradians = Math.atan2(roaddir.x,roaddir.y) + Math.PI/4;
+			let awayfromroad = NintyDegreeTurn(roaddir);
+			if (Math.random() < 0.5)
+			{
+				awayfromroad.x *= -1;
+				awayfromroad.y *= -1;
+			}
+			let awayAmount = buildingRadius+5;
+			let randomroadpos = Math.random()*LengthBetweenPoints(roads[i].start, roads[i].end);
+			buildingpos.x = roads[i].start.x + buildingpos.x * randomroadpos;
+			buildingpos.y = roads[i].start.y + buildingpos.y * randomroadpos;
+			buildingpos.x += awayfromroad.x*awayAmount;
+			buildingpos.y += awayfromroad.y*awayAmount;
+			
+			let newbuilding = 
+					{ 
+						position: { x: buildingpos.x, y: buildingpos.y },
+						sides: []
+					};
+			for (let k = 0; k < buildingSides; k++)
+			{
+				if (k > 0)
+					wallPoint1 = { x: wallPoint2.x, y:wallPoint2.y };
+				else
+				{
+					wallPoint1 = FindShapePoint(roadradians + Math.PI*2*k/buildingSides, buildingRadius);
+					//wallPoint1.x += Math.random()*variance/3 - variance/6;
+					//wallPoint1.y += Math.random()*variance/3 - variance/6;
+					wallStart = { x: wallPoint1.x, y:wallPoint1.y };
+				}
+				if (k == buildingSides-1)
+				{
+					wallPoint2 = { x: wallStart.x, y:wallStart.y };
+				}
+				else
+				{
+					wallPoint2 = FindShapePoint(roadradians + Math.PI*2*(k+1)/buildingSides, buildingRadius);
+					//wallPoint2.x += Math.random()*variance/3 - variance/6;
+					//wallPoint2.y += Math.random()*variance/3 - variance/6;
+				}
+				
+				newbuilding.sides.push(newwall);
+			}
+			let intersectPoint;
+			let intersectFound = true;
+			while (intersectFound == true && attempts < 255)
+			{
+				intersectFound = false;
+				
+				for (let l = 0; l < newbuilding.sides.length; l++)
+				{
+					let temproad = GetBuildingWall(newbuilding, l)
+					for (let k = 0; k < walls.length && !intersectFound; k++)
+					{
+						intersectPoint = RoadIntersectsAtPoint(temproad, walls[k]);
+						if (intersectPoint != false)
+						{
+							intersectFound = true;
+						}
+					}
+					
+					for (let k = 0; k < roads.length && !intersectFound; k++)
+					{
+						intersectPoint = RoadIntersectsAtPoint(temproad, roads[k]);
+						if (intersectPoint != false)
+						{
+							intersectFound = true;
+						}
+					}
+					
+					for (let k = 0; k < arteryroads.length && !intersectFound; k++)
+					{
+						intersectPoint = RoadIntersectsAtPoint(temproad, arteryroads[k]);
+						if (intersectPoint != false)
+						{
+							intersectFound = true;
+						}
+					}
+					
+					for (let k = 0; k < buildings.length && !intersectFound; k++)
+					{
+						for (let m = 0; m < buildings[k].sides.length && !intersectFound; m++)
+						{
+							intersectPoint = RoadIntersectsAtPoint(temproad, GetBuildingWall(buildings[k],m));
+							if (intersectPoint != false)
+							{
+								intersectFound = true;
+							}
+						}
+					}
+				}
+				if (intersectFound)
+				{
+					awayfromroad.x *= -1;
+					awayfromroad.y *= -1;
+					buildingpos = DirectionVector(roads[i].start, roads[i].end);
+					randomroadpos = Math.random()*LengthBetweenPoints(roads[i].start, roads[i].end);
+					buildingpos.x = roads[i].start.x + buildingpos.x * randomroadpos;
+					buildingpos.y = roads[i].start.y + buildingpos.y * randomroadpos;
+					buildingpos.x += awayfromroad.x*awayAmount;
+					buildingpos.y += awayfromroad.y*awayAmount;
+					newbuilding.position.x = buildingpos.x;
+					newbuilding.position.y = buildingpos.y;
+					attempts++;
+				}
+			}
+			if (!intersectFound)
+			{
+				buildings.push(newbuilding);
+			}
+		}
+	}
+	
+	for (let i in arteryroads)
+	{
+		let buildingsCount = Math.floor(Math.random()*4+4);
+		
+		
+		for (let j = 0; j <  buildingsCount; j++)
+		{
+			let attempts = 0;
+			let buildingSides = 4;
+			let buildingRadius = Math.floor(Math.random()*5+6)*3;
+			let buildingpos = DirectionVector(arteryroads[i].start, arteryroads[i].end);
+			let roaddir = { x: buildingpos.x, y: buildingpos.y };
+			let roadradians = Math.atan2(roaddir.x,roaddir.y) + Math.PI/4;
+			let awayfromroad = NintyDegreeTurn(roaddir);
+			if (Math.random() < 0.5)
+			{
+				awayfromroad.x *= -1;
+				awayfromroad.y *= -1;
+			}
+			let awayAmount = buildingRadius+2;
+			let randomroadpos = Math.random()*LengthBetweenPoints(arteryroads[i].start, arteryroads[i].end);
+			buildingpos.x = arteryroads[i].start.x + buildingpos.x * randomroadpos;
+			buildingpos.y = arteryroads[i].start.y + buildingpos.y * randomroadpos;
+			buildingpos.x += awayfromroad.x*awayAmount;
+			buildingpos.y += awayfromroad.y*awayAmount;
+			
+			let newbuilding = 
+					{ 
+						position: { x: buildingpos.x, y: buildingpos.y },
+						sides: []
+					};
+			for (let k = 0; k < buildingSides; k++)
+			{
+				if (k > 0)
+					wallPoint1 = { x: wallPoint2.x, y:wallPoint2.y };
+				else
+				{
+					wallPoint1 = FindShapePoint(roadradians + Math.PI*2*k/buildingSides, buildingRadius);
+					//wallPoint1.x += Math.random()*variance/3 - variance/6;
+					//wallPoint1.y += Math.random()*variance/3 - variance/6;
+					wallStart = { x: wallPoint1.x, y:wallPoint1.y };
+				}
+				if (k == buildingSides-1)
+				{
+					wallPoint2 = { x: wallStart.x, y:wallStart.y };
+				}
+				else
+				{
+					wallPoint2 = FindShapePoint(roadradians + Math.PI*2*(k+1)/buildingSides, buildingRadius);
+					//wallPoint2.x += Math.random()*variance/3 - variance/6;
+					//wallPoint2.y += Math.random()*variance/3 - variance/6;
+				}
+				newwall = 
+					{ 
+						start: { x: wallPoint1.x, y: wallPoint1.y },
+						end: { x: wallPoint2.x, y: wallPoint2.y }
+					};
+				newbuilding.sides.push(newwall);
+			}
+			let intersectPoint;
+			let intersectFound = true;
+			while (intersectFound == true && attempts < 255)
+			{
+				intersectFound = false;
+				
+				for (let l = 0; l < newbuilding.sides.length; l++)
+				{
+					let temproad = GetBuildingWall(newbuilding, l)
+					for (let k = 0; k < walls.length && !intersectFound; k++)
+					{
+						intersectPoint = RoadIntersectsAtPoint(temproad, walls[k]);
+						if (intersectPoint != false)
+						{
+							intersectFound = true;
+						}
+					}
+					
+					for (let k = 0; k < arteryroads.length && !intersectFound; k++)
+					{
+						intersectPoint = RoadIntersectsAtPoint(temproad, arteryroads[k]);
+						if (intersectPoint != false)
+						{
+							intersectFound = true;
+						}
+					}
+					
+					for (let k = 0; k < arteryroads.length && !intersectFound; k++)
+					{
+						intersectPoint = RoadIntersectsAtPoint(temproad, arteryroads[k]);
+						if (intersectPoint != false)
+						{
+							intersectFound = true;
+						}
+					}
+					
+					for (let k = 0; k < buildings.length && !intersectFound; k++)
+					{
+						for (let m = 0; m < buildings[k].sides.length && !intersectFound; m++)
+						{
+							intersectPoint = RoadIntersectsAtPoint(temproad, GetBuildingWall(buildings[k],m));
+							if (intersectPoint != false)
+							{
+								intersectFound = true;
+							}
+						}
+					}
+				}
+				if (intersectFound)
+				{
+					awayfromroad.x *= -1;
+					awayfromroad.y *= -1;
+					buildingpos = DirectionVector(arteryroads[i].start, arteryroads[i].end);
+					randomroadpos = Math.random()*LengthBetweenPoints(arteryroads[i].start, arteryroads[i].end);
+					buildingpos.x = arteryroads[i].start.x + buildingpos.x * randomroadpos;
+					buildingpos.y = arteryroads[i].start.y + buildingpos.y * randomroadpos;
+					buildingpos.x += awayfromroad.x*awayAmount;
+					buildingpos.y += awayfromroad.y*awayAmount;
+					newbuilding.position.x = buildingpos.x;
+					newbuilding.position.y = buildingpos.y;
+					attempts++;
+				}
+			}
+			
+			if (!intersectFound)
+			{
+				buildings.push(newbuilding);
+			}
+		}
+	}
+	
+	town = { roads: roads, smallroads: arteryroads, walls: walls, towers: towers, buildings: buildings };
+	
+	return town;
+}
+
 
 //
 // handle errors??? no
@@ -12647,5 +13502,4 @@ client.on('error', console.error);
 client.login(logintoken); //allidroid logon
 
 initializeAndStartAdventureSim();
-MarkovNameTrain();
 MarkovPhonemeNameTrain();
