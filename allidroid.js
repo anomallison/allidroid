@@ -12337,16 +12337,16 @@ function MarkovPhonemeNameGen(arguments)
 	let maxlength = 6
 	let numberOfNames = 1;
 	let argumentpos = arguments.indexOf("-min");
-	if (argumentpos > -1 && argumentspos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 25)
+	if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 25)
 		minlength = arguments[argumentpos+1];
 	argumentpos = arguments.indexOf("-max")
-	if (argumentpos > -1 && argumentspos+1 < arguments.length && !isNaN(arguments[argumentspos+1]) && arguments[argumentspos+1] > 0 && arguments[argumentspos+1] < 25 && arguments[argumentspos+1] > minlength)
+	if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 25 && arguments[argumentpos+1] > minlength)
 		maxlength = arguments[argumentpos+1];
 	else if (minlength > 6)
 		maxlength = minlength;
 	argumentpos = arguments.indexOf("-n")
-	if (argumentpos > -1 && argumentspos+1 < arguments.length && !isNaN(arguments[argumentspos+1]) && arguments[argumentspos+1] > 0 && arguments[argumentspos+1] < 20)
-		numberOfNames = arguments[argumentspos+1];
+	if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 21)
+		numberOfNames = arguments[argumentpos+1];
 	
 	let names = [];
 	
