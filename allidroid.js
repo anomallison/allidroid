@@ -5235,8 +5235,8 @@ function CityLocationValid(point, cities, map, map_width)
 	return true;
 }
 
-let MAX_MAP_HEIGHT = 300;
-let MAX_MAP_WIDTH = 400;
+let MAX_MAP_HEIGHT = 160;
+let MAX_MAP_WIDTH = 240;
 
 let SMOOTHING_ITERATIONS = 2;
 let LAND_EROSION = 0.0133;
@@ -5271,13 +5271,11 @@ function generateMap(channel, arguments)
 	if (arguments != null)
 	{
 		let argumentpos = arguments.indexOf("-h");
-		console.log(argumentpos);
 		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
 		{
 			MAP_HEIGHT = Math.floor(parseInt(arguments[argumentpos+1]));
 		}
 		argumentpos = arguments.indexOf("-w");
-		console.log(argumentpos);
 		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
 		{
 			MAP_WIDTH = Math.floor(parseInt(arguments[argumentpos+1]));
@@ -6389,7 +6387,7 @@ function generateMap(channel, arguments)
 	let citycount = 0;
 	for (let i = 0; i < LANDMASSES; i++)
 	{
-		citycount += Math.floor(Math.random()*6);
+		citycount += Math.max(Math.floor(Math.random()*7)-3,0);
 	}
 	
 	for (let i = 0; i < citycount && citiesCheck; i++)
