@@ -18,6 +18,8 @@ const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_EMOJIS_
 const mergeImages = require('merge-images');
 const { Canvas, Image } = require('canvas');
 
+const paper = require('paper-jsdom-canvas');
+
 var fs = require("fs");
 
 const monster_types = 
@@ -642,15 +644,11 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
-    }/*
-	else if (normalizedCommand == "drawsquares")
-	{
-		DrawSquares(receivedMessage.channel,arguments);
-	}
+    }
 	else if (normalizedCommand == "rendertownmap")
 	{
 		DrawTownMap(receivedMessage.channel,arguments);
-	}*/
+	}
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -4764,64 +4762,7 @@ function SeaLevelContiguousToPoint(sealevelmap, pointx, pointy, map_width, map_h
 					}
 				}
 				
-				if (currenthex.x%2 == 1)
-				{
-					if (direction == 5)
-					{
-						currenthex.x--;
-					}
-					else if (direction == 4)
-					{
-						currenthex.x--;
-						currenthex.y++;
-					}
-					else if (direction == 3)
-					{
-						currenthex.y++;
-					}
-					else if (direction == 2)
-					{
-						currenthex.x++;
-						currenthex.y++;
-					}
-					else if (direction == 1)
-					{
-						currenthex.x++;
-					}
-					else if (direction == 0)
-					{
-						currenthex.y--;
-					}
-				} 
-				else
-				{
-					if (direction == 5)
-					{
-						currenthex.x--;
-						currenthex.y--;
-					}
-					else if (direction == 4)
-					{
-						currenthex.x--;
-					}
-					else if (direction == 3)
-					{
-						currenthex.y++;
-					}
-					else if (direction == 2)
-					{
-						currenthex.x++;
-					}
-					else if (direction == 1)
-					{
-						currenthex.x++;
-						currenthex.y--;
-					}
-					else if (direction == 0)
-					{
-						currenthex.y--;
-					}
-				}
+				MoveHex(currenthex, direction);
 				curdirdur++;
 				if (curdirdur == dirduration)
 				{
@@ -12879,22 +12820,50 @@ function RoadIntersectsAtPoint(road1, road2, thickness = 0)
 		let tempdir = DirectionVector(road2.start, road2.end);
 		
 		tempdir = NintyDegreeTurn(tempdir);
-		if (Orientation(road1.start, road1.end, road2.start) == 0)
+		
+		temproad.start.x = road2.start.x + tempdir.x*thickness/2;
+		temproad.start.y = road2.start.y +tempdir.y*thickness/2;
+		temproad.end.x = road2.end.x + tempdir.x*thickness/2;
+		temproad.end.y = road2.end.y + tempdir.y*thickness/2;
+		
+		let side1 = RoadIntersectsAtPoint(road1, temproad);
+		
+		tempdir.x *= -1;
+		tempdir.y *= -1;
+		
+		temproad.start.x = road2.start.x + tempdir.x*thickness/2;
+		temproad.start.y = road2.start.y +tempdir.y*thickness/2;
+		temproad.end.x = road2.end.x + tempdir.x*thickness/2;
+		temproad.end.y = road2.end.y + tempdir.y*thickness/2;
+		
+		let side2 = RoadIntersectsAtPoint(road1, temproad);
+		if (side1 != false && side2 != false)
 		{
-			tempdir.x *= -1;
-			tempdir.y *= -1;
+			let distance1 = LengthBetweenPoints(road1.start, side1);
+			let distance2 = LengthBetweenPoints(road1.start, side2);
+			if (distance1 < distance2)
+				return side1;
+			else 
+				return side2;
 		}
-		temproad.start.x += tempdir.x*thickness/2;
-		temproad.start.y += tempdir.y*thickness/2;
-		temproad.end.x += tempdir.x*thickness/2;
-		temproad.end.y += tempdir.y*thickness/2;
-		
-		
+		else if (side1 != false && side2 == false)
+		{
+			return side1;
+		}
+		else if (side1 == false && side2 != false)
+		{
+			return side2;
+		}
+		else
+		{
+			return false;
+		}
+		/*
 		if (PointInTriangle(road1.start, road2.start, temproad.end, temproad.start))
 			return { x: road1.start.x, y: road1.start.y };
 		if (PointInTriangle(road1.start, road2.start,  road2.end, temproad.end))
 			return { x: road1.start.x, y: road1.start.y };
-		
+		*/
 	}
 	
 	
@@ -12929,6 +12898,34 @@ function PointInTriangle (point, trianglePoint1, trianglePoint2, trianglePoint3)
 	return d == 0 || (d < 0) == (s + t <= 0);
 }
 
+function PointInRoad(point, road, thickness)
+{
+	if (thickness <= 0)
+		return false;
+	
+	let side0 = { start: { x: road.start.x, y: road.start.y}, end: { x: road.end.x, y: road.end.y } };
+	let side1 = { start: { x: road.start.x, y: road.start.y}, end: { x: road.end.x, y: road.end.y } };
+	let tempdir = DirectionVector(side0.start, side0.end);
+	
+	tempdir = NintyDegreeTurn(tempdir);
+	
+	side0.start.x += tempdir.x*thickness/2;
+	side0.start.y += tempdir.y*thickness/2;
+	side0.end.x += tempdir.x*thickness/2;
+	side0.end.y += tempdir.y*thickness/2;
+	side1.start.x += tempdir.x*-1*thickness/2;
+	side1.start.y += tempdir.y*-1*thickness/2;
+	side1.end.x += tempdir.x*-1*thickness/2;
+	side1.end.y += tempdir.y*-1*thickness/2;
+	
+	if (PointInTriangle(point, side0.start, side0.end, side1.start))
+		return true;
+	if (PointInTriangle(point, side1.start,  side1.end, side0.end))
+		return true;
+	
+	return false
+}
+
 
 function GenerateTown(arguments)
 {
@@ -12957,8 +12954,9 @@ function GenerateTown(arguments)
 			start: { x: 0, y: 0 },
 			end: { x: 1, y: 1 }
 		};
-	let riverX = Math.random() < 0.5 ? Math.random()*600+200 : Math.random*600+1200;
-	let riverDir = { x: 0, y: 1 }; //FindShapePoint(Math.random()*Math.PI*2/3-Math.PI/3, 1);
+	let riverRand = Math.random();
+	let riverX = riverRand < 0.5 ? Math.random()*600+200 : Math.random()*600+1200;
+	let riverDir = riverRand < 0.5 ? FindShapePoint(Math.random()*Math.PI/3, 1) : FindShapePoint(-Math.random()*Math.PI/3, 1);
 	console.log(riverDir);
 	let	currentpos = { x: riverX, y: -250 };
 	
@@ -12978,6 +12976,29 @@ function GenerateTown(arguments)
 		currentpos.y = newroad.end.y;
 	}
 	
+	
+	
+	let tcInRiver = false;
+	let tcShiftAmount = 2.5;
+	do
+	{
+		tcInRiver = false;
+		for (let i = 0; i < river.length && !tcInRiver; i++)
+		{
+			if (PointInRoad(towncenter, river[i], riverthickness))
+			{
+				tcInRiver = true;
+			}
+		}
+		
+		if (tcInRiver)
+		{
+			tcShiftAmount *= -2;
+			towncenter.x = xoffset + tcShiftAmount;
+		}
+	}
+	while (tcInRiver)
+	
 	console.log("make walls");
 	
 	// make walls and towers
@@ -12994,18 +13015,20 @@ function GenerateTown(arguments)
 			end: { x: 1, y: 1 }
 		};
 	
-	let nextPointInWater = 0;
 	for (let i = 0; i < wallsSides; i++)
 	{
-		console.log("wallside " + i);
 		let intersectFound = false;
+		let wallSubmerged = false;
+		let twoSidesWall = false;
+		let startInRiver = false;
+		let endInRiver = false;
 		if (i > 0)
 			wallPoint1 = { x: wallPoint2.x, y:wallPoint2.y };
 		else
 		{
 			wallPoint1 = FindShapePoint(Math.PI*2*i/wallsSides, wallsRadius);
-			wallPoint1.x += xoffset + Math.random()*variance - variance/2;
-			wallPoint1.y += yoffset + Math.random()*variance - variance/2;
+			wallPoint1.x += towncenter.x + Math.random()*variance - variance/2;
+			wallPoint1.y += towncenter.y + Math.random()*variance - variance/2;
 			wallStart = { x: wallPoint1.x, y:wallPoint1.y };
 		}
 		if (i == wallsSides-1)
@@ -13015,116 +13038,117 @@ function GenerateTown(arguments)
 		else
 		{
 			wallPoint2 = FindShapePoint(Math.PI*2*(i+1)/wallsSides, wallsRadius);
-			wallPoint2.x += xoffset + Math.random()*variance - variance/2;
-			wallPoint2.y += yoffset + Math.random()*variance - variance/2;
+			wallPoint2.x += towncenter.x + Math.random()*variance - variance/2;
+			wallPoint2.y += towncenter.y + Math.random()*variance - variance/2;
 		}
+		
 		newwall = 
 			{ 
 				start: { x: wallPoint1.x, y: wallPoint1.y },
 				end: { x: wallPoint2.x, y: wallPoint2.y }
 			};
+		for (let j = 0; j < river.length && !intersectFound; j++)
+		{
+			if (PointInRoad(newwall.start, river[j], riverthickness))
+			{
+				startInRiver = true;
+			}
+			if (PointInRoad(newwall.end, river[j], riverthickness))
+			{
+				endInRiver = true;
+			}
+		}
 		
 		for (let j = 0; j < river.length && !intersectFound; j++)
 		{
-			let intersectPoint = RoadIntersectsAtPoint(newwall, river[j], riverthickness);
-			if (intersectPoint != false)
+			if (startInRiver && endInRiver)
 			{
-				intersectFound = true;
-				if (LengthBetweenPoints(intersectPoint, newwall.start) > 0.25)
+				wallSubmerged = true;
+			}
+			else if (startInRiver && !endInRiver)
+			{
+				let intersectPoint0 = RoadIntersectsAtPoint(newwall, river[j], riverthickness);
+				if (intersectPoint0 != false)
 				{
-					newwall.end.x = intersectPoint.x;
-					newwall.end.y = intersectPoint.y;
-					if (!ContainsIdenticalXY(towers, intersectPoint))
+					newwall.start.x = intersectPoint0.x;
+					newwall.start.y = intersectPoint0.y
+					if (!ContainsIdenticalXY(towers, newwall.start))
 					{
-						let newtower = { x: intersectPoint.x, y: intersectPoint.y };
+						let newtower = { x: newwall.start.x, y: newwall.start.y };
 						newtower.type = "circle";
 						towers.push(newtower);
 					}
-					console.log("pushwall 1");
-					walls.push(newwall);
 					
-					let reverseRoad = { start: { x: wallPoint2.x, y: wallPoint2.y }, end: { x: wallPoint1.x, y: wallPoint1.y } };
-					let secondIntersectP = RoadIntersectsAtPoint(reverseRoad, river[j], riverthickness);
-					if (secondIntersectP != false)
-					{
-						if (LengthBetweenPoints(secondIntersectP, reverseRoad.start) > 0.25)
-						{
-							reverseRoad.end.x = intersectPoint.x;
-							reverseRoad.end.y = intersectPoint.y;
-							if (!ContainsIdenticalXY(towers, intersectPoint))
-							{
-								let newtower = { x: intersectPoint.x, y: intersectPoint.y };
-								newtower.type = "circle";
-								towers.push(newtower);
-							}
-							
-							if (!ContainsIdenticalXY(towers, reverseRoad.start))
-							{
-								let newtower = { x: reverseRoad.start.x, y: reverseRoad.start.y };
-								newtower.type = "circle";
-								towers.push(newtower);
-							}
-							console.log("pushwall 2");
-							walls.push(reverseRoad);
-						}
-						else
-						{
-							nextPointInWater++;
-						}
-						
-					}
 				}
-				else
-				{
-					let reverseRoad = { start: { x: wallPoint2.x, y: wallPoint2.y }, end: { x: wallPoint1.x, y: wallPoint1.y } };
-					let secondIntersectP = RoadIntersectsAtPoint(reverseRoad, river[j], riverthickness);
-					if (secondIntersectP != false)
-					{
-						if (LengthBetweenPoints(secondIntersectP, reverseRoad.start) > 0.25)
-						{
-							reverseRoad.end.x = intersectPoint.x;
-							reverseRoad.end.y = intersectPoint.y;
-							if (!ContainsIdenticalXY(towers, intersectPoint))
-							{
-								let newtower = { x: intersectPoint.x, y: intersectPoint.y };
-								newtower.type = "circle";
-								towers.push(newtower);
-							}
-							
-							if (!ContainsIdenticalXY(towers, reverseRoad.start))
-							{
-								let newtower = { x: reverseRoad.start.x, y: reverseRoad.start.y };
-								newtower.type = "circle";
-								towers.push(newtower);
-							}
-							console.log("pushwall 3");
-							walls.push(reverseRoad);
-						}
-						else
-						{
-							console.log("next point in water");
-							nextPointInWater++;
-						}
-						
-					}
-				}
+				
+				walls.push(newwall);
 			}
-		}
-		if (!intersectFound && nextPointInWater <= 0)
-		{
-			console.log("pushwall 4");
-			console.log(newwall);
-			walls.push(newwall);
-			if (!ContainsIdenticalXY(towers, wallPoint1))
+			else if (!startInRiver && endInRiver)
 			{
-				let newtower = { x: wallPoint1.x, y: wallPoint1.y };
-				newtower.type = "circle";
-				towers.push(newtower);
+				let intersectPoint0 = RoadIntersectsAtPoint(newwall, river[j], riverthickness);
+				if (intersectPoint0 != false)
+				{
+					newwall.end.x = intersectPoint0.x;
+					newwall.end.y = intersectPoint0.y
+					if (!ContainsIdenticalXY(towers, newwall.end))
+					{
+						let newtower = { x: newwall.end.x, y: newwall.end.y };
+						newtower.type = "circle";
+						towers.push(newtower);
+					}
+				}
+				
+				walls.push(newwall);
+				if (!ContainsIdenticalXY(towers, newwall.start))
+				{
+					let newtower = { x: newwall.start.x, y: newwall.start.y };
+					newtower.type = "circle";
+					towers.push(newtower);
+				}
+			}
+			else
+			{
+				reversewall = 
+				{ 
+					start: { x: wallPoint2.x, y: wallPoint2.y },
+					end: { x: wallPoint1.x, y: wallPoint1.y }
+				};
+				let intersectPoint0 = RoadIntersectsAtPoint(newwall, river[j], riverthickness);
+				let intersectPoint1 = RoadIntersectsAtPoint(reversewall, river[j], riverthickness);
+				if (intersectPoint0 != false)
+				{
+					newwall.end.x = intersectPoint0.x;
+					newwall.end.y = intersectPoint0.y
+					if (!ContainsIdenticalXY(towers, newwall.end))
+					{
+						let newtower = { x: newwall.end.x, y: newwall.end.y };
+						newtower.type = "circle";
+						towers.push(newtower);
+					}
+				}
+				if (intersectPoint1 != false)
+				{
+					reversewall.end.x = intersectPoint1.x;
+					reversewall.end.y = intersectPoint1.y
+					if (!ContainsIdenticalXY(towers, reversewall.end))
+					{
+						let newtower = { x: reversewall.end.x, y: reversewall.end.y };
+						newtower.type = "circle";
+						towers.push(newtower);
+					}
+					walls.push(reversewall);
+				}
+				
+				walls.push(newwall);
+				if (!ContainsIdenticalXY(towers, newwall.start))
+				{
+					let newtower = { x: newwall.start.x, y: newwall.start.y };
+					newtower.type = "circle";
+					towers.push(newtower);
+				}
 			}
 		}
-		if (nextPointInWater > 0)
-			nextPointInWater--;
-	} 
+	}
 	
 	console.log("make roads");
 	
@@ -13143,20 +13167,22 @@ function GenerateTown(arguments)
 	
 	let arterystarts = [];
 	// main roads;
-	let mainroadcount = Math.floor(Math.max(Math.random()*4-2,0)+2);
+	let totalmainroadcount = Math.floor(Math.max(Math.random()*5-2,0)+3);
+	let mainroadcount = Math.ceil(totalmainroadcount/2);
+	let innermainroadcount = totalmainroadcount - mainroadcount;
 	let initialMainRoadDir = Math.random()*Math.PI*2;
 	for (let i = 0; i < mainroadcount; i++)
 	{
 		let intersectFound = false;
 		let intersectPoint;
 		let	currentpos = { x: towncenter.x, y: towncenter.y };
-		let roaddir = FindShapePoint(initialMainRoadDir+Math.PI*2/(mainroadcount+Math.floor(Math.random()*3))*i, 1);
+		let roaddir = FindShapePoint(initialMainRoadDir+Math.PI*2/(totalmainroadcount)*i, 1);
 		let roadactualdir;
 		let pastwall = false;
 		while (currentpos.x > -200 && currentpos.x < 2200 && currentpos.y > -200 && currentpos.y < 2200)
 		{
-			let stretchOfRoad = Math.floor(Math.random()*120+120);
-			let arteryPoint = Math.floor(Math.random()*80+80);
+			let stretchOfRoad = Math.floor(Math.random()*110+110);
+			let arteryPoint = Math.floor(Math.random()*70+70);
 			newroad = 
 			{ 
 				start: { x: currentpos.x, y: currentpos.y },
@@ -13171,6 +13197,50 @@ function GenerateTown(arguments)
 				end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
 				dir: -1
 			};
+			
+			let createBridge = false;
+			for (let j = 0; j < river.length && !createBridge; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, river[j], riverthickness);
+				if (intersectPoint != false)
+				{
+					let bridgeDir = DirectionVector(river[j].start, river[j].end);
+					bridgeDir = NintyDegreeTurn(bridgeDir);
+					//intersectFound = true;
+					createBridge = true;
+					newroad.end.x = intersectPoint.x;
+					newroad.end.y = intersectPoint.y;
+					roads.push(newroad);
+					bridgeRoad = 
+					{ 
+						start: { x: newroad.end.x + bridgeDir.x*riverthickness*2, y: newroad.end.y + bridgeDir.y*riverthickness*2 },
+						end: { x: newroad.end.x, y: newroad.end.y}
+					};
+					bridgeEnd = RoadIntersectsAtPoint(bridgeRoad, river[j], riverthickness-1)
+					if (bridgeEnd != false)
+					{
+						bridgeRoad = 
+						{ 
+							start: { x: newroad.end.x, y: newroad.end.y },
+							end: { x: newroad.end.x + bridgeDir.x*riverthickness, y: newroad.end.y + bridgeDir.y*riverthickness }
+						};
+					}
+					else
+					{
+						bridgeRoad = 
+						{ 
+							start: { x: newroad.end.x, y: newroad.end.y },
+							end: { x: newroad.end.x - bridgeDir.x*riverthickness, y: newroad.end.y - bridgeDir.y*riverthickness }
+						};
+					}
+					roads.push(bridgeRoad);
+					newroad = 
+					{ 
+						start: { x: bridgeRoad.end.x, y: bridgeRoad.end.y },
+						end: { x: bridgeRoad.end.x + roaddir.x*2, y: bridgeRoad.end.y + roaddir.y*2 }
+					};
+				}
+			}
 		
 			for (let j = 0; j < walls.length && !intersectFound; j++)
 			{
@@ -13188,9 +13258,9 @@ function GenerateTown(arguments)
 				}
 			}
 			
-			if (!pastwall)
+			if (!createBridge && LengthBetweenPoints(newartery.end, towncenter) < wallsRadius*0.85)
 			{
-				if (Math.random() < 0.334)
+				if (Math.random() < 0.25)
 					arterystarts.push(newartery);
 				else
 				{
@@ -13199,7 +13269,7 @@ function GenerateTown(arguments)
 					newartery = 
 					{ 
 						start: { x: currentpos.x, y: currentpos.y },
-						end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
+						end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
 						dir: 1
 					};
 					arterystarts.push(newartery);
@@ -13209,6 +13279,118 @@ function GenerateTown(arguments)
 			roads.push(newroad);
 			currentpos.x = newroad.end.x;
 			currentpos.y = newroad.end.y;
+		}
+	}
+	// main inner roads
+	for (let i = 0; i < innermainroadcount; i++)
+	{
+		let intersectFound = false;
+		let intersectPoint;
+		let	currentpos = { x: towncenter.x, y: towncenter.y };
+		let roaddir = FindShapePoint(initialMainRoadDir+Math.PI*2/(totalmainroadcount)*(i+mainroadcount), 1);
+		let roadactualdir;
+		let pastwall = false;
+		while (currentpos.x > -200 && currentpos.x < 2200 && currentpos.y > -200 && currentpos.y < 2200)
+		{
+			let stretchOfRoad = Math.floor(Math.random()*110+110);
+			let arteryPoint = Math.floor(Math.random()*70+70);
+			newroad = 
+			{ 
+				start: { x: currentpos.x, y: currentpos.y },
+				end: { x: currentpos.x + roaddir.x*stretchOfRoad, y: currentpos.y + roaddir.y*stretchOfRoad }
+			};
+			newroad.end.x += Math.random()*variance - variance/2;
+			newroad.end.y += Math.random()*variance - variance/2;
+			roadactualdir = DirectionVector(newroad.start, newroad.end);
+			newartery = 
+			{ 
+				start: { x: currentpos.x, y: currentpos.y },
+				end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
+				dir: -1
+			};
+		
+		
+			let createBridge = false;
+			for (let j = 0; j < river.length && !createBridge; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, river[j], riverthickness);
+				if (intersectPoint != false)
+				{
+					let bridgeDir = DirectionVector(river[j].start, river[j].end);
+					bridgeDir = NintyDegreeTurn(bridgeDir);
+					//intersectFound = true;
+					createBridge = true;
+					newroad.end.x = intersectPoint.x;
+					newroad.end.y = intersectPoint.y;
+					roads.push(newroad);
+					bridgeRoad = 
+					{ 
+						start: { x: newroad.end.x + bridgeDir.x*riverthickness*2, y: newroad.end.y + bridgeDir.y*riverthickness*2 },
+						end: { x: newroad.end.x, y: newroad.end.y}
+					};
+					bridgeEnd = RoadIntersectsAtPoint(bridgeRoad, river[j], riverthickness-1)
+					if (bridgeEnd != false)
+					{
+						bridgeRoad = 
+						{ 
+							start: { x: newroad.end.x, y: newroad.end.y },
+							end: { x: newroad.end.x + bridgeDir.x*riverthickness, y: newroad.end.y + bridgeDir.y*riverthickness }
+						};
+					}
+					else
+					{
+						bridgeRoad = 
+						{ 
+							start: { x: newroad.end.x, y: newroad.end.y },
+							end: { x: newroad.end.x - bridgeDir.x*riverthickness, y: newroad.end.y - bridgeDir.y*riverthickness }
+						};
+					}
+					roads.push(bridgeRoad);
+					newroad = 
+					{ 
+						start: { x: bridgeRoad.end.x, y: bridgeRoad.end.y },
+						end: { x: bridgeRoad.end.x + roaddir.x*2, y: bridgeRoad.end.y + roaddir.y*2 }
+					};
+				}
+			}
+		
+			for (let j = 0; j < walls.length && !intersectFound; j++)
+			{
+				intersectPoint = RoadIntersectsAtPoint(newroad, walls[j]);
+				if (intersectPoint != false)
+				{
+					intersectFound = true;
+					newroad.end.x = intersectPoint.x;
+					newroad.end.y = intersectPoint.y;
+				}
+			}
+			
+			if (LengthBetweenPoints(newartery.end, towncenter) < wallsRadius*0.85)
+			{
+				if (Math.random() < 0.25)
+					arterystarts.push(newartery);
+				else
+				{
+					newartery.dir = 0;
+					arterystarts.push(newartery);
+					newartery = 
+					{ 
+						start: { x: currentpos.x, y: currentpos.y },
+						end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
+						dir: 1
+					};
+					arterystarts.push(newartery);
+				}
+			}
+			
+			roads.push(newroad);
+			currentpos.x = newroad.end.x;
+			currentpos.y = newroad.end.y;
+			if (intersectFound)
+			{
+				currentpos.x = 25000;
+				currentpos.y = 25000;
+			}
 		}
 	}
 	
@@ -13222,6 +13404,7 @@ function GenerateTown(arguments)
 		let	currentpos = { x: arterystarts[i].end.x, y: arterystarts[i].end.y };
 		let roaddir = NintyDegreeTurn(DirectionVector(arterystarts[i].start, arterystarts[i].end));
 		let roadactualdir;
+		let ignoreFirstRoad = 1;
 		
 		roadsubarr = [];
 		if (arterystarts[i].dir == 1 || (arterystarts[i].dir == -1 && Math.random() < 0.5))
@@ -13232,7 +13415,7 @@ function GenerateTown(arguments)
 		
 		while (currentpos.x > -1 && currentpos.x < 2000 && currentpos.y > -1 && currentpos.y < 2000)
 		{
-			let stretchOfRoad = Math.floor(Math.random()*80+80);
+			let stretchOfRoad = Math.floor(Math.random()*90+90);
 			let arteryPoint = Math.floor(Math.random()*50+50);
 			newroad = 
 			{
@@ -13251,9 +13434,14 @@ function GenerateTown(arguments)
 			
 			let intersectPoint;
 			let intersectFound = false;
-			
+			let inRiver = false;
 			for (let j = 0; j < river.length && !intersectFound; j++)
 			{
+				if (!inRiver && PointInRoad(newroad.start, river[j], riverthickness))
+				{
+					inRiver = true;
+				}
+				
 				let intersectPoint = RoadIntersectsAtPoint(newroad, river[j], riverthickness);
 				if (intersectPoint != false)
 				{
@@ -13286,14 +13474,21 @@ function GenerateTown(arguments)
 					intersectPoint = RoadIntersectsAtPoint(newroad, roads[j], roadthickness);
 					if (intersectPoint != false)
 					{
-						let truedir = DirectionVector(newroad.start, intersectPoint);
-						let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-						trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-						trueintersectpoint.x += truelength * truedir.x;
-						trueintersectpoint.y += truelength * truedir.y;
-						intersectFound = true;
-						newroad.end.x = trueintersectpoint.x;
-						newroad.end.y = trueintersectpoint.y;
+						if (ignoreFirstRoad > 0)
+						{
+							ignoreFirstRoad--;
+						}
+						else
+						{
+							let truedir = DirectionVector(newroad.start, intersectPoint);
+							let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
+							trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
+							trueintersectpoint.x += truelength * truedir.x;
+							trueintersectpoint.y += truelength * truedir.y;
+							intersectFound = true;
+							newroad.end.x = trueintersectpoint.x;
+							newroad.end.y = trueintersectpoint.y;
+						}
 					}
 				}
 			}
@@ -13305,47 +13500,56 @@ function GenerateTown(arguments)
 				{
 					if (LengthBetweenPoints(newroad.start, intersectPoint) > 1)
 					{
-						let truedir = DirectionVector(newroad.start, intersectPoint);
-						let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-						trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-						trueintersectpoint.x += truelength * truedir.x;
-						trueintersectpoint.y += truelength * truedir.y;
-						intersectFound = true;
-						newroad.end.x = trueintersectpoint.x;
-						newroad.end.y = trueintersectpoint.y;
+						if (ignoreFirstRoad > 0)
+						{
+							ignoreFirstRoad--;
+						}
+						else
+						{
+							let truedir = DirectionVector(newroad.start, intersectPoint);
+							let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
+							trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
+							trueintersectpoint.x += truelength * truedir.x;
+							trueintersectpoint.y += truelength * truedir.y;
+							intersectFound = true;
+							newroad.end.x = trueintersectpoint.x;
+							newroad.end.y = trueintersectpoint.y;
+						}
 					}
 				}
 			}
 			
-			if (LengthBetweenPoints(newroad.start, newroad.end) > LengthBetweenPoints(newartery.start, newartery.end))
+			if (!inRiver)
 			{
-				if (Math.random() < 0.334)
-					subarterystarts.push(newartery);
-				else
+				if (LengthBetweenPoints(newroad.start, newroad.end) > LengthBetweenPoints(newartery.start, newartery.end))
 				{
-					newartery.dir = 0;
-					subarterystarts.push(newartery);
-					newartery = 
-					{ 
-						start: { x: currentpos.x, y: currentpos.y },
-						end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
-						dir: 1
-					};
-					subarterystarts.push(newartery);
+					if (Math.random() < 0.334)
+						subarterystarts.push(newartery);
+					else
+					{
+						newartery.dir = 0;
+						subarterystarts.push(newartery);
+						newartery = 
+						{ 
+							start: { x: currentpos.x, y: currentpos.y },
+							end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
+							dir: 1
+						};
+						subarterystarts.push(newartery);
+					}
 				}
+				roadsubarr.push(newroad);
 			}
-			
-			roadsubarr.push(newroad);
 			currentpos.x = newroad.end.x;
 			currentpos.y = newroad.end.y;
-			if (intersectFound)
+			if (intersectFound || inRiver)
 			{
 				currentpos.x = 25000;
 				currentpos.y = 25000;
 			}
 			else
 			{
-				roaddir = DirectionVector(newroad.start, newroad.end)
+				//roaddir = DirectionVector(newroad.start, newroad.end)
 			}
 		}
 		arteryroads = arteryroads.concat(roadsubarr);
@@ -13358,19 +13562,19 @@ function GenerateTown(arguments)
 		let	currentpos = { x: subarterystarts[i].end.x, y: subarterystarts[i].end.y };
 		let roaddir = NintyDegreeTurn(DirectionVector(subarterystarts[i].start, subarterystarts[i].end));
 		let roadactualdir;
+		let ignoreFirstRoad = 1;
 		
 		roadsubarr = [];
 		
-		if (Math.random() < 0.5)
+		if (subarterystarts[i].dir == 1 || (subarterystarts[i].dir == -1 && Math.random() < 0.5))
 		{
 			roaddir.x *= -1;
 			roaddir.y *= -1;
 		}
 		while (currentpos.x > -1 && currentpos.x < 2000 && currentpos.y > -1 && currentpos.y < 2000)
 		{
-			let stretchOfRoad = Math.floor(Math.random()*80+80);
+			let stretchOfRoad = Math.floor(Math.random()*90+90);
 			let arteryPoint = Math.floor(Math.random()*50+50);
-			roadactualdir = DirectionVector(newroad.start, newroad.end);
 			
 			newroad = 
 			{
@@ -13379,18 +13583,25 @@ function GenerateTown(arguments)
 			};
 			newroad.end.x += Math.random()*variance/2 - variance/4;
 			newroad.end.y += Math.random()*variance/2 - variance/4;
+			roadactualdir = DirectionVector(newroad.start, newroad.end);
 			
 			newartery = 
 			{ 
 				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint }
+				end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
+				dir: -1
 			};
 			
 			let intersectPoint;
 			let intersectFound = false;
-			
+			let inRiver = false;
 			for (let j = 0; j < river.length && !intersectFound; j++)
 			{
+				if (!inRiver && PointInRoad(newroad.start, river[j], riverthickness))
+				{
+					inRiver = true;
+				}
+				
 				let intersectPoint = RoadIntersectsAtPoint(newroad, river[j], riverthickness);
 				if (intersectPoint != false)
 				{
@@ -13421,14 +13632,21 @@ function GenerateTown(arguments)
 				intersectPoint = RoadIntersectsAtPoint(newroad, roads[j], roadthickness);
 				if (intersectPoint != false)
 				{
-					let truedir = DirectionVector(newroad.start, intersectPoint);
-					let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-					trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-					trueintersectpoint.x += truelength * truedir.x;
-					trueintersectpoint.y += truelength * truedir.y;
-					intersectFound = true;
-					newroad.end.x = trueintersectpoint.x;
-					newroad.end.y = trueintersectpoint.y;
+					if (ignoreFirstRoad > 0)
+					{
+						ignoreFirstRoad--;
+					}
+					else
+					{
+						let truedir = DirectionVector(newroad.start, intersectPoint);
+						let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
+						trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
+						trueintersectpoint.x += truelength * truedir.x;
+						trueintersectpoint.y += truelength * truedir.y;
+						intersectFound = true;
+						newroad.end.x = trueintersectpoint.x;
+						newroad.end.y = trueintersectpoint.y;
+					}
 				}
 			}
 			
@@ -13437,33 +13655,55 @@ function GenerateTown(arguments)
 				intersectPoint = RoadIntersectsAtPoint(newroad, arteryroads[j], sroadthickness);
 				if (intersectPoint != false)
 				{
-					let truedir = DirectionVector(newroad.start, intersectPoint);
-					let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-					trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-					trueintersectpoint.x += truelength * truedir.x;
-					trueintersectpoint.y += truelength * truedir.y;
-					intersectFound = true;
-					newroad.end.x = trueintersectpoint.x;
-					newroad.end.y = trueintersectpoint.y;
+					if (ignoreFirstRoad > 0)
+					{
+						ignoreFirstRoad--;
+					}
+					else
+					{
+						let truedir = DirectionVector(newroad.start, intersectPoint);
+						let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
+						trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
+						trueintersectpoint.x += truelength * truedir.x;
+						trueintersectpoint.y += truelength * truedir.y;
+						intersectFound = true;
+						newroad.end.x = trueintersectpoint.x;
+						newroad.end.y = trueintersectpoint.y;
+					}
 				}
 			}
 			
-			if (Math.random() < 0.667 && LengthBetweenPoints(newroad.start, newroad.end) > LengthBetweenPoints(newartery.start, newartery.end))
+			if (!inRiver)
 			{
-				subarterystarts.push(newartery);
+				if (Math.random() < 0.334 && LengthBetweenPoints(newroad.start, newroad.end) > LengthBetweenPoints(newartery.start, newartery.end))
+				{
+					if (Math.random() < 0.667)
+						subarterystarts.push(newartery);
+					else
+					{
+						newartery.dir = 0;
+						subarterystarts.push(newartery);
+						newartery = 
+						{ 
+							start: { x: currentpos.x, y: currentpos.y },
+							end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
+							dir: 1
+						};
+						subarterystarts.push(newartery);
+					}
+				}
+				roadsubarr.push(newroad);
 			}
-			
-			roadsubarr.push(newroad);
 			currentpos.x = newroad.end.x;
 			currentpos.y = newroad.end.y;
-			if (intersectFound)
+			if (intersectFound || inRiver)
 			{
 				currentpos.x = 25000;
 				currentpos.y = 25000;
 			}
 			else
 			{
-				roaddir = DirectionVector(newroad.start, newroad.end)
+				//roaddir = DirectionVector(newroad.start, newroad.end)
 			}
 		}
 		arteryroads = arteryroads.concat(roadsubarr);
@@ -13477,7 +13717,7 @@ function GenerateTown(arguments)
 	
 	for (let i in roads)
 	{
-		let buildingsCount = Math.floor(Math.random()*4+4);
+		let buildingsCount = Math.floor(Math.random()*3+3);
 		
 		for (let j = 0; j < buildingsCount && totalbuildingcount < maxbuildingcount; j++)
 		{
@@ -13494,7 +13734,7 @@ function GenerateTown(arguments)
 				awayfromroad.y *= -1;
 			}
 			let awayFromRoadDir = 0;
-			let awayAmount = buildingRadius+roadthickness+3;
+			let awayAmount = buildingRadius+roadthickness/2+3;
 			let randomroadpos = Math.random()*LengthBetweenPoints(roads[i].start, roads[i].end);
 			buildingpos.x = roads[i].start.x + buildingpos.x * randomroadpos;
 			buildingpos.y = roads[i].start.y + buildingpos.y * randomroadpos;
@@ -13504,6 +13744,7 @@ function GenerateTown(arguments)
 			let newbuilding = 
 					{ 
 						position: { x: buildingpos.x, y: buildingpos.y },
+						radius: buildingRadius,
 						sides: []
 					};
 			for (let k = 0; k < buildingSides; k++)
@@ -13527,7 +13768,11 @@ function GenerateTown(arguments)
 					//wallPoint2.x += Math.random()*variance/3 - variance/6;
 					//wallPoint2.y += Math.random()*variance/3 - variance/6;
 				}
-				
+				newwall = 
+					{ 
+						start: { x: wallPoint1.x, y: wallPoint1.y },
+						end: { x: wallPoint2.x, y: wallPoint2.y }
+					};
 				newbuilding.sides.push(newwall);
 			}
 			let intersectPoint;
@@ -13538,10 +13783,16 @@ function GenerateTown(arguments)
 				
 				for (let l = 0; l < newbuilding.sides.length; l++)
 				{
+					
 					let temproad = GetBuildingWall(newbuilding, l)
 					
 					for (let j = 0; j < river.length && !intersectFound; j++)
 					{
+						if (PointInRoad(temproad.start, river[j], riverthickness))
+						{
+							intersectFound = true;
+						}
+						
 						let intersectPoint = RoadIntersectsAtPoint(temproad, river[j], riverthickness);
 						if (intersectPoint != false)
 						{
@@ -13575,7 +13826,7 @@ function GenerateTown(arguments)
 							intersectFound = true;
 						}
 					}
-					
+					/*
 					for (let k = 0; k < buildings.length && !intersectFound; k++)
 					{
 						for (let m = 0; m < buildings[k].sides.length && !intersectFound; m++)
@@ -13587,6 +13838,13 @@ function GenerateTown(arguments)
 							}
 						}
 					}
+					*/
+				}
+				for (let k = 0; k < buildings.length && !intersectFound; k++)
+				{
+					let buildingToBuildingDistance = LengthBetweenPoints(buildings[k].position, newbuilding.position);
+					if (buildingToBuildingDistance < (buildings[k].radius + newbuilding.radius)/1.41)
+						intersectFound = true;
 				}
 				if (intersectFound)
 				{
@@ -13606,7 +13864,7 @@ function GenerateTown(arguments)
 					attempts++;
 				}
 			}
-			if (!intersectFound)
+			if (!intersectFound && LengthBetweenPoints(towncenter, buildingpos) < wallsRadius*0.975)
 			{
 				totalbuildingcount++;
 				buildings.push(newbuilding);
@@ -13616,7 +13874,7 @@ function GenerateTown(arguments)
 	
 	for (let i in arteryroads)
 	{
-		let buildingsCount = Math.floor(Math.random()*4+4);
+		let buildingsCount = Math.floor(Math.random()*3+3);
 		
 		for (let j = 0; j <  buildingsCount && totalbuildingcount < maxbuildingcount; j++)
 		{
@@ -13633,7 +13891,7 @@ function GenerateTown(arguments)
 				awayfromroad.y *= -1;
 			}
 			let awayFromRoadDir = 0;
-			let awayAmount = buildingRadius+sroadthickness+2;
+			let awayAmount = buildingRadius+sroadthickness/2+2;
 			let randomroadpos = Math.random()*LengthBetweenPoints(arteryroads[i].start, arteryroads[i].end);
 			buildingpos.x = arteryroads[i].start.x + buildingpos.x * randomroadpos;
 			buildingpos.y = arteryroads[i].start.y + buildingpos.y * randomroadpos;
@@ -13643,6 +13901,7 @@ function GenerateTown(arguments)
 			let newbuilding = 
 					{ 
 						position: { x: buildingpos.x, y: buildingpos.y },
+						radius: buildingRadius,
 						sides: []
 					};
 			for (let k = 0; k < buildingSides; k++)
@@ -13685,6 +13944,11 @@ function GenerateTown(arguments)
 					
 					for (let j = 0; j < river.length && !intersectFound; j++)
 					{
+						if (PointInRoad(temproad.start, river[j], riverthickness))
+						{
+							intersectFound = true;
+						}
+						
 						let intersectPoint = RoadIntersectsAtPoint(temproad, river[j], riverthickness);
 						if (intersectPoint != false)
 						{
@@ -13718,7 +13982,7 @@ function GenerateTown(arguments)
 							intersectFound = true;
 						}
 					}
-					
+					/*
 					for (let k = 0; k < buildings.length && !intersectFound; k++)
 					{
 						for (let m = 0; m < buildings[k].sides.length && !intersectFound; m++)
@@ -13730,7 +13994,15 @@ function GenerateTown(arguments)
 							}
 						}
 					}
+					*/
 				}
+				for (let k = 0; k < buildings.length && !intersectFound; k++)
+				{
+					let buildingToBuildingDistance = LengthBetweenPoints(buildings[k].position, newbuilding.position);
+					if (buildingToBuildingDistance < (buildings[k].radius + newbuilding.radius)/1.41)
+						intersectFound = true;
+				}
+				
 				if (intersectFound)
 				{
 					if (awayFromRoadDir == 0)
@@ -13750,7 +14022,7 @@ function GenerateTown(arguments)
 				}
 			}
 			
-			if (!intersectFound)
+			if (!intersectFound && LengthBetweenPoints(towncenter, buildingpos) < wallsRadius*0.975)
 			{
 				totalbuildingcount++;
 				buildings.push(newbuilding);
@@ -13825,6 +14097,1017 @@ function MoveHex(hex, direction)
 	}
 }
 
+function AdjacentHexNotAllType(nodemap, hex, map_width, map_height, type)
+{
+	if (hex.x%2 == 1)
+	{
+		if (hex.y-1 > -1 && nodemap[hex.x+(hex.y-1)*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.x+1 < map_width && nodemap[hex.x+1+hex.y*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.x+1 < map_width && hex.y+1 < map_height && nodemap[hex.x+1+(hex.y+1)*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.y+1 < map_height && nodemap[hex.x+(hex.y+1)*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.x-1 > -1 && hex.y+1 < map_height && nodemap[hex.x-1+(hex.y+1)*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.x-1 > -1 && nodemap[hex.x-1+hex.y*map_width].sector != type)
+		{
+			return true;
+		}
+	} 
+	else
+	{
+		if (hex.y-1 > -1 && nodemap[hex.x+(hex.y-1)*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.x+1 < map_width && hex.y-1 > -1 && nodemap[hex.x+1+(hex.y-1)*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.x+1 < map_width && nodemap[hex.x+1+hex.y*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.y+1 < map_height && nodemap[hex.x+(hex.y+1)*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.x-1 > -1 && nodemap[hex.x-1+hex.y*map_width].sector != type)
+		{
+			return true;
+		}
+		if (hex.x-1 > -1 && hex.y-1 > -1 && nodemap[hex.x-1+(hex.y-1)*map_width].sector != type)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+function AreHexesAdjacent(hex0, hex1)
+{
+	if (hex0.x%2 == 1)
+	{
+		if (hex0.x == hex1.x && hex0.y-1 == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x+1 == hex1.x && hex0.y == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x+1 == hex1.x && hex0.y+1 == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x == hex1.x && hex0.y+1 == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x-1 == hex1.x && hex0.y+1 == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x-1 == hex1.x && hex0.y == hex1.y)
+		{
+			return true;
+		}
+	} 
+	else
+	{
+		if (hex0.x == hex1.x && hex0.y-1 == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x+1 == hex1.x && hex0.y-1 == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x+1 == hex1.x && hex0.y == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x == hex1.x && hex0.y+1 == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x-1 == hex1.x && hex0.y == hex1.y)
+		{
+			return true;
+		}
+		if (hex0.x-1 == hex1.x && hex0.y-1 == hex1.y)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+function NextSectorlessNode(hex, nodemap, map_width, map_height)
+{
+	let totalloops = 1;
+	let sizecovered = 7;
+
+	while (map_width*map_height > sizecovered)
+	{
+		totalloops++;
+		sizecovered += totalloops*6;
+	}
+	
+	let currenthex = { x: hex.x, y: hex.y };
+	
+	//first
+	MoveHex(currenthex, 0);
+	let position = currenthex.x + currenthex.y * map_width;
+	if (nodemap[position].sector == null)
+		return { x: currenthex.x, y: currenthex.y };
+	for (let a = 2; a < 6; a++)
+	{
+		MoveHex(currenthex, a);
+		position = currenthex.x + currenthex.y * map_width;
+		if (nodemap[position].sector == null)
+			return { x: currenthex.x, y: currenthex.y };
+	}
+	MoveHex(currenthex, 0);
+	position = currenthex.x + currenthex.y * map_width;
+	if (nodemap[position].sector == null)
+		return { x: currenthex.x, y: currenthex.y };
+
+	return null;
+}
+
+function NearestSectorlessNode(hex, nodemap, map_width, map_height, nthreturnval = 1, maxsearch = -1)
+{
+	let returnval = { x: 0, y: 0 };
+	let nthfind = 0;
+	
+	let totalloops = 1;
+	let sizecovered = 7;
+
+	while (map_width*map_height > sizecovered)
+	{
+		totalloops++;
+		sizecovered += totalloops*6;
+	}
+	
+	let startpos = { x: hex.x, y: hex.y };
+	let currenthex = { x:0, y:0 };
+	let curdirdur = 0;
+	let dirduration = 1;
+	let loopend = 6;
+	let sizereached = 1;
+	if (maxsearch == -1)
+		maxsearch = map_width*map_height;
+	
+	for(let j = 0; j < totalloops && sizereached < maxsearch; j++)
+	{
+		let direction = 3;
+		if (startpos.x  % 2 == 1)
+		{
+			startpos.x = startpos.x+1;
+		}
+		else
+		{
+			startpos.x = startpos.x+1;
+			startpos.y = startpos.y-1;
+		}
+		currenthex.x = startpos.x;
+		currenthex.y = startpos.y;
+		
+		for(let k = 0; k < loopend && sizereached < maxsearch; k++)
+		{
+			if (currenthex.x < map_width && currenthex.y < map_height && currenthex.x > -1 && currenthex.y > -1)
+			{
+				position = currenthex.x+currenthex.y*map_width;
+				if (nodemap[position].sector == null)
+				{
+					nthfind++;
+					if (nthfind >= nthreturnval)
+					{	
+						returnval.x = currenthex.x
+						returnval.y = currenthex.y
+						return returnval;
+					}
+				}
+			}
+			
+			MoveHex(currenthex, direction);
+			curdirdur++;
+			if (curdirdur == dirduration)
+			{
+				curdirdur = 0;
+				direction++;
+				if (direction == 6)
+					direction = 0;
+			}
+			sizereached++;
+		}
+		
+		loopend += 6;
+		dirduration++;
+	}
+	//console.log(newcontigoushexes);
+	
+	return null;
+}
+
+function GetWarpedNodeCenter(node, hex_width, hex_height)
+{
+	let returnval = { x: 0, y: 0 };
+	
+	returnval.x = node.x*hex_width*3/4 + hex_width*3/4 + node.warp.x;
+	returnval.y = node.y*hex_height + hex_height/2 + (node.x%2)*hex_height/2 + node.warp.y;
+	
+	return returnval;
+}
+
+function MoveOnSquareGrid(point,dir)
+{
+	dir = dir%4;
+	if (dir == 0)
+		point.y--;
+	else if (dir == 1)
+		point.x--;
+	else if (dir == 2)
+		point.y++;
+	else if (dir == 3)
+		point.x++;
+}
+/*
+function GenerateTown(arguments)
+{
+	let map_width = 13;
+	let map_height = 10;
+	
+	let sectors = [];
+	let nodemap = [];
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x = 0; x < map_width; x++)
+		{
+			let newnode = { x: x, y: y };
+			newnode.warp = FindShapePoint(Math.random()*Math.PI*2, Math.ceil(Math.random()*15.95+4.04));
+			newnode.sector = null;
+			nodemap.push(newnode);
+		}
+	}
+	
+	let newsector = {
+					nodes: [],
+					type: "city"
+					}
+	
+	let currenthex;
+	//make city districts
+	let citydistrictscount = Math.floor(Math.random()*6+5);
+	
+	let tempwallnodearray = [];
+	for (let a = 0; a < citydistrictscount; a++)
+	{
+		newsector = {
+					nodes: [],
+					type: "city"
+					}
+		let tempcitydistrictnodearray = [];
+		currenthex = { x: Math.floor(map_width/2), y: Math.floor(map_height/2) };
+		let position = currenthex.x+currenthex.y*map_width;
+		if (nodemap[position].sector != null)
+			currenthex = NearestSectorlessNode({ x: Math.floor(map_width/2), y: Math.floor(map_height/2) }, nodemap, map_width, map_height);
+		currentdir = Math.floor(Math.random()*6);
+		
+		let sectorsize = Math.floor(Math.random()*4+3);
+		let cursectorsize = 0;
+		let tempcontigmap = [];
+		for (let y = 0; y < map_height; y++)
+		{
+			for (let x = 0; x < map_width; x++)
+			{
+				tempcontigmap.push(false);
+			}
+		}
+		
+		let hexesavailable = true;
+		let districtorigin = { x: currenthex.x, y: currenthex.y };
+		while (hexesavailable && cursectorsize < sectorsize && currenthex.x < map_width && currenthex.x > -1 && currenthex.y < map_height && currenthex.y > -1)
+		{
+			position = currenthex.x+currenthex.y*map_width;
+			if (nodemap[position].sector == null)
+			{
+				tempcitydistrictnodearray.push(nodemap[position]);
+				nodemap[position].sector = "city";
+				tempcontigmap[position] = true;
+				//newsector.nodes.push(nodemap[position]);
+				cursectorsize++;
+			}
+			
+			let nexthex = NextSectorlessNode(districtorigin, nodemap, map_width, map_height);
+			if (nexthex != null)
+			{
+				currenthex.x = nexthex.x;
+				currenthex.y = nexthex.y;
+			}
+			else 
+			{
+				hexesavailable = false;
+			}
+		}
+		let currentnode = tempcitydistrictnodearray[0];
+		tempcitydistrictnodearray.splice(0,1);
+		let onlyNonAdjacencentDetected = 0;
+		while (tempcitydistrictnodearray.length > 0 && onlyNonAdjacencentDetected < 255)
+		{
+			for (let a = 0; a < tempcitydistrictnodearray.length; a++)
+			{
+				if (AreHexesAdjacent(currentnode,tempcitydistrictnodearray[a]))
+				{
+					onlyNonAdjacencentDetected = 0;
+					newsector.nodes.push(tempcitydistrictnodearray[a])
+					currentnode = tempcitydistrictnodearray[a];
+					tempcitydistrictnodearray.splice(a,1)
+					a += tempcitydistrictnodearray.length;
+				}
+				else
+				{
+					onlyNonAdjacencentDetected++;
+				}
+			}
+		}
+		if (tempcitydistrictnodearray > 0)
+		{
+			for (let i in tempcitydistrictnodearray)
+			{
+				tempcitydistrictnodearray[i].sector = null;
+			}
+		}
+		sectors.push(newsector);
+		tempwallnodearray = tempwallnodearray.concat(newsector.nodes);
+	}
+	
+	newsector = {
+				nodes: [],
+				type: "walls"
+				}
+	
+	for (let a = 0; a < tempwallnodearray.length; a++)
+	{
+		if (!AdjacentHexNotAllType(nodemap, tempwallnodearray[a], map_width, map_height, "city"))
+		{
+			tempwallnodearray.splice(a,1);
+			a--;
+		}
+	}
+	
+	newsector.nodes.push(tempwallnodearray[0]);
+	
+	let currentnode = tempwallnodearray[0];
+	tempwallnodearray.splice(0,1);
+	let onlyNonAdjacencentDetected = 0;
+	while (tempwallnodearray.length > 0 && onlyNonAdjacencentDetected < 255)
+	{
+		for (let a = 0; a < tempwallnodearray.length; a++)
+		{
+			if (AreHexesAdjacent(currentnode,tempwallnodearray[a]))
+			{
+				onlyNonAdjacencentDetected = 0;
+				newsector.nodes.push(tempwallnodearray[a])
+				currentnode = tempwallnodearray[a];
+				tempwallnodearray.splice(a,1)
+				a += tempwallnodearray.length;
+			}
+			else
+			{
+				onlyNonAdjacencentDetected++;
+			}
+		}
+	}
+	
+	sectors.push(newsector);
+	
+	
+	//make river
+	
+	newsector = {
+				nodes: [],
+				type: "river"
+				}
+	
+	currentdir = 3 + Math.floor(Math.random()*3-1)
+	currenthex;
+	if (currentdir < 0)
+		currenthex = { x: Math.floor(Math.random()*(map_width/2-5)+map_width/2), y: 0}
+	else if (currentdir > 0)
+		currenthex = { x: Math.floor(Math.random()*(map_width/2)+5), y: 0}
+	else
+		currenthex = { x: Math.floor(Math.random()*(map_width/2-map_width/4)+map_width/4), y: 0}
+	
+	if (currentdir < 0)
+		currentdir += 6;
+	
+	let changeDirectionFreq = 5
+	let changeDirIn = changeDirectionFreq;
+	
+	while (currenthex.x < map_width && currenthex.x > -1 && currenthex.y < map_height && currenthex.y > -1)
+	{
+		changeDirIn--;
+		nodemap[currenthex.x+(currenthex.y*map_width)].sector = "river";
+		newsector.nodes.push(nodemap[currenthex.x+(currenthex.y*map_width)]);
+		let tempdir = currentdir + Math.floor(Math.random()*3-1);
+		
+		if (changeDirIn <= 0)
+		{
+			changeDirIn = changeDirectionFreq;
+			currentdir = tempdir;
+		}
+		
+		if (tempdir < 0)
+			tempdir += 6;
+		else if (tempdir > 5)
+			tempdir -= 6;
+		MoveHex(currenthex, tempdir);
+	}
+	
+	sectors.push(newsector);
+	
+	return sectors;
+}
+
+function DrawTownMap(channel, arguments)
+{
+	let hex_width = 200;
+	let hex_height = 174;
+	//let tempcanvas = new Canvas();
+	//tempcanvas.width = 2000;
+	//tempcanvas.height = 1914;
+	
+	let town = GenerateTown(arguments);
+	
+	paper.setup(new paper.Size(2000, 1914));
+	paper.view.viewSize = new paper.Size(2000,1914);
+	
+	let backgroundPath = new paper.Path.Rectangle(new paper.Point(0,0), new paper.Size(2000,1914));
+	backgroundPath.fillColor = new paper.Color(0.875,0.85,0.675);
+	paper.view.draw();
+	
+	//var ctx = tempcanvas.getContext('2d');
+	//ctx.fillStyle = "#DDCC99";
+	//ctx.fillRect(0,0,1805,1800);
+	
+	let riverthickness = Math.floor(Math.random()*30+51);
+	
+	
+	for (let i in town)
+	{
+		console.log("in town loop");
+		if (town[i].type == "river" && town[i].nodes.length > 1)
+		{	
+			console.log(town[i].nodes.length);
+			
+			let riverPath = new paper.Path();
+			riverPath.strokeColor = new paper.Color(0,0.5,1);
+			riverPath.strokeWidth = riverthickness;
+			let realpos0 = GetWarpedNodeCenter(town[i].nodes[0], hex_width, hex_height);
+			let startpos = { x: realpos0.x, y: realpos0.y};
+			riverPath.moveTo(new paper.Point( realpos0.x, realpos0.y ));
+			for (let a = 1; a < town[i].nodes.length-1; a++)
+			{
+				realpos0 = GetWarpedNodeCenter(town[i].nodes[a], hex_width, hex_height);
+				//ctx.lineTo(realpos0.x, realpos0.y);
+				riverPath.lineTo(new paper.Point( realpos0.x, realpos0.y));
+			}
+			//riverPath.simplify(1);
+			riverPath.smooth();
+		}
+		if (town[i].type == "city" && town[i].nodes.length > 2)
+		{
+			console.log(town[i].nodes.length);
+			let greatestDepth = 0;
+			for (let a = 0; a < town[i].nodes.length+1; a++)
+			{
+				let p0 = a % town[i].nodes.length;
+				let p1 = (a+1) % town[i].nodes.length
+				let realpos0 = GetWarpedNodeCenter(town[i].nodes[p0], hex_width, hex_height);
+				let realpos1 = GetWarpedNodeCenter(town[i].nodes[p1], hex_width, hex_height);
+				let length0 = LengthBetweenPoints(realpos0, realpos1);
+				let dir0 = DirectionVector(realpos0, realpos1);
+				let ndir0 = NintyDegreeTurn(dir0);
+				ndir0.x *= -1;
+				ndir0.y *= -1;
+				let usedLength = greatestDepth;
+				while (length0-usedLength > 12)
+				{
+					let cityDistrictBuilding = new paper.Path();
+					cityDistrictBuilding.fillColor = new paper.Color(0.66,0.33,0.11);
+					cityDistrictBuilding.strokeColor = 'black';
+					cityDistrictBuilding.strokeWidth = 2;
+					let buildingLength = Math.random()*(length0)/2+8;
+					while (buildingLength > length0-usedLength)
+					{
+						//console.log("1; " + (length0-usedLength))
+						buildingLength = Math.random()*(length0)/2+8;
+					}
+					let buildingDepth = Math.random()*24+8;
+					if (buildingDepth > greatestDepth)
+						greatestDepth = buildingDepth;
+					cityDistrictBuilding.moveTo(new paper.Point( realpos0.x+dir0.x*usedLength, realpos0.y+dir0.y*usedLength ));
+					cityDistrictBuilding.lineTo(new paper.Point( realpos0.x+dir0.x*(buildingLength+usedLength), realpos0.y+dir0.y*(buildingLength+usedLength) ));
+					cityDistrictBuilding.lineTo(new paper.Point( realpos0.x+dir0.x*(buildingLength+usedLength)+(ndir0.x*buildingDepth), realpos0.y+dir0.y*(buildingLength+usedLength)+(ndir0.y*buildingDepth) ));
+					cityDistrictBuilding.lineTo(new paper.Point( realpos0.x+dir0.x*(usedLength)+(ndir0.x*buildingDepth), realpos0.y+dir0.y*(usedLength)+(ndir0.y*buildingDepth) ));
+					cityDistrictBuilding.closePath();
+					usedLength += buildingLength+Math.random()*4+4;
+				}
+			}
+			
+			
+			/*
+			let cityDistrictPath = new paper.Path();
+			cityDistrictPath.strokeColor = 'blue';
+			cityDistrictPath.strokeWidth = 5;
+			let realpos0 = GetWarpedNodeCenter(town[i].nodes[0], hex_width, hex_height);
+			let startpos = { x: realpos0.x, y: realpos0.y};
+			cityDistrictPath.moveTo(new paper.Point( realpos0.x, realpos0.y ));
+			for (let a = 0; a < town[i].nodes.length; a++)
+			{
+				realpos0 = GetWarpedNodeCenter(town[i].nodes[a], hex_width, hex_height);
+				//ctx.lineTo(realpos0.x, realpos0.y);
+				cityDistrictPath.lineTo(new paper.Point( realpos0.x, realpos0.y));
+			}
+			cityDistrictPath.closePath();
+			
+		}
+		/*
+		if (town[i].type == "walls" && town[i].nodes.length > 1)
+		{
+			console.log(town[i].nodes.length);
+			
+			let wallPath = new paper.Path();
+			wallPath.strokeColor = 'black';
+			wallPath.strokeWidth = 8;
+			let realpos0 = GetWarpedNodeCenter(town[i].nodes[0], hex_width, hex_height);
+			let startpos = { x: realpos0.x, y: realpos0.y};
+			wallPath.moveTo(new paper.Point( realpos0.x, realpos0.y ));
+			for (let a = 0; a < town[i].nodes.length; a++)
+			{
+				realpos0 = GetWarpedNodeCenter(town[i].nodes[a], hex_width, hex_height);
+				let wallTower = new paper.Path.Circle(new paper.Point(realpos0.x, realpos0.y), 12);
+				wallTower.fillColor = 'black';
+				//ctx.lineTo(realpos0.x, realpos0.y);
+				wallPath.lineTo(new paper.Point( realpos0.x, realpos0.y));
+			}
+			wallPath.lineTo(new paper.Point( startpos.x, startpos.y));
+		}
+		
+	}
+	
+	//output file
+	let file = 'frame-0.png';
+	let path = './' + file;
+	let newname = 'drawnmap.png';
+	
+	paper.view.draw();
+	
+	
+	paper.view.exportFrames({
+		amount: 1,
+		directory: './',
+		onComplete: function() {
+			console.log('Done exporting.');
+			channel.send({ files: [{ attachment: path, name: newname }] });
+		},
+		onProgress: function(event) {
+			console.log(event.percentage + '% complete, frame took: ' + event.delta);
+		}
+	});
+	
+}
+*/
+
+function SpawnPoint(allpoints, point, mindistance)
+{
+	let newpoint = { x: point.x, y: point.y, type: null, connections: [] };
+	let connectionDistance = 999999999999;
+	let closestPoint = null;
+	for (let a in allpoints)
+	{
+		let distance = LengthBetweenPoints(point, allpoints[a]);
+		if (distance < connectionDistance)
+		{
+			connectionDistance = distance;
+			closestPoint = allpoints[a];
+		}
+	}
+	if (connectionDistance > mindistance)
+	{
+		allpoints.push(newpoint);
+		return newpoint;
+	}
+	return closestPoint;
+}
+
+function ConnectPoints(blockingpoints, point0, point1, type, overwriteConnection = false)
+{
+	
+	let road0 = {	start: { x: point0.x, y: point0.y },
+					end: { x: point1.x, y: point1.y } };
+	let connectionNotBlocked = true;
+	
+	for (let a in blockingpoints)
+	{
+		for (let b in blockingpoints[a].connections)
+		{
+			let road1 = {	start: { x: blockingpoints[a].x, y: blockingpoints[a].y },
+							end: { x: blockingpoints[a].connections[b].node.x, y: blockingpoints[a].connections[b].node.y } };
+			
+			let intersectPoint = RoadIntersectsAtPoint(road0, road1);
+			if (intersectPoint != false)
+			{
+				if (LengthBetweenPoints(intersectPoint, point1) > 1 && LengthBetweenPoints(intersectPoint, point0) > 1)
+					connectionNotBlocked = false;
+			}
+		}
+	}
+	
+	
+	if (connectionNotBlocked)
+	{
+		let connectionNo = FindConnection(point0, point1);
+		if (connectionNo == -1)
+		{
+			point0.connections.push({ node: point1, type: type });
+			point1.connections.push({ node: point0, type: type });
+		}
+		else if (overwriteConnection)
+		{
+			point0.connections[connectionNo].type = type;
+			point1.connections[FindConnection(point1, point0)].type = type;
+		}
+	}
+}
+
+function FindConnection(point0, point1)
+{
+	let connectionNo = -1;
+	for (let b = 0; b < point0.connections.length; b++)
+	{
+		if (point1 == point0.connections[b].node)
+		{
+			connectionNo = b;
+		}
+	}
+	return connectionNo;
+}
+
+function ConnectToNearestNPoints(allpoints, point, n, type, overwriteConnection = false, maxrange = 999999)
+{
+	let temppoints = allpoints.slice();
+	for (let i = 0; i < n; i++)
+	{
+		let shortestdistance = 999999;
+		let nearestpoint = null;
+		for(let a = 0; a < temppoints.length; a++)
+		{
+			let distance = LengthBetweenPoints(point, temppoints[a]);
+			if (distance < shortestdistance && distance < maxrange)
+			{
+				shorestdistance = distance;
+				nearestpoint = a;
+			}
+		}
+		if (nearestpoint != null)
+		{
+			ConnectPoints(allpoints, point, temppoints[nearestpoint], type, overwriteConnection);
+			temppoints.splice(nearestpoint, 1);
+		}
+	}
+}
+
+function FindEndOfLineShape(startpoint)
+{
+	let previouspoint = null;
+	let currentpoint = startpoint;
+	let availablepoints = currentpoint.connections.slice();
+	while (availablepoints.length > 0)
+	{
+		previouspoint = currentpoint;
+		currentpoint = availablepoints[0].node;
+		availablepoints = currentpoint.connections.slice();
+		availablepoints.splice(FindConnection(currentpoint, previouspoint), 1);
+		if (currentpoint == startpoint)
+			break;
+	}
+	
+	return currentpoint;
+}
+
+function SelectNearestPointToPoint(allpoints, point)
+{
+	let closestdistance = 9999999;
+	let nearestPoint = null;
+	for (let a in allpoints)
+	{
+		distance = LengthBetweenPoints(point, allpoints[a]);
+		if (distance < closestdistance)
+		{
+			closestdistance = distance;
+			nearestPoint = allpoints[a];
+		}
+	}
+	return nearestPoint;
+}
+
+function SelectAllPointsWithinRangeOfPoint(allpoints, point, range)
+{
+	let pointsInRange = [];
+	for (let a in allpoints)
+	{
+		if (LengthBetweenPoints(point, allpoints[a]) <= range)
+		{
+			pointsInRange.push(allpoints[a]);
+		}
+	}
+	return pointsInRange;
+}
+
+function PaperGenerateTown(arguments)
+{
+
+	let allpoints = [];
+	
+	//generate wall points
+	
+	let wallSides = Math.random()*5+5;
+	let cityRadius = Math.random()*200+400;
+	let tempwallspoints = [];
+	
+	for(let i = 0; i < wallSides; i++)
+	{
+		let allpointscount = allpoints.length;
+		let newpoint = FindShapePoint(Math.PI*2/wallSides*i, cityRadius)
+		newpoint.x += 1000;
+		newpoint.y += 1000;
+		let nextpoint = SpawnPoint(allpoints, newpoint, 160);
+		if (allpoints.length > allpointscount)
+			tempwallspoints.push(nextpoint);
+	}
+	
+	let wallstartpoint = tempwallspoints[0];
+	
+	for (let i = 0; i < tempwallspoints.length+1; i++)
+	{
+		let p0 = i % tempwallspoints.length;
+		let p1 = (i+1) % tempwallspoints.length;
+		tempwallspoints[p0].type = "tower";
+		ConnectPoints(allpoints, tempwallspoints[p0], tempwallspoints[p1], "wall");
+	}
+	
+	//generate innercity points
+	let tempcitypoints = [];
+	let citylayers = cityRadius/215;
+	
+	
+	for (let i = 0; i < citylayers; i++)
+	{
+		let layerpoints = Math.random()*6+4
+		let layerradius = 155*(i+1)+Math.random()*60;
+		for (let j = 0; j < layerpoints; j++)
+		{
+			let allpointscount = allpoints.length;
+			let newpoint = FindShapePoint(Math.PI*2/layerpoints*j, layerradius);
+			newpoint.x += 1000;
+			newpoint.y += 1000;
+			let nextpoint = SpawnPoint(tempcitypoints, newpoint, 130);
+			//if (allpoints.length > allpointscount)
+			//	tempcitypoints.push(nextpoint);
+		}
+	}
+	
+	allpoints = allpoints.concat(tempcitypoints);
+	let citystartpoints = tempcitypoints[0];
+	
+	for (let i = 0; i < tempcitypoints.length; i++)
+	{
+		let p0 = i % tempcitypoints.length;
+		//let p1 = (i+1) % tempcitypoints.length;
+		//ConnectPoints(allpoints, tempcitypoints[p0], tempcitypoints[p1], "city");
+		ConnectToNearestNPoints(tempcitypoints, tempcitypoints[p0], 6, "city", false, 320)
+	}
+	
+	//generate river points
+	
+	let riverarray = [];
+	let riverpoint = SpawnPoint(riverarray, {x: Math.random()*1500+250, y:-50}, 130);
+	let riverstartpoint = riverpoint;
+	
+	console.log("river starting");
+	while (riverpoint.y > -250 && riverpoint.y < 2250 && riverpoint.x < 2250 && riverpoint.x > -250)
+	{
+		let next = FindShapePoint(Math.random()*Math.PI*2/4+Math.PI*2*3/8+Math.PI, 200);
+		next.x += riverpoint.x;
+		next.y += riverpoint.y;
+		let nextpoint = SpawnPoint(riverarray, next, 150);
+		ConnectPoints(riverarray, riverpoint, nextpoint, "river");
+		riverpoint = nextpoint;
+	}
+	
+	allpoints = allpoints.concat(riverarray);
+	
+	console.log("river finished");
+	wallstartpoint = FindEndOfLineShape(wallstartpoint);
+	console.log("finish wall");
+	//citystartpoints = FindEndOfLineShape(citystartpoints);
+	//console.log("finish end of line shapes");
+	
+	return { allpoints: allpoints, walls: wallstartpoint, city: citystartpoints, river: riverstartpoint };
+}
+
+function PaperDrawTownMap(channel, arguments)
+{
+	
+	let town = GenerateTown(arguments);
+	
+	paper.setup(new paper.Size(2000, 2000));
+	paper.view.viewSize = new paper.Size(2000,2000);
+	
+	let backgroundPath = new paper.Path.Rectangle(new paper.Point(0,0), new paper.Size(2000,2000));
+	backgroundPath.fillColor = new paper.Color(0.875,0.85,0.675);
+	
+	/*
+	for (let a in town.allpoints)
+	{
+		let realpos0 = { x: town.allpoints[a].x, y: town.allpoints[a].y };
+		let wallTower = new paper.Path.Circle(new paper.Point(realpos0.x, realpos0.y), 3);
+		wallTower.fillColor = 'black';
+		for (let b = 0; b < town.allpoints[a].connections.length; b++)
+		{
+			let wallPath = new paper.Path();
+			wallPath.strokeColor = 'black';
+			wallPath.strokeWidth = 1;
+			wallPath.moveTo( new paper.Point(realpos0.x, realpos0.y));
+			wallPath.lineTo( new paper.Point(town.allpoints[a].connections[b].node.x, town.allpoints[a].connections[b].node.y));
+		}
+	}
+	*/
+	
+	// do river
+	
+	console.log("draw river");
+	let currentNode = town.river;
+	let previousNode = null;
+	let startingNode = currentNode;
+	let realpos0 = { x: currentNode.x, y: currentNode.y };
+	let riverBase = new paper.Path();
+	let terminatePath = false;
+	riverBase.strokeColor = new paper.Color(0,0.5,1);
+	riverBase.strokeWidth = 81;
+	riverBase.moveTo(new paper.Point( realpos0.x, realpos0.y ));
+	let loopcounter = 0
+	do
+	{
+		realpos0 = { x: currentNode.x, y: currentNode.y };
+		riverBase.lineTo(new paper.Point(realpos0.x, realpos0.y));
+		if (currentNode.type == "bridge")
+		{
+			//to do
+		}
+		let i = 0;
+		do
+		{
+			nextNode = currentNode.connections[i].node;
+			i++;
+		}
+		while (nextNode == previousNode && i < currentNode.connections.length)
+		if (nextNode == previousNode)
+		{
+			terminatePath = true;
+		}
+		previousNode = currentNode;
+		currentNode = nextNode;
+		loopcounter++;
+	}
+	while (currentNode != startingNode && !terminatePath && loopcounter < 9999)
+	if (currentNode == startingNode)
+	{
+		realpos0 = { x: currentNode.x, y: currentNode.y };
+		riverBase.lineTo(new paper.Point(realpos0.x, realpos0.y));
+	}
+	
+	// do walls
+	
+	console.log("draw walls");
+	currentNode = town.walls;
+	previousNode = null;
+	startingNode = currentNode;
+	realpos0 = { x: currentNode.x, y: currentNode.y };
+	wallPath = new paper.Path();
+	terminatePath = false;
+	wallPath.strokeColor = 'black';
+	wallPath.strokeWidth = 16;
+	wallPath.moveTo(new paper.Point( realpos0.x, realpos0.y ));
+	do
+	{
+		realpos0 = { x: currentNode.x, y: currentNode.y };
+		wallPath.lineTo(new paper.Point(realpos0.x, realpos0.y));
+		if (currentNode.type == "tower")
+		{
+			let wallTower = new paper.Path.Circle(new paper.Point(realpos0.x, realpos0.y), 20);
+			wallTower.fillColor = 'black';
+		}
+		let nextNode = currentNode.connections[0].node;
+		let i = 1;
+		while (nextNode == previousNode && i < currentNode.connections.length)
+		{
+			nextNode = currentNode.connections[i].node;
+			i++;
+		}
+		if (nextNode == previousNode)
+		{
+			terminatePath = true;
+		}
+		previousNode = currentNode;
+		currentNode = nextNode;
+	} while (currentNode != startingNode && !terminatePath)
+	if (currentNode == startingNode)
+	{
+		realpos0 = { x: currentNode.x, y: currentNode.y };
+		wallPath.lineTo(new paper.Point(realpos0.x, realpos0.y));
+	}
+	
+	// do buildings
+	
+	console.log("draw buildings");
+	for (let a in town.allpoints)
+	{
+		let realpos0 = { x: town.allpoints[a].x, y: town.allpoints[a].y };
+		for (let b = 0; b < town.allpoints[a].connections.length; b++)
+		{
+			if (town.allpoints[a].connections[b].type == "city")
+			{
+				let realpos1 = { x: town.allpoints[a].connections[b].node.x, y: town.allpoints[a].connections[b].node.y };
+				let length = LengthBetweenPoints(realpos0, realpos1) - 50;
+				let dir = DirectionVector(realpos0, realpos1);
+				let ndir = NintyDegreeTurn(dir);
+				let lengthused = 50;
+				let awayfromroaddist = 10;
+				while (length-lengthused > 50)
+				{
+					let buildingLength = Math.random()*96+16;
+					let buildingDepth = Math.random()*9+24;
+					while (buildingLength > length-lengthused)
+					{
+						buildingLength = Math.random()*96+16;
+					}
+					let buildingPath = new paper.Path();
+					buildingPath.strokeColor = 'black';
+					buildingPath.strokeWidth = 4;
+					buildingPath.fillColor = new paper.Color(0.8,0.67,0.25);
+					buildingPath.moveTo(new paper.Point(realpos0.x + ndir.x*awayfromroaddist + dir.x*lengthused, realpos0.y + ndir.y*awayfromroaddist + dir.y*lengthused));
+					buildingPath.lineTo(new paper.Point(realpos0.x + ndir.x*awayfromroaddist + dir.x*(buildingLength+lengthused), realpos0.y + ndir.y*awayfromroaddist + dir.y*(buildingLength+lengthused)));
+					buildingPath.lineTo(new paper.Point(realpos0.x + ndir.x*(awayfromroaddist+buildingDepth) + dir.x*(buildingLength+lengthused), realpos0.y + ndir.y*(awayfromroaddist+buildingDepth) + dir.y*(buildingLength+lengthused)));
+					buildingPath.lineTo(new paper.Point(realpos0.x + ndir.x*(awayfromroaddist+buildingDepth) + dir.x*lengthused, realpos0.y + ndir.y*(awayfromroaddist+buildingDepth) + dir.y*lengthused));
+					buildingPath.closePath();
+					lengthused += buildingLength + 4;
+				}
+			}
+		}
+	}
+	
+	paper.view.draw();
+	
+	//output file
+	let file = 'frame-0.png';
+	let path = './' + file;
+	let newname = 'drawnmap.png';
+	
+	paper.view.draw();
+	
+	
+	paper.view.exportFrames({
+		amount: 1,
+		directory: './',
+		onComplete: function() {
+			console.log('Done exporting.');
+			channel.send({ files: [{ attachment: path, name: newname }] });
+		},
+		onProgress: function(event) {
+			console.log(event.percentage + '% complete, frame took: ' + event.delta);
+		}
+	});
+	
+}
 
 //
 // handle errors??? no
