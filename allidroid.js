@@ -4792,6 +4792,98 @@ function SeaLevelContiguousToPoint(sealevelmap, pointx, pointy, map_width, map_h
 	return sealevelmap;
 }
 
+function LandmassCalculation(sealevelmap, landmassmap, landmassno, pointx, pointy, map_width, map_height, size)
+{
+	let contiguitymap = []
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x  = 0; x < map_width; x++)
+		{
+			contiguitymap.push( false );
+		}
+	}
+	
+	contiguitymap[pointx+(pointy*map_width)] = true;
+	
+	let newcontigoushexes = 1;
+	
+	while (newcontigoushexes > 0)
+	{
+		newcontigoushexes = 0;
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (size > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: pointx, y: pointy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < size; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < size; k++)
+			{
+				if (currenthex.x < map_width && currenthex.y < map_height && currenthex.x > -1 && currenthex.y > -1)
+				{
+					position = currenthex.x+currenthex.y*map_width;
+					if (!contiguitymap[position] && sealevelmap[position].sealevel == "land")
+					{
+						contiguitymap[position] = AdjacentMapHexContiguous(contiguitymap, currenthex.x, currenthex.y, map_width, map_height);
+						if (contiguitymap[position])
+							newcontigoushexes++;
+					}
+				}
+				
+				MoveHex(currenthex, direction);
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		//console.log(newcontigoushexes);
+	}
+	
+	for (let y = 0; y < map_height; y++)
+	{
+		for (let x  = 0; x < map_width; x++)
+		{
+			if (!contiguitymap[x+(y*map_width)])
+				landmassmap[x+(y*map_width)] = landmassno;
+		}
+	}
+	
+	return landmassmap;
+}
+
 function LakeWaterDetection(sealevelmap, map_width, map_height)
 {
 	let contiguitymap = []
@@ -4969,7 +5061,7 @@ function NearestGrasslandsToPoint(map, point, map_width, map_height, maxsearch =
 			if (currenthex.x < map_width && currenthex.y < map_height && currenthex.x > -1 && currenthex.y > -1)
 			{
 				position = currenthex.x+currenthex.y*map_width;
-				if (map[position].sealevel == "land" && map[position].terrain == "grass")
+				if (map[position].sealevel == "land" && map[position].terrain == "grass" && map[position].trees != "forest" && map[position].trees != "jungle")
 				{
 					returnval.x = currenthex.x
 					returnval.y = currenthex.y
@@ -5045,6 +5137,68 @@ function VectorToDirection(vector)
 			return 3;
 	}
 	
+}
+
+function DirectionFromHexToHex(hexFrom, hexTo)
+{
+	hex = { x: hexFrom.x - hexTo.x, y: hexFrom.y - hexTo.y };
+	direction = -1;
+	if (hexFrom.x%2 == 1)
+	{
+		if (hex.x == 1 && hex.y == 0)
+		{
+			direction = 5;
+		}
+		else if (hex.x == 1 && hex.y == -1)
+		{
+			direction = 4;
+		}
+		else if (hex.x == 0 && hex.y == -1)
+		{
+			direction = 3;
+		}
+		else if (hex.x == -1 && hex.y == -1)
+		{
+			direction = 2;
+		}
+		else if (hex.x == -1 && hex.y == 0)
+		{
+			direction = 1
+		}
+		else if (hex.x == 0 && hex.y == 1)
+		{
+			direction = 0;
+		}
+	} 
+	else
+	{
+		if (hex.x == 1 && hex.y == 1)
+		{
+			direction = 5;
+		}
+		else if (hex.x == 1 && hex.y == 0)
+		{
+			direction = 4;
+		}
+		else if (hex.x == 0 && hex.y == -1)
+		{
+			direction = 3;
+		}
+		else if (hex.x == -1 && hex.y == 0)
+		{
+			direction = 2;
+		}
+		else if (hex.x == -1 && hex.y == 1)
+		{
+			direction = 1;
+		}
+		else if (hex.x == 0 && hex.y == 1)
+		{
+			direction = 0;
+		}
+	}
+	
+	return direction;
 }
 
 function TreesContiguousToPoint(treesmap, value, pointx, pointy, map_width, map_height, size)
@@ -5158,7 +5312,7 @@ function GetNearestCity(cities, point)
 
 function CityLocationValid(point, cities, map, map_width)
 {
-	if (map[point.x+point.y*map_width].sealevel == "water")
+	if (map[point.x+point.y*map_width].sealevel == "water" || map[point.x+point.y*map_width].sealevel == "lake" || map[point.x+point.y*map_width].sealevel == "deepwater")
 	{
 		return false;
 	}
@@ -5175,6 +5329,690 @@ function CityLocationValid(point, cities, map, map_width)
 	
 	return true;
 }
+
+function CountTerrainAroundHex(map, pointx, pointy, terrain, map_width, map_height)
+{
+	let count = 0;
+	if (pointx%2 == 1)
+	{
+		if (pointy-1 > -1 && map[pointx+(pointy-1)*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if (pointx+1 < map_width && map[pointx+1+pointy*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if ((pointx+1 < map_width && pointy+1 < map_height) && map[pointx+1+(pointy+1)*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if (pointy+1 < map_height && map[pointx+(pointy+1)*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if ((pointx-1 > -1 && pointy+1 < map_height) && map[pointx-1+(pointy+1)*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if (pointx-1 > -1 && map[pointx-1+pointy*map_width].terrain == terrain)
+		{
+			count++;
+		}
+	} 
+	else
+	{
+		if (pointy-1 > -1 && map[pointx+(pointy-1)*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if ((pointx+1 < map_width && pointy-1 > -1) && map[pointx+1+(pointy-1)*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if (pointx+1 < map_width && map[pointx+1+pointy*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if (pointy+1 < map_height && map[pointx+(pointy+1)*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if (pointx-1 > -1 && map[pointx-1+pointy*map_width].terrain == terrain)
+		{
+			count++;
+		}
+		if ((pointx-1 > -1 && pointy-1 > -1) && map[pointx-1+(pointy-1)*map_width].terrain == terrain)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
+function CountRiversAroundHex(riverarray, pointx, pointy, map_width, map_height)
+{
+	let count = 0;
+	let hex;
+	if (pointx%2 == 1)
+	{
+		if (pointy-1 > -1)
+		{
+			hex = { x: pointx, y: pointy-1 };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointx+1 < map_width)
+		{
+			hex = { x: pointx+1, y: pointy };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointx+1 < map_width && pointy+1 < map_height)
+		{
+			hex = { x: pointx+1, y: pointy+1};
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointy+1 < map_height)
+		{
+			hex = { x: pointx, y: pointy+1 };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointx-1 > -1 && pointy+1 < map_height)
+		{
+			hex = { x: pointx-1, y: pointy+1 };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointx-1 > -1)
+		{
+			hex = { x: pointx-1, y: pointy };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+	} 
+	else
+	{
+		if (pointy-1 > -1)
+		{
+			hex = { x: pointx, y: pointy-1 };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointx+1 < map_width && pointy-1 > -1)
+		{
+			hex = { x: pointx+1, y: pointy-1 };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointx+1 < map_width)
+		{
+			hex = { x: pointx+1, y: pointy };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointy+1 < map_height)
+		{
+			hex = { x: pointx, y: pointy+1 };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointx-1 > -1)
+		{
+			hex = { x: pointx-1, y: pointy };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+		if (pointx-1 > -1 && pointy-1 > -1)
+		{
+			hex = { x: pointx-1, y: pointy-1 };
+			count += ContainsIdenticalXY(riverarray, hex) ? 1 : 0;
+		}
+	}
+	return count;
+}
+
+function CountSealevelAroundHex(map, pointx, pointy, sealevel, map_width, map_height)
+{
+	let count = 0;
+	if (pointx%2 == 1)
+	{
+		if (pointy-1 > -1 && map[pointx+(pointy-1)*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if (pointx+1 < map_width && map[pointx+1+pointy*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if ((pointx+1 < map_width && pointy+1 < map_height) && map[pointx+1+(pointy+1)*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if (pointy+1 < map_height && map[pointx+(pointy+1)*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if ((pointx-1 > -1 && pointy+1 < map_height) && map[pointx-1+(pointy+1)*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if (pointx-1 > -1 && map[pointx-1+pointy*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+	} 
+	else
+	{
+		if (pointy-1 > -1 && map[pointx+(pointy-1)*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if ((pointx+1 < map_width && pointy-1 > -1) && map[pointx+1+(pointy-1)*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if (pointx+1 < map_width && map[pointx+1+pointy*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if (pointy+1 < map_height && map[pointx+(pointy+1)*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if (pointx-1 > -1 && map[pointx-1+pointy*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+		if ((pointx-1 > -1 && pointy-1 > -1) && map[pointx-1+(pointy-1)*map_width].sealevel == sealevel)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
+function MapTerrainAutomataPass(map, terrainFrom, terrainTo, map_width, map_height, passes = 1)
+{
+	for (let a = 0; a < passes; a++)
+	{
+		let tentativemap = [];
+		for (let y = 0; y < map_height; y++)
+		{
+			for (let x = 0; x < map_width; x++)
+			{
+				position = (x+y*map_width);
+				let climateCount = CountTerrainAroundHex(map, x, y, terrainFrom, map_width, map_height);
+				if (map[position].terrain == terrainFrom)
+				{
+					if (climateCount > 2)
+					{
+						tentativemap.push(terrainFrom);
+					}
+					else if (climateCount == 2)
+					{
+						tentativemap.push(map[position].terrain);
+					}
+					else
+					{
+						tentativemap.push(terrainTo);
+					}
+				}
+				else
+				{
+					tentativemap.push(map[position].terrain);
+				}
+			}
+		}
+		//tentativemap done, make changes
+		for (let y = 0; y < map_height; y++)
+		{
+			for (let x = 0; x < map_width; x++)
+			{
+				position = (x+y*map_width);
+				if (map[position].terrain == terrainFrom || tentativemap[position] == terrainTo)
+				{
+					map[position].terrain = tentativemap[position];
+				}
+			}
+		}
+	}
+}
+
+function MapSealevelAutomataPass(map, sealevelFrom, sealevelTo, map_width, map_height, passes = 1)
+{
+	for (let a = 0; a < passes; a++)
+	{
+		let tentativemap = [];
+		for (let y = 0; y < map_height; y++)
+		{
+			for (let x = 0; x < map_width; x++)
+			{
+				position = (x+y*map_width);
+				let climateCount = CountSealevelAroundHex(map, x, y, sealevelFrom, map_width, map_height);
+				if (climateCount > 2)
+				{
+					tentativemap.push(sealevelFrom);
+				}
+				else if (climateCount == 2)
+				{
+					tentativemap.push(map[position].sealevel);
+				}
+				else
+				{
+					tentativemap.push(sealevelTo);
+				}
+			}
+		}
+		//tentativemap done, make changes
+		for (let y = 0; y < map_height; y++)
+		{
+			for (let x = 0; x < map_width; x++)
+			{
+				position = (x+y*map_width);
+				if (map[position].sealevel == sealevelFrom)
+				{
+					map[position].sealevel = tentativemap[position];
+				}
+			}
+		}
+	}
+}
+
+
+function mapPathToPosition(start, end, map, map_width, map_height)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let closest = { x: start.x, y: start.y };
+	let closestHexHeuristic = 99999999;
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		if (current.x == end.x && current.y == end.y)
+		{
+			//console.log("path found");
+			//console.log(dictionaryCameFrom);
+			return dictionaryToDirection(dictionaryCameFrom, end, start);
+		}
+		
+		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+			//newcost += 1;
+		}
+		let connection = { x: current.x, y: current.y };
+		for (let i = 0; i < 6; i++)
+		{
+			connection = { x: current.x, y: current.y };
+			MoveHex(connection,i);
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && map[connection.x+(connection.y*map_width)].sealevel != "water" && map[connection.x+(connection.y*map_width)].sealevel != "lake" && map[connection.x+(connection.y*map_width)].sealevel != "deepwater")
+			{
+				let connectioncost = newcost + map[connection.x+(connection.y*map_width)].movecost;
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (connectioncost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+						priority = connectioncost + pathHeuristic(connection, end);
+						if (priority - connectioncost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - connectioncost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+					priority = connectioncost + pathHeuristic(connection, end);
+					if (priority - connectioncost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - connectioncost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+		}
+	}
+	//console.log("full path not found");
+	return dictionaryToDirection(dictionaryCameFrom, closest, start)
+}
+
+function XNearestPointsWithPathing(points, point, x, map, landmassmap, map_width, map_height)
+{
+	let temppoints = points.slice();
+	let nearestpoints = [];
+	for (let i = 0; i < x; i++)
+	{
+		let nearesty = -1;
+		let nearestdist = 99999999;
+		for (let y = 0; y < temppoints.length; y++)
+		{
+			if (point != temppoints[y])
+			{
+				let posA = point.x + point.y * map_width;
+				let posB = temppoints[y].x + temppoints[y].y * map_width;
+				let distance;
+				if (landmassmap[posA] == landmassmap[posB])
+				{
+					let path = mapPathToPosition(point, temppoints[y], map, map_width, map_height);
+					if (path[path.length-1] == temppoints[y])
+					{
+						distance = path.length;
+						if (distance < nearestdist)
+						{
+							nearesty = y;
+							nearestdist = distance;
+						}
+					}
+				}
+			}
+		}
+		if (nearesty > -1)
+		{
+			nearestpoints.push(temppoints[nearesty]);
+			temppoints.splice(nearesty,1);
+		}
+		else
+		{
+			i += x;
+		}
+	}
+	
+	return nearestpoints;
+}
+
+function XNearestPoints(points, point, x)
+{
+	let temppoints = points.slice();
+	let nearestpoints = [];
+	for (let i = 0; i < x; i++)
+	{
+		let nearesty = -1;
+		let nearestdist = 99999999;
+		for (let y = 0; y = temppoints.length; y++)
+		{
+			let distance = LengthBetweenPoints(temppoints[y],point);
+			if (distance < nearestdist && distance > 0)
+			{
+				nearesty = y;
+				nearestdist = distance;
+			}
+		}
+		if (nearesty > -1)
+		{
+			nearestpoints.push(temppoints[nearesty]);
+			temppoints.splice(nearesty,1);
+		}
+		else
+		{
+			i += x;
+		}
+	}
+	
+	return nearestpoints;
+}
+
+function ExpandTerritoryByOne(territorymap, point, territoryvalue, map_width, map_height)
+{
+	if (point.x%2 == 1)
+	{
+		if (point.y-1 > -1 && territorymap[point.x+(point.y-1)*map_width] == -1)
+		{
+			territorymap[point.x+(point.y-1)*map_width] = territoryvalue;
+		}
+		if (point.x+1 < map_width && territorymap[point.x+1+point.y*map_width] == -1)
+		{
+			territorymap[point.x+1+point.y*map_width] = territoryvalue;
+		}
+		if ((point.x+1 < map_width && point.y+1 < map_height) && territorymap[point.x+1+(point.y+1)*map_width] == -1)
+		{
+			territorymap[point.x+1+(point.y+1)*map_width] = territoryvalue;
+		}
+		if (point.y+1 < map_height && territorymap[point.x+(point.y+1)*map_width] == -1)
+		{
+			territorymap[point.x+(point.y+1)*map_width] = territoryvalue;
+		}
+		if ((point.x-1 > -1 && point.y+1 < map_height) && territorymap[point.x-1+(point.y+1)*map_width] == -1)
+		{
+			territorymap[point.x-1+(point.y+1)*map_width] = territoryvalue;
+		}
+		if (point.x-1 > -1 && territorymap[point.x-1+point.y*map_width] == -1)
+		{
+			territorymap[point.x-1+point.y*map_width] = territoryvalue;
+		}
+	} 
+	else
+	{
+		if (point.y-1 > -1 && territorymap[point.x+(point.y-1)*map_width] == -1)
+		{
+			territorymap[point.x+(point.y-1)*map_width] = territoryvalue;
+		}
+		if ((point.x+1 < map_width && point.y-1 > -1) && territorymap[point.x+1+(point.y-1)*map_width] == -1)
+		{
+			territorymap[point.x+1+(point.y-1)*map_width] = territoryvalue;
+		}
+		if (point.x+1 < map_width && territorymap[point.x+1+point.y*map_width] == -1)
+		{
+			territorymap[point.x+1+point.y*map_width] = territoryvalue;
+		}
+		if (point.y+1 < map_height && territorymap[point.x+(point.y+1)*map_width] == -1)
+		{
+			territorymap[point.x+(point.y+1)*map_width] = territoryvalue;
+		}
+		if (point.x-1 > -1 && territorymap[point.x-1+point.y*map_width] == -1)
+		{
+			territorymap[point.x-1+point.y*map_width] = territoryvalue;
+		}
+		if ((point.x-1 > -1 && point.y-1 > -1) && territorymap[point.x-1+(point.y-1)*map_width] == -1)
+		{
+			territorymap[point.x-1+(point.y-1)*map_width] = territoryvalue;
+		}
+	}
+	return territorymap;
+}
+
+function TerritoryBorders(territorymap, point, territoryvalue, map_width, map_height)
+{
+	let borders = 0;
+	if (point.x%2 == 1)
+	{
+		if (point.y-1 > -1 && territorymap[point.x+(point.y-1)*map_width] != territoryvalue)
+		{
+			borders += 8;
+		}
+		if (point.x+1 < map_width && territorymap[point.x+1+point.y*map_width] != territoryvalue)
+		{
+			borders += 4;
+		}
+		if ((point.x+1 < map_width && point.y+1 < map_height) && territorymap[point.x+1+(point.y+1)*map_width] != territoryvalue)
+		{
+			borders += 2;
+		}
+		if (point.y+1 < map_height && territorymap[point.x+(point.y+1)*map_width] != territoryvalue)
+		{
+			borders += 1;
+		}
+		if ((point.x-1 > -1 && point.y+1 < map_height) && territorymap[point.x-1+(point.y+1)*map_width] != territoryvalue)
+		{
+			borders += 32;
+		}
+		if (point.x-1 > -1 && territorymap[point.x-1+point.y*map_width] != territoryvalue)
+		{
+			borders += 16;
+		}
+	} 
+	else
+	{
+		if (point.y-1 > -1 && territorymap[point.x+(point.y-1)*map_width] != territoryvalue)
+		{
+			borders += 8;
+		}
+		if ((point.x+1 < map_width && point.y-1 > -1) && territorymap[point.x+1+(point.y-1)*map_width] != territoryvalue)
+		{
+			borders += 4;
+		}
+		if (point.x+1 < map_width && territorymap[point.x+1+point.y*map_width] != territoryvalue)
+		{
+			borders += 2;
+		}
+		if (point.y+1 < map_height && territorymap[point.x+(point.y+1)*map_width] != territoryvalue)
+		{
+			borders += 1;
+		}
+		if (point.x-1 > -1 && territorymap[point.x-1+point.y*map_width] != territoryvalue)
+		{
+			borders += 32;
+		}
+		if ((point.x-1 > -1 && point.y-1 > -1) && territorymap[point.x-1+(point.y-1)*map_width] != territoryvalue)
+		{
+			borders += 16;
+		}
+	}
+	return borders;
+}
+
+function addToBasicDictionary(dictionary, key, value)
+{
+	for(let i = 0; i < dictionary.length; i++)
+	{
+		if (dictionary[i].key == key)
+		{
+			dictionary[i].value += value;
+			return;
+		}
+	}
+	
+	dictionary.push({ key: key, value: value });
+}
+
+function getFromBasicDictionary(dictionary, key)
+{
+	for(let i = 0; i < dictionary.length; i++)
+	{
+		if (dictionary[i].key == key)
+		{
+			return dictionary[i].value;
+		}
+	}
+	
+	return null;
+}
+
+function MostNumerousSurroundingTerritory(territorymap, pointx, pointy, map_width, map_height)
+{
+	let counts = [];
+	if (pointx%2 == 1)
+	{
+		if (pointy-1 > -1)
+		{
+			addToBasicDictionary(counts,territorymap[pointx+(pointy-1)*map_width],1);
+		}
+		if (pointx+1 < map_width)
+		{
+			addToBasicDictionary(counts,territorymap[pointx+1+pointy*map_width],1);
+		}
+		if (pointx+1 < map_width && pointy+1 < map_height)
+		{
+			addToBasicDictionary(counts,territorymap[pointx+1+(pointy+1)*map_width],1);
+		}
+		if (pointy+1 < map_height)
+		{
+			addToBasicDictionary(counts,territorymap[pointx+(pointy+1)*map_width],1);
+		}
+		if (pointx-1 > -1 && pointy+1 < map_height)
+		{
+			addToBasicDictionary(counts,territorymap[pointx-1+(pointy+1)*map_width],1);
+		}
+		if (pointx-1 > -1)
+		{
+			addToBasicDictionary(counts,territorymap[pointx-1+pointy*map_width],1);
+		}
+	} 
+	else
+	{
+		if (pointy-1 > -1)
+		{
+			addToBasicDictionary(counts,territorymap[pointx+(pointy-1)*map_width],1);
+		}
+		if (pointx+1 < map_width && pointy-1 > -1)
+		{
+			addToBasicDictionary(counts,territorymap[pointx+1+(pointy-1)*map_width],1);
+		}
+		if (pointx+1 < map_width)
+		{
+			addToBasicDictionary(counts,territorymap[pointx+1+pointy*map_width],1);
+		}
+		if (pointy+1 < map_height)
+		{
+			addToBasicDictionary(counts,territorymap[pointx+(pointy+1)*map_width],1);
+		}
+		if (pointx-1 > -1)
+		{
+			addToBasicDictionary(counts,territorymap[pointx-1+pointy*map_width],1);
+		}
+		if (pointx-1 > -1 && pointy-1 > -1)
+		{
+			addToBasicDictionary(counts,territorymap[pointx-1+(pointy-1)*map_width],1);
+		}
+	}
+	
+	let highestTerritory = -1;
+	let highestCount = -1;
+	for (let i = 0; i < counts.length; i++)
+	{
+		if (counts[i].value > highestCount)
+		{
+			highestTerritory = counts[i].key;
+			highestCount = counts[i].value;
+		}
+	}
+	
+	return { territory: highestTerritory, count: highestCount };
+}
+
+function TerritoriesAutomataPass(territorymap, map_width, map_height, passes = 1)
+{
+	for (let a = 0; a < passes; a++)
+	{
+		let tentativemap = [];
+		for (let y = 0; y < map_height; y++)
+		{
+			for (let x = 0; x < map_width; x++)
+			{
+				position = (x+y*map_width);
+				let surroundingTerritory = MostNumerousSurroundingTerritory(territorymap, x, y, map_width, map_height);
+				
+				if (surroundingTerritory.count > 3 && surroundingTerritory.territory != -1)
+				{
+					tentativemap.push(surroundingTerritory.territory);
+				}
+				else
+				{
+					tentativemap.push(territorymap[position]);
+				}
+			}
+		}
+		//tentativemap done, make changes
+		for (let y = 0; y < map_height; y++)
+		{
+			for (let x = 0; x < map_width; x++)
+			{
+				position = (x+y*map_width);
+				territorymap[position] = tentativemap[position];
+			}
+		}
+	}
+}
+
 
 let MAX_MAP_HEIGHT = 160;
 let MAX_MAP_WIDTH = 240;
@@ -5208,6 +6046,12 @@ function generateMap(channel, arguments)
 	let Map_Size = MAP_HEIGHT+MAP_WIDTH;
 	
 	let citiesCheck = true;
+	let roadsCheck = false;
+	let townsCheck = true;
+	let territoriesCheck = false;
+	
+	let city_density = 1;
+	let city_connectedness = 2;
 	
 	if (arguments != null)
 	{
@@ -5246,11 +6090,38 @@ function generateMap(channel, arguments)
 		{
 			grid_opacity =  parseFloat(arguments[argumentpos+1]);
 		}
+		argumentpos = arguments.indexOf("-city");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			city_density =  parseFloat(arguments[argumentpos+1]);
+		}
+		argumentpos = arguments.indexOf("-cityconnectedness");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			city_connectedness = Math.floor(parseInt(arguments[argumentpos+1]));
+		}
 		argumentpos = arguments.indexOf("-nocities");
 		if (argumentpos > -1)
 		{
 			citiesCheck = false;
 		}
+		argumentpos = arguments.indexOf("-notowns");
+		if (argumentpos > -1)
+		{
+			townsCheck = false;
+		}
+		/*
+		argumentpos = arguments.indexOf("-roads");
+		if (argumentpos > -1)
+		{
+			roadsCheck = true;
+		}
+		argumentpos = arguments.indexOf("-territories");
+		if (argumentpos > -1)
+		{
+			territoriesCheck = true;
+		}
+		*/
 	}
 	
 	
@@ -5290,18 +6161,6 @@ function generateMap(channel, arguments)
 		terrainmap = increaseContrast(terrainmap, MAP_HEIGHT, MAP_WIDTH, 0.25);
 	//terrainmap = sharpenMap(terrainmap, MAP_HEIGHT, MAP_WIDTH, 1);
 	
-	/*
-	let heightmap = [];
-	//initialize heightmap
-	for (let y = 0; y < MAP_HEIGHT; y++)
-	{
-		for (let x  = 0; x < MAP_WIDTH; x++)
-		{
-			heightmap.push(0);
-		}
-	}
-	*/
-	
 	let landmap = [];
 	//initialize landmap
 	for (let y = 0; y < MAP_HEIGHT; y++)
@@ -5312,13 +6171,26 @@ function generateMap(channel, arguments)
 		}
 	}
 	
+	// landmass map
+	
+	let landmassmap = [];
+	let landmassstarts = [];
+	
+	for (let x = 0; x < MAP_WIDTH; x++)
+	{
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			landmassmap.push(-1);
+		}
+	}
+	
 	let premapmap = [];
 	//initialize the premapmap
 	for (let y = 0; y < MAP_HEIGHT; y++)
 	{
 		for (let x  = 0; x < MAP_WIDTH; x++)
 		{
-			premapmap.push({ sealevel: "water", terrain: "grass" });
+			premapmap.push({ sealevel: "water", terrain: "grass", trees: "none", movecost: 2 });
 		}
 	}
 	
@@ -5363,6 +6235,7 @@ function generateMap(channel, arguments)
 		}
 		
 		let startpos = { x: randomx, y: randomy };
+		landmassstarts.push({ x: randomx, y: randomy });
 		let currenthex = { x:0, y:0 };
 		let curdirdur = 0;
 		let dirduration = 1;
@@ -5401,7 +6274,6 @@ function generateMap(channel, arguments)
 					}
 				}
 				
-				
 				MoveHex(currenthex, direction);
 				curdirdur++;
 				if (curdirdur == dirduration)
@@ -5423,7 +6295,10 @@ function generateMap(channel, arguments)
 			for (let x  = 0; x < MAP_WIDTH; x++)
 			{
 				if (temppremap[x+(y*MAP_WIDTH)].sealevel == "land")
+				{
+					landmassmap[x+(y*MAP_WIDTH)] = i+1;
 					landmap[x+(y*MAP_WIDTH)] += LAND_LEVEL;
+				}
 			}
 		}
 	}
@@ -5589,7 +6464,6 @@ function generateMap(channel, arguments)
 		}
 	}
 	
-	
 	for (let i = 0; i < SMOOTHING_ITERATIONS; i++)
 	{
 		for (let y = 0; y < MAP_HEIGHT; y++)
@@ -5651,6 +6525,7 @@ function generateMap(channel, arguments)
 				}
 				else*/ if (heightmap[x+(y*MAP_WIDTH)] > MOUNTAIN_LEVEL)
 				{
+					premapmap[x+(y*MAP_WIDTH)].movecost = 6;
 					if (terrainmap[x+(y*MAP_WIDTH)] > SNOW_LEVEL)
 					{
 						premapmap[x+(y*MAP_WIDTH)].sealevel = "mountain";
@@ -5679,8 +6554,10 @@ function generateMap(channel, arguments)
 				}
 				else if (heightmap[x+(y*MAP_WIDTH)] > HILL_LEVEL)
 				{
+					premapmap[x+(y*MAP_WIDTH)].movecost = 3;
 					if (terrainmap[x+(y*MAP_WIDTH)] > SNOW_LEVEL)
 					{
+						premapmap[x+(y*MAP_WIDTH)].movecost = 4;
 						premapmap[x+(y*MAP_WIDTH)].sealevel = "hill";
 						premapmap[x+(y*MAP_WIDTH)].terrain = "snow";
 					}
@@ -5703,7 +6580,7 @@ function generateMap(channel, arguments)
 					}
 					else
 					{
-						
+						premapmap[x+(y*MAP_WIDTH)].movecost = 4;
 						premapmap[x+(y*MAP_WIDTH)].sealevel = "hill";
 						premapmap[x+(y*MAP_WIDTH)].terrain = "desert";
 					}
@@ -5712,6 +6589,7 @@ function generateMap(channel, arguments)
 				{
 					if (terrainmap[x+(y*MAP_WIDTH)] > SNOW_LEVEL)
 					{
+						premapmap[x+(y*MAP_WIDTH)].movecost = 3;
 						premapmap[x+(y*MAP_WIDTH)].terrain = "snow";
 					}
 					else if (terrainmap[x+(y*MAP_WIDTH)] > TUNDRA_LEVEL)
@@ -5728,11 +6606,46 @@ function generateMap(channel, arguments)
 					}
 					else
 					{
+						premapmap[x+(y*MAP_WIDTH)].movecost = 3;
 						premapmap[x+(y*MAP_WIDTH)].terrain = "desert";
 					}
 				}
 			}
 		}
+	}
+	
+	// do water border
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		position = (y*MAP_WIDTH);
+		premapmap[position].terrain = "grass";
+		premapmap[position].sealevel = "water";
+		
+		position = (MAP_WIDTH-1+y*MAP_WIDTH);
+		premapmap[position].terrain = "grass";
+		premapmap[position].sealevel = "water";
+	}
+	for (let x = 0; x < MAP_WIDTH; x++)
+	{
+		position = (x);
+		premapmap[position].terrain = "grass";
+		premapmap[position].sealevel = "water";
+		
+		position = (x+(MAP_HEIGHT-1)*MAP_WIDTH);
+		premapmap[position].terrain = "grass";
+		premapmap[position].sealevel = "water";
+	}
+	
+	
+	//do automata
+	MapTerrainAutomataPass(premapmap, "desert", "tundra", MAP_WIDTH, MAP_HEIGHT, 2);
+	MapTerrainAutomataPass(premapmap, "snow", "tundra", MAP_WIDTH, MAP_HEIGHT, 2);
+	
+	// do landmass map
+	for (let i = 0; i < landmassstarts.length; i++)
+	{
+		let position = landmassstarts[i].x + landmassstarts[i].y * MAP_WIDTH; 
+		landmassmap = LandmassCalculation(premapmap, landmassmap, landmassmap[position], landmassstarts[i].x, landmassstarts[i].y, MAP_WIDTH, MAP_HEIGHT, Map_Size);
 	}
 	
 	//do jungles
@@ -5807,65 +6720,7 @@ function generateMap(channel, arguments)
 					}
 				}
 				
-				
-				if (currenthex.x%2 == 1)
-				{
-					if (direction == 5)
-					{
-						currenthex.x--;
-					}
-					else if (direction == 4)
-					{
-						currenthex.x--;
-						currenthex.y++;
-					}
-					else if (direction == 3)
-					{
-						currenthex.y++;
-					}
-					else if (direction == 2)
-					{
-						currenthex.x++;
-						currenthex.y++;
-					}
-					else if (direction == 1)
-					{
-						currenthex.x++;
-					}
-					else if (direction == 0)
-					{
-						currenthex.y--;
-					}
-				} 
-				else
-				{
-					if (direction == 5)
-					{
-						currenthex.x--;
-						currenthex.y--;
-					}
-					else if (direction == 4)
-					{
-						currenthex.x--;
-					}
-					else if (direction == 3)
-					{
-						currenthex.y++;
-					}
-					else if (direction == 2)
-					{
-						currenthex.x++;
-					}
-					else if (direction == 1)
-					{
-						currenthex.x++;
-						currenthex.y--;
-					}
-					else if (direction == 0)
-					{
-						currenthex.y--;
-					}
-				}
+				MoveHex(currenthex, direction);
 				curdirdur++;
 				if (curdirdur == dirduration)
 				{
@@ -5888,7 +6743,10 @@ function generateMap(channel, arguments)
 			for (let x  = 0; x < MAP_WIDTH; x++)
 			{
 				if (temptreemap[x+(y*MAP_WIDTH)] == "jungle")
+				{
 					premapmap[x+(y*MAP_WIDTH)].trees = "jungle";
+					premapmap[x+(y*MAP_WIDTH)].movecost += 1;
+				}
 			}
 		}
 		
@@ -5966,65 +6824,7 @@ function generateMap(channel, arguments)
 					}
 				}
 				
-				
-				if (currenthex.x%2 == 1)
-				{
-					if (direction == 5)
-					{
-						currenthex.x--;
-					}
-					else if (direction == 4)
-					{
-						currenthex.x--;
-						currenthex.y++;
-					}
-					else if (direction == 3)
-					{
-						currenthex.y++;
-					}
-					else if (direction == 2)
-					{
-						currenthex.x++;
-						currenthex.y++;
-					}
-					else if (direction == 1)
-					{
-						currenthex.x++;
-					}
-					else if (direction == 0)
-					{
-						currenthex.y--;
-					}
-				} 
-				else
-				{
-					if (direction == 5)
-					{
-						currenthex.x--;
-						currenthex.y--;
-					}
-					else if (direction == 4)
-					{
-						currenthex.x--;
-					}
-					else if (direction == 3)
-					{
-						currenthex.y++;
-					}
-					else if (direction == 2)
-					{
-						currenthex.x++;
-					}
-					else if (direction == 1)
-					{
-						currenthex.x++;
-						currenthex.y--;
-					}
-					else if (direction == 0)
-					{
-						currenthex.y--;
-					}
-				}
+				MoveHex(currenthex, direction);
 				curdirdur++;
 				if (curdirdur == dirduration)
 				{
@@ -6047,7 +6847,10 @@ function generateMap(channel, arguments)
 			for (let x  = 0; x < MAP_WIDTH; x++)
 			{
 				if (temptreemap[x+(y*MAP_WIDTH)] == "forest")
+				{
 					premapmap[x+(y*MAP_WIDTH)].trees = "forest";
+					premapmap[x+(y*MAP_WIDTH)].movecost += 1;
+				}
 			}
 		}
 		
@@ -6092,67 +6895,10 @@ function generateMap(channel, arguments)
 			rivers.push({ direction: river_direction, x: randomx, y: randomy });
 		
 		let currenthex = { x: randomx, y:randomy };
-		
-		while (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT && premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
+		let continueRiver = true;
+		while (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT && premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water"&& premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water" && continueRiver)
 		{
-			if (currenthex.x%2 == 1)
-			{
-				if (river_direction == 5)
-				{
-					currenthex.x--;
-				}
-				else if (river_direction == 4)
-				{
-					currenthex.x--;
-					currenthex.y++;
-				}
-				else if (river_direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (river_direction == 2)
-				{
-					currenthex.x++;
-					currenthex.y++;
-				}
-				else if (river_direction == 1)
-				{
-					currenthex.x++;
-				}
-				else if (river_direction == 0)
-				{
-					currenthex.y--;
-				}
-			} 
-			else
-			{
-				if (river_direction == 5)
-				{
-					currenthex.x--;
-					currenthex.y--;
-				}
-				else if (river_direction == 4)
-				{
-					currenthex.x--;
-				}
-				else if (river_direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (river_direction == 2)
-				{
-					currenthex.x++;
-				}
-				else if (river_direction == 1)
-				{
-					currenthex.x++;
-					currenthex.y--;
-				}
-				else if (river_direction == 0)
-				{
-					currenthex.y--;
-				}
-			}
+			MoveHex(currenthex, river_direction);
 			
 			river_direction = VectorToDirection(MapCoordinationsToVector(nearestWaterBody, currenthex));
 			
@@ -6168,8 +6914,11 @@ function generateMap(channel, arguments)
 			
 			if (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT)
 			{
-				if (premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
-					rivers.push({ direction: river_direction, x: currenthex.x, y: currenthex.y });
+				if (ContainsIdenticalXY(rivers,currenthex))
+				{
+					continueRiver = false;
+				}
+				rivers.push({ direction: river_direction, x: currenthex.x, y: currenthex.y });
 			}
 		}
 	}
@@ -6243,64 +6992,7 @@ function generateMap(channel, arguments)
 			
 			while (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT && premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
 			{
-				if (currenthex.x%2 == 1)
-				{
-					if (river_direction == 5)
-					{
-						currenthex.x--;
-					}
-					else if (river_direction == 4)
-					{
-						currenthex.x--;
-						currenthex.y++;
-					}
-					else if (river_direction == 3)
-					{
-						currenthex.y++;
-					}
-					else if (river_direction == 2)
-					{
-						currenthex.x++;
-						currenthex.y++;
-					}
-					else if (river_direction == 1)
-					{
-						currenthex.x++;
-					}
-					else if (river_direction == 0)
-					{
-						currenthex.y--;
-					}
-				} 
-				else
-				{
-					if (river_direction == 5)
-					{
-						currenthex.x--;
-						currenthex.y--;
-					}
-					else if (river_direction == 4)
-					{
-						currenthex.x--;
-					}
-					else if (river_direction == 3)
-					{
-						currenthex.y++;
-					}
-					else if (river_direction == 2)
-					{
-						currenthex.x++;
-					}
-					else if (river_direction == 1)
-					{
-						currenthex.x++;
-						currenthex.y--;
-					}
-					else if (river_direction == 0)
-					{
-						currenthex.y--;
-					}
-				}
+				MoveHex(currenthex, river_direction);
 				
 				river_direction = VectorToDirection(MapCoordinationsToVector(nearestWaterBody, currenthex));
 				
@@ -6317,61 +7009,260 @@ function generateMap(channel, arguments)
 				if (currenthex.x > -1 && currenthex.x < MAP_WIDTH && currenthex.y > -1 && currenthex.y < MAP_HEIGHT)
 				{
 					if (premapmap[currenthex.x+currenthex.y*MAP_WIDTH].sealevel != "water")
+					{
+						if (ContainsIdenticalXY(rivers,currenthex))
+						{
+							continueRiver = false;
+						}
 						rivers.push({ direction: river_direction, x: currenthex.x, y: currenthex.y });
+					}
 				}
 			}
 		}
 	}
 	
+	// do marshes
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass" && premapmap[x+(y*MAP_WIDTH)].sealevel == "land")
+			{
+				let riveradj = CountRiversAroundHex(rivers, x, y, MAP_WIDTH, MAP_HEIGHT)+1;
+				let marshchance = riveradj*riveradj*0.00667;
+				if (Math.random() < marshchance)
+				{
+					premapmap[x+(y*MAP_WIDTH)].terrain = "marsh";
+					premapmap[x+(y*MAP_WIDTH)].movecost = 4;
+				}
+			}
+		}
+	}
+	
+	// do oasis
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			if (premapmap[x+(y*MAP_WIDTH)].terrain == "desert" && premapmap[x+(y*MAP_WIDTH)].sealevel == "land")
+			{
+				let riveradj = CountRiversAroundHex(rivers, x, y, MAP_WIDTH, MAP_HEIGHT)+1;
+				let oasischance = riveradj*0.01667;
+				if (Math.random() < oasischance)
+					premapmap[x+(y*MAP_WIDTH)].terrain = "oasis";
+			}
+		}
+	}
+	
+	
 	// do city locations
 	let cities = [];
 	let citycount = 0;
-	for (let i = 0; i < LANDMASSES; i++)
+	let citylandmass = Math.ceil(Map_Size);
+	for (let i = 0; i < citylandmass; i++)
 	{
-		citycount += Math.max(Math.floor(Math.random()*7)-3,0);
+		let citiesroll = Math.max(Math.floor(Math.random()*4+Math.random()*4)-3,0);
+		citycount += citiesroll;
 	}
+	
+	citycount = Math.ceil(citycount*city_density);
 	
 	for (let i = 0; i < citycount && citiesCheck; i++)
 	{
 		let currenthex;
-		let ideallocationfound = false;
 		//ideal location random placement attempts
+		let cityvalid = true;
 		
-		for (let j = 0; j < 255 && !ideallocationfound; j++)
+		for (let j = 0; j < 255 && cityvalid; j++)
 		{
-			currenthex = { x: Math.floor(Math.random()*(MAP_WIDTH-1)+1), y: Math.floor(Math.random()*(MAP_HEIGHT-1)+1) };
-			while (!CityLocationValid(currenthex, cities, premapmap, MAP_WIDTH))
+			let placeattempts = 0;
+			currenthex = { x: Math.floor(Math.random()*(MAP_WIDTH-1)+1), y: Math.floor(Math.random()*(MAP_HEIGHT-1)+1), capitalcity: i };
+			while (!CityLocationValid(currenthex, cities, premapmap, MAP_WIDTH) && placeattempts <= 255)
 			{
-				currenthex = { x: Math.floor(Math.random()*MAP_WIDTH), y: Math.floor(Math.random()*MAP_HEIGHT) };
+				currenthex = { x: Math.floor(Math.random()*(MAP_WIDTH-1)+1), y: Math.floor(Math.random()*(MAP_HEIGHT-1)+1), capitalcity: i };
+				placeattempts++;
+				if (placeattempts > 255)
+				{
+					console.log("stopping placing cities, " + i + " cities placed");
+					cityvalid = false;
+					citycount = i;
+					i += citycount;
+				}
 			}
 			
-			let hasRiver = ContainsIdenticalXY(rivers, currenthex);
-			let hasShore = (NearestWaterbodyToPoint(premapmap, currenthex.x, currenthex.y, MAP_WIDTH, MAP_HEIGHT, 7) != null);
-			let hasGrasslands = (NearestGrasslandsToPoint(premapmap, currenthex, MAP_WIDTH, MAP_HEIGHT, 7) != null);
-			let chanceToStay = 0.04;
-			if (hasRiver)
+			if (cityvalid)
 			{
-				chanceToStay += 0.29;
+				let position = currenthex.x + currenthex.y*MAP_WIDTH;
+				let hasFreshWater = ContainsIdenticalXY(rivers, currenthex) || CountRiversAroundHex(rivers, currenthex.x, currenthex.y, MAP_WIDTH, MAP_HEIGHT) > 0 || premapmap[position].terrain == "oasis";
+				let hasShore = (NearestWaterbodyToPoint(premapmap, currenthex.x, currenthex.y, MAP_WIDTH, MAP_HEIGHT, 7) != null);
+				let hasGrasslands = (NearestGrasslandsToPoint(premapmap, currenthex, MAP_WIDTH, MAP_HEIGHT, 7) != null);
+				let chanceToStay = 0.1;
+				let factorsToStay = 0;
+				if (hasFreshWater)
+				{
+					factorsToStay++;
+				}
+				if (hasShore)
+				{
+					factorsToStay++;
+				}
+				if (hasGrasslands)
+				{
+					factorsToStay++;
+				}
+				chanceToStay += factorsToStay*factorsToStay*0.1;
+				if (Math.random() < chanceToStay)
+					j += 255;
+				else
+					j++;
 			}
-			if (hasShore)
-			{
-				chanceToStay += 0.29;
-			}
-			if (hasGrasslands)
-			{
-				chanceToStay += 0.38;
-			}
-			if (Math.random() < chanceToStay)
-				j += 255;
-			else
-				j++;
 		}
-		
-		cities.push(currenthex);
+		if (cityvalid)
+			cities.push(currenthex);
 	}
 	
+	// do towns
 	
+	let maxdistancefromcity = 6;
 	
+	let towns = [];
+	let roads = [];
+	
+	for (let i = 0; i < cities.length && townsCheck; i++)
+	{
+		let towncount = Math.floor((Math.random()*5 + Math.random()*5 - 1))
+		for (let a = 0; a < towncount; a++)
+		{
+			let currenthex = { x: cities[i].x, y: cities[i].y };
+			let nexthex = { x: currenthex.x, y: currenthex.y };
+			let randommovedir = Math.floor(Math.random()*6);
+			for (let b = 0; b < maxdistancefromcity; b++)
+			{
+				MoveHex(nexthex, randommovedir);
+				let position = nexthex.x + nexthex.y*MAP_WIDTH;
+				if (nexthex.x > -1 && nexthex.x < MAP_WIDTH && nexthex.y > -1 && nexthex.y < MAP_HEIGHT)
+				{
+					if (premapmap[position].sealevel != "water" && premapmap[position].sealevel != "lake"&& premapmap[position].sealevel != "deepwater")
+					{
+						currenthex.x = nexthex.x;
+						currenthex.y = nexthex.y;
+					}
+				}
+				randommovedir = Math.floor(Math.random()*6);
+			}
+			if (!ContainsIdenticalXY(cities,currenthex) && !ContainsIdenticalXY(towns,currenthex))
+			{
+				let townbp = 
+						{
+							x: currenthex.x,
+							y: currenthex.y,
+							city: cities[i]
+						};
+				towns.push(townbp);
+			}
+		}
+	}
+	
+	let territoriesmap = [];
+	let capitalcities = [];
+	
+	for (let x = 0; x < MAP_WIDTH; x++)
+	{
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			territoriesmap.push(-1);
+		}
+	}
+	
+	if (territoriesCheck)
+	{
+		let tempcities = cities.slice();
+		let numcapitalcities = Math.min(Math.ceil(Math.sqrt(citycount)+Math.random()*5),citycount);
+		for (let i = 0; i < numcapitalcities; i++)
+		{
+			let currentcity = Math.floor(Math.random()*tempcities.length);
+			capitalcities.push(tempcities[currentcity]);
+			tempcities.splice(currentcity, 1);
+		}
+		
+		for (let i = 0; i < capitalcities.length; i++)
+		{
+			let nearestCities = XNearestPointsWithPathing(tempcities, capitalcities[i], city_connectedness, premapmap, landmassmap, MAP_WIDTH, MAP_HEIGHT);
+			for (let j = 0; j < nearestCities.length; j++)
+			{
+				nearestCities[j].capitalcity = capitalcities[i].capitalcity;
+			}
+		}
+	}
+	
+	if (roadsCheck)
+	{
+		// do roads from towns to cities
+		
+		for (let i = 0; i < towns.length; i++)
+		{
+			let hexesFromTownToCity = mapPathToPosition(towns[i], towns[i].city, premapmap, MAP_WIDTH, MAP_HEIGHT);
+			if (hexesFromTownToCity[hexesFromTownToCity.length-1] == towns[i].city)
+			{
+				for (let a = 0; a < hexesFromTownToCity.length; a++)
+				{
+					let position = a;
+					if (position < hexesFromTownToCity.length-1)
+					{
+						let road_dir = DirectionFromHexToHex(hexesFromTownToCity[position], hexesFromTownToCity[position+1]);
+						if (ContainsIdenticalXY(roads, hexesFromTownToCity[position]))
+							a += hexesFromTownToCity.length;
+						
+						roads.push({ direction: road_dir, x: hexesFromTownToCity[position].x, y: hexesFromTownToCity[position].y });
+					}
+					let mappos = hexesFromTownToCity[position].x + hexesFromTownToCity[position].y*MAP_WIDTH;
+					premapmap[mappos].movecost = 1;
+					if (territoriesCheck)
+					{
+						territoriesmap[mappos] = towns[i].city.capitalcity;
+						if (a == 0 || a == hexesFromTownToCity.length-1)
+							territoriesmap = ExpandTerritoryByOne(territoriesmap, hexesFromTownToCity[position], towns[i].city.capitalcity, MAP_WIDTH, MAP_HEIGHT);
+					}
+				}
+			}
+		}
+		
+		// do roads from city to city
+		
+		for (let i = 0; i < cities.length; i++)
+		{
+			let nearestCities = XNearestPointsWithPathing(cities, cities[i], city_connectedness, premapmap, landmassmap, MAP_WIDTH, MAP_HEIGHT);
+			for (let a = 0; a < nearestCities.length; a++)
+			{
+				let hexesFromTownToCity = mapPathToPosition(cities[i], nearestCities[a], premapmap, MAP_WIDTH, MAP_HEIGHT);
+				if (hexesFromTownToCity[hexesFromTownToCity.length-1] == nearestCities[a])
+				{
+					for (let b = 0; b < hexesFromTownToCity.length; b++)
+					{
+						if (b < hexesFromTownToCity.length-1)
+						{
+							let road_dir = DirectionFromHexToHex(hexesFromTownToCity[b], hexesFromTownToCity[b+1]);
+
+							roads.push({ direction: road_dir, x: hexesFromTownToCity[b].x, y: hexesFromTownToCity[b].y });
+						}
+						let mappos = hexesFromTownToCity[b].x + hexesFromTownToCity[b].y*MAP_WIDTH;
+						premapmap[mappos].movecost = 1;
+						if (territoriesCheck && cities[i].capitalcity == nearestCities[a].capitalcity)
+						{
+							territoriesmap[mappos] = cities[i].capitalcity;
+							if (b == 0 || b == hexesFromTownToCity.length-1)
+								territoriesmap = ExpandTerritoryByOne(territoriesmap, hexesFromTownToCity[b], cities[i].capitalcity, MAP_WIDTH, MAP_HEIGHT);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	if (territoriesCheck)
+	{
+		TerritoriesAutomataPass(territoriesmap, MAP_WIDTH, MAP_HEIGHT, 4);
+	}
 	
 	let mapmap = [];
 	for (let y = 0; y < MAP_HEIGHT; y++)
@@ -6383,9 +7274,11 @@ function generateMap(channel, arguments)
 			let trees = true;
 			if (premapmap[x+(y*MAP_WIDTH)].sealevel == "mountain")
 			{
+				let snowless = (Math.random() < 0.55);
 				if (premapmap[x+(y*MAP_WIDTH)].terrain == "snow")
 				{
 					mapmap.push({ src: './terrain_tiles_snow_flat.png', x: xpos, y: ypos});
+					snowless = false;
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "tundra")
 				{
@@ -6402,8 +7295,17 @@ function generateMap(channel, arguments)
 				else
 				{
 					mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
+					snowless = true;
 				}
-				mapmap.push({ src: './terrain_tiles_mountain.png', x: xpos, y: ypos});
+				
+				if (snowless)
+				{
+					mapmap.push({ src: './terrain_tiles_mountain_snowless.png', x: xpos, y: ypos});
+				}
+				else
+				{
+					mapmap.push({ src: './terrain_tiles_mountain.png', x: xpos, y: ypos});
+				}
 			}
 			else if (premapmap[x+(y*MAP_WIDTH)].sealevel == "hill")
 			{
@@ -6441,31 +7343,26 @@ function generateMap(channel, arguments)
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass")
 				{
-					if (Math.random() < 0.02)
-					{
-						mapmap.push({ src: './terrain_tiles_marsh.png', x: xpos, y: ypos});
-						trees = false;
-					}
-					else
-					{
-						mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
-					}
+					mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
+				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "marsh")
+				{
+					mapmap.push({ src: './terrain_tiles_marsh.png', x: xpos, y: ypos});
+					trees = false;
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "plains")
 				{
 					mapmap.push({ src: './terrain_tiles_plains_flat.png', x: xpos, y: ypos});
 				}
+				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "oasis")
+				{
+					trees = false;
+					mapmap.push({ src: './terrain_tiles_oasis.png', x: xpos, y: ypos});
+				}
 				else
 				{
 					trees = false;
-					if (Math.random() < 0.011)
-					{
-						mapmap.push({ src: './terrain_tiles_oasis.png', x: xpos, y: ypos});
-					}
-					else
-					{
-						mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
-					}
+					mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
 				}
 					
 			}
@@ -6487,9 +7384,6 @@ function generateMap(channel, arguments)
 					mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
 				}
 			}
-			
-			/* MOVE GRID LAYERING TO AFTER
-			*/
 		}
 	}
 	
@@ -6532,12 +7426,60 @@ function generateMap(channel, arguments)
 		mapmap.push({ src: tile, x: xpos, y: ypos });
 	}
 	
+	
+	for (i in roads)
+	{
+		let xpos = (12*roads[i].x);
+		let ypos = (14*roads[i].y+((roads[i].x%2)*7));
+		let tile = './terrain_roads_horizontalA.png';
+		
+		if (roads[i].direction == 0)
+		{
+			ypos -= 14;
+			tile = './terrain_roads_vertical.png';
+		}
+		else if (roads[i].direction == 1)
+		{
+			ypos -= 7;
+			tile = './terrain_roads_horizontalA.png';
+		}
+		else if (roads[i].direction == 2)
+		{
+			tile = './terrain_roads_horizontalB.png';
+		}
+		else if (roads[i].direction == 3)
+		{
+			tile = './terrain_roads_vertical.png';
+		}
+		else if (roads[i].direction == 4)
+		{
+			xpos -= 12;
+			tile = './terrain_roads_horizontalA.png';
+		}
+		else if (roads[i].direction == 5)
+		{
+			ypos -= 7;
+			xpos -= 12;
+			tile = './terrain_roads_horizontalB.png';
+		}
+		
+		mapmap.push({ src: tile, x: xpos, y: ypos });
+	}
+	
 	for (i in cities)
 	{
 		let xpos = (12*cities[i].x);
 		let ypos = (14*cities[i].y+((cities[i].x%2)*7));
 		
 		mapmap.push({ src: './terrain_tiles_city.png', x: xpos, y: ypos });
+	}
+	
+	for (i in towns)
+	{
+		let xpos = (12*towns[i].x);
+		let ypos = (14*towns[i].y+((towns[i].x%2)*7));
+		
+		mapmap.push({ src: './terrain_tiles_town.png', x: xpos, y: ypos });
 	}
 	
 	for (let y = 0; y < MAP_HEIGHT; y++)
@@ -6557,6 +7499,45 @@ function generateMap(channel, arguments)
 			if (grid_opacity > 0)
 			{
 				mapmap.push({ src: './terrain_tiles_whitegrid.png', x: xpos, y: ypos, opacity: grid_opacity });
+			}
+			
+			if (territoriesCheck && territoriesmap[x+(y*MAP_WIDTH)] > -1)
+			{
+				//mapmap.push({ src: './terrain_tiles_whitegrid.png', x: xpos, y: ypos});
+				
+				let mappoint = { x: x, y: y };
+				let borders = TerritoryBorders(territoriesmap, mappoint, territoriesmap[x+(y*MAP_WIDTH)], MAP_WIDTH, MAP_HEIGHT);
+				if (borders >= 32)
+				{
+					mapmap.push({ src: './terrain_tiles_border_4.png', x: xpos, y: ypos});
+					borders -= 32;
+				}
+				if (borders >= 16)
+				{
+					mapmap.push({ src: './terrain_tiles_border_5.png', x: xpos, y: ypos});
+					borders -= 16;
+				}
+				if (borders >= 8)
+				{
+					mapmap.push({ src: './terrain_tiles_border_0.png', x: xpos, y: ypos});
+					borders -= 8;
+				}
+				if (borders >= 4)
+				{
+					mapmap.push({ src: './terrain_tiles_border_1.png', x: xpos, y: ypos});
+					borders -= 4;
+				}
+				if (borders >= 2)
+				{
+					mapmap.push({ src: './terrain_tiles_border_2.png', x: xpos, y: ypos});
+					borders -= 2;
+				}
+				if (borders >= 1)
+				{
+					mapmap.push({ src: './terrain_tiles_border_3.png', x: xpos, y: ypos});
+					borders -= 1;
+				}
+				
 			}
 		}
 	}
@@ -12349,10 +13330,12 @@ function MarkovPhonemeNameTrain()
 	markovphonemes["ɪ"] = [];
 	markovphonemes["ʊ"] = [];
 	markovphonemes["uː"] = [];
+	markovphonemes["e-"] = [];
 	markovphonemes["e"] = [];
 	markovphonemes["ə"] = [];
 	markovphonemes["ɜː"] = [];
 	markovphonemes["ɔː"] = [];
+	markovphonemes["æ-"] = [];
 	markovphonemes["æ"] = [];
 	markovphonemes["ʌ"] = [];
 	markovphonemes["ɑː"] = [];
@@ -12368,24 +13351,34 @@ function MarkovPhonemeNameTrain()
 	markovphonemes["p"] = [];
 	markovphonemes["b"] = [];
 	markovphonemes["t"] = [];
+	markovphonemes["d-"] = [];
 	markovphonemes["d"] = [];
 	markovphonemes["tʃ"] = [];
+	markovphonemes["dʒ-"] = [];
 	markovphonemes["dʒ"] = [];
+	markovphonemes["k-"] = [];
 	markovphonemes["k"] = [];
+	markovphonemes["g-"] = [];
 	markovphonemes["g"] = [];
+	markovphonemes["f-"] = [];
 	markovphonemes["f"] = [];
 	markovphonemes["v"] = [];
 	markovphonemes["θ"] = [];
 	markovphonemes["ð"] = [];
+	markovphonemes["s-"] = [];
 	markovphonemes["s"] = [];
+	markovphonemes["z-"] = [];
 	markovphonemes["z"] = [];
 	markovphonemes["ʃ"] = [];
 	markovphonemes["ʒ"] = [];
 	markovphonemes["m"] = [];
+	markovphonemes["n-"] = [];
 	markovphonemes["n"] = [];
 	markovphonemes["ŋ"] = [];
 	markovphonemes["h"] = [];
+	markovphonemes["l-"] = [];
 	markovphonemes["l"] = [];
+	markovphonemes["r-"] = [];
 	markovphonemes["r"] = [];
 	markovphonemes["w"] = [];
 	markovphonemes["j"] = [];
@@ -12404,10 +13397,12 @@ function MarkovPhonemeNameTrain()
 		{
 			if (k+1 < temptrainingname.length)
 			{
+				//console.log(temptrainingname[k]);
 				markovphonemes[temptrainingname[k]].push(temptrainingname[k+1]);
 			}
 			else
 			{
+				//console.log(temptrainingname[k]);
 				markovphonemes[temptrainingname[k]].push("E");
 			}
 		}
@@ -14037,6 +15032,8 @@ function GenerateTown(arguments)
 
 function MoveHex(hex, direction)
 {
+	direction = direction%6;
+	
 	if (hex.x%2 == 1)
 	{
 		if (direction == 5)

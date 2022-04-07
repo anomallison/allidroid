@@ -1,8 +1,15 @@
 ``!generatemap`` generates a low resolution hex grid terrain map
 
-``!generatemap`` takes upto 5 arguments currently: the width, the height, grid opacity, the number of landmasses to generate on the map, the cold balance between 0 and 100 typically, and the hot balance between 0 and 100 typically
-
-hot and cold balance are by default both set to 50 without specification
+``!generatemap`` accepts various arguments:
+``-w X`` sets the width to X
+``-h X`` sets the height to X
+``-g X`` sets the grid opacity to X (default 0)
+``-l X`` sets the landmasses to X (default is calculated: Math.ceil(Math.log2(Map_Size)*Math.log2(Map_Size)/2), Map_Size is height * width)
+``-hot X`` sets the hot balance to X (default hot 25 cold 25, for reference)
+``-cold X`` sets the cold balance to X
+``-nocities`` the map will not place any cities (or by extension, any towns or roads)
+``-notowns`` the map will not place any towns
+``-roads`` the map will place roads between cities and towns (greatly increases render time)
 
 example
 ``!generatemap 40 30 0 8 50 50``

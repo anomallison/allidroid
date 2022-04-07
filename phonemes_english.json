@@ -16,8 +16,13 @@
 	},
 	{
 		"phoneme": "uː",
-		"spellings": ["oo","ou"],
+		"spellings": ["oo","ou","uu"],
 		"lists": ["vowels","monophthongs","close"]
+	},
+	{
+		"phoneme": "e-",
+		"spellings": ["eh"],
+		"lists": ["vowels","monophthongs","mid"]
 	},
 	{
 		"phoneme": "e",
@@ -36,12 +41,17 @@
 	},
 	{
 		"phoneme": "ɔː",
-		"spellings": ["oor","our"],
+		"spellings": ["oor","our","or"],
 		"lists": ["vowels","monophthongs","close"]
 	},
 	{
 		"phoneme": "æ",
 		"spellings": ["a"],
+		"lists": ["vowels","monophthongs","open"]
+	},
+	{
+		"phoneme": "æ-",
+		"spellings": ["aa"],
 		"lists": ["vowels","monophthongs","open"]
 	},
 	{
@@ -115,6 +125,11 @@
 		"lists": ["consonants"]
 	},
 	{
+		"phoneme": "d-",
+		"spellings": ["dd"],
+		"lists": ["consonants"]
+	},
+	{
 		"phoneme": "d",
 		"spellings": ["d"],
 		"lists": ["consonants"]
@@ -125,18 +140,38 @@
 		"lists": ["consonants"]
 	},
 	{
+		"phoneme": "dʒ-",
+		"spellings": ["jj"],
+		"lists": ["consonants"]
+	},
+	{
 		"phoneme": "dʒ",
 		"spellings": ["j","g"],
 		"lists": ["consonants"]
 	},
 	{
+		"phoneme": "k-",
+		"spellings": ["cc","kk"],
+		"lists": ["consonants"]
+	},
+	{
 		"phoneme": "k",
-		"spellings": ["c","k","ch"],
+		"spellings": ["c","k","ch","qu"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "g-",
+		"spellings": ["gg"],
 		"lists": ["consonants"]
 	},
 	{
 		"phoneme": "g",
-		"spellings": ["g"],
+		"spellings": ["g","gh"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "f-",
+		"spellings": ["ff"],
 		"lists": ["consonants"]
 	},
 	{
@@ -165,6 +200,16 @@
 		"lists": ["consonants"]
 	},
 	{
+		"phoneme": "s-",
+		"spellings": ["ss"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "z-",
+		"spellings": ["zz"],
+		"lists": ["consonants"]
+	},
+	{
 		"phoneme": "z",
 		"spellings": ["z"],
 		"lists": ["consonants"]
@@ -185,6 +230,11 @@
 		"lists": ["consonants"]
 	},
 	{
+		"phoneme": "n-",
+		"spellings": ["nn"],
+		"lists": ["consonants"]
+	},
+	{
 		"phoneme": "n",
 		"spellings": ["n"],
 		"lists": ["consonants"]
@@ -200,8 +250,18 @@
 		"lists": ["consonants"]
 	},
 	{
+		"phoneme": "l-",
+		"spellings": ["ll"],
+		"lists": ["consonants"]
+	},
+	{
 		"phoneme": "l",
 		"spellings": ["l"],
+		"lists": ["consonants"]
+	},
+	{
+		"phoneme": "r-",
+		"spellings": ["rr"],
 		"lists": ["consonants"]
 	},
 	{
