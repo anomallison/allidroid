@@ -115,6 +115,11 @@
 		"lists": ["consonants"]
 	},
 	{
+		"phoneme": "p-",
+		"spellings": ["pp"],
+		"lists": ["consonants"]
+	},
+	{
 		"phoneme": "b",
 		"spellings": ["b"],
 		"lists": ["consonants"]

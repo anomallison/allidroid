@@ -12,7 +12,7 @@
 
 const { Client, Intents } = require('discord.js');
 
-const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES"] });
+const client = new Client({ intents: [ "GUILDS", "GUILD_MESSAGES", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES" ] });
 
 
 const mergeImages = require('merge-images');
@@ -52,6 +52,10 @@ var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 
 //goblin generator files
 var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'));
+
+
+//fren generator files
+var fren_gen = JSON.parse(fs.readFileSync('friend_gen/fren_gen.json'));
 
 //city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
@@ -141,14 +145,14 @@ client.on('messageCreate', (receivedMessage) => {
     if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
        return
     }
-	
+
 	if (receivedMessage.guild != null)
 	{
 		receivedMessage.guild.members.fetch(receivedMessage.author.id)
 		.then( member => {
 			roles = member.roles.cache;
 			if (!hasName(roles, "bot banned")) // warning: hasName always checks against lowercase names
-			{
+			{;
 				if (receivedMessage.content.startsWith("!")) {
 					processCommand(receivedMessage)
 				}
@@ -615,7 +619,10 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generategoblin") 
 	{
 		generateGoblin(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "generatecity") 
+    } else if (normalizedCommand == "frog") 
+	{
+		generateFren(receivedMessage.channel,arguments);
+    }  else if (normalizedCommand == "generatecity") 
 	{
 		generateCityMap(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "generatevillage") 
@@ -4994,8 +5001,8 @@ function NearestWaterbodyToPoint(map, pointx, pointy, map_width, map_height, max
 				position = currenthex.x+currenthex.y*map_width;
 				if (map[position].sealevel == "water")
 				{
-					returnval.x = currenthex.x
-					returnval.y = currenthex.y
+					returnval.x = currenthex.x;
+					returnval.y = currenthex.y;
 					return returnval;
 				}
 			}
@@ -7647,6 +7654,39 @@ function generateGoblin(channel, arguments)
 		channel.send({ files: [{ attachment: path, name: file }] });
 		}
 		))
+}
+
+function generateFren(channel, arguments)
+{
+	let fullfren = [];
+	
+	let random_int = Math.floor(Math.random()*fren_gen.bodies.length);
+	let fren_body = fren_gen.bodies[random_int];
+	let bodypath = fren_body.path;
+	fullfren.push(bodypath);
+	
+	random_int = Math.floor(Math.random()*fren_gen.accessories.length);
+	let accessory = fren_gen.accessories[random_int].path;
+	fullfren.push(accessory);
+	
+	
+	let file = 'newestfren.png';
+	let path = './' + file;
+	
+	console.log(fullfren);
+	
+	mergeImages(fullfren, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+		
 }
 
 //
@@ -13349,6 +13389,7 @@ function MarkovPhonemeNameTrain()
 	markovphonemes["aɪ"] = [];
 	markovphonemes["aʊ"] = [];
 	markovphonemes["p"] = [];
+	markovphonemes["p-"] = [];
 	markovphonemes["b"] = [];
 	markovphonemes["t"] = [];
 	markovphonemes["d-"] = [];
