@@ -90,6 +90,36 @@
 		},
 		{
 			"path":"./friend_gen/body29.png"
+		},
+		{
+			"path":"./friend_gen/body30.png"
+		},
+		{
+			"path":"./friend_gen/body31.png"
+		},
+		{
+			"path":"./friend_gen/body32.png"
+		},
+		{
+			"path":"./friend_gen/body33.png"
+		},
+		{
+			"path":"./friend_gen/body34.png"
+		},
+		{
+			"path":"./friend_gen/body35.png"
+		},
+		{
+			"path":"./friend_gen/body36.png"
+		},
+		{
+			"path":"./friend_gen/body37.png"
+		},
+		{
+			"path":"./friend_gen/body38.png"
+		},
+		{
+			"path":"./friend_gen/body39.png"
 		}
 	],
 	"accessories":
@@ -117,6 +147,27 @@
 		},
 		{
 			"path":"./friend_gen/accessory7.png"
+		},
+		{
+			"path":"./friend_gen/accessory8.png"
+		},
+		{
+			"path":"./friend_gen/accessory9.png"
+		},
+		{
+			"path":"./friend_gen/accessory10.png"
+		},
+		{
+			"path":"./friend_gen/accessory11.png"
+		},
+		{
+			"path":"./friend_gen/accessory12.png"
+		},
+		{
+			"path":"./friend_gen/accessory13.png"
+		},
+		{
+			"path":"./friend_gen/accessory14.png"
 		}
 	]
 }

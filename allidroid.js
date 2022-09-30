@@ -7673,8 +7673,6 @@ function generateFren(channel, arguments)
 	let file = 'newestfren.png';
 	let path = './' + file;
 	
-	console.log(fullfren);
-	
 	mergeImages(fullfren, 
 	{
 		Canvas: Canvas,
