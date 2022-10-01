@@ -53,9 +53,11 @@ var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 //goblin generator files
 var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'));
 
-
 //fren generator files
 var fren_gen = JSON.parse(fs.readFileSync('friend_gen/fren_gen.json'));
+
+//slime generator files
+var slime_gen = JSON.parse(fs.readFileSync('slime_gen/slime_gen.json'));
 
 //city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
@@ -622,7 +624,10 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "frog") 
 	{
 		generateFren(receivedMessage.channel,arguments);
-    }  else if (normalizedCommand == "generatecity") 
+    } else if (normalizedCommand == "slime") 
+	{
+		generateSlime(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "generatecity") 
 	{
 		generateCityMap(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "generatevillage") 
@@ -7685,6 +7690,67 @@ function generateFren(channel, arguments)
 		}
 		))
 		
+}
+
+function generateSlime(channel, arguments)
+{
+	let fullslime = [];
+	let inneritems = [];
+	let outeritems = [];
+	let hasexpression = false;
+	let expression;
+	
+	let random_int = Math.floor(Math.random()*slime_gen.bodies.length);
+	let slimebody = slime_gen.bodies[random_int];
+	
+	for (let i = 0; i < slime_gen.items.length; i++)
+	{
+		let randomf = Math.random();
+		if (randomf < slime_gen.items[i].chance)
+		{
+			inneritems.push(slime_gen.items[i].path[0]);
+			if (slime_gen.items[i].path.length > 1)
+				outeritems.push(slime_gen.items[i].path[1]);
+		}
+	}
+	
+	if (Math.random() < 0.25)
+	{
+		hasexpression = true;
+		random_int = Math.floor(Math.random()*slime_gen.expressions.length);
+		expression = slime_gen.expressions[random_int];
+	}
+	
+	fullslime.push(slimebody.path);
+	for (let i = 0; i < inneritems.length; i++)
+	{
+		fullslime.push(inneritems[i]);
+	}
+	fullslime.push(slimebody.path);
+	if (hasexpression)
+		fullslime.push(expression.path);
+	for (let i = 0; i < outeritems.length; i++)
+	{
+		fullslime.push(outeritems[i]);
+	}
+	
+	//console.log(fullslime);
+	
+	let file = 'newestslime.png';
+	let path = './' + file;
+	
+	
+	mergeImages(fullslime, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
 }
 
 //
