@@ -59,6 +59,9 @@ var fren_gen = JSON.parse(fs.readFileSync('friend_gen/fren_gen.json'));
 //slime generator files
 var slime_gen = JSON.parse(fs.readFileSync('slime_gen/slime_gen.json'));
 
+//familiar generator files
+var familiar_gen = JSON.parse(fs.readFileSync('familiar_gen/familiar_gen.json'));
+
 //city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
 var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
@@ -627,7 +630,13 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "slime") 
 	{
 		generateSlime(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "generatecity") 
+    } else if (normalizedCommand == "familiar") 
+	{
+		generateFamiliar(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "outputadventureworldmap") 
+	{
+		outputAdventureWorldMap(receivedMessage.channel,arguments);
+    }else if (normalizedCommand == "generatecity") 
 	{
 		generateCityMap(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "generatevillage") 
@@ -4025,7 +4034,7 @@ function noiseMap2D(height, width, noisevariance, edgevalue = 0.33)
 	{
 		for (let x = 0; x < width; x++)
 		{
-			let v = gradientOfTwo(map0[x+(y*width)],map1[((width-1)-x)+((height-1)-y)*width]);
+			let v = gradientOfTwo(map0[x+(y*width)],map1[((width-1)-x)+(((height-1)-y)*width)]);
 			//let v = gradientOfTwo(map0[x+(y*width)],map1[x+(y*height)]);
 			if (v < lowest)
 				lowest = v;
@@ -4066,6 +4075,7 @@ function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 	{
 		for (let x  = 0; x < width; x++)
 		{
+			
 			if (Math.random() < 0.5)
 				dx = Math.random()*noisevariance;
 			else
@@ -4085,6 +4095,10 @@ function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 			if ((y-1) > -1)
 			{
 				previousy = map[x+((y-1)*width)];
+			}
+			else
+			{
+				previousy = edgevalue;
 			}
 		}
 		previousx = edgevalue;
@@ -5621,6 +5635,7 @@ function MapSealevelAutomataPass(map, sealevelFrom, sealevelTo, map_width, map_h
 		}
 	}
 }
+
 
 
 function mapPathToPosition(start, end, map, map_width, map_height)
@@ -7579,6 +7594,228 @@ function generateMap(channel, arguments)
 	})*/
 }
 
+function outputAdventureWorldMap(channel, arguments)
+{
+	
+	let mapmap = [];
+	for (let y = 0; y < asworld_height; y++)
+	{
+		for (let x  = 0; x < asworld_width; x++)
+		{
+			let xpos = (12*x);
+			let ypos = (14*y+((x%2)*7));
+			let trees = true;
+			if (asworldmap[x+(y*asworld_width)].sealevel > 10)
+			{
+				let snowless = (Math.random() < 0.55);
+				if (asworldmap[x+(y*asworld_width)].climate == "extremely cold")
+				{
+					mapmap.push({ src: './terrain_tiles_snow_flat.png', x: xpos, y: ypos});
+					snowless = false;
+				}
+				else if (asworldmap[x+(y*asworld_width)].climate == "cold")
+				{
+					mapmap.push({ src: './terrain_tiles_tundra_flat.png', x: xpos, y: ypos});
+				}
+				else if (asworldmap[x+(y*asworld_width)].climate == "temperate")
+				{
+					mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
+				}
+				else
+				{
+					mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
+					snowless = true;
+				}
+				
+				if (snowless)
+				{
+					mapmap.push({ src: './terrain_tiles_mountain_snowless.png', x: xpos, y: ypos});
+				}
+				else
+				{
+					mapmap.push({ src: './terrain_tiles_mountain.png', x: xpos, y: ypos});
+				}
+			}
+			else if (asworldmap[x+(y*asworld_width)].sealevel <= 10 && asworldmap[x+(y*asworld_width)].sealevel > 5)
+			{
+				if (asworldmap[x+(y*asworld_width)].climate == "extremely cold")
+				{
+					mapmap.push({ src: './terrain_tiles_snow_hills.png', x: xpos, y: ypos});
+				}
+				else if (asworldmap[x+(y*asworld_width)].climate == "cold")
+				{
+					mapmap.push({ src: './terrain_tiles_tundra_hills.png', x: xpos, y: ypos});
+				}
+				else if (asworldmap[x+(y*asworld_width)].climate == "temperate")
+				{
+					mapmap.push({ src: './terrain_tiles_grass_hills.png', x: xpos, y: ypos});
+				}
+				else
+				{
+					trees = false;
+					mapmap.push({ src: './terrain_tiles_desert_hills.png', x: xpos, y: ypos});
+				}
+			}
+			else if (asworldmap[x+(y*asworld_width)].sealevel <= 5 && asworldmap[x+(y*asworld_width)].sealevel > 0)
+			{
+				if (asworldmap[x+(y*asworld_width)].climate == "extremely cold")
+				{
+					mapmap.push({ src: './terrain_tiles_snow_flat.png', x: xpos, y: ypos});
+				}
+				else if (asworldmap[x+(y*asworld_width)].climate == "cold")
+				{
+					mapmap.push({ src: './terrain_tiles_tundra_flat.png', x: xpos, y: ypos});
+				}
+				else if (asworldmap[x+(y*asworld_width)].climate == "temperate")
+				{
+					mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
+				}
+				else
+				{
+					trees = false;
+					mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
+				}
+					
+			}
+			else if (asworldmap[x+(y*asworld_width)].sealevel <= 0)
+			{
+				trees = false;
+				mapmap.push({ src: './terrain_tiles_water.png', x: xpos, y: ypos});
+			}
+			
+			if (trees)
+			{
+				if (asworldmap[x+(y*asworld_width)].biome == "forest")
+				{
+					mapmap.push({ src: './terrain_tiles_forest.png', x: xpos, y: ypos});
+				}
+				else if (asworldmap[x+(y*asworld_width)].biome == "jungle")
+				{
+					mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
+				}
+			}
+		}
+	}
+	
+	/*
+	for (i in rivers)
+	{
+		let xpos = (12*rivers[i].x);
+		let ypos = (14*rivers[i].y+((rivers[i].x%2)*7));
+		let tile = '';
+		
+		if (rivers[i].direction == 0)
+		{
+			ypos -= 14;
+			tile =  Math.random() < 0.5 ? './terrain_river_vertical_0.png' : './terrain_river_vertical_1.png';
+		}
+		else if (rivers[i].direction == 1)
+		{
+			ypos -= 7;
+			tile =  Math.random() < 0.5 ? './terrain_river_horizontalA_0.png' : './terrain_river_horizontalA_1.png';
+		}
+		else if (rivers[i].direction == 2)
+		{
+			tile =  Math.random() < 0.5 ? './terrain_river_horizontalB_0.png' : './terrain_river_horizontalB_1.png';
+		}
+		else if (rivers[i].direction == 3)
+		{
+			tile =  Math.random() < 0.5 ? './terrain_river_vertical_0.png' : './terrain_river_vertical_1.png';
+		}
+		else if (rivers[i].direction == 4)
+		{
+			xpos -= 12;
+			tile =  Math.random() < 0.5 ? './terrain_river_horizontalA_0.png' : './terrain_river_horizontalA_1.png';
+		}
+		else if (rivers[i].direction == 5)
+		{
+			ypos -= 7;
+			xpos -= 12;
+			tile =  Math.random() < 0.5 ? './terrain_river_horizontalB_0.png' : './terrain_river_horizontalB_1.png';
+		}
+		
+		mapmap.push({ src: tile, x: xpos, y: ypos });
+	}
+	*/
+	
+	/*
+	for (i in roads)
+	{
+		let xpos = (12*roads[i].x);
+		let ypos = (14*roads[i].y+((roads[i].x%2)*7));
+		let tile = './terrain_roads_horizontalA.png';
+		
+		if (roads[i].direction == 0)
+		{
+			ypos -= 14;
+			tile = './terrain_roads_vertical.png';
+		}
+		else if (roads[i].direction == 1)
+		{
+			ypos -= 7;
+			tile = './terrain_roads_horizontalA.png';
+		}
+		else if (roads[i].direction == 2)
+		{
+			tile = './terrain_roads_horizontalB.png';
+		}
+		else if (roads[i].direction == 3)
+		{
+			tile = './terrain_roads_vertical.png';
+		}
+		else if (roads[i].direction == 4)
+		{
+			xpos -= 12;
+			tile = './terrain_roads_horizontalA.png';
+		}
+		else if (roads[i].direction == 5)
+		{
+			ypos -= 7;
+			xpos -= 12;
+			tile = './terrain_roads_horizontalB.png';
+		}
+		
+		mapmap.push({ src: tile, x: xpos, y: ypos });
+	}
+	*/
+	
+	for (let y = 0; y < asworld_height; y++)
+	{
+		for (let x  = 0; x < asworld_width; x++)
+		{
+			let xpos = (12*x);
+			let ypos = (14*y+((x%2)*7));
+			if (asworldmap[x+(y*asworld_width)].landmark == "city")
+			{
+				mapmap.push({ src: './terrain_tiles_city.png', x: xpos, y: ypos});
+			}
+			else if (asworldmap[x+(y*asworld_width)].landmark == "town")
+			{
+				mapmap.push({ src: './terrain_tiles_town.png', x: xpos, y: ypos});
+			}
+		}
+	}
+	
+	let file = 'generatedmap.png';
+	let path = './' + file;
+	
+	mergeImages(mapmap, 
+	{
+		width: (12*asworld_width + 4),
+		height: (14*asworld_height + 7),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+	
+}
+
+
 //
 //
 // goblin generator function
@@ -7679,6 +7916,45 @@ function generateFren(channel, arguments)
 	let path = './' + file;
 	
 	mergeImages(fullfren, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+		
+}
+
+function generateFamiliar(channel, arguments)
+{
+	let fullFamiliar = [];
+	
+	let random_int = Math.floor(Math.random()*familiar_gen.bodies.length);
+	let fam_body = familiar_gen.bodies[random_int];
+	let bodypath = fam_body.path;
+	fullFamiliar.push(bodypath);
+	
+	random_int = Math.floor(Math.random()*familiar_gen.hats.length);
+	let famhat = familiar_gen.hats[random_int].path;
+	fullFamiliar.push(famhat);
+	
+	random_int = Math.floor(Math.random()*familiar_gen.heads.length);
+	let famhead = familiar_gen.heads[random_int].path;
+	fullFamiliar.push(famhead);
+	
+	random_int = Math.floor(Math.random()*familiar_gen.eyes.length);
+	let fameye = familiar_gen.eyes[random_int].path;
+	fullFamiliar.push(fameye);
+	
+	
+	let file = 'newestfamiliar.png';
+	let path = './' + file;
+	
+	mergeImages(fullFamiliar, 
 	{
 		Canvas: Canvas,
 		Image: Image
@@ -9803,10 +10079,10 @@ function noisemaptopng(channel, arguments)
 	}
 	
 	let imagemap = [];
-	let noisemap = noiseMap2D(asworld_height,asworld_width, 0.04);
-	noisemap = increaseContrast(noisemap, asworld_height, asworld_width, 0.6);
-	noisemap = smoothenMap(noisemap, asworld_height, asworld_width, 0.175);
-	noisemap = increaseContrast(noisemap, asworld_height, asworld_width, 0.333);
+	let noisemap = noiseMap(map_height, map_width, 0.23, 045);
+	noisemap = increaseContrast(noisemap, map_height, map_width, 0.4);
+	noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
+	noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
 	
 	for (let y = 0; y < map_height; y++)
 	{
@@ -10211,12 +10487,32 @@ function initializeSimWorldMap()
 
 function generateSimWorldMap()
 {
+	let LAND_LEVEL = 0.37;
+	let HILL_LEVEL = 0.721;
+	let MOUNTAIN_LEVEL = 0.908;
+	let SNOW_MOUNTAIN_LEVEL = 0.931; 
+
+	let PLAINS_LEVEL = 0.16;
+	let GRASS_LEVEL = 0.32;
+	let TUNDRA_LEVEL = 0.794;
+	let SNOW_LEVEL = 0.825;
+
+	let FOREST_LEVEL = 0.0052;
+	let JUNGLE_LEVEL = 0.0031;
+
+	let ColdBalance = 25;
+	let HotBalance = 25;
+	
+	let Map_Size = asworld_height+asworld_width;
+	
+	let city_density = 0.25;
+	
 	initializeSimWorldMap();
-	let noisemapsealevel = noiseMap2D(asworld_height,asworld_width, 0.35);
+	let noisemapsealevel = noiseMap2D(asworld_height,asworld_width, 0.08);
 	noisemapsealevel = increaseContrast(noisemapsealevel, asworld_height, asworld_width, 0.4);
 	noisemapsealevel = smoothenMap(noisemapsealevel, asworld_height, asworld_width, 0.175);
 	noisemapsealevel = increaseContrast(noisemapsealevel, asworld_height, asworld_width, 0.25)
-	let noisemapbiome = noiseMap2D(asworld_height,asworld_width, 0.13);
+	let noisemapbiome = noiseMap2D(asworld_height,asworld_width, 0.05);
 	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.4);
 	noisemapbiome = smoothenMap(noisemapbiome, asworld_height, asworld_width, 0.175);
 	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.25);
@@ -10229,159 +10525,851 @@ function generateSimWorldMap()
 	noisemaplandmarks = smoothenMap(noisemaplandmarks, asworld_height, asworld_width, 0.175);
 	noisemaplandmarks = increaseContrast(noisemaplandmarks, asworld_height, asworld_width, 0.333);
 	
-	//do landmasses, 32
+	//do landmasses
+	let landmasses = 27;
 	
-	for (let i = 0; i < 32; i++)
+	let landmap = [];
+	//initialize landmap
+	for (let y = 0; y < asworld_height; y++)
 	{
-		let randomwidth = Math.floor(Math.random()*Math.ceil(asworld_width*0.58))+8;
-		let randomheight = Math.floor(Math.random()*Math.ceil(asworld_height*0.58))+8;
-		let randomx = Math.floor(Math.random()*(asworld_width - randomwidth-4))+2;
-		let randomy = Math.floor(Math.random()*(asworld_height - randomheight-4))+2;
-		
-		let midpointx = Math.floor(randomwidth/2);
-		let midpointy = Math.floor(randomheight/2);
-		
-		for (let x = randomx; x < randomwidth+randomx; x++)
+		for (let x  = 0; x < asworld_width; x++)
 		{
-			for (let y = randomy; y < randomheight+randomy; y++)
+			landmap.push(0);
+		}
+	}
+	
+	// landmass map
+	
+	let landmassmap = [];
+	let landmassstarts = [];
+	
+	for (let x = 0; x < asworld_width; x++)
+	{
+		for (let y = 0; y < asworld_height; y++)
+		{
+			landmassmap.push(-1);
+		}
+	}
+	
+	let premapmap = [];
+	//initialize the premapmap
+	for (let y = 0; y < asworld_height; y++)
+	{
+		for (let x  = 0; x < asworld_width; x++)
+		{
+			premapmap.push({ sealevel: "water", terrain: "grass", trees: "none"});
+		}
+	}
+	
+	//do Landmasses
+	
+	for (let i = 0; i < landmasses; i++)
+	{
+		let tempcontigmap = [];
+		//initialize the tempcontigmap
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
 			{
-				let probx = Math.abs(1 - ((x - randomx) / midpointx));
-				let proby = Math.abs(1 - ((y - randomy) / midpointy));
-				let probability = probx * proby * LAND_EROSION;
-				if (Math.random() > probability)
+				tempcontigmap.push(false);
+			}
+		}
+		
+		let temppremap = [];
+		//initialize the temppremap
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				temppremap.push({ sealevel: "water", terrain: "grass" });
+			}
+		}
+		
+		let randomsize = Math.floor(Math.random()*(asworld_height*asworld_width/6)+Map_Size);
+		let randomx = Math.floor(Math.random()*(asworld_width*3/4)+(asworld_width/8));
+		let randomy = Math.floor(Math.random()*(asworld_height*3/4)+(asworld_height/8));
+		
+		temppremap[randomx+(randomy*asworld_width)].sealevel = "land";
+		tempcontigmap[randomx+(randomy*asworld_width)] = true;
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		landmassstarts.push({ x: randomx, y: randomy });
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1)
 				{
-					if (x+(y*asworld_width) > -1 && x+(y*asworld_width) < asworld_height*asworld_width)
-						asworldmap[x+(y*asworld_width)].sealevel = -1;
+					let position = currenthex.x+(currenthex.y*asworld_width);
+					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+					let probability = LAND_EROSION * Math.log2(Map_Size) * Math.sqrt(randomsize);
+					
+					if (Math.random()*distance < probability)
+					{
+						if (AdjacentMapHexContiguous(tempcontigmap, currenthex.x, currenthex.y, asworld_width, asworld_height, true))
+						{
+							tempcontigmap[position] = true;
+							temppremap[position].sealevel = "land";
+						}
+					}
+				}
+				
+				MoveHex(currenthex, direction);
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				if (temppremap[x+(y*asworld_width)].sealevel == "land")
+				{
+					landmassmap[x+(y*asworld_width)] = i+1;
+					landmap[x+(y*asworld_width)] += LAND_LEVEL;
 				}
 			}
 		}
 	}
 	
-	for (let i = 0; i < 3; i++)
+	for (let y = 0; y < asworld_width; y++)
+	{
+		for (let x  = 0; x < asworld_width; x++)
+		{
+			if (landmap[x+(y*asworld_width)] == 0)
+				noisemapsealevel[x+(y*asworld_width)] = 0;
+			else if (noisemapsealevel[x+(y*asworld_width)] < LAND_LEVEL)
+				noisemapsealevel[x+(y*asworld_width)] = LAND_LEVEL;
+		}
+	}
+	
+	//do mountains
+	
+	let mountain_count = Math.floor(landmasses*landmasses/13);
+	
+	for (let i = 0; i < mountain_count; i++)
+	{
+		let tempcontigmap = [];
+		//initialize the tempcontigmap
+		for (let y = 0; y < asworld_width; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				tempcontigmap.push(false);
+			}
+		}
+		
+		let temppremap = [];
+		//initialize the temppremap
+		for (let y = 0; y < asworld_width; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				temppremap.push(0);
+			}
+		}
+		
+		let randomsize = Math.floor(Math.random()*(asworld_width*asworld_width/2)+(asworld_width*asworld_width/4));
+		let randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
+		let randomy = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
+		
+		while (noisemapsealevel[randomx+(randomy*asworld_width)] < LAND_LEVEL)
+		{
+			randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
+			randomy = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
+		}
+		
+		let randomheight = (Math.random()*0.345)+0.486;
+		let lastdistance = 0;
+		let lastheight = randomheight;
+		
+		temppremap[randomx+(randomy*asworld_width)] = randomheight;
+		tempcontigmap[randomx+(randomy*asworld_width)] = true;
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1)
+				{
+					let position = currenthex.x+(currenthex.y*asworld_width);
+					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+					let probability = MOUNTAIN_EROSION * Math.log2(Map_Size) * Math.sqrt(randomsize);
+					let ddh = 0.028;
+					let dh = Math.random()*(0.0901-ddh);
+					let nextheight = 0;
+					
+					if (Math.random()*distance < probability)
+					{
+						dh = Math.random()*(0.0901-ddh);
+						if (Math.random() < 0.333)
+							dh -= Math.random()*(0.0199+ddh);
+						
+						nextheight = Math.min(Math.max(lastheight-dh,0),1);
+					}
+					
+					ddh -= 0.003;
+					
+					if (!tempcontigmap[position] && nextheight >= LAND_LEVEL)
+					{
+						if (AdjacentMapHexContiguous(tempcontigmap, currenthex.x, currenthex.y, asworld_width, asworld_height, true))
+						{
+							tempcontigmap[position] = true;
+							temppremap[position] = nextheight;
+						}
+						lastheight = nextheight;
+					}
+					
+				}
+				
+				MoveHex(currenthex, direction);
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+			lastdistance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+		}
+		
+		//temppremap = NormalizeMap(temppremap, 1, 0);
+		
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+					noisemapsealevel[x+(y*asworld_width)] += temppremap[x+(y*asworld_width)];
+			}
+		}
+		
+	}
+	
+	for (let x = 0; x < asworld_width; x++)
+	{
+		for (let y = 0; y < asworld_height; y++)
+		{
+			if (noisemapsealevel[x+(y*asworld_width)] >= LAND_LEVEL)
+			{
+				premapmap[x+(y*asworld_width)].sealevel = "land";
+			}
+		}
+	}
+	
+	for (let i = 0; i < SMOOTHING_ITERATIONS; i++)
 	{
 		for (let y = 0; y < asworld_height; y++)
 		{
 			for (let x  = 0; x < asworld_width; x++)
 			{
 				let waterCount = 6;
-				if (x+((y+1)*asworld_width) < asworldmap.length && asworldmap[x+((y+1)*asworld_width)].sealevel == -1)
+				if (x+((y+1)*asworld_width) < premapmap.length && premapmap[x+((y+1)*asworld_width)].sealevel == "land")
 					waterCount--;
-				if (x+((y-1)*asworld_width) > -1 && asworldmap[x+((y-1)*asworld_width)].sealevel == -1)
+				if (x+((y-1)*asworld_width) > -1 && premapmap[x+((y-1)*asworld_width)].sealevel == "land")
 					waterCount--
 				if (x%2 == 0)
 				{
-					if ((x+1)+(y*asworld_width) < asworldmap.length && asworldmap[(x+1)+(y*asworld_width)].sealevel == -1)
+					if ((x+1)+(y*asworld_width) < premapmap.length && premapmap[(x+1)+(y*asworld_width)].sealevel == "land")
 						waterCount--;
-					if ((x+1)+((y-1)*asworld_width) > -1 && (x+1)+((y-1)*asworld_width) < asworldmap.length && asworldmap[(x+1)+((y-1)*asworld_width)].sealevel == -1)
+					if ((x+1)+((y-1)*asworld_width) > -1 && (x+1)+((y-1)*asworld_width) < premapmap.length && premapmap[(x+1)+((y-1)*asworld_width)].sealevel == "land")
 						waterCount--;
-					if ((x-1)+(y*asworld_width) > -1 && asworldmap[(x-1)+(y*asworld_width)].sealevel == -1)
+					if ((x-1)+(y*asworld_width) > -1 && premapmap[(x-1)+(y*asworld_width)].sealevel == "land")
 						waterCount--;
-					if ((x-1)+((y-1)*asworld_width) > -1 && asworldmap[(x-1)+((y-1)*asworld_width)].sealevel == -1)
+					if ((x-1)+((y-1)*asworld_width) > -1 && premapmap[(x-1)+((y-1)*asworld_width)].sealevel == "land")
 						waterCount--;
 				}
 				else
 				{
-					if ((x+1)+((y+1)*asworld_width) < asworldmap.length && asworldmap[(x+1)+((y+1)*asworld_width)].sealevel == -1)
+					if ((x+1)+((y+1)*asworld_width) < premapmap.length && premapmap[(x+1)+((y+1)*asworld_width)].sealevel == "land")
 						waterCount--;
-					if ((x+1)+(y*asworld_width) < asworldmap.length && asworldmap[(x+1)+(y*asworld_width)].sealevel == -1)
+					if ((x+1)+(y*asworld_width) < premapmap.length && premapmap[(x+1)+(y*asworld_width)].sealevel == "land")
 						waterCount--;
-					if ((x-1)+((y+1)*asworld_width) > -1 && (x-1)+((y+1)*asworld_width) < asworldmap.length && asworldmap[(x-1)+((y+1)*asworld_width)].sealevel == -1)
+					if ((x-1)+((y+1)*asworld_width) > -1 && (x-1)+((y+1)*asworld_width) < premapmap.length && premapmap[(x-1)+((y+1)*asworld_width)].sealevel == "land")
 						waterCount--;
-					if ((x-1)+(y*asworld_width) > -1 && asworldmap[(x-1)+(y*asworld_width)].sealevel == -1)
+					if ((x-1)+(y*asworld_width) > -1 && premapmap[(x-1)+(y*asworld_width)].sealevel == "land")
 						waterCount--;
 				}
 				
 				if (waterCount == 6)
 				{
-					asworldmap[x+(y*asworld_width)].sealevel = -1;
+					premapmap[x+(y*asworld_width)].sealevel = "water";
 				}
-				else if (waterCount < 3 && asworldmap[x+(y*asworld_width)].sealevel == -1)
+				else if (waterCount < 3 && premapmap[x+(y*asworld_width)].sealevel == "water")
 				{
-					asworldmap[x+(y*asworld_width)].sealevel = 1;
+					premapmap[x+(y*asworld_width)].sealevel = "land";
 				}
 			}
 		}
 	}
 	
-	let baserand = 0;
-	
 	for (let y = 0; y < asworld_height; y++)
 	{
-		for (let x = 0; x < asworld_width; x++)
+		for (let x  = 0; x < asworld_width; x++)
 		{
-			asworldmap[x+(y*asworld_width)].sealevel *= noisemapsealevel[x+(y*asworld_width)]*20;
-			if (asworldmap[x+(y*asworld_width)].sealevel > 0)
+			if (premapmap[x+(y*asworld_width)].sealevel == "land")
 			{
-				baserand = noisemapbiome[x+(y*asworld_width)];
-				if (baserand < 0.20)
+				if (noisemapsealevel[x+(y*asworld_width)] > MOUNTAIN_LEVEL)
 				{
-					asworldmap[x+(y*asworld_width)].biome = "jungle";
-				}
-				else if (baserand < 0.4)
-				{
-					asworldmap[x+(y*asworld_width)].biome = "forest";
-				}
-				else if (baserand < 0.6)
-				{
-					asworldmap[x+(y*asworld_width)].biome = "grasslands";
-				}
-				else if (baserand < 0.8)
-				{
-					asworldmap[x+(y*asworld_width)].biome = "plains";
-				}
-				else //if (baserand < 1)
-				{
-					asworldmap[x+(y*asworld_width)].biome = "desolate";
-				}
-				
-				baserand = noisemapclimate[x+(y*asworld_width)];
-				if (baserand < 0.1667)
-				{
-					asworldmap[x+(y*asworld_width)].climate = "extremely hot";
-				}
-				else if (baserand < 0.35)
-				{
-					asworldmap[x+(y*asworld_width)].climate = "hot";
-				}
-				else if (baserand < 0.65)
-				{
-					asworldmap[x+(y*asworld_width)].climate = "temperate";
-				}
-				else if (baserand < 0.8443)
-				{
-					asworldmap[x+(y*asworld_width)].climate = "cold";
-				}
-				else //if (baserand < 1)
-				{
-					asworldmap[x+(y*asworld_width)].climate = "extremely cold";
-				}
-				
-				baserand = noisemaplandmarks[x+(y*asworld_width)];
-				if (baserand < 0.25)
-				{
-					baserand = Math.random();
-					if (baserand < 0.2)
-						asworldmap[x+(y*asworld_width)].landmark = "city"
-					else if (baserand < 0.5)
-						asworldmap[x+(y*asworld_width)].landmark = "town"
+					if (noisemapbiome[x+(y*asworld_width)] > SNOW_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].sealevel = "mountain";
+						premapmap[x+(y*asworld_width)].terrain = "snow";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > TUNDRA_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].sealevel = "mountain";
+						premapmap[x+(y*asworld_width)].terrain = "tundra";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > GRASS_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].sealevel = "mountain";
+						premapmap[x+(y*asworld_width)].terrain = "grass";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > PLAINS_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].sealevel = "mountain";
+						premapmap[x+(y*asworld_width)].terrain = "tundra";
+					}
 					else
-						asworldmap[x+(y*asworld_width)].landmark = "village"
+					{
+						premapmap[x+(y*asworld_width)].sealevel = "mountain";
+						premapmap[x+(y*asworld_width)].terrain = "desert";
+					}
 				}
-				else if (baserand < 0.75)
+				else if (noisemapsealevel[x+(y*asworld_width)] > HILL_LEVEL)
 				{
-					asworldmap[x+(y*asworld_width)].landmark = "none"
-				}
-				else
-				{
-					baserand = Math.random();
-					if (baserand < 0.2)
-						asworldmap[x+(y*asworld_width)].landmark = "evil castle"
-					else if (baserand < 0.5)
-						asworldmap[x+(y*asworld_width)].landmark = "monster lair"
+					if (noisemapbiome[x+(y*asworld_width)] > SNOW_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].sealevel = "hill";
+						premapmap[x+(y*asworld_width)].terrain = "snow";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > TUNDRA_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].sealevel = "hill";
+						premapmap[x+(y*asworld_width)].terrain = "tundra";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > GRASS_LEVEL)
+					{
+						
+						premapmap[x+(y*asworld_width)].sealevel = "hill";
+						premapmap[x+(y*asworld_width)].terrain = "grass";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > PLAINS_LEVEL)
+					{
+						
+						premapmap[x+(y*asworld_width)].sealevel = "hill";
+						premapmap[x+(y*asworld_width)].terrain = "tundra";
+					}
 					else
-						asworldmap[x+(y*asworld_width)].landmark = "quest site"
+					{
+						premapmap[x+(y*asworld_width)].sealevel = "hill";
+						premapmap[x+(y*asworld_width)].terrain = "desert";
+					}
+				}
+				else //if (heightmap[x+(y*asworld_width)] > LAND_LEVEL)
+				{
+					if (noisemapbiome[x+(y*asworld_width)] > SNOW_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].terrain = "snow";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > TUNDRA_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].terrain = "tundra";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > GRASS_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].terrain = "grass";
+					}
+					else if (noisemapbiome[x+(y*asworld_width)] > PLAINS_LEVEL)
+					{
+						premapmap[x+(y*asworld_width)].terrain = "plains";
+					}
+					else
+					{
+						premapmap[x+(y*asworld_width)].terrain = "desert";
+					}
 				}
 			}
+		}
+	}
+	
+	// do water border
+	for (let y = 0; y < asworld_height; y++)
+	{
+		position = (y*asworld_width);
+		premapmap[position].terrain = "grass";
+		premapmap[position].sealevel = "water";
+		
+		position = (asworld_width-1+y*asworld_width);
+		premapmap[position].terrain = "grass";
+		premapmap[position].sealevel = "water";
+	}
+	for (let x = 0; x < asworld_width; x++)
+	{
+		position = (x);
+		premapmap[position].terrain = "grass";
+		premapmap[position].sealevel = "water";
+		
+		position = (x+(asworld_height-1)*asworld_width);
+		premapmap[position].terrain = "grass";
+		premapmap[position].sealevel = "water";
+	}
+	
+	//do automata
+	MapTerrainAutomataPass(premapmap, "desert", "tundra", asworld_width, asworld_height, 2);
+	MapTerrainAutomataPass(premapmap, "snow", "tundra", asworld_width, asworld_height, 2);
+	
+	// do landmass map
+	for (let i = 0; i < landmassstarts.length; i++)
+	{
+		let position = landmassstarts[i].x + landmassstarts[i].y * asworld_width; 
+		landmassmap = LandmassCalculation(premapmap, landmassmap, landmassmap[position], landmassstarts[i].x, landmassstarts[i].y, asworld_width, asworld_height, Map_Size);
+	}
+	
+	//do jungles
+	let jungle_count = Math.floor(Math.random()* landmasses * (Math.sqrt(Map_Size)/11 +1)) +1;
+	for (let i = 0; i < jungle_count; i++)
+	{
+		let temptreemap = [];
+		//initialize the tempmap
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				temptreemap.push("none");
+			}
+		}
+		
+		let randomsize = Math.floor((Math.random()*(asworld_height*asworld_width/6)+asworld_height+asworld_width)*2/3);
+		let randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
+		let randomy = Math.floor(Math.random()*(asworld_height*5/6)+(asworld_height/12));
+		while (premapmap[randomx+randomy*asworld_width].sealevel == "water" || premapmap[randomx+randomy*asworld_width].sealevel == "mountain" || premapmap[randomx+randomy*asworld_width].terrain == "desert")
+		{
+			randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
+			randomy = Math.floor(Math.random()*(asworld_height*5/6)+(asworld_height/12));
+		}
+		
+		temptreemap[randomx+(randomy*asworld_width)] = "jungle";
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1)
+				{
+					let position = currenthex.x+(currenthex.y*asworld_width);
+					if ((premapmap[position].sealevel == "land" || premapmap[position].sealevel == "hill") && premapmap[position].terrain != "desert")
+					{
+						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+						let probability = JUNGLE_LEVEL * Math.log2(Map_Size) * Math.sqrt(randomsize);
+						
+						if (Math.random()*distance < probability)
+						{
+							temptreemap[position] = "jungle";
+						}
+					}
+				}
+				
+				MoveHex(currenthex, direction);
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		
+		temptreemap = TreesContiguousToPoint(temptreemap, "jungle", randomx, randomy, asworld_width, asworld_height, randomsize);
+		
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				if (temptreemap[x+(y*asworld_width)] == "jungle")
+				{
+					premapmap[x+(y*asworld_width)].trees = "jungle";
+				}
+			}
+		}
+	}
+	
+	//do forests
+	let forest_count = Math.floor(Math.random()* landmasses * (Math.sqrt(Map_Size)/9 +1)) +1;
+	for (let i = 0; i < forest_count; i++)
+	{
+		let temptreemap = [];
+		//initialize the tempmap
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				temptreemap.push("none");
+			}
+		}
+		
+		let randomsize = Math.floor((Math.random()*(asworld_height*asworld_width/6)+asworld_height+asworld_width)*3/4);
+		let randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
+		let randomy = Math.floor(Math.random()*(asworld_height*5/6)+(asworld_height/12));
+		while (premapmap[randomx+randomy*asworld_width].sealevel == "water" || premapmap[randomx+randomy*asworld_width].sealevel == "mountain" || premapmap[randomx+randomy*asworld_width].terrain == "desert")
+		{
+			randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
+			randomy = Math.floor(Math.random()*(asworld_height*5/6)+(asworld_height/12));
+		}
+		
+		temptreemap[randomx+(randomy*asworld_width)] = "forest";
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			if (startpos.x  % 2 == 1)
+			{
+				startpos.x = startpos.x+1;
+			}
+			else
+			{
+				startpos.x = startpos.x+1;
+				startpos.y = startpos.y-1;
+			}
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1)
+				{
+					let position = currenthex.x+(currenthex.y*asworld_width);
+					if ((premapmap[position].sealevel == "land" || premapmap[position].sealevel == "hill") && premapmap[position].terrain != "desert")
+					{
+						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+						let probability = FOREST_LEVEL * Math.log2(Map_Size) * Math.sqrt(randomsize);
+						
+						if (Math.random()*distance < probability)
+						{
+							temptreemap[position] = "forest";
+						}
+					}
+				}
+				
+				MoveHex(currenthex, direction);
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		
+		temptreemap = TreesContiguousToPoint(temptreemap, "forest", randomx, randomy, asworld_width, asworld_height, randomsize);
+		
+		for (let y = 0; y < asworld_height; y++)
+		{
+			for (let x  = 0; x < asworld_width; x++)
+			{
+				if (temptreemap[x+(y*asworld_width)] == "forest")
+				{
+					premapmap[x+(y*asworld_width)].trees = "forest";
+				}
+			}
+		}
+	}
+	
+	
+	// do landmarks
+	let landmarks = [];
+	let citycount = 4;
+	let landmarkcount = 1;
+	let landmarklandmass = Math.ceil(Map_Size);
+	for (let i = 0; i < landmarklandmass; i++)
+	{
+		let landmarksroll = Math.max(Math.floor(Math.random()*4+Math.random()*4)-3,1);
+		landmarkcount += landmarksroll;
+	}
+	for (let i = 0; i < landmarklandmass; i++)
+	{
+		let landmarksroll = Math.max(Math.floor(Math.random()*4+Math.random()*4)-3,0);
+		citycount += landmarksroll;
+	}
+	
+	citycount = Math.ceil(citycount*city_density);
+	
+	
+	//cities
+	for (let i = 0; i < citycount; i++)
+	{
+		let currenthex;
+		//ideal location random placement attempts
+		let landmarkvalid = true;
+		
+		for (let j = 0; j < 255 && landmarkvalid; j++)
+		{
+			let placeattempts = 0;
+			currenthex = { x: Math.floor(Math.random()*(asworld_width-1)+1), y: Math.floor(Math.random()*(asworld_height-1)+1), capitalcity: i };
+			while (!CityLocationValid(currenthex, landmarks, premapmap, asworld_width) && placeattempts <= 255)
+			{
+				currenthex = { x: Math.floor(Math.random()*(asworld_width-1)+1), y: Math.floor(Math.random()*(asworld_height-1)+1), capitalcity: i };
+				placeattempts++;
+				if (placeattempts > 255)
+				{
+					console.log("stopping placing cities, " + i + " cities placed");
+					landmarkvalid = false;
+					citycount = i;
+					i += citycount;
+				}
+			}
+			
+			if (landmarkvalid)
+			{
+				let position = currenthex.x + currenthex.y*asworld_width;
+				let hasShore = (NearestWaterbodyToPoint(premapmap, currenthex.x, currenthex.y, asworld_width, asworld_height, 7) != null);
+				let hasGrasslands = (NearestGrasslandsToPoint(premapmap, currenthex, asworld_width, asworld_height, 7) != null);
+				let chanceToStay = 0.1;
+				let factorsToStay = 0.16;
+				if (hasShore)
+				{
+					factorsToStay++;
+				}
+				if (hasGrasslands)
+				{
+					factorsToStay++;
+				}
+				chanceToStay += factorsToStay*factorsToStay*0.1;
+				if (Math.random() < chanceToStay)
+					j += 255;
+				else
+					j++;
+			}
+		}
+		if (landmarkvalid)
+		{
+			landmarks.push(currenthex);
+			asworldmap[currenthex.x+(currenthex.y*asworld_width)].landmark = "city";
+		}
+	}
+	
+	//other landmarks
+	for (let i = 0; i < landmarkcount; i++)
+	{
+		let currenthex;
+		//ideal location random placement attempts
+		let landmarkvalid = true;
+		
+		for (let j = 0; j < 255 && landmarkvalid; j++)
+		{
+			let placeattempts = 0;
+			currenthex = { x: Math.floor(Math.random()*(asworld_width-1)+1), y: Math.floor(Math.random()*(asworld_height-1)+1), capitalcity: i };
+			while (!CityLocationValid(currenthex, landmarks, premapmap, asworld_width) && placeattempts <= 255)
+			{
+				currenthex = { x: Math.floor(Math.random()*(asworld_width-1)+1), y: Math.floor(Math.random()*(asworld_height-1)+1), capitalcity: i };
+				placeattempts++;
+				if (placeattempts > 255)
+				{
+					console.log("stopping placing landmarks, " + i + " landmarks placed");
+					landmarkvalid = false;
+					landmarkcount = i;
+					i += landmarkcount;
+				}
+			}
+			
+			if (landmarkvalid)
+			{
+				let position = currenthex.x + currenthex.y*asworld_width;
+				let hasShore = (NearestWaterbodyToPoint(premapmap, currenthex.x, currenthex.y, asworld_width, asworld_height, 7) != null);
+				let hasGrasslands = (NearestGrasslandsToPoint(premapmap, currenthex, asworld_width, asworld_height, 7) != null);
+				let chanceToStay = 0.1;
+				let factorsToStay = 0.16;
+				if (hasShore)
+				{
+					factorsToStay++;
+				}
+				if (hasGrasslands)
+				{
+					factorsToStay++;
+				}
+				chanceToStay += factorsToStay*factorsToStay*0.1;
+				if (Math.random() < chanceToStay)
+					j += 255;
+				else
+					j++;
+			}
+		}
+		if (landmarkvalid)
+		{
+			landmarks.push(currenthex);
+			let randomroll = Math.random();
+			if (randomroll < 0.5)
+				asworldmap[currenthex.x+(currenthex.y*asworld_width)].landmark = "monster lair";
+			else if (randomroll < 0.8)
+				asworldmap[currenthex.x+(currenthex.y*asworld_width)].landmark = "quest site";
+			else
+				asworldmap[currenthex.x+(currenthex.y*asworld_width)].landmark = "evil castle";
+		}
+	}
+	
+	
+	for (let x = 0; x < asworld_width; x++)
+	{
+		for (let y = 0; y < asworld_height; y++)
+		{
+			//asworldmap[x+(y*asworld_width)].sealevel = noisemapsealevel[x+(y*asworld_width)]*1;
+			if (premapmap[x+(y*asworld_width)].sealevel == "mountain")
+				asworldmap[x+(y*asworld_width)].sealevel = 12.5;
+			else if (premapmap[x+(y*asworld_width)].sealevel == "hill")
+				asworldmap[x+(y*asworld_width)].sealevel = 7.5;
+			else if (premapmap[x+(y*asworld_width)].sealevel == "land")
+				asworldmap[x+(y*asworld_width)].sealevel = 1;
+			else
+				asworldmap[x+(y*asworld_width)].sealevel = -1;
+			if (premapmap[x+(y*asworld_width)].terrain == "snow")
+				asworldmap[x+(y*asworld_width)].climate = "extremely cold";
+			else if (premapmap[x+(y*asworld_width)].terrain == "tundra")
+				asworldmap[x+(y*asworld_width)].climate = "cold";
+			else if (premapmap[x+(y*asworld_width)].terrain == "grass")
+				asworldmap[x+(y*asworld_width)].climate = "temperate";
+			else if (premapmap[x+(y*asworld_width)].terrain == "plains")
+				asworldmap[x+(y*asworld_width)].climate = "hot";
+			else
+				asworldmap[x+(y*asworld_width)].climate = "extremely hot";
+			if (premapmap[x+(y*asworld_width)].trees == "jungle")
+				asworldmap[x+(y*asworld_width)].biome = "jungle";
+			else if (premapmap[x+(y*asworld_width)].trees == "forest")
+				asworldmap[x+(y*asworld_width)].biome = "forest";
+			else if (premapmap[x+(y*asworld_width)].climate == "temperate")
+				asworldmap[x+(y*asworld_width)].biome = "grasslands";
+			else if (premapmap[x+(y*asworld_width)].terrain == "plains")
+				asworldmap[x+(y*asworld_width)].biome = "plains";
+			else if (premapmap[x+(y*asworld_width)].terrain == "snow")
+				asworldmap[x+(y*asworld_width)].biome = "desolate";
+			else
+				asworldmap[x+(y*asworld_width)].biome = "desolate";
 		}
 	}
 	
@@ -10685,6 +11673,12 @@ function makeParty(arguments)
 		return "You must provide at least one class specification or \"any\" for this command";
 	
 	let nearestCity = findNearestLandmark(64, 36, "city", 0.667);
+	while (nearestCity != null && nearestCity == false)
+	{
+		nearestCity = findNearestLandmark(64, 36, "city", 0.667);
+	}
+	if (nearestCity == null)
+		throw "no city found";
 	
 	adventuringparty = {
 		id: arguments[0],
@@ -12342,6 +13336,7 @@ function findNearestLandmark(xpos, ypos, landmark, probability = 1)
 	let dirduration = 1;
 	let loopend = 6;
 	let sizereached = 1;
+	let landmarkfound = false;
 	for(let j = 0; j < totalloops && sizereached < size; j++)
 	{
 		let direction = 3;
@@ -12361,6 +13356,7 @@ function findNearestLandmark(xpos, ypos, landmark, probability = 1)
 		{
 			if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1 && asworldmap[currenthex.x + (currenthex.y*asworld_width)].landmark == landmark)
 			{
+				landmarkfound = true;
 				if (Math.random() < probability)
 				{
 					let start = { x: xpos, y: ypos };
@@ -12444,6 +13440,8 @@ function findNearestLandmark(xpos, ypos, landmark, probability = 1)
 		loopend += 6;
 		dirduration++;
 	}
+	if (landmarkfound)
+		return false;
 	return null;
 }
 
@@ -13264,6 +14262,12 @@ function startAdventure(partyid, questlevel)
 	addPriority(party.priorities,"adventure");
 	fullyRecuperateParty(party);
 	let nearestquestsite = findNearestLandmark(party.xpos, party.ypos, party.quest.landmark, 0.667);
+	while (nearestquestsite != null && nearestquestsite == false)
+	{
+		nearestquestsite = findNearestLandmark(party.xpos, party.ypos, party.quest.landmark, 0.667);
+	}
+	if (nearestquestsite == null)
+		throw "no quest site found";
 	let start = { x: party.xpos, y: party.ypos };
 	party.questpath = pathToPosition(start, nearestquestsite);
 	
@@ -13327,6 +14331,12 @@ function loadSimWorldMap()
 		for (let i = 0; i < adventuringparties.length; i++)
 		{
 			let nearestCity = findNearestLandmark(64, 36, "city", 0.667);
+			while (nearestCity != null && nearestCity == false)
+			{
+				nearestCity = findNearestLandmark(64, 36, "city", 0.667);
+			}
+			if (nearestCity == null)
+				throw "no city found";
 			adventuringparties[i].xpos = nearestCity.x;
 			adventuringparties[i].ypos = nearestCity.y;
 		}
