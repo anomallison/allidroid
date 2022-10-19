@@ -147,38 +147,48 @@ const KEYSMASH_DEFAULT_MIN = 18;
 //
 
 client.on('messageCreate', (receivedMessage) => {
-    if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
-       return
-    }
+	try
+	{
+		if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
+		   return
+		}
 
-	if (receivedMessage.guild != null)
-	{
-		receivedMessage.guild.members.fetch(receivedMessage.author.id)
-		.then( member => {
-			roles = member.roles.cache;
-			if (!hasName(roles, "bot banned")) // warning: hasName always checks against lowercase names
-			{;
-				if (receivedMessage.content.startsWith("!")) {
-					processCommand(receivedMessage)
+		if (receivedMessage.guild != null)
+		{
+			receivedMessage.guild.members.fetch(receivedMessage.author.id)
+			.then( member => {
+				roles = member.roles.cache;
+				if (!hasName(roles, "bot banned")) // warning: hasName always checks against lowercase names
+				{;
+					if (receivedMessage.content.startsWith("!")) {
+						processCommand(receivedMessage)
+					}
 				}
-			}
-			else
-			{
-				console.log("Command ignored, due to ban");
-			}
-		})
-		.catch(console.error);
-	}
-	else if (receivedMessage.content.startsWith("!")) 
-	{
-		try
+				else
+				{
+					console.log("Command ignored, due to ban");
+				}
+			})
+			.catch(console.error);
+		}
+		else if (receivedMessage.content.startsWith("!")) 
 		{
 			processCommand(receivedMessage);
+			/*
+			try
+			{
+				
+			}
+			catch (err)
+			{
+				
+			}
+			*/
 		}
-		catch (err)
-		{
-			console.log(Date.now() + ", error: " + err.message);
-		}
+	}
+	catch (err)
+	{
+		console.log(Date.now() + ", error: " + err.message);
 	}
 })
 
