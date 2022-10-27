@@ -6096,11 +6096,15 @@ function generateMap(channel, arguments)
 		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
 		{
 			MAP_HEIGHT = Math.floor(parseInt(arguments[argumentpos+1]));
+			if (MAP_HEIGHT > 128)
+				MAP_HEIGHT = 128;
 		}
 		argumentpos = arguments.indexOf("-w");
 		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
 		{
 			MAP_WIDTH = Math.floor(parseInt(arguments[argumentpos+1]));
+			if (MAP_WIDTH > 128)
+				MAP_WIDTH = 128;
 		}
 		Map_Size = MAP_HEIGHT+MAP_WIDTH;
 		argumentpos = arguments.indexOf("-l");
