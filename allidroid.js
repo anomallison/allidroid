@@ -50,6 +50,9 @@ var boss_generator = JSON.parse(fs.readFileSync('bosses2.json'));
 var item_artifactnames = JSON.parse(fs.readFileSync('item_artifactnames.json'));
 var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 
+//bird generator files
+var bird_gen = JSON.parse(fs.readFileSync('bird_gen/bird_generator.json'));
+
 //goblin generator files
 var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'));
 
@@ -643,6 +646,9 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "familiar") 
 	{
 		generateFamiliar(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "bird") 
+	{
+		generateBird(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "outputadventureworldmap") 
 	{
 		outputAdventureWorldMap(receivedMessage.channel,arguments);
@@ -7969,6 +7975,63 @@ function generateFamiliar(channel, arguments)
 	let path = './' + file;
 	
 	mergeImages(fullFamiliar, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+		
+}
+
+function generateBird(channel, arguments)
+{
+	let fullBird = [];
+	
+	let random_int = Math.floor(Math.random()*bird_gen.feet.length);
+	let birdfeet = bird_gen.feet[random_int].path;
+	fullBird.push(birdfeet);
+	
+	random_int = Math.floor(Math.random()*bird_gen.frontwings.length);
+	let birdfrontwing = bird_gen.frontwings[random_int].path;
+	fullBird.push(birdfrontwing);
+	
+	random_int = Math.floor(Math.random()*bird_gen.bodies.length);
+	let birdbody = bird_gen.bodies[random_int].path;
+	fullBird.push(birdbody);
+	
+	random_int = Math.floor(Math.random()*bird_gen.backwings.length);
+	let birdbackwing = bird_gen.backwings[random_int].path;
+	fullBird.push(birdbackwing);
+	
+	random_int = Math.floor(Math.random()*bird_gen.heads.length);
+	let birdhead = bird_gen.heads[random_int].path;
+	fullBird.push(birdhead);
+	
+	random_int = Math.floor(Math.random()*bird_gen.beaks.length);
+	let birdbeak = bird_gen.beaks[random_int].path;
+	fullBird.push(birdbeak);
+	
+	random_int = Math.floor(Math.random()*bird_gen.eyes.length);
+	let birdeyes = bird_gen.eyes[random_int].path;
+	fullBird.push(birdeyes);
+	
+	if (Math.random < 0.2)
+	{
+		random_int = Math.floor(Math.random()*bird_gen.accessories.length);
+		let birdaccessory = bird_gen.accessories[random_int].path;
+		fullBird.push(birdaccessory);
+	}
+	
+	
+	let file = 'newestbird.png';
+	let path = './' + file;
+	
+	mergeImages(fullBird, 
 	{
 		Canvas: Canvas,
 		Image: Image
