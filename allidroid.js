@@ -8012,21 +8012,20 @@ function generateBird(channel, arguments)
 	let birdhead = bird_gen.heads[random_int].path;
 	fullBird.push(birdhead);
 	
-	random_int = Math.floor(Math.random()*bird_gen.beaks.length);
-	let birdbeak = bird_gen.beaks[random_int].path;
-	fullBird.push(birdbeak);
-	
 	random_int = Math.floor(Math.random()*bird_gen.eyes.length);
 	let birdeyes = bird_gen.eyes[random_int].path;
 	fullBird.push(birdeyes);
 	
-	if (Math.random < 0.2)
+	if (Math.random() < 0.2)
 	{
 		random_int = Math.floor(Math.random()*bird_gen.accessories.length);
 		let birdaccessory = bird_gen.accessories[random_int].path;
 		fullBird.push(birdaccessory);
 	}
 	
+	random_int = Math.floor(Math.random()*bird_gen.beaks.length);
+	let birdbeak = bird_gen.beaks[random_int].path;
+	fullBird.push(birdbeak);
 	
 	let file = 'newestbird.png';
 	let path = './' + file;
