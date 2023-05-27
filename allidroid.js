@@ -1,7 +1,7 @@
 ////////
 //
 // written by AnomAllison
-// last updated 13/12/2021
+// last updated 27/05/2023
 //
 // I hope Allidroid can bring people some humour and entertainment
 //
@@ -64,6 +64,9 @@ var slime_gen = JSON.parse(fs.readFileSync('slime_gen/slime_gen.json'));
 
 //familiar generator files
 var familiar_gen = JSON.parse(fs.readFileSync('familiar_gen/familiar_gen.json'));
+
+//psyduck generator files
+var psyduck_gen = JSON.parse(fs.readFileSync('psyduck_gen/psyduck_gen.json'));
 
 //city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
@@ -637,6 +640,9 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generategoblin") 
 	{
 		generateGoblin(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "psyduck") 
+	{
+		generatePsyduck(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "frog") 
 	{
 		generateFren(receivedMessage.channel,arguments);
@@ -7906,6 +7912,56 @@ function generateGoblin(channel, arguments)
 	let path = './' + file;
 	
 	mergeImages(assembledgoblin, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+}
+
+function generatePsyduck(channel, arguments)
+{
+	let assembledpsyduck = [];
+	
+	let random_int = Math.floor(Math.random()*psyduck_gen.rightarms.length);
+	let rightarm = psyduck_gen.rightarms[random_int];
+	let partpath = rightarm.path;
+	assembledpsyduck.push(partpath);
+	
+	random_int = Math.floor(Math.random()*psyduck_gen.bodies.length);
+	let bodypart = psyduck_gen.bodies[random_int];
+	partpath = bodypart.path;
+	assembledpsyduck.push(partpath);
+	
+	random_int = Math.floor(Math.random()*psyduck_gen.heads.length);
+	let head = psyduck_gen.heads[random_int];
+	partpath = head.path;
+	assembledpsyduck.push(partpath);
+	
+	random_int = Math.floor(Math.random()*psyduck_gen.eyes.length);
+	let eyes = psyduck_gen.eyes[random_int];
+	partpath = eyes.path;
+	assembledpsyduck.push(partpath);
+	
+	random_int = Math.floor(Math.random()*psyduck_gen.hairs.length);
+	let hair = psyduck_gen.hairs[random_int];
+	partpath = hair.path;
+	assembledpsyduck.push(partpath);
+	
+	random_int = Math.floor(Math.random()*psyduck_gen.leftarms.length);
+	let leftarm = psyduck_gen.leftarms[random_int];
+	partpath = leftarm.path;
+	assembledpsyduck.push(partpath);
+	
+	let file = 'psyduck.png';
+	let path = './' + file;
+	
+	mergeImages(assembledpsyduck, 
 	{
 		Canvas: Canvas,
 		Image: Image
