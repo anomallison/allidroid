@@ -9,6 +9,9 @@
 		},
 		{
 			"path":"./psyduck_gen/body_2.png"
+		},
+		{
+			"path":"./psyduck_gen/body_3.png"
 		}
 	],
 	"eyes":
@@ -39,6 +42,12 @@
 		},
 		{
 			"path":"./psyduck_gen/hair_3.png"
+		},
+		{
+			"path":"./psyduck_gen/hair_4.png"
+		},
+		{
+			"path":"./psyduck_gen/hair_5.png"
 		}
 	],
 	"heads":
@@ -69,6 +78,12 @@
 		},
 		{
 			"path":"./psyduck_gen/leftarm_4.png"
+		},
+		{
+			"path":"./psyduck_gen/leftarm_5.png"
+		},
+		{
+			"path":"./psyduck_gen/leftarm_6.png"
 		}
 	],
 	"rightarms":
@@ -87,6 +102,9 @@
 		},
 		{
 			"path":"./psyduck_gen/rightarm_4.png"
+		},
+		{
+			"path":"./psyduck_gen/rightarm_5.png"
 		}
 	]
 }
