@@ -4209,5 +4209,50 @@
 				"damagediesides": 8
 			}
 		}
+		{
+			"id": "traproom3",
+			"level": 1,
+			"solutions":
+			[
+				{
+					"type": "skillone",
+					"skill": "sleightOfHand",
+					"dcmin": 7,
+					"dcmax": 11,
+					"failure": "hurtone",
+					"success": "proceed"
+				},
+				{
+					"type": "skillone",
+					"skill": "arcana",
+					"dcmin": 7,
+					"dcmax": 12,
+					"failure": "hurtone",
+					"success": "proceed"
+				},
+				{
+					"type": "skillall",
+					"skill": "acrobatics",
+					"dcmin": 3,
+					"dcmax": 7,
+					"failure": "hurtall",
+					"success": "proceed"
+				}
+			],
+			"fight":
+			{
+				"enemymin": 0,
+				"enemymax": 0,
+				"enemylist": [],
+				"mandatoryenemies":	[]
+			},
+			"trap":
+			{
+				"name": "an acid trap",
+				"damagetype": "acid",
+				"damagedienum": 3,
+				"damagediesides": 6
+			}
+		},
 	]
 }

@@ -2966,5 +2966,180 @@
 			"gender": "x",
 			"invalidpairs": [ ],
 			"lists":["magic"]
+	},
+	{
+		"id": "bg3-00",
+		"name": "Tav",
+		"gender": "a",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-01",
+		"name": "Shadowheart",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-02",
+		"name": "Lae'zel",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-03",
+		"name": "Gale Dekarios",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-04",
+		"name": "Astarion Ancunin",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-05",
+		"name": "Karlach Cliffgate",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-06",
+		"name": "Wyll Ravenguard",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-07",
+		"name": "Halsin",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-08",
+		"name": "Minthara Baenre",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-09",
+		"name": "Minsc",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-0A",
+		"name": "Jaheira",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-0B",
+		"name": "The Emperor",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-0C",
+		"name": "Mizora",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-0C",
+		"name": "Mizora",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-0D",
+		"name": "Alfira",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-0E",
+		"name": "Lakrissa",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-0F",
+		"name": "Dammon",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-10",
+		"name": "Omeluum",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-10",
+		"name": "Omeluum",
+		"gender": "x",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-11",
+		"name": "Blurg",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-12",
+		"name": "Isobel",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-13",
+		"name": "Dame Aylin",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-14",
+		"name": "Orin the Red",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-15",
+		"name": "Enver Gortash",
+		"gender": "m",
+		"invalidpairs": [],
+		"lists":[]
+	},
+	{
+		"id": "bg3-16",
+		"name": "Lucretious",
+		"gender": "f",
+		"invalidpairs": [],
+		"lists":[]
 	}
 ]
