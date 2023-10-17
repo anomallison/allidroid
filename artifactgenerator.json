@@ -14,7 +14,7 @@
 			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","smallarms","longarms","bow","sling"]
 		},
 		{
-			"description":"fissues glow all over [it]that spurt hot steam, burning you",
+			"description":"fissures glow all over [it] that spurt hot steam, burning you",
 			"keywords":["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","smallarms","longarms","bow","sling","wand","magicoffhand","shield","jewelery","holysymbol","armour","clothes","tool"]
 		},
 		{
@@ -237,7 +237,7 @@
 			"keywords":["wand","magicoffhand"]
 		},
 		{
-			"description":"[it] is imbued with am array of spells and functions, charged by a powerful recharging enchantment",
+			"description":"[it] is imbued with an array of spells and functions, charged by a powerful recharging enchantment",
 			"keywords":["wand"]
 		},
 		{

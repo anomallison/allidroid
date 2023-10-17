@@ -29,3 +29,8 @@ There are the following commands:
 ``!room``
 ``!alienlanguage``
 ``!adventure``
+``!slime``
+``!psyduck``
+``!frog``
+``!bird``
+``!alienlanguage``

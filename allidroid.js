@@ -542,7 +542,7 @@ function processCommand(receivedMessage)
 		
 		if (output == null)
 		{
-			console.log("failed command: adventure");
+			console.log("failed command: makeparty");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -691,6 +691,10 @@ function processCommand(receivedMessage)
 	else if (normalizedCommand == "rendertownmap")
 	{
 		DrawTownMap(receivedMessage.channel,arguments);
+	}
+	else if (normalizedCommand == "renderhexworldmap")
+	{
+		DrawHexWorldMap(receivedMessage.channel,arguments);
 	}
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
@@ -10211,10 +10215,10 @@ function noisemaptopng(channel, arguments)
 	}
 	
 	let imagemap = [];
-	let noisemap = noiseMap(map_height, map_width, 0.23, 045);
-	noisemap = increaseContrast(noisemap, map_height, map_width, 0.4);
-	noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
-	noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
+	let noisemap = noiseMap2D(map_height, map_width, 0.23, 045);
+	noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
+	//noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
 	
 	for (let y = 0; y < map_height; y++)
 	{
@@ -10567,8 +10571,6 @@ function encodeToAlienLanguage(channel, arguments)
 //
 
 var adventuringparties = [];
-var currentparty = 0;
-var simulatedTimeOfDay = 360; //minutes, 0 being midnight of day
 var asworld_width = 128;
 var asworld_height = 72;
 var asworldmap = [];
@@ -11535,7 +11537,8 @@ function makeAdventurer(classname)
 	
 	let firstname = monster_names[Math.floor(Math.random()*monster_names.length)];
 	let surname = monster_surnames[Math.floor(Math.random()*monster_surnames.length)];
-	
+	let heightadj = adventure_sim.adventurers.heightAdjectives[Math.floor(Math.random()*adventure_sim.adventurers.heightAdjectives.length)]
+	let weightadj = adventure_sim.adventurers.weightAdjectives[Math.floor(Math.random()*adventure_sim.adventurers.weightAdjectives.length)];
 	let adventurer = {
 		name: firstname + " " + surname, 
 		species: species.name, 
@@ -11544,29 +11547,49 @@ function makeAdventurer(classname)
 		stats: {
 			level: 1,
 			exp: 0,
-			cHP: species.stats.HP + adventurerclass.stats.HP,
-			mHP: species.stats.HP + adventurerclass.stats.HP,
-			cMP: species.stats.MP + adventurerclass.stats.MP,
-			mMP: species.stats.MP + adventurerclass.stats.MP,
+			woundLevelUp: 0,
+			woundMax: species.stats.wounds + adventurerclass.stats.wounds,
+			wounds: [],
+			woundThreshold: species.stats.woundThreshold + adventurerclass.stats.woundThreshold,
+			healRate: species.stats.healRate,
 			initiative: species.stats.initiative + adventurerclass.stats.initiative,
-			attack: species.stats.Attack + adventurerclass.stats.Attack,
-			defense: species.stats.Defense + adventurerclass.stats.Defense,
-			damagedienum: adventurerclass.stats.DamageDieNum,
-			damagediesides: adventurerclass.stats.DamageDieSides,
-			charisma: species.stats.Charisma + adventurerclass.stats.Charisma,
-			size: species.stats.Size + adventurerclass.stats.Size,
+			skills: {
+				acrobatics: species.stats.skills.acrobatics + adventurerclass.stats.skills.acrobatics,
+				animalHandling: species.stats.skills.animalHandling + adventurerclass.stats.skills.animalHandling,
+				arcana: species.stats.skills.arcana + adventurerclass.stats.skills.arcana,
+				athletics: species.stats.skills.athletics + adventurerclass.stats.skills.athletics,
+				deception: species.stats.skills.deception + adventurerclass.stats.skills.deception,
+				insight: species.stats.skills.insight + adventurerclass.stats.skills.insight,
+				intimidation: species.stats.skills.intimidation + adventurerclass.stats.skills.intimidation,
+				investigation: species.stats.skills.investigation + adventurerclass.stats.skills.investigation,
+				medicine: species.stats.skills.medicine + adventurerclass.stats.skills.medicine,
+				nature: species.stats.skills.nature + adventurerclass.stats.skills.nature,
+				perception: species.stats.skills.perception + adventurerclass.stats.skills.perception,
+				performance: species.stats.skills.performance + adventurerclass.stats.skills.performance,
+				persuasion: species.stats.skills.persuasion + adventurerclass.stats.skills.persuasion,
+				religion: species.stats.skills.religion + adventurerclass.stats.skills.religion,
+				sleightOfHand: species.stats.skills.sleightOfHand + adventurerclass.stats.skills.sleightOfHand,
+				stealth: species.stats.skills.stealth + adventurerclass.stats.skills.stealth,
+				survival: species.stats.skills.survival + adventurerclass.stats.skills.survival
+			},
+			damagetype: adventurerclass.stats.damagetype,
+			damagedienum: adventurerclass.stats.damagedienum,
+			damagediesides: adventurerclass.stats.damagediesides,
+			resistances: [],
+			weaknesses: []
 		},
 		side: 0,
-		magicitems: [],
-		canheal: adventurerclass.canheal,
-		partyhealpoint: adventurerclass.partyhealpoint,
-		abilities: [],
+		magicitems: {
+			mainHand: null,
+			offHand: null,
+			clothes: null,
+			armour: null,
+			accessories: [ null, null, null, null ]
+		},
+		scars: [],
+		heightAdjective: heightadj,
+		weightAdjective: weightadj,
 		personallog: []
-	}
-	
-	for (let i = 0; i < adventurerclass.abilities.length; i++)
-	{
-		adventurer.abilities.push(getAbilityByID(adventurerclass.abilities[i]));
 	}
 	
 	return adventurer;
@@ -11585,6 +11608,557 @@ function addToPersonalLog(adventurer, logtext)
 	return false;
 }
 
+function getPartyMemberStat(partymember, stat)
+{
+	if (stat == "woundMax")
+	{
+		let statvalue = partymember.stats.woundMax;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.woundMaxMod;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.woundMaxMod;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.woundMaxMod;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.woundMaxMod;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.woundMaxMod;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.woundMaxMod;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.woundMaxMod;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.woundMaxMod;
+		
+		return statvalue;
+	}
+	
+	if (stat == "woundThreshold")
+	{
+		let statvalue = partymember.stats.woundThreshold;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.woundThresholdMod;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.woundThresholdMod;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.woundThresholdMod;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.woundThresholdMod;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.woundThresholdMod;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.woundThresholdMod;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.woundThresholdMod;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.woundThresholdMod;
+		
+		return statvalue;
+	}
+	
+	if (stat == "healRate")
+	{
+		let statvalue = partymember.stats.healRate;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.healRateMod;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.healRateMod;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.healRateMod;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.healRateMod;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.healRateMod;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.healRateMod;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.healRateMod;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.healRateMod;
+		
+		return statvalue;
+	}
+	
+	if (stat == "initiative")
+	{
+		let statvalue = partymember.stats.initiative;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.initiativeMod;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.initiativeMod;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.initiativeMod;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.initiativeMod;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.initiativeMod;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.initiativeMod;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.initiativeMod;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.initiativeMod;
+		
+		return statvalue;
+	}
+	
+	if (stat == "acrobatics")
+	{
+		let statvalue = partymember.stats.skills.acrobatics;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.acrobatics;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.acrobatics;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.acrobatics;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.acrobatics;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.acrobatics;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.acrobatics;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.acrobatics;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.acrobatics;
+		
+		return statvalue;
+	}
+	
+	if (stat == "animalHandling")
+	{
+		let statvalue = partymember.stats.skills.animalHandling;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.animalHandling;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.animalHandling;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.animalHandling;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.animalHandling;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.animalHandling;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.animalHandling;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.animalHandling;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.animalHandling;
+		
+		return statvalue;
+	}
+	
+	if (stat == "arcana")
+	{
+		let statvalue = partymember.stats.skills.arcana;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.arcana;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.arcana;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.arcana;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.arcana;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.arcana;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.arcana;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.arcana;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.arcana;
+		
+		return statvalue;
+	}
+	
+	if (stat == "athletics")
+	{
+		let statvalue = partymember.stats.skills.athletics;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.athletics;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.athletics;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.athletics;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.athletics;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.athletics;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.athletics;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.athletics;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.athletics;
+		
+		return statvalue;
+	}
+	
+	if (stat == "deception")
+	{
+		let statvalue = partymember.stats.skills.deception;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.deception;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.deception;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.deception;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.deception;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.deception;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.deception;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.deception;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.deception;
+		
+		return statvalue;
+	}
+	
+	if (stat == "insight")
+	{
+		let statvalue = partymember.stats.skills.insight;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.insight;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.insight;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.insight;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.insight;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.insight;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.insight;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.insight;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.insight;
+		
+		return statvalue;
+	}
+	
+	if (stat == "intimidation")
+	{
+		let statvalue = partymember.stats.skills.intimidation;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.intimidation;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.intimidation;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.intimidation;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.intimidation;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.intimidation;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.intimidation;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.intimidation;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.intimidation;
+		
+		return statvalue;
+	}
+	
+	if (stat == "investigation")
+	{
+		let statvalue = partymember.stats.skills.investigation;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.investigation;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.investigation;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.investigation;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.investigation;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.investigation;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.investigation;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.investigation;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.investigation;
+		
+		return statvalue;
+	}
+	
+	if (stat == "medicine")
+	{
+		let statvalue = partymember.stats.skills.medicine;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.medicine;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.medicine;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.medicine;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.medicine;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.medicine;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.medicine;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.medicine;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.medicine;
+		
+		return statvalue;
+	}
+	
+	if (stat == "nature")
+	{
+		let statvalue = partymember.stats.skills.nature;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.nature;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.nature;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.nature;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.nature;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.nature;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.nature;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.nature;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.nature;
+		
+		return statvalue;
+	}
+	
+	if (stat == "perception")
+	{
+		let statvalue = partymember.stats.skills.perception;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.perception;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.perception;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.perception;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.perception;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.perception;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.perception;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.perception;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.perception;
+		
+		return statvalue;
+	}
+	
+	if (stat == "performance")
+	{
+		let statvalue = partymember.stats.skills.performance;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.performance;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.performance;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.performance;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.performance;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.performance;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.performance;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.performance;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.performance;
+		
+		return statvalue;
+	}
+	
+	if (stat == "persuasion")
+	{
+		let statvalue = partymember.stats.skills.persuasion;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.persuasion;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.persuasion;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.persuasion;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.persuasion;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.persuasion;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.persuasion;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.persuasion;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.persuasion;
+		
+		return statvalue;
+	}
+	
+	if (stat == "religion")
+	{
+		let statvalue = partymember.stats.skills.religion;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.religion;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.religion;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.religion;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.religion;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.religion;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.religion;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.religion;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.religion;
+		
+		return statvalue;
+	}
+	
+	if (stat == "sleightOfHand")
+	{
+		let statvalue = partymember.stats.skills.sleightOfHand;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.sleightOfHand;
+		
+		return statvalue;
+	}
+	
+	if (stat == "stealth")
+	{
+		let statvalue = partymember.stats.skills.stealth;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.stealth;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.stealth;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.stealth;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.stealth;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.stealth;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.stealth;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.stealth;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.stealth;
+		
+		return statvalue;
+	}
+	
+	if (stat == "survival")
+	{
+		let statvalue = partymember.stats.skills.survival;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.skillMod.survival;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.skillMod.survival;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.skillMod.survival;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.skillMod.survival;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.skillMod.survival;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.skillMod.survival;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.skillMod.survival;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.skillMod.survival;
+		
+		return statvalue;
+	}
+	
+	if (stat == "damageMod")
+	{
+		let statvalue = 0;
+		
+		if (partymember.magicitems.mainHand != null)
+			statvalue += partymember.magicitems.mainHand.effects.damageMod;
+		if (partymember.magicitems.offHand != null)
+			statvalue += partymember.magicitems.offHand.effects.damageMod;
+		if (partymember.magicitems.clothes != null)
+			statvalue += partymember.magicitems.clothes.effects.damageMod;
+		if (partymember.magicitems.armour != null)
+			statvalue += partymember.magicitems.armour.effects.damageMod;
+		if (partymember.magicitems.accessories[0] != null)
+			statvalue += partymember.magicitems.accessories[0].effects.damageMod;
+		if (partymember.magicitems.accessories[1] != null)
+			statvalue += partymember.magicitems.accessories[1].effects.damageMod;
+		if (partymember.magicitems.accessories[2] != null)
+			statvalue += partymember.magicitems.accessories[2].effects.damageMod;
+		if (partymember.magicitems.accessories[3] != null)
+			statvalue += partymember.magicitems.accessories[3].effects.damageMod;
+		
+		return statvalue;
+	}
+	
+	if (stat == "damagedienum")
+	{
+		let statvalue = partymember.stats.damagedienum;
+		
+		return statvalue;
+	}
+	
+	if (stat == "damagediesides")
+	{
+		let statvalue = partymember.stats.damagedienum;
+		
+		return statvalue;
+	}
+	
+	if (stat == "damagediesides")
+	{
+		let statvalue = partymember.stats.damagedienum;
+		
+		return statvalue;
+	}
+}
 
 function getPartyMemberByName(party, name)
 {
@@ -11671,6 +12245,23 @@ function retirePartyMember(arguments)
 	return partymembername + " has been retired";
 }
 
+function outputAdventurerWounds(adventurer)
+{
+	if (adventurer.stats.wounds.length == 0)
+	{
+		return "none";
+	}
+	
+	let output = "";
+	for (let i = 0; i < adventurer.stats.wounds.length; i++)
+	{
+		output += adventurer.stats.wounds[i] + "wound";
+		if (i+1 < adventurer.stats.wounds.length)
+			output += ", ";
+	}
+	
+	return output;
+}
 
 function outputPartyMemberSummary(arguments)
 {
@@ -11687,32 +12278,219 @@ function outputPartyMemberSummary(arguments)
 	
 	let output = partymember.name + " the " + partymember.species + " " + partymember.classname + "\n"
 		+ "Level: " + partymember.stats.level + ", Status: " + partymember.cstatus + "\n"
-		+ "HP: " + partymember.stats.mHP + ", MP: " + partymember.stats.mMP + ", Initiative: " + partymember.stats.initiative + "\n"
-		+ "Attack: " + partymember.stats.attack + ", Defense: " + partymember.stats.defense + "\n"
-		+ "Damage: " + Math.floor(partymember.stats.damagedienum) + "d" + Math.floor(partymember.stats.damagediesides) + "\n"
-		+ "Magic Items: ";
+		+ "Max Wounds: " + getPartyMemberStat(partymember, "woundMax") + ", Wound Threshold: " + getPartyMemberStat(partymember, "woundThreshold") + ", Heal Rate: " + getPartyMemberStat(partymember, "healRate") + "\n"
+		+ "Attack: " + partymember.stats.damagedienum + "d" + partymember.stats.damagediesides + " +" + getPartyMemberStat(partymember, "damageMod") + " " + partymember.stats.damagetype + "\n"
+		+ "Skills: ";
 	
-	for (let i = 0; i < partymember.magicitems.length; i++)
+	let skillscount = 0;
+	
+	if (partymember.stats.skills.acrobatics > 0)
 	{
-		output += partymember.magicitems[i].name + " (" + partymember.magicitems[i].classification + ")";
-		if (i < partymember.magicitems.length-2)
+		skillscount++;
+		output += "acrobatics +" + getPartyMemberStat(partymember, "acrobatics");
+	}
+
+	if (partymember.stats.skills.animalHandling > 0)
+	{
+		if (skillscount > 0)
 			output += ", ";
-		else if (i == partymember.magicitems.length-2)
-			output += " and ";
+		skillscount++;
+		output += "animal handling +" + getPartyMemberStat(partymember, "animalHandling");
 	}
 	
-	output += "\nAbilities: "
-	
-	for (let i = 0; i < partymember.abilities.length; i++)
+	if (partymember.stats.skills.arcana > 0)
 	{
-		output += partymember.abilities[i].name;
-		if (i < partymember.abilities.length-2)
+		if (skillscount > 0)
 			output += ", ";
-		else if (i == partymember.abilities.length-2)
-			output += " and ";
+		skillscount++;
+		output += "arcana +" + getPartyMemberStat(partymember, "arcana");
 	}
 	
-	output += "\nPersonal Log:\n"
+	if (partymember.stats.skills.athletics > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "athletics +" + getPartyMemberStat(partymember, "athletics");
+	}
+	
+	if (partymember.stats.skills.deception > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "deception +" + getPartyMemberStat(partymember, "deception");
+	}
+	
+	if (partymember.stats.skills.insight > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "insight +" + getPartyMemberStat(partymember, "insight");
+	}
+	
+	if (partymember.stats.skills.intimidation > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "intimidation +" + getPartyMemberStat(partymember, "intimidation");
+	}
+	
+	if (partymember.stats.skills.investigation > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "investigation +" + getPartyMemberStat(partymember, "investigation");
+	}
+	
+	if (partymember.stats.skills.medicine > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "medicine +" + getPartyMemberStat(partymember, "medicine");
+	}
+	
+	if (partymember.stats.skills.nature > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "nature +" + getPartyMemberStat(partymember, "nature");
+	}
+	
+	if (partymember.stats.skills.perception > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "perception +" + getPartyMemberStat(partymember, "perception");
+	}
+	
+	if (partymember.stats.skills.performance > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "performance +" + getPartyMemberStat(partymember, "performance");
+	}
+	
+	if (partymember.stats.skills.persuasion > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "persuasion +" + getPartyMemberStat(partymember, "persuasion");
+	}
+	
+	if (partymember.stats.skills.religion > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "religion +" + getPartyMemberStat(partymember, "religion");
+	}
+	
+	if (partymember.stats.skills.sleightOfHand > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "sleight of hand +" + getPartyMemberStat(partymember, "sleightOfHand");
+	}
+	
+	if (partymember.stats.skills.stealth > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "stealth +" + getPartyMemberStat(partymember, "stealth");
+	}
+	
+	if (partymember.stats.skills.survival > 0)
+	{
+		if (skillscount > 0)
+			output += ", ";
+		skillscount++;
+		output += "survival +" + getPartyMemberStat(partymember, "survival");
+	}
+	
+	output += "\nEquipment\n";
+	
+	let itemcount = 0;
+	
+	if (partymember.magicitems.mainHand != null)
+	{
+		itemcount++;
+		output += partymember.magicitems.mainHand.name + " (level " + partymember.magicitems.mainHand.itlvl + ") in main hand";
+	}
+	
+	if (partymember.magicitems.offHand != null)
+	{
+		if (itemcount > 0)
+			output += ", ";
+		itemcount++;
+		output += partymember.magicitems.offHand.name + " (level " + partymember.magicitems.offHand.itlvl + ") in off hand";
+	}
+	
+	if (partymember.magicitems.clothes != null)
+	{
+		if (itemcount > 0)
+			output += ", ";
+		itemcount++;
+		output += partymember.magicitems.clothes.name + " (level " + partymember.magicitems.clothes.itlvl + ") as clothes";
+	}
+	
+	if (partymember.magicitems.armour != null)
+	{
+		if (itemcount > 0)
+			output += ", ";
+		itemcount++;
+		output += partymember.magicitems.armour.name + " (level " + partymember.magicitems.armour.itlvl + ") as armour";
+	}
+	
+	if (partymember.magicitems.accessories[0] != null)
+	{
+		if (itemcount > 0)
+			output += ", ";
+		itemcount++;
+		output += partymember.magicitems.accessories[0].name + " (level " + partymember.magicitems.accessories[0].itlvl + ") as an accessory";
+	}
+	
+	if (partymember.magicitems.accessories[1] != null)
+	{
+		if (itemcount > 0)
+			output += ", ";
+		itemcount++;
+		output += partymember.magicitems.accessories[1].name + " (level " + partymember.magicitems.accessories[1].itlvl + ") as an accessory";
+	}
+	
+	if (partymember.magicitems.accessories[2] != null)
+	{
+		if (itemcount > 0)
+			output += ", ";
+		itemcount++;
+		output += partymember.magicitems.accessories[2].name + " (level " + partymember.magicitems.accessories[2].itlvl + ") as an accessory";
+	}
+	
+	if (partymember.magicitems.accessories[3] != null)
+	{
+		if (itemcount > 0)
+			output += ", ";
+		itemcount++;
+		output += partymember.magicitems.accessories[3].name + " (level " + partymember.magicitems.accessories[3].itlvl + ") as an accessory";
+	}
+	output += "\nDescription:\n" + grammarCapitalFirstLetter(partymember.heightAdjective) + " and " + partymember.weightAdjective;
+	
+	for (let i = 0; i < partymember.scars.length; i++)
+	{
+		output += ", " + partymember.scars[i];
+	}
+	
+	output += "\nPersonal Log:\n";
 	
 	for (let i = 0; i < partymember.personallog.length; i++)
 	{
@@ -11720,6 +12498,9 @@ function outputPartyMemberSummary(arguments)
 		if (i < partymember.personallog.length-1)
 			output += "\n";
 	}
+	
+	if (output.length > 2000)
+		return "sorry, party summary too long to display";
 	
 	return output;
 }
@@ -11826,18 +12607,22 @@ function makeParty(arguments)
 		priorities: [{name: "adventure", count: 1}],
 		currentlyinencounter: false,
 		encounterinitiative: [],
+		encounterengagements: [],
 		currentinitiative: 0,
 		currentpartymember: 0,
-		encounterallies:[],
 		encounterenemies: [],
+		encounterexp: 0,
 		encountersummary: "",
-		encounterlevel: 0,
 		currentenemy: 0,
 		questfight: false,
 		questpath: [],
 		questlocation: 0,
 		questcomplete: false,
 		questsucceed: false,
+		dungeon: [],
+		dungeonexplore: false,
+		dungeonroomnum: 0,
+		dungeoncomplete: false,
 		log: []
 	};
 	
@@ -11984,31 +12769,6 @@ function getAdventurerItemByName(itemname)
 	return null;
 }
 
-function wantToSleep(party)
-{
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].stats.cHP / party.members[i].stats.mHP < 0.75)
-			return true;
-		if (party.members[i].stats.cMP / party.members[i].stats.mMP < 0.667)
-			return true;
-	}
-	return false;
-}
-
-function stateBasedPriorities(party)
-{	
-	
-	if (party.cstamina < 0.15 || wantToSleep(party))
-	{
-		addPriority(party.priorities, "sleep");
-	}
-	else if (party.cstamina > 0.95 && partyHPMonitor(party) > 0.98 && partyMPMonitor(party) > 0.96)
-	{
-		clearPriority(party.priorities, "sleep");
-	}
-}
-
 function getEncounterTableByName(tablename)
 {
 	for (let i = 0; i < adventure_sim.encounters.length; i++)
@@ -12030,27 +12790,24 @@ function getCreatureByBlueprintID(creatureid)
 				name: adventure_sim.enemyblueprints[i].name,
 				plural: adventure_sim.enemyblueprints[i].plural,
 				cstatus: "good",
+				exp: adventure_sim.enemyblueprints[i].exp,
 				stats:
 				{
 					level: adventure_sim.enemyblueprints[i].stats.level,
-					cHP: adventure_sim.enemyblueprints[i].stats.hp,
-					mHP: adventure_sim.enemyblueprints[i].stats.hp,
-					cMP: adventure_sim.enemyblueprints[i].stats.mp,
-					mMP: adventure_sim.enemyblueprints[i].stats.mp,
+					woundMax: adventure_sim.enemyblueprints[i].stats.wounds,
+					wounds: [],
+					woundThreshold: adventure_sim.enemyblueprints[i].stats.woundThreshold,
 					initiative: adventure_sim.enemyblueprints[i].stats.initiative,
-					attack: adventure_sim.enemyblueprints[i].stats.attack,
-					defense: adventure_sim.enemyblueprints[i].stats.defense,
+					damagetype: adventure_sim.enemyblueprints[i].stats.damagetype,
 					damagedienum: adventure_sim.enemyblueprints[i].stats.damagedienum,
 					damagediesides: adventure_sim.enemyblueprints[i].stats.damagediesides,
-					size: adventure_sim.enemyblueprints[i].stats.Size
+					resistances: [],
+					weaknesses: []
 				},
 				side: 1,
-				abilities: []
 			};
-			for (let j = 0; j < adventure_sim.enemyblueprints[i].abilities.length; j++)
-			{
-				creature.abilities.push(getAbilityByID(adventure_sim.enemyblueprints[i].abilities[j]));
-			}
+			
+			// give enemies resistance/weakness
 			
 			return creature;
 		}
@@ -12058,133 +12815,275 @@ function getCreatureByBlueprintID(creatureid)
 	return null;
 }
 
-function findAppropriateAttackTarget(possibleTargets, ignoreTaunt = false)
+function scarTarget(target, damagetype)
 {
-	let currenthp = 9999999;
-	let currentdefense = 9999999
-	let currentattack = -1;
-	let currenttarget = -1;
-	
-	for (let i = 0; i < possibleTargets.length; i++)
+	let scarloc = adventure_sim.adventurers.scarlocations[Math.floor(Math.random()*adventure_sim.adventurers.scarlocations.length)]
+	let scartypes = adventure_sim.adventurers.scardescriptions.filter(filterByList,damagetype);
+	let randomscartype = Math.floor(Math.random()*scartypes.length);
+	let scar = scartypes[randomscartype].desc[Math.floor(Math.random()*scartypes[randomscartype].desc.length)];
+	target.scars.push(scar + " on their " + scarloc);
+	if (target.scars.length > 12)
+		target.scars.splice(Math.floor(Math.random()*12), 1);
+}
+
+function woundTarget(party, target, woundlevel, attacker)
+{
+	let maxWounds = target.stats.woundMax;
+	if (target.sides == 0)
 	{
-		let targetstatus = possibleTargets[i].cstatus.split(" ");
-		if (possibleTargets[i].cstatus != "dead" && !targetstatus.includes("fled"))
+		if (target.magicitems.mainHand != null)
+			maxWounds += target.magicitems.mainHand.effects.woundMax;
+		if (target.magicitems.offHand != null)
+			maxWounds += target.magicitems.offHand.effects.woundMax;
+		if (target.magicitems.clothes != null)
+			maxWounds += target.magicitems.clothes.effects.woundMax;
+		if (target.magicitems.armour != null)
+			maxWounds += target.magicitems.armour.effects.woundMax;
+		if (target.magicitems.accessories[0] != null)
+			maxWounds += target.magicitems.accessories[0].effects.woundMax;
+		if (target.magicitems.accessories[1] != null)
+			maxWounds += target.magicitems.accessories[1].effects.woundMax;
+		if (target.magicitems.accessories[2] != null)
+			maxWounds += target.magicitems.accessories[2].effects.woundMax;
+		if (target.magicitems.accessories[3] != null)
+			maxWounds += target.magicitems.accessories[3].effects.woundMax;
+	}
+	
+	if (target.stats.wounds.length < maxWounds)
+		target.stats.wounds.push(woundlevel)
+	else
+	{
+		let woundapplied = false;
+		for (let i = 0; i < target.stats.wounds.length; i++)
 		{
-			if (targetstatus.includes("taunt") && !ignoreTaunt)
+			if (target.stats.wounds[i] < woundlevel)
 			{
-				currenttarget = i;
-				return possibleTargets[currenttarget];
+				woundapplied = true;
+				target.stats.wounds[i] = woundlevel;
 			}
-			else if (possibleTargets[i].stats.cHP < currenthp)
+		}
+		if (!woundapplied)
+		{
+			for (let i = 0; i < target.stats.wounds.length; i++)
 			{
-				currenthp = possibleTargets[i].stats.cHP;
-				currentdefense = possibleTargets[i].stats.defense;
-				currentattack = possibleTargets[i].stats.attack;
-				currenttarget = i;
-			}
-			else if (possibleTargets[i].stats.cHP == currenthp && possibleTargets[i].stats.defense < currentdefense)
-			{
-				currenthp = possibleTargets[i].stats.cHP;
-				currentdefense = possibleTargets[i].stats.defense;
-				currentattack = possibleTargets[i].stats.attack;
-				currenttarget = i;
-			}
-			else if (possibleTargets[i].stats.cHP == currenthp && possibleTargets[i].stats.defense == currentdefense && possibleTargets[i].stats.attack > currentattack)
-			{
-				currenthp = possibleTargets[i].stats.cHP;
-				currentdefense = possibleTargets[i].stats.defense;
-				currentattack = possibleTargets[i].stats.attack;
-				currenttarget = i;
+				if (target.stats.wounds[i] == woundlevel)
+				{
+					woundapplied = true;
+					woundlevel++;
+					target.stats.wounds[i] = woundlevel;
+				}
 			}
 		}
 	}
-	if (currenttarget == -1)
-		return null;
-	return possibleTargets[currenttarget];
-}
-
-function findAppropriateHealTarget(possibleTargets)
-{
-	let currenthp = 0;
-	let currentdefense = 0
-	let currenttarget = -1;
 	
-	for (let i = 0; i < possibleTargets.length; i++)
+	if (woundlevel >= 2 && target.side == 0 && Math.random() < 0.12)
 	{
-		let targetstatus = possibleTargets[i].cstatus.split(" ");
-		if (possibleTargets[i].cstatus != "dead" && !targetstatus.includes("fled"))
+		scarTarget(target, attacker.stats.damagetype);
+	}
+	
+	
+	if (woundlevel == 0 && target.side == 0 && Math.random() < 0.15)
+	{
+		scarTarget(target, attacker.stats.damagetype);
+	}
+	
+	if (target.stats.wounds.length >= maxWounds)
+	{
+		let criticalwoundcount = 0;
+		for (let i = 0; i < target.stats.wounds.length; i++)
 		{
-			let missingHP = possibleTargets[i].stats.mHP - possibleTargets[i].stats.cHP;
-			if (missingHP > currenthp)
+			if (target.stats.wounds[i] >= 1)
 			{
-				currenthp = missingHP;
-				currentdefense = possibleTargets[i].stats.defense;
-				currenttarget = i;
+				criticalwoundcount++;
 			}
-			else if (missingHP == currenthp && possibleTargets[i].stats.defense < currentdefense)
+		}
+		
+		if (criticalwoundcount >= maxWounds)
+		{
+			if (target.side == 0)
 			{
-				currenthp = missingHP
-				currentdefense = possibleTargets[i].stats.defense;
-				currenttarget = i;
+				target.cstatus = "dead";
+				addToAdventureSimLog(party,target.name + " killed by " + attacker.name);
+				addToPersonalLog(target, "Killed by " + attacker.name);
+				removeFromEngagements(party, target);
+			}
+			else
+			{
+				for (let i = 0; i < party.encounterenemies.length; i++)
+				{
+					if (party.encounterenemies[i] == target)
+					{
+						party.encounterenemies.splice(i, 1);
+						i--;
+					}
+				}
+				
+				removeFromEngagements(party, target);
+				party.encounterexp += target.exp;
 			}
 		}
 	}
-	if (currenttarget == -1)
-		return null;
-	return possibleTargets[currenttarget];
 }
 
+function getResistances(target)
+{
+	let resistances = target.stats.resistances.slice();
+	if (target.side == 0)
+	{
+		if (target.magicitems.mainHand != null)
+		{
+			for (let i = 0; i < target.magicitems.mainHand.effects.resistances.length; i++)
+			{
+				if (resistances.indexOf(target.magicitems.mainHand.effects.resistances[i]) == -1)
+				{
+					resistances.push(target.magicitems.mainHand.effects.resistances[i]);
+				}
+			}
+		}
+		if (target.magicitems.offHand != null)
+		{
+			for (let i = 0; i < target.magicitems.offHand.effects.resistances.length; i++)
+			{
+				if (resistances.indexOf(target.magicitems.offHand.effects.resistances[i]) == -1)
+				{
+					resistances.push(target.magicitems.offHand.effects.resistances[i]);
+				}
+			}
+		}
+		if (target.magicitems.clothes != null)
+		{
+			for (let i = 0; i < target.magicitems.clothes.effects.resistances.length; i++)
+			{
+				if (resistances.indexOf(target.magicitems.clothes.effects.resistances[i]) == -1)
+				{
+					resistances.push(target.magicitems.clothes.effects.resistances[i]);
+				}
+			}
+		}
+		if (target.magicitems.armour != null)
+		{
+			for (let i = 0; i < target.magicitems.armour.effects.resistances.length; i++)
+			{
+				if (resistances.indexOf(target.magicitems.armour.effects.resistances[i]) == -1)
+				{
+					resistances.push(target.magicitems.armour.effects.resistances[i]);
+				}
+			}
+		}
+		if (target.magicitems.accessories[0] != null)
+		{
+			for (let i = 0; i < target.magicitems.accessories[0].effects.resistances.length; i++)
+			{
+				if (resistances.indexOf(target.magicitems.accessories[0].effects.resistances[i]) == -1)
+				{
+					resistances.push(target.magicitems.accessories[0].effects.resistances[i]);
+				}
+			}
+		}
+		if (target.magicitems.accessories[1] != null)
+		{
+			for (let i = 0; i < target.magicitems.accessories[1].effects.resistances.length; i++)
+			{
+				if (resistances.indexOf(target.magicitems.accessories[1].effects.resistances[i]) == -1)
+				{
+					resistances.push(target.magicitems.accessories[1].effects.resistances[i]);
+				}
+			}
+		}
+		if (target.magicitems.accessories[2] != null)
+		{
+			for (let i = 0; i < target.magicitems.accessories[2].effects.resistances.length; i++)
+			{
+				if (resistances.indexOf(target.magicitems.accessories[2].effects.resistances[i]) == -1)
+				{
+					resistances.push(target.magicitems.accessories[2].effects.resistances[i]);
+				}
+			}
+		}
+		if (target.magicitems.accessories[3] != null)
+		{
+			for (let i = 0; i < target.magicitems.accessories[3].effects.resistances.length; i++)
+			{
+				if (resistances.indexOf(target.magicitems.accessories[3].effects.resistances[i]) == -1)
+				{
+					resistances.push(target.magicitems.accessories[3].effects.resistances[i]);
+				}
+			}
+		}
+	}
+	
+	return resistances;
+}
 
+function getWeaknesses(target)
+{
+	let weaknesses = target.stats.weaknesses.slice();
+	
+	return weaknesses;
+}
 
 function attackTarget(party, attacker, target)
 {
-	let attackroll = Math.floor(Math.random()*100)+1;
-	if (attackroll + attacker.stats.attack > target.stats.defense)
+	let attackroll = 0;
+	for (let i = 0; i < Math.floor(attacker.stats.damagedienum); i++)
 	{
-		let damageroll = 0;
-		for (let i = 0; i < Math.floor(attacker.stats.damagedienum); i++)
-		{
-			damageroll += Math.floor(Math.random()*Math.floor(attacker.stats.damagediesides))+1;
-		}
-		
-		changeStatusAmountOn(target, "taunt", -1);
-		
-		target.stats.cHP -= damageroll;
-		if (target.stats.cHP <= 0)
-		{
-			target.cstatus = "dead";
-			if (addToPersonalLog(target,"Killed by " + grammarAorAn(attacker.name) + " " + attacker.name))
-			{
-				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(attacker.name) + " " + attacker.name);
-			}
-		}
-		return damageroll;
+		attackroll += Math.floor(Math.random()*Math.floor(attacker.stats.damagediesides))+1;
 	}
-	else
+	
+	let totalWoundThreshold = target.stats.woundThreshold;
+	if (target.side == 0)
 	{
-		return -1;
+		if (target.magicitems.mainHand != null)
+			totalWoundThreshold += target.magicitems.mainHand.effects.woundThresholdMod;
+		if (target.magicitems.offHand != null)
+			totalWoundThreshold += target.magicitems.offHand.effects.woundThresholdMod;
+		if (target.magicitems.clothes != null)
+			totalWoundThreshold += target.magicitems.clothes.effects.woundThresholdMod;
+		if (target.magicitems.armour != null)
+			totalWoundThreshold += target.magicitems.armour.effects.woundThresholdMod;
+		if (target.magicitems.accessories[0] != null)
+			totalWoundThreshold += target.magicitems.accessories[0].effects.woundThresholdMod;
+		if (target.magicitems.accessories[1] != null)
+			totalWoundThreshold += target.magicitems.accessories[1].effects.woundThresholdMod;
+		if (target.magicitems.accessories[2] != null)
+			totalWoundThreshold += target.magicitems.accessories[2].effects.woundThresholdMod;
+		if (target.magicitems.accessories[3] != null)
+			totalWoundThreshold += target.magicitems.accessories[3].effects.woundThresholdMod;
 	}
-}
-
-function getAbilityByID(abilityid)
-{
-	for (let i = 0; i < adventure_sim.abilityblueprints.length; i++)
+	
+	targetresistances = getResistances(target);
+	targetweaknesses = getWeaknesses(target);
+	
+	for (let i = 0; i < targetresistances.length; i++)
 	{
-		if (adventure_sim.abilityblueprints[i].id == abilityid)
+		if (attacker.stats.damagetype == targetresistances[i])
 		{
-			let ability = {
-				id: adventure_sim.abilityblueprints[i].id,
-				name: adventure_sim.abilityblueprints[i].name,
-				mpcost: adventure_sim.abilityblueprints[i].mpcost,
-				target: adventure_sim.abilityblueprints[i].target,
-				effecttype: adventure_sim.abilityblueprints[i].effecttype,
-				effectdienum: adventure_sim.abilityblueprints[i].effectdienum,
-				effectdiesides: adventure_sim.abilityblueprints[i].effectdiesides
-			};
-			return ability;
+			totalWoundThreshold = totalWoundThreshold * 2;
+			i += targetresistances.length;
 		}
 	}
-	return null;
+	
+	for (let i = 0; i < targetweaknesses.length; i++)
+	{
+		if (attacker.stats.damagetype == targetweaknesses[i])
+		{
+			totalWoundThreshold = Math.floor(totalWoundThreshold / 2);
+			i += targetweaknesses.length;
+		}
+	}
+	
+	if (attackroll > (totalWoundThreshold * 2))
+	{
+		woundTarget(party, target, 2, attacker)
+	}
+	else if (attackroll > totalWoundThreshold)
+	{
+		woundTarget(party, target, 1, attacker)
+	}
+	else if (attackroll > (totalWoundThreshold / 2))
+	{
+		woundTarget(party, target, 0, attacker)
+	}
 }
 
 function filterByCreatureLevel(creature)
@@ -12203,102 +13102,6 @@ function getRandomCreatureOfLevel(creaturelevel)
 	return creature;
 }
 
-function useAbility(party, caster, ability, target)
-{
-	let effectroll = 0;
-	for (let i = 0; i < ability.effectdienum; i++)
-	{
-		effectroll += Math.floor(Math.random()*ability.effectdiesides)+1;
-	}
-	
-	let maxeffect = 0;
-	
-	if (ability.effecttype == "healing")
-	{
-		maxeffect = target.stats.mHP - target.stats.cHP;
-		effectroll = Math.min(maxeffect, effectroll);
-		target.stats.cHP += effectroll;
-	}
-	
-	if (ability.effecttype == "fire")
-	{
-		maxeffect = target.stats.cHP;
-		effectroll = Math.min(maxeffect, effectroll);
-		target.stats.cHP -= effectroll;
-		if (target.stats.cHP > 0)
-			addStatusTo(target, "burn", ability.effectdienum);
-		else
-		{
-			target.cstatus = "dead"
-			if (addToPersonalLog(target,"Killed by " + grammarAorAn(caster.name) + " " + caster.name))
-				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(caster.name) + " " + caster.name);
-		}
-	}
-	
-	if (ability.effecttype == "poison")
-	{
-		maxeffect = target.stats.cHP;
-		effectroll = Math.min(maxeffect, effectroll);
-		target.stats.cHP -= effectroll;
-		if (target.stats.cHP > 0)
-			addStatusTo(target, "poison", ability.effectdienum);
-		else
-		{
-			target.cstatus = "dead"
-			if (addToPersonalLog(target,"Killed by " + grammarAorAn(caster.name) + " " + caster.name))
-				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(caster.name) + " " + caster.name);
-		}
-	}
-	
-	if (ability.effecttype == "stun")
-	{
-		maxeffect = target.stats.cHP;
-		effectroll = Math.min(maxeffect, effectroll);
-		target.stats.cHP -= effectroll;
-		if (target.stats.cHP > 0)
-			addStatusTo(target, "stun", 1);
-		else
-		{
-			target.cstatus = "dead"
-			if (addToPersonalLog(target,"Killed by " + grammarAorAn(caster.name) + " " + caster.name))
-				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(caster.name) + " " + caster.name);
-		}
-	}
-	
-	if (ability.effecttype == "hpsteal")
-	{
-		maxeffect = target.stats.cHP;
-		effectroll = Math.min(maxeffect, effectroll);
-		target.stats.cHP -= effectroll;
-		if (target.stats.cHP <= 0)
-		{
-			target.cstatus = "dead"
-			if (addToPersonalLog(target,"Killed by " + grammarAorAn(caster.name) + " " + caster.name))
-				addToAdventureSimLog(party, target.name + " was killed by " + grammarAorAn(caster.name) + " " + caster.name);
-		}
-		caster.stats.cHP = Math.min(caster.stats.mHP, caster.stats.cHP + ability.effectdienum);
-	}
-	
-	if (ability.effecttype == "regeneration")
-	{
-		addStatusTo(target,"regeneration",effectroll);
-	}
-	
-	if (ability.effecttype == "taunt")
-	{
-		addStatusTo(target,"taunt",effectroll);
-	}
-	
-	if (ability.effecttype == "summon")
-	{
-		let creature = getRandomCreatureOfLevel(effectroll);
-		creature.side = caster.side;
-		addToInitiativeList(party, creature, caster.side);
-	}
-	
-	return effectroll;
-}
-
 function addToInitiativeList(party, creature, side)
 {
 	if (side == 0)
@@ -12313,274 +13116,143 @@ function addToInitiativeList(party, creature, side)
 	}
 }
 
-function copyAbilityList(abilities)
+function getEngagedTarget(party, combatant)
 {
-	let newlist = [];
-	for (let i = 0; i < abilities.length; i++)
+	for (let i = 0; i < party.encounterengagements.length; i++)
 	{
-		let ability = {
-			id: abilities[i].id,
-			name: abilities[i].name,
-			mpcost: abilities[i].mpcost,
-			target: abilities[i].target,
-			effecttype: abilities[i].effecttype,
-			effectdienum: abilities[i].effectdienum,
-			effectdiesides: abilities[i].effectdiesides
-			};
-		newlist.push(ability);
+		if (party.encounterengagements[i].attacker == combatant)
+			return party.encounterengagements[i].defender;
 	}
-	return newlist;
-}
-
-function findAbilityOfEffectType(abilities, effecttype, maxmp)
-{
-	currentmp = -1;
-	currentability = -1;
-	for (let i = 0; i < abilities.length; i++)
+	
+	if (combatant.side == 0)
 	{
-		if (abilities[i].effecttype == effecttype)
+		tempenemylist = party.encounterenemies.slice();
+	
+		for (let i = 0; i < tempenemylist.length; i++)
 		{
-			if (abilities[i].mpcost <= maxmp && abilities[i].mpcost > currentmp)
+			for (let j = 0; j < party.encounterengagements.length; j++)
 			{
-				currentmp = abilities[i].mpcost;
-				currentability = i;
+				if (tempenemylist[i] == party.encounterengagements[j].attacker)
+				{
+					tempenemylist.splice(i, 1);
+					i--;
+					j += party.encounterengagements.length;
+				}
 			}
 		}
-	}
-	if (currentability == -1)
-		return null;
-	return abilities[currentability];
-}
-
-function partyMPMonitor(party)
-{
-	let mmp = 0;
-	let tmp = 0;
-	
-	for (let i = 0; i < party.members.length; i++)
-	{
-		tmp += party.members[i].stats.cMP;
-		mmp += party.members[i].stats.mMP;
-	}
-	
-	return (tmp / mmp);
-}
-
-function partyMemberSleep(partymember)
-{
-	let hpgain = partymember.stats.mHP * 0.0625;
-	let mpgain = partymember.stats.mMP * 0.0625;
-	
-	partymember.stats.cHP = Math.min(partymember.stats.mHP, partymember.stats.cHP+Math.ceil(hpgain));
-	partymember.stats.cMP = Math.min(partymember.stats.mMP, partymember.stats.cMP+Math.ceil(mpgain));
-}
-
-function partyHPMonitor(party)
-{
-	let mhp = 0;
-	let thp = 0;
-	
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].stats.cHP > 0)
+		
+		if (tempenemylist.length > 0)
 		{
-			thp += party.members[i].stats.cHP;
-			mhp += party.members[i].stats.mHP;
+			let randomtarget = tempenemylist[Math.floor(Math.random()*tempenemylist.length)];
+			party.encounterengagements.push({ attacker: combatant, defender: randomtarget});
+			party.encounterengagements.push({ attacker: randomtarget, defender: combatant});
+			
+			return randomtarget;
+		}
+		else
+		{
+			let randomtarget = party.encounterenemies[Math.floor(Math.random()*party.encounterenemies.length)];
+			party.encounterengagements.push({ attacker: combatant, defender: randomtarget});
+			
+			return randomtarget;
 		}
 	}
-	
-	return (thp / mhp);
-}
-
-function encounterTotalLevel(party)
-{
-	let tlevel = 0;
-	for (let i = 0; i <  party.encounterenemies.length; i++)
+	else
 	{
-		tlevel += party.encounterenemies[i].stats.level;
-	}
+		tempenemylist = party.members.slice();
 	
-	return tlevel;
+		for (let i = 0; i < tempenemylist.length; i++)
+		{
+			if (tempenemylist[i].cstatus == "dead")
+			{
+				tempenemylist.splice(i, 1);
+				i--;
+			}				
+			else
+			{
+				for (let j = 0; j < party.encounterengagements.length; j++)
+				{
+					if (tempenemylist[i] == party.encounterengagements[j].attacker)
+					{
+						tempenemylist.splice(i, 1);
+						i--;
+						j += party.encounterengagements.length;
+					}
+				}
+			}
+		}
+		
+		if (tempenemylist.length > 0)
+		{
+			let randomtarget = tempenemylist[Math.floor(Math.random()*tempenemylist.length)];
+			party.encounterengagements.push({ attacker: combatant, defender: randomtarget});
+			party.encounterengagements.push({ attacker: randomtarget, defender: combatant});
+			
+			return randomtarget;
+		}
+		else
+		{
+			let randomtarget = party.members[Math.floor(Math.random()*party.members.length)];
+			while (randomtarget.cstatus == "dead")
+			{
+				randomtarget = party.members[Math.floor(Math.random()*party.members.length)];
+			}
+			party.encounterengagements.push({ attacker: combatant, defender: randomtarget});
+			
+			return randomtarget;
+		}
+	}
 }
 
-function partyTotalLevel(party)
+function removeFromEngagements(party, combatant)
 {
-	let tlevel = 0;
-	for (let i = 0; i < party.members.length; i++)
+	for (let i = 0; i < party.encounterengagements.length; i++)
 	{
-		tlevel += party.members[i].stats.level;
+		if (party.encounterengagements[i].attacker == combatant || party.encounterengagements[i].defender == combatant)
+		{
+			party.encounterengagements.splice(i, 1);
+			i--;
+		}
 	}
-	
-	return tlevel;
 }
 
-function doCombatTurn(party, combatant, side)
+function doCombatTurn(party, combatant)
 {
+	/*
 	if (side == 0 && party.encounterlevel > partyTotalLevel(party))
 	{
 		addStatusTo(combatant,"fled");
 	}
-	let target;
-	let targetstatus;
-	let ability = null;
-	if (combatant.canheal && partyHPMonitor(party) < combatant.partyhealpoint)
-	{
-		if (side == 0)
-			target = findAppropriateHealTarget(party.members);
-		else if (side == 1)
-			target = findAppropriateHealTarget(party.encounterenemies);
-		
-		if (target != null)
-		{
-			ability = findAbilityOfEffectType(combatant.abilities, "healing", combatant.stats.cMP);
-			if (ability != null && combatant.stats.cMP >= ability.mpcost)
-			{
-				combatant.stats.cMP -= ability.mpcost;
-				let healingToTarget = useAbility(party, combatant, ability, target);
-				return;
-			}
-		}
-	}
+	*/
+	let target = getEngagedTarget(party, combatant);
 	
-	let cstatus = combatant.cstatus.split(" ");
-	if (!cstatus.includes("taunt") && (side == 0 && countLivingParty(party) > 1))
-	{
-		ability = findAbilityOfEffectType(combatant.abilities, "taunt", combatant.stats.cMP);
-		if (ability != null && combatant.stats.cMP >= ability.mpcost)
-		{
-			combatant.stats.cMP -= ability.mpcost;
-			useAbility(party, combatant, ability, combatant);
-			return;
-		}
-	}
+	attackTarget(party, combatant, target);
 	
-	if (!cstatus.includes("regeneration") && combatant.stats.cHP < combatant.stats.mHP)
-	{
-		let ability = findAbilityOfEffectType(combatant.abilities, "regeneration", combatant.stats.cMP);
-		if (ability != null && combatant.stats.cMP >= ability.mpcost)
-		{
-			combatant.stats.cMP -= ability.mpcost;
-			useAbility(party, combatant, ability, combatant);
-			return;
-		}
-	}
-	
-	if (combatant.stats.cHP < combatant.stats.mHP)
-		ability = findAbilityOfEffectType(combatant.abilities, "hpsteal", combatant.stats.cMP);
-	
-	if (ability == null)
-		ability = findAbilityOfEffectType(combatant.abilities, "summon", combatant.stats.cMP);
-
-	if (ability == null)
-		ability = findAbilityOfEffectType(combatant.abilities, "fire", combatant.stats.cMP);
-
-	if (ability == null)
-		ability = findAbilityOfEffectType(combatant.abilities, "stun", combatant.stats.cMP);
-	
-	if (ability == null)
-		ability = findAbilityOfEffectType(combatant.abilities, "poison", combatant.stats.cMP);
-	
-	if (ability != null && combatant.stats.cMP >= ability.mpcost)
-	{
-		if (side == 0)
-			targets = party.encounterenemies;
-		else if (side == 1)
-			targets = party.members;
-		
-		target = findAppropriateAttackTarget(targets);
-		if (target != null)
-		{
-			combatant.stats.cMP -= ability.mpcost;
-			if (ability.target == "single")
-			{
-				useAbility(party, combatant, ability, target);
-				return;
-			}
-			else if (ability.target == "all")
-			{
-				for (let i = 0; i < targets.length; i++)
-				{
-					if (targets[i].cstatus != "dead")
-						useAbility(party, combatant, ability, targets[i]);
-				}
-				return;
-			}
-		}
-	}
-	
-	if (side == 0)
-		target = findAppropriateAttackTarget(party.encounterenemies);
-	else if (side == 1)
-		target = findAppropriateAttackTarget(party.members);
-	
-	if (target != null)
-	{
-		let damageToTarget = attackTarget(party, combatant, target);
-	}
 }
 
-function isPartyDead(party)
+function givePartyMemberExp(party, partymember, exp)
 {
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-			return false;
-	}
-	return true;
-}
-
-function countLivingParty(party)
-{
-	let count = 0;
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-			count++;
-	}
-	return count;
-}
-
-function hasPartyFled(party)
-{
-	for (let i = 0; i < party.members.length; i++)
-	{
-		partymemberstatus = party.members[i].cstatus.split(" ");
-		if (!partymemberstatus.includes("fled") && !partymemberstatus.includes("dead"))
-			return false;
-	}
-	return true;
-}
-
-function isEnemyRouted(party)
-{
-	for (let i = 0; i < party.encounterenemies.length; i++)
-	{
-		enemystatus = party.encounterenemies[i].cstatus.split(" ");
-		if (!enemystatus.includes("fled") && !enemystatus.includes("dead"))
-			return false;
-	}
-	return true;
-}
-
-function levelUpPartyMember(party, partymember)
-{
+	partymember.stats.exp += exp;
+	let levelup = false;
 	let charclass = findClassByName(partymember.classname);
-	partymember.stats.level++;
-	partymember.stats.mHP += charclass.levelup.hp;
-	partymember.stats.cHP += charclass.levelup.hp;
-	partymember.stats.mMP += charclass.levelup.mp;
-	partymember.stats.cMP += charclass.levelup.mp;
-	partymember.stats.attack += charclass.levelup.attack;
-	partymember.stats.defense += charclass.levelup.defense;
-	partymember.stats.damagedienum += charclass.levelup.damagedienum;
-	partymember.stats.damagediesides += charclass.levelup.damagediesides;
-	partymember.stats.charisma += charclass.levelup.charisma;
-	addToAdventureSimLog(party, partymember.name + " levels up to level " + partymember.stats.level);
+	while (partymember.stats.exp >= expLevelUpRequirement(partymember.stats.level))
+	{
+		levelup = true;
+		partymember.stats.level++;
+		partymember.stats.woundLevelUp += charclass.stats.levelup.wounds;
+		while (partymember.stats.woundLevelUp > 1)
+		{
+			partymember.stats.woundLevelUp--;
+			partymember.stats.woundMax++;
+		}
+	}
+	if (levelup)
+		addToAdventureSimLog(party, partymember.name + " levels up to level " + partymember.stats.level);
 }
 
 function expLevelUpRequirement(characterlevel)
 {
-	return (1000*characterlevel*characterlevel/2);
+	return (125*characterlevel*(characterlevel+1));
 }
 
 
@@ -12658,38 +13330,32 @@ function addStatusTo(p, statustoadd, amount = -1)
 	return true;
 }
 
-function givePartyMemberExp(party, partymember, encounterlevel)
+function removeWorstWound(partymember)
 {
-	let expamount = 100*encounterlevel/partymember.stats.level;
-	partymember.stats.exp += expamount;
-	if (partymember.stats.exp >= expLevelUpRequirement(partymember.stats.level))
-		levelUpPartyMember(party, partymember);
+	let highestwoundval = -1;
+	let highestwoundind = -1;
+	
+	for (let i = 0; i < partymember.stats.wounds.length; i++)
+	{
+		if (partymember.stats.wounds[i] > highestwoundval)
+		{
+			highestwoundval = partymember.stats.wounds[i];
+			highestwoundind = i;
+		}
+	}
+	
+	if (highestwoundind > -1)
+		partymember.stats.wounds.splice(highestwoundind, 1);
 }
 
-function clearCombatEncounterAlliesEnemies(party)
-{
-	party.encounterenemies = [];
-	party.encounterallies = [];
-}
-
-function removeEffectsOnDeath(combatant)
-{
-	removeStatusFrom(combatant,"taunt");
-	removeStatusFrom(combatant,"burn");
-	removeStatusFrom(combatant,"stun");
-	removeStatusFrom(combatant,"poison");
-	removeStatusFrom(combatant,"regeneration");
-}
-
-function endCombatEffects(party)
+function partyRest(party)
 {
 	for (let i = 0; i < party.members.length; i++)
 	{
-		removeStatusFrom(party.members[i],"taunt");
-		removeStatusFrom(party.members[i],"burn");
-		removeStatusFrom(party.members[i],"stun");
-		removeStatusFrom(party.members[i],"poison");
-		removeStatusFrom(party.members[i],"regeneration");
+		for (let j = 0; j < party.members[i].stats.healRate; j++)
+		{
+			removeWorstWound(party.members[i]);
+		}
 	}
 }
 
@@ -12702,102 +13368,54 @@ function combatRound(party)
 	
 	let combatant = party.encounterinitiative[party.currentinitiative].combatant;
 	
-	if (isNaN(combatant.stats.cHP))
+	if (combatant.cstatus != "dead")
 	{
-		combatant.stats.cHP = 0;
-		console.log("WARNING: NaN HP on " + combatant.name);
-	}
-	
-	if (combatant.stats.cHP <= 0)
-		combatant.cstatus = "dead";
-	
-	let combatantstatus = combatant.cstatus.split(" ");
-	for(let i = 0; i < combatantstatus.length; i++)
-	{
-		if (combatantstatus[i] == "burn")
-		{
-			combatant.stats.cHP -= parseInt(combatantstatus[i+1]);
-			changeStatusAmountOn(combatant, "burn", -1);
-			if (combatant.stats.cHP <= 0)
-			{
-				if (addToPersonalLog(combatant, "Burned to death"))
-					addToAdventureSimLog(party,combatant.name + " burned to death");
-				combatant.cstatus = "dead";	
-			}
-		}
-		else if (combatantstatus[i] == "poison")
-		{
-			combatant.stats.cHP -= parseInt(combatantstatus[i+1]);
-			changeStatusAmountOn(combatant, "poison", -1);
-			if (combatant.stats.cHP <= 0)
-			{
-				if (addToPersonalLog(combatant, "Died to poison"))
-					addToAdventureSimLog(party,combatant.name + " died to poison");
-				combatant.cstatus = "dead";	
-			}
-		}
-		else if (combatantstatus[i] == "regeneration" && combatant.stats.cHP > 0)
-		{
-			combatant.stats.cHP = Math.min(combatant.stats.mHP, combatant.stats.cHP + parseInt(partymemberstatus[i+1]));
-			changeStatusAmountOn(combatant, "regeneration", -1);
-		}
-	}
-			
-	if (!combatantstatus.includes("fled") && combatant.cstatus != "dead" && !combatantstatus.includes("stun"))
-	{
-		doCombatTurn(party, combatant, combatant.side);
-	}
-	else if (combatantstatus.includes("stun"))
-	{
-		changeStatusAmountOn(combatant, "stun", -1);
+		doCombatTurn(party, combatant);
 	}
 	
 	party.currentinitiative++;
 	
-	if (isEnemyRouted(party))
+	if (party.encounterenemies.length == 0)
 	{
+		addToAdventureSimLog(party,party.name + " defeat the " + party.encountersummary);
 		if (party.questfight)
 		{
-			addToAdventureSimLog(party,party.name + " defeat the " + party.encountersummary);
 			party.questsucceed = true;
 		}
-		endCombatEffects(party);
+		
+		let livingpartycount = 0;
 		for (let i = 0; i < party.members.length; i++)
 		{
 			if (party.members[i].cstatus != "dead")
-				givePartyMemberExp(party, party.members[i], party.encounterlevel);
+				livingpartycount++;
 		}
-		clearCombatEncounterAlliesEnemies(party);
+		
+		for (let i = 0; i < party.members.length; i++)
+		{
+			if (party.members[i].cstatus != "dead")
+				givePartyMemberExp(party, party.members[i], Math.ceil(party.encounterexp / livingpartycount));
+		}
+		party.encounterexp = 0;
 		party.currentlyinencounter = false;
+		partyRest(party);
 	}
 	else if (isPartyDead(party))
 	{
-		addToAdventureSimLog(party,party.name + " die in combat against the " + party.encountersummary);
-		clearCombatEncounterAlliesEnemies(party);
+		addToAdventureSimLog(party,party.name + " have been defeated by the " + party.encountersummary);
 		party.currentlyinencounter = false;
-		if (party.questfight)
-		{
-			party.questsucceed == false;
-		}
+		saveAdventuringParties();
 	}
-	else if (hasPartyFled(party))
+}
+
+function isPartyDead(party)
+{
+	for (let i = 0; i < party.members.length; i++)
 	{
-		for (let i = 0; i < party.members.length; i++)
-		{
-			cstatus = party.members[i].cstatus.split(" ");
-			if (cstatus.includes("fled"))
-				removeStatusFrom(party.members[i],"fled");
-		}
-		party.encounterenemies = [];
-		endCombatEffects(party);
-		clearCombatEncounterAlliesEnemies(party);
-		party.currentlyinencounter = false;
-		if (party.questfight)
-		{
-			addToAdventureSimLog(party,party.name + " flee from the " + party.encountersummary);
-			party.questsucceed == false;
-		}
+		if (party.members[i].cstatus != "dead")
+			return false;
 	}
+	
+	return true;
 }
 
 function randomLivingPartyMember(party)
@@ -12811,64 +13429,143 @@ function randomLivingPartyMember(party)
 	return character;
 }
 
-function initiateSocialEncounter(party)
+function filterByRoomLevel(room)
 {
-	let encounter = adventure_sim.socialencounters[Math.floor(Math.random()*adventure_sim.socialencounters.length)];
-	let character = randomLivingPartyMember(party);
+	if (room.level <= this)
+		return true;
+	return false;
+}
+
+function generateQuestDungeon(rooms, questlevel)
+{
+	let dungeonrooms = [];
 	
-	let dieroll = Math.floor(Math.random()*100)+1;
-	let crit = (dieroll%11 == 0);
+	let potentialrooms = adventure_sim.dungeonrooms.filter(filterByRoomLevel, questlevel);
+	let hasfinalroom = false;
 	
-	let logmessage = "";
-	
-	if (dieroll + character.stats.charisma >= encounter.chadif)
+	for (let i = 0; i < rooms; i++)
 	{
-		if (crit)
+		let randomroom = Math.floor(Math.random()*potentialrooms.length);
+		let newroom = potentialrooms[randomroom];
+		let rerolls = 0;
+		while (newroom.id == "questfight" && rerolls < 3)
 		{
-			logmessage = encounter.critsuccess;
+			rerolls++;
+			randomroom = Math.floor(Math.random()*potentialrooms.length);
+			newroom = potentialrooms[randomroom];
 		}
-		else
+		
+		if (newroom.id == "questfight")
 		{
-			logmessage = encounter.success;
+			i += rooms;
+			hasfinalroom = true;
 		}
-	}
-	else
-	{
-		if (crit)
-		{
-			logmessage = encounter.critfail;
-		}
-		else
-		{
-			logmessage = encounter.fail;
-		}
-	}
-	
-	let position = logmessage.indexOf("\[");
-	let endposition = -1;
-	let logmessagesubstr = "";
-	
-	while (position != -1)
-	{
-		endposition = logmessage.indexOf("\]");
-		logmessagesubstr = logmessage.substring(position+1,endposition);
-		substr_number = randomNumberForText(logmessagesubstr);
-		if (logmessagesubstr == "character")
-		{
-			logmessage = logmessage.substr(0,position) + character.name + logmessage.substr(endposition+1);
-		}
-		else if (substr_number != false)
-		{
-			logmessage = logmessage.substr(0,position) + substr_number.toString() + logmessage.substr(endposition+1);
-		}
-		else
-		{
-			logmessage = logmessage.substr(0,position) + logmessage.substr(endposition+1);
-		}
-		position = logmessage.indexOf("\[");
+		
+		dungeonrooms.push(newroom);
 	}
 	
-	addToAdventureSimLog(party, logmessage);
+	if (!hasfinalroom)
+	{
+		dungeonrooms.push({ id: "questfight", trap: { name: "", damagetype: "", damagedienum: 0, damagediesides: 0} });
+	}
+	
+	let dungeon = [];
+	
+	for (let i = 0; i < dungeonrooms.length; i++)
+	{
+		let room = 
+		{
+			id: dungeonrooms[i].id,
+			solutions: [],
+			fight: [],
+			trap: 
+			{
+				name: dungeonrooms[i].trap.name,
+				damagetype: dungeonrooms[i].trap.damagetype,
+				damagedienum: dungeonrooms[i].trap.damagedienum,
+				damagediesides: dungeonrooms[i].trap.damagediesides
+			}
+		};
+		
+		if (room.id != "questfight")
+		{
+			for (let j = 0; j < dungeonrooms[i].solutions.length; j++)
+			{
+				let solutiondc = Math.floor(Math.random() * (dungeonrooms[i].solutions[j].dcmax - dungeonrooms[i].solutions[j].dcmin)) + dungeonrooms[i].solutions[j].dcmin;
+				let solution =
+				{
+					type: dungeonrooms[i].solutions[j].type,
+					skill: dungeonrooms[i].solutions[j].skill,
+					dc: solutiondc,
+					failure: dungeonrooms[i].solutions[j].failure,
+					success: dungeonrooms[i].solutions[j].success
+				}
+				
+				room.solutions.push(solution);
+			}
+			
+			let randomenemycount = Math.floor(Math.random() * (dungeonrooms[i].fight.enemymax - dungeonrooms[i].fight.enemymin) + dungeonrooms[i].fight.enemymin);
+			
+			for (let j = 0; j < randomenemycount; j++)
+			{
+				let randomenemy = Math.floor(Math.random() * dungeonrooms[i].fight.enemylist.length);
+				
+				room.fight.push(dungeonrooms[i].fight.enemylist[randomenemy]);
+			}
+			
+			for (let j = 0; j < dungeonrooms[i].fight.mandatoryenemies.length; j++)
+			{
+				room.fight.push(dungeonrooms[i].fight.mandatoryenemies[j]);
+			}
+		}
+		
+		dungeon.push(room);
+	}
+	
+	return dungeon;
+}
+
+function initiateDungeonExplore(party)
+{
+	party.dungeonexplore = true;
+	party.dungeonroomnum = 0;
+	party.dungeon = generateQuestDungeon(Math.floor(Math.random()*6)+2, party.quest.level);
+}
+
+function initiateRoomEncounter(party, room)
+{
+	for (let i = 0; i < room.fight.length; i++)
+	{
+		let enemy = getCreatureByBlueprintID(room.fight[i]);
+		if (enemy != null)
+			party.encounterenemies.push(enemy);
+	}
+	
+	tempinitlist = [];
+	party.encounterinitiative = [];
+	for (let i = 0; i < party.members.length; i++)
+	{
+		tempinitlist.push({ combatant: party.members[i], initiative: party.members[i].stats.initiative + Math.random()*10+1 });
+	}
+	for (let i = 0; i < party.encounterenemies.length; i++)
+	{
+		tempinitlist.push({ combatant: party.encounterenemies[i], initiative: party.encounterenemies[i].stats.initiative + Math.random()*10+1 });
+	}
+	while (tempinitlist.length > 0)
+	{
+		let highest = 0;
+		let selected = -1;
+		for (let i = 0; i < tempinitlist.length; i++)
+		{
+			if (tempinitlist[i].initiative > highest)
+				selected = i;
+		}
+		party.encounterinitiative.push(tempinitlist[selected]);
+		tempinitlist.splice(selected,1);
+	}
+	
+	party.encountersummary = getEnemySummary(party.encounterenemies);
+	party.currentlyinencounter = true;
 }
 
 function initiateQuestEncounter(party, encounter)
@@ -12905,7 +13602,6 @@ function initiateQuestEncounter(party, encounter)
 	}
 	
 	party.encountersummary = getEnemySummary(party.encounterenemies);
-	party.encounterlevel = encounterTotalLevel(party);
 	party.questfight = true;
 	party.currentlyinencounter = true;
 }
@@ -12991,7 +13687,6 @@ function initiateCombatEncounter(party, biome, climate)
 		tempinitlist.splice(selected,1);
 	}
 	party.encountersummary = getEnemySummary(party.encounterenemies);
-	party.encounterlevel = encounterTotalLevel(party);
 	party.questfight = false;
 	party.currentlyinencounter = true;
 }
@@ -13637,48 +14332,590 @@ function partyActionAdventure(party)
 			party.questfight = false;
 			initiateCombatEncounter(party, positionbiome, positionclimate);
 		}
-		else
-		{
-			initiateSocialEncounter(party);
-		}
 	}
 	else if (party.questlocation == party.questpath.length-1)
 	{
 		addToAdventureSimLog(party, party.name + " make it to the " + positionlandmark);
 		clearPriority(party.priorities,"adventure");
+		addPriority(party.priorities,"dungeon");
+		initiateDungeonExplore(party);
+	}
+}
+
+function skillCheckOdds(partymember, skill, dc)
+{
+	let successneeds = dc;
+	let odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	
+	if (skill == "acrobatics")
+	{
+		let skillvalue = partymember.stats.skills.acrobatics;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.acrobatics;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.acrobatics;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.acrobatics;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.acrobatics;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.acrobatics;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.acrobatics;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.acrobatics;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.acrobatics;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "animalHandling")
+	{
+		let skillvalue = partymember.stats.skills.animalHandling;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.animalHandling;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.animalHandling;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.animalHandling;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.animalHandling;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.animalHandling;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.animalHandling;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.animalHandling;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.animalHandling;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "arcana")
+	{
+		let skillvalue = partymember.stats.skills.arcana;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.arcana;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.arcana;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.arcana;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.arcana;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.arcana;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.arcana;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.arcana;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.arcana;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "athletics")
+	{
+		let skillvalue = partymember.stats.skills.athletics;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.athletics;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.athletics;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.athletics;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.athletics;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.athletics;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.athletics;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.athletics;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.athletics;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "deception")
+	{
+		let skillvalue = partymember.stats.skills.deception;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.deception;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.deception;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.deception;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.deception;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.deception;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.deception;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.deception;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.deception;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "insight")
+	{
+		let skillvalue = partymember.stats.skills.insight;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.insight;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.insight;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.insight;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.insight;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.insight;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.insight;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.insight;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.insight;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "intimidation")
+	{
+		let skillvalue = partymember.stats.skills.intimidation;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.intimidation;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.intimidation;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.intimidation;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.intimidation;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.intimidation;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.intimidation;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.intimidation;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.intimidation;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "investigation")
+	{
+		let skillvalue = partymember.stats.skills.investigation;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.investigation;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.investigation;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.investigation;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.investigation;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.investigation;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.investigation;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.investigation;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.investigation;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "medicine")
+	{
+		let skillvalue = partymember.stats.skills.medicine;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.medicine;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.medicine;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.medicine;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.medicine;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.medicine;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.medicine;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.medicine;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.medicine;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "nature")
+	{
+		let skillvalue = partymember.stats.skills.nature;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.nature;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.nature;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.nature;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.nature;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.nature;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.nature;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.nature;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.nature;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "perception")
+	{
+		let skillvalue = partymember.stats.skills.perception;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.perception;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.perception;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.perception;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.perception;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.perception;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.perception;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.perception;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.perception;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "performance")
+	{
+		let skillvalue = partymember.stats.skills.performance;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.performance;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.performance;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.performance;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.performance;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.performance;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.performance;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.performance;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.performance;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "persuasion")
+	{
+		let skillvalue = partymember.stats.skills.persuasion;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.persuasion;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.persuasion;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.persuasion;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.persuasion;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.persuasion;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.persuasion;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.persuasion;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.persuasion;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "religion")
+	{
+		let skillvalue = partymember.stats.skills.religion;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.religion;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.religion;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.religion;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.religion;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.religion;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.religion;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.religion;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.religion;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "sleightOfHand")
+	{
+		let skillvalue = partymember.stats.skills.sleightOfHand;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.sleightOfHand;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.sleightOfHand;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "stealth")
+	{
+		let skillvalue = partymember.stats.skills.stealth;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.stealth;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.stealth;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.stealth;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.stealth;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.stealth;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.stealth;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.stealth;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.stealth;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	if (skill == "survival")
+	{
+		let skillvalue = partymember.stats.skills.survival;
+		if (partymember.magicitems.mainHand != null)
+			skillvalue += partymember.magicitems.mainHand.effects.skillMod.survival;
+		if (partymember.magicitems.offHand != null)
+			skillvalue += partymember.magicitems.offHand.effects.skillMod.survival;
+		if (partymember.magicitems.clothes != null)
+			skillvalue += partymember.magicitems.clothes.effects.skillMod.survival;
+		if (partymember.magicitems.armour != null)
+			skillvalue += partymember.magicitems.armour.effects.skillMod.survival;
+		if (partymember.magicitems.accessories[0] != null)
+			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.survival;
+		if (partymember.magicitems.accessories[1] != null)
+			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.survival;
+		if (partymember.magicitems.accessories[2] != null)
+			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.survival;
+		if (partymember.magicitems.accessories[3] != null)
+			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.survival;
+		
+		successneeds -= skillvalue;
+		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
+	}
+	
+	return odds;
+}
+
+function roomResolutionOddCalc(party, solution)
+{
+	let livingpartycount = 0;
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead")
+			livingpartycount++;
+	}
+	
+	if (solution.type == "skillone")
+	{
+		let bestmemberodds = 0;
+		let bestmemberi = -1;
+		for (let i = 0; i < party.members.length; i++)
+		{
+			if (party.members[i].cstatus != "dead")
+			{
+				let odds = skillCheckOdds(party.members[i], solution.skill, solution.dc);
+				if (odds > bestmemberodds)
+				{
+					bestmemberodds = odds;
+					bestmemberi = i;
+				}
+			}
+		}
+		return { odds: bestmemberodds, member: bestmemberi };
+	}
+	
+	if (solution.type == "skillall")
+	{
+		let totalodds = 1;
+		for (let i = 0; i < party.members.length; i++)
+		{
+			if (party.members[i].cstatus != "dead")
+			{
+				let odds = skillCheckOdds(party.members[i], solution.skill, solution.dc);
+				totalodds *= odds;
+			}
+		}
+		return { odds: totalodds, member: -1 };
+	}
+	
+	if (solution.type == "fight")
+	{
+		//don't do odds, just do as 45% ?
+		
+		return { odds: 0.375, member: -1 };
+	}
+}
+
+function resolveRoomViaSolution(party, room, solution, resolver)
+{
+	if (solution.type == "fight")
+	{
+		initiateRoomEncounter(party, room);
+	}
+	else
+	{
+		let resolveOdds = roomResolutionOddCalc(party, solution);
+		let randomroll = Math.random();
+		
+		if (randomroll < resolveOdds)
+		{
+			
+		}
+		else
+		{
+			if (solution.failure == "fight")
+			{
+				initiateRoomEncounter(party, room)
+			}
+			else if (solution.failure == "hurtone")
+			{
+				let attacker = 
+				{
+					name: party.dungeon[party.dungeonroomnum].trap.name,
+					stats: 
+					{
+						damagetype: party.dungeon[party.dungeonroomnum].trap.damagetype,
+						damagedienum: party.dungeon[party.dungeonroomnum].trap.damagedienum,
+						damagediesides: party.dungeon[party.dungeonroomnum].trap.damagediesides,
+					}
+				}
+				
+				attackTarget(party, attacker, party.members[resolver]);
+			}
+			else if (solution.failure == "hurtall")
+			{
+				let attacker = 
+				{
+					name: party.dungeon[party.dungeonroomnum].trap.name,
+					stats: 
+					{
+						damagetype: party.dungeon[party.dungeonroomnum].trap.damagetype,
+						damagedienum: party.dungeon[party.dungeonroomnum].trap.damagedienum,
+						damagediesides: party.dungeon[party.dungeonroomnum].trap.damagediesides,
+					}
+				}
+				
+				for (let i = 0; i < party.members.length; i++)
+				{
+					if (party.members[i].cstatus != "dead")
+						attackTarget(party, attacker, party.members[i]);
+				}
+			}
+		}
+	}
+	
+	
+	
+	party.dungeonroomnum++;
+}
+
+function partyActionDungeon(party)
+{
+	if (party.dungeon[party.dungeonroomnum].id == "questfight")
+	{
+		addToAdventureSimLog(party, party.name + " find the targets!");
+		clearPriority(party.priorities,"dungeon");
 		addPriority(party.priorities,"town");
 		initiateQuestEncounter(party, party.quest.encounters[Math.floor(Math.random()*party.quest.encounters.length)]);
+		party.dungeonexplore = false;
+		party.dungeoncomplete = true;
+		party.dungeon = [];
+		
+		return;
 	}
-}
-
-function partyActionSleep(party)
-{
-	party.cstamina = Math.min(1, party.cstamina + 0.05);
-	addStatusTo(party, "asleep");
 	
-	for (let i = 0; i < party.members.length; i++)
+	let roomsolutionodds = [];
+	let totalsolutionodds = 0;
+	let avgsolutionodds = 0;
+	let highestsolutionodds = 0;
+	
+	for (let i = 0; i < party.dungeon[party.dungeonroomnum].solutions.length; i++)
 	{
-		if (party.members.cstatus != "dead")
-			partyMemberSleep(party.members[i]);
+		let roomodds = roomResolutionOddCalc(party, party.dungeon[party.dungeonroomnum].solutions[i]);
+		roomsolutionodds.push(roomodds);
+		totalsolutionodds += roomodds.odds;
+		if (roomodds.odds > highestsolutionodds)
+			highestsolutionodds = roomodds.odds;
 	}
 	
-	addToAdventureSimLog(party, party.name + " set up camp and rest");
-}
-
-function partyActionAsleep(party)
-{
-	party.cstamina = Math.min(1, party.cstamina + 0.05);
+	avgsolutionodds = totalsolutionodds / party.dungeon[party.dungeonroomnum].solutions.length;
 	
-	for (let i = 0; i < party.members.length; i++)
+	let consideredsolutions = [];
+	
+	for (let i = 0; i < roomsolutionodds.length; i++)
 	{
-		if (party.members.cstatus != "dead")
-			partyMemberSleep(party.members[i]);
+		if (roomsolutionodds[i].odds > (highestsolutionodds - (avgsolutionodds / 3)))
+		{
+			consideredsolutions.push({ index: i, resolver: roomsolutionodds[i].member });
+		}
 	}
 	
-	if (party.cstamina > 0.95  && partyHPMonitor(party) > 0.98 && partyMPMonitor(party) > 0.96)
-	{
-		removeStatusFrom(party, "asleep");
-	}
+	let chosensolution = Math.floor(Math.random()*consideredsolutions.length);
+	
+	resolveRoomViaSolution(party, party.dungeon[party.dungeonroomnum], party.dungeon[party.dungeonroomnum].solutions[consideredsolutions[chosensolution].index], consideredsolutions[chosensolution].resolver);
+	
 }
 
 function partyActionGoToTown(party)
@@ -13704,10 +14941,6 @@ function partyActionGoToTown(party)
 			party.questfight = false;
 			initiateCombatEncounter(party, positionbiome, positionclimate);
 		}
-		else
-		{
-			initiateSocialEncounter(party);
-		}
 	}
 	else if (party.questlocation == 0)
 	{
@@ -13720,46 +14953,24 @@ function partyActionGoToTown(party)
 
 function partyGetAction(party)
 {
-	let tempprioritylist = copyPrioritiesList(party.priorities);
-	let currentHighestPriority = getHighestPriority(tempprioritylist);
-	
-	let keywords = getLandmarkKeywords(party.xpos, party.ypos);
-	let action = "";
-	while (action == "" && currentHighestPriority != null)
+	if (party.questsucceed)
 	{
-		if (keywords.includes(currentHighestPriority))
-		{
-			action = currentHighestPriority;
-		}
-		else
-		{
-			clearPriority(tempprioritylist, currentHighestPriority);
-			currentHighestPriority = getHighestPriority(tempprioritylist);
-		}
-	}
-	
-	if (currentHighestPriority == null)
-		console.log("Error, no action available");
-	
-	let currentstatus = party.cstatus.split(" ");
-	
-	if (currentstatus.includes("asleep"))
-		partyActionAsleep(party);
-	else if (action == "adventure")
-		partyActionAdventure(party);
-	else if (action == "town")
 		partyActionGoToTown(party);
-	else if (action == "sleep")
-		partyActionSleep(party);
+	}
+	else if (party.dungeonexplore)
+	{
+		partyActionDungeon(party);
+	}
+	else
+	{
+		partyActionAdventure(party);
+	}
 }
 
 function simulateAdventuring(party)
 {
 	if (!party.currentlyinencounter && !isPartyDead(party))
 	{
-		party.cstamina -= 0.02;
-		stateBasedPriorities(party);
-		
 		partyGetAction(party);
 	}
 	
@@ -13769,22 +14980,9 @@ function simulateAdventuring(party)
 	}
 }
 
-function fullyRecuperateParty(party)
-{
-	for (let i = 0; i <  party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-		{
-			party.members[i].stats.cHP = party.members[i].stats.mHP;
-			party.members[i].stats.cMP = party.members[i].stats.mMP;
-			party.members[i].cstatus = "good";
-		}
-	}
-}
-
 function filterByItLvl(itemproperty)
 {
-	if (itemproperty.itlvl <= this)
+	if (itemproperty.itlvl == this)
 			return true;
 	return false;
 }
@@ -13799,397 +14997,72 @@ function getItemPropertyById(itempropertyid)
 	return null;
 }
 
-function addItemEnchant(enchantlist, enchantment)
-{
-	for (let i = 0; i < enchantlist.length; i++)
-	{
-		if (enchantlist[i].id == enchantment.id)
-		{
-			let enchantmentid = enchantment.id.split(" ");
-			enchantmentid[1] = parseInt(enchantmentid[1]);
-			enchantmentid++;
-			let upgrade = getItemPropertyById(argumentsbacktostring(enchantmentid));
-			if (upgrade != null)
-			{
-				enchantlist.splice(i,1);
-				enchantlist.push(upgrade);
-			}
-			else
-			{
-				enchantlist.push(enchantment);
-			}
-			return;
-		}
-	}
-	enchantlist.push(enchantment);
-}
-
-function classifyItem(item)
-{
-	let total = item.effects.hp + item.effects.mp + item.effects.attack + item.effects.defense + item.effects.damagedienum*5;
-	let hpprop = item.effects.hp / total;
-	let mpprop = item.effects.mp / total;
-	let attackprop = item.effects.attack / total;
-	let defenseprop = item.effects.defense / total;
-	let damageprop = item.effects.damagedienum*5 / total;
-	
-	let values = [
-		{key: "hp", value: hpprop},
-		{key: "mp", value: mpprop}, 
-		{key: "attack", value: attackprop},
-		{key: "defense", value: defenseprop}, 
-		{key: "damage", value: damageprop}
-		];
-	let sortedvalues = [];
-	let highestval = -1;
-	let highesti = -1;
-	let curindex = 0;
-	while (values.length > 0)
-	{
-		if (values[curindex].value > highestval)
-		{
-			highestval = values[curindex].value;
-			highesti = curindex;
-		}
-		curindex++;
-		if (curindex == values.length)
-		{
-			sortedvalues.push(values[highesti]);
-			values.splice(highesti,1);
-			highestval = -1;
-			highesti = -1;
-			curindex = 0;
-		}
-	}
-	if (sortedvalues[0].key == "hp")
-	{
-		if (sortedvalues[1].key == "mp")
-		{
-			item.classification = "sustain";
-		}
-		else if (sortedvalues[1].key == "attack")
-		{
-			item.classification = "defense";
-		}
-		else if (sortedvalues[1].key == "defense")
-		{
-			item.classification = "defense";
-		}
-		else if (sortedvalues[1].key == "damage")
-		{
-			item.classification = "defense";
-		}
-	}
-	else if (sortedvalues[0].key == "mp")
-	{
-		if (sortedvalues[1].key == "hp")
-		{
-			item.classification = "sustain";
-		}
-		else if (sortedvalues[1].key == "attack")
-		{
-			item.classification = "offense";
-		}
-		else if (sortedvalues[1].key == "defense")
-		{
-			item.classification = "defense";
-		}
-		else if (sortedvalues[1].key == "damage")
-		{
-			item.classification = "offense";
-		}
-	}
-	else if (sortedvalues[0].key = "attack" )
-	{
-		if (sortedvalues[1].key == "hp")
-		{
-			item.classification = "offense";
-		}
-		else if (sortedvalues[1].key == "mp")
-		{
-			item.classification = "offense";
-		}
-		else if (sortedvalues[1].key == "defense")
-		{
-			item.classification = "offense";
-		}
-		else if (sortedvalues[1].key == "damage")
-		{
-			item.classification = "offense";
-		}
-	}
-	else if (sortedvalues[0].key = "defense" )
-	{
-		if (sortedvalues[1].key == "hp")
-		{
-			item.classification = "defense";
-		}
-		else if (sortedvalues[1].key == "mp")
-		{
-			item.classification = "defense";
-		}
-		else if (sortedvalues[1].key == "attack")
-		{
-			item.classification = "defense";
-		}
-		else if (sortedvalues[1].key == "damage")
-		{
-			item.classification = "defense";
-		}
-	}
-	else if (sortedvalues[0].key = "damage" )
-	{
-		if (sortedvalues[1].key == "hp")
-		{
-			item.classification = "offense";
-		}
-		else if (sortedvalues[1].key == "mp")
-		{
-			item.classification = "offense";
-		}
-		else if (sortedvalues[1].key == "attack")
-		{
-			item.classification = "offense";
-		}
-		else if (sortedvalues[1].key == "defense")
-		{
-			item.classification = "offense";
-		}
-	}
-}
-
 function createAdventureSimItem(itemlevel)
 {
 	let tempitemproperties = adventure_sim.itemproperties.filter(filterByItLvl,itemlevel);
 	
+	if (tempitemproperties.length == 0)
+	{
+		console.log("no properties found of level: " + itemlevel);
+		return null;
+	}
+	
+	let randomproperty = tempitemproperties[Math.floor((Math.random()*tempitemproperties.length))];
+	let itemslot = randomproperty.ittypes[Math.floor((Math.random()*randomproperty.ittypes.length))];
 	let itemname;
-	let baserand  = Math.random();
-	if (baserand < 0.12) // single first word name
-	{
-		itemname = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))];
-	}
-	else if (baserand < 0.24) // single last word name
-	{
-		itemname = "the " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))];
-	}
-	else
-	{
-		itemname = "the " + item_artifactnames.first[Math.floor((Math.random()*item_artifactnames.first.length))] + " " + item_artifactnames.last[Math.floor((Math.random()*item_artifactnames.last.length))];
-	}
+	
+	if (itemslot == "mainhand")
+		itemname = adventure_sim.itemnames.mainhand[Math.floor(Math.random()*adventure_sim.itemnames.mainhand.length)];
+	else if (itemslot == "offhand")
+		itemname = adventure_sim.itemnames.offhand[Math.floor(Math.random()*adventure_sim.itemnames.offhand.length)];
+	else if (itemslot == "clothes")
+		itemname = adventure_sim.itemnames.clothes[Math.floor(Math.random()*adventure_sim.itemnames.clothes.length)];
+	else if (itemslot == "armour")
+		itemname = adventure_sim.itemnames.armour[Math.floor(Math.random()*adventure_sim.itemnames.armour.length)];
+	else if (itemslot == "accessory")
+		itemname = adventure_sim.itemnames.accessory[Math.floor(Math.random()*adventure_sim.itemnames.accessory.length)];
+	
+	itemname += " " + randomproperty.name;
+	
 	let item = { 
 		itlvl: itemlevel,
 		name: itemname,
+		slot: itemslot,
 		effects: {
-			hp: 0,
-			mp: 0,
-			attack: 0,
-			defense: 0,
-			damagedienum: 0
-			},
-		classification: ""
+			damageMod: randomproperty.effects.damageMod,
+			woundMaxMod: randomproperty.effects.woundMaxMod,
+			woundThresholdMod: randomproperty.effects.woundThresholdMod,
+			healRateMod: randomproperty.effects.healRateMod,
+			initiativeMod: randomproperty.effects.initiativeMod,
+			skillMod: {
+				acrobatics: randomproperty.effects.skillMod.acrobatics,
+				animalHandling: randomproperty.effects.skillMod.animalHandling,
+				arcana: randomproperty.effects.skillMod.arcana,
+				athletics: randomproperty.effects.skillMod.athletics,
+				deception: randomproperty.effects.skillMod.deception,
+				insight: randomproperty.effects.skillMod.insight,
+				intimidation: randomproperty.effects.skillMod.intimidation,
+				investigation: randomproperty.effects.skillMod.investigation,
+				medicine: randomproperty.effects.skillMod.medicine,
+				nature: randomproperty.effects.skillMod.nature,
+				perception: randomproperty.effects.skillMod.perception,
+				performance: randomproperty.effects.skillMod.performance,
+				persuasion: randomproperty.effects.skillMod.persuasion,
+				religion: randomproperty.effects.skillMod.religion,
+				sleightOfHand: randomproperty.effects.skillMod.sleightOfHand,
+				stealth: randomproperty.effects.skillMod.stealth,
+				survival: randomproperty.effects.skillMod.survival
+				},
+			resistances: []
+			}
 		};
 	
-	let itemcurlevel = 0;
-	let itemenchants = [];
-	let newenchant;
-	
-	while (itemcurlevel < itemlevel) // && tempitemproperties.length > 0)
+	for (let i = 0; i < randomproperty.effects.resistances.length; i++)
 	{
-		newenchant = tempitemproperties[Math.floor(Math.random()*tempitemproperties.length)];
-		itemcurlevel += newenchant.itlvl;
-		addItemEnchant(itemenchants,newenchant);
-		tempitemproperties = tempitemproperties.filter(filterByItLvl,itemlevel - itemcurlevel);
+		item.effects.resistances.push(randomproperty.effects.resistances[i]);
 	}
-	
-	for (let i = 0; i < itemenchants.length; i++)
-	{
-		item.effects.hp += itemenchants[i].effects.hp;
-		item.effects.mp += itemenchants[i].effects.mp;
-		item.effects.attack += itemenchants[i].effects.attack;
-		item.effects.defense += itemenchants[i].effects.defense;
-		item.effects.damagedienum += itemenchants[i].effects.damagedienum;
-	}
-	
-	classifyItem(item);
 	
 	return item;
-}
-
-function getPartyTank(party)
-{
-	let hp = 0;
-	let defense = 0;
-	let items = 9999;
-	let chosen = -1;
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead" && findAbilityOfEffectType(party.members[i].abilities, "taunt", 999) != null)
-		{
-			if (party.members[i].magicitems.length <= items)
-			{
-				if (party.members[i].magicitems.length < items)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (party.members[i].stats.mHP > hp)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (party.members[i].stats.mHP == hp && party.members[i].stats.defense > defense)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-			}
-		}
-	}
-	if (chosen == -1)
-		return null;
-	return party.members[chosen];
-}
-
-function getPartyHealer(party)
-{
-	let hp = 999999;
-	let defense = 999999;
-	let items = 9999;
-	let chosen = -1;
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead" && findAbilityOfEffectType(party.members[i].abilities, "healing", 999) != null)
-		{
-			if (party.members[i].magicitems.length <= items)
-			{
-				if (party.members[i].magicitems.length < items)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (party.members[i].stats.mHP < hp)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (party.members[i].stats.mHP == hp && party.members[i].stats.defense < defense)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-			}
-		}
-	}
-	if (chosen == -1)
-		return null;
-	return party.members[chosen];
-}
-
-function getPartyDefender(party)
-{
-	let hp = -1;
-	let defense = -1;
-	let items = 9999;
-	let chosen = -1;
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-		{
-			if (party.members[i].magicitems.length <= items)
-			{
-				if (party.members[i].magicitems.length < items)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (party.members[i].stats.mHP > hp)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (party.members[i].stats.mHP == hp && party.members[i].stats.defense > defense)
-				{
-					hp = party.members[i].stats.mHP;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-			}
-		}
-	}
-	if (chosen == -1)
-		return null;
-	return party.members[chosen];
-}
-
-function getPartyAttacker(party)
-{
-	let damage = 0;
-	let attack = 999999;
-	let defense = 999999;
-	let items = 9999;
-	let chosen = -1;
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-		{
-			if (party.members[i].magicitems.length <= items)
-			{
-				let pmemdam = party.members[i].stats.damagedienum*party.members[i].stats.damagediesides;
-				if (party.members[i].magicitems.length < items)
-				{
-					damage = pmemdam;
-					attack = party.members[i].stats.attack;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (pmemdam > damage)
-				{
-					damage = pmemdam;
-					attack = party.members[i].stats.attack;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (pmemdam == damage && party.members[i].stats.attack < attack)
-				{
-					damage = pmemdam;
-					attack = party.members[i].stats.attack;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-				else if (pmemdam == damage && party.members[i].stats.attack == attack && party.members[i].stats.defense < defense)
-				{
-					damage = pmemdam;
-					attack = party.members[i].stats.attack;
-					defense = party.members[i].stats.defense;
-					items = party.members[i].magicitems.length;
-					chosen = i;
-				}
-			}
-		}
-	}
-	if (chosen == -1)
-		return null;
-	return party.members[chosen];
 }
 
 function getIndexOfMagicItem(adventurer, item)
@@ -14202,99 +15075,261 @@ function getIndexOfMagicItem(adventurer, item)
 	return -1;
 }
 
-var MAX_EQUIPPED_ITEMS = 12;
-
 function unequipAdventurerWithItem(adventurer, item)
 {
-	adventurer.stats.mHP -= item.effects.hp
-	adventurer.stats.mMP -= item.effects.mp
-	adventurer.stats.attack -= item.effects.attack
-	adventurer.stats.defense -= item.effects.defense
-	adventurer.stats.damagedienum -= item.effects.damagedienum
-	let index = getIndexOfMagicItem(adventurer,item);
-	adventurer.magicitems.splice(index,1);
+	if (item.slot == "mainhand")
+	{
+		adventurer.magicitems.mainhand = null;
+	}
+	else if (item.slot == "offhand")
+	{
+		adventurer.magicitems.offHand = null;
+	}
+	else if (item.slot == "clothes")
+	{
+		adventurer.magicitems.clothes = null;
+	}
+	else if (item.slot == "armour")
+	{
+		adventurer.magicitems.armour = null;
+	}
+	else if (item.slot == "accessory")
+	{
+		if (adventurer.magicitems.accessories[0] != null && adventurer.magicitems.accessories[0] == item)
+			adventurer.magicitems.accessories[0] = null;
+		else if (adventurer.magicitems.accessories[1] != null && adventurer.magicitems.accessories[1] == item)
+			adventurer.magicitems.accessories[1] = null;
+		else if (adventurer.magicitems.accessories[2] != null && adventurer.magicitems.accessories[2] == item)
+			adventurer.magicitems.accessories[2] = null;
+		else if (adventurer.magicitems.accessories[3] != null && adventurer.magicitems.accessories[3] == item)
+			adventurer.magicitems.accessories[3] = null;
+	}
 }
 
 function equipAdventurerWithItem(adventurer, item)
 {
-	adventurer.magicitems.push(item);
-	adventurer.stats.mHP += item.effects.hp
-	adventurer.stats.mMP += item.effects.mp
-	adventurer.stats.attack += item.effects.attack
-	adventurer.stats.defense += item.effects.defense
-	adventurer.stats.damagedienum += item.effects.damagedienum
-	
+	if (item.slot == "mainhand")
+	{
+		adventurer.magicitems.mainHand = item;
+	}
+	else if (item.slot == "offhand")
+	{
+		adventurer.magicitems.offHand = item;
+	}
+	else if (item.slot == "clothes")
+	{
+		adventurer.magicitems.clothes = item;
+	}
+	else if (item.slot == "armour")
+	{
+		adventurer.magicitems.armour = item;
+	}
+	else if (item.slot == "accessory")
+	{
+		if (adventurer.magicitems.accessories[0] == null)
+			adventurer.magicitems.accessories[0] = item;
+		else if (adventurer.magicitems.accessories[1] == null)
+			adventurer.magicitems.accessories[1] = item;
+		else if (adventurer.magicitems.accessories[2] == null)
+			adventurer.magicitems.accessories[2] = item;
+		else if (adventurer.magicitems.accessories[3] == null)
+			adventurer.magicitems.accessories[3] = item;
+	}
 }
 
 function smartEquipUnequipAdventurer(adventurer, item)
 {
-	if (adventurer.magicitems.length < MAX_EQUIPPED_ITEMS)
+	if (item.slot == "mainhand")
 	{
-		equipAdventurerWithItem(adventurer, item);
-		return adventurer.name + " received " + item.name;
-	}
-	else
-	{
-		let smallest = 999999;
-		let smallesti = -1;
-		for (let i = 0; i < adventurer.magicitems.length; i++)
+		if (adventurer.magicitems.mainHand == null)
 		{
-			if (adventurer.magicitems[i].itlvl === undefined || adventurer.magicitems[i].itlvl < smallest)
-			{
-				if (adventurer.magicitems[i].itlvl !== undefined)
-					smallest = adventurer.magicitems[i].itlvl;
-				smallesti = i;
-			}
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " equipped " + item.name + " in their main hand";
+			return null;
 		}
-		if (adventurer.magicitems[smallesti].itlvl === undefined || adventurer.magicitems[smallesti].itlvl < item.itlvl)
+		else if (adventurer.magicitems.mainHand.itlvl < item.itlvl)
 		{
-			let lostitem = adventurer.magicitems[smallesti];
-			unequipAdventurerWithItem(adventurer, adventurer.magicitems[smallesti]);
-			equipAdventurerWithItem(adventurer, item)
-			return adventurer.name + " discarded " + lostitem.name + "\n" 
-				+ adventurer.name + " received " + item.name;
+			let lostitem = adventurer.magicitems.mainhand;
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " in their main hand";
+			return lostitem;
 		}
 		else
 		{
-			return adventurer.name + " discarded " + item.name;
+			//return adventurer.name + " discarded " + item.name;
+			return item;
+		}
+	}
+	else if (item.slot == "offhand")
+	{
+		if (adventurer.magicitems.offHand == null)
+		{
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " equipped " + item.name + " in their off hand";
+			return null;
+		}
+		else if (adventurer.magicitems.offHand.itlvl < item.itlvl)
+		{
+			let lostitem = adventurer.magicitems.offHand;
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " in their off hand";
+			return lostitem;
+		}
+		else
+		{
+			//return adventurer.name + " discarded " + item.name;
+			return item;
+		}
+	}
+	else if (item.slot == "clothes")
+	{
+		if (adventurer.magicitems.clothes == null)
+		{
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " equipped " + item.name + " as clothes";
+			return null;
+		}
+		else if (adventurer.magicitems.clothes.itlvl < item.itlvl)
+		{
+			let lostitem = adventurer.magicitems.clothes;
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " as clothes";
+			return lostitem;
+		}
+		else
+		{
+			//return adventurer.name + " discarded " + item.name;
+			return item;
+		}
+	}
+	else if (item.slot == "armour")
+	{
+		if (adventurer.magicitems.armour == null)
+		{
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " equipped " + item.name + " as armour";
+			return null;
+		}
+		else if (adventurer.magicitems.armour.itlvl < item.itlvl)
+		{
+			let lostitem = adventurer.magicitems.armour;
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " as armour";
+			return lostitem;
+		}
+		else
+		{
+			//return adventurer.name + " discarded " + item.name;
+			return item;
+		}
+	}
+	else if (item.slot == "accessory")
+	{
+		if (adventurer.magicitems.accessories[0] == null || adventurer.magicitems.accessories[1] == null || adventurer.magicitems.accessories[2] == null || adventurer.magicitems.accessories[3] == null)
+		{
+			equipAdventurerWithItem(adventurer, item);
+			//return adventurer.name + " equipped " + item.name + " as an accessory";
+			return null;
+		}
+		else
+		{
+			lowestitlvl = 999;
+			lowestiti = -1;
+			for (let i = 0; i < 4; i++)
+			{
+				if (adventurer.magicitems.accessories[i].itlvl < lowestitlvl)
+				{
+					lowestitlvl = adventurer.magicitems.accessories[i].itlvl;
+					lowestiti = i;
+				}
+			}
+			
+			if (lowestiti > -1)
+			{
+				let lostitem = adventurer.magicitems.accessories[lowestiti];
+				unequipAdventurerWithItem(adventurer, adventurer.magicitems.accessories[lowestiti]);
+				equipAdventurerWithItem(adventurer, item);
+				//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " as an accessory";
+				return lostitem;
+			}
+			else
+			{
+				//return adventurer.name + " discarded " + item.name;
+				return item;
+			}
 		}
 	}
 }
 
-function equipPartyWithItems(party, items)
+function getPartyMemberWithLeastItems(party)
 {
-	let partymember;
-	for (let i = 0; i < items.length; i++)
+	let lowestitemcount = 999;
+	let lowestitemmember = -1;
+	for(let i = 0; i < party.length; i++)
 	{
-		if (items[i].classification == "offense")
+		let itemcount = 0;
+		if (party[i].magicitems.mainHand != null)
+			itemcount++;
+		if (party[i].magicitems.offHand != null)
+			itemcount++;
+		if (party[i].magicitems.clothes != null)
+			itemcount++;
+		if (party[i].magicitems.armour != null)
+			itemcount++;
+		if (party[i].magicitems.accessories[0] != null)
+			itemcount++;
+		if (party[i].magicitems.accessories[1] != null)
+			itemcount++;
+		if (party[i].magicitems.accessories[2] != null)
+			itemcount++;
+		if (party[i].magicitems.accessories[3] != null)
+			itemcount++;
+		
+		if (itemcount < lowestitemcount)
 		{
-			partymember = getPartyAttacker(party);
-			//equipAdventurerWithItem(partymember, items[i]);
-			addToAdventureSimLog(party, smartEquipUnequipAdventurer(partymember, items[i]));
-		}
-		else if (items[i].classification == "defense")
-		{
-			partymember = getPartyDefender(party);
-			//equipAdventurerWithItem(partymember, items[i]);
-			addToAdventureSimLog(party, smartEquipUnequipAdventurer(partymember, items[i]));
-		}
-		else if (items[i].classification == "sustain")
-		{
-			partymember = getPartyHealer(party);
-			if (partymember != null)
-			{
-				//equipAdventurerWithItem(partymember, items[i]);
-				addToAdventureSimLog(party, smartEquipUnequipAdventurer(partymember, items[i]));
-			}
-			else
-			{
-				partymember = getPartyDefender(party);
-				//equipAdventurerWithItem(partymember, items[i]);
-				addToAdventureSimLog(party, smartEquipUnequipAdventurer(partymember, items[i]));
-			}
+			lowestitemcount = itemcount;
+			lowestitemmember = i;
 		}
 	}
 	
+	return party[lowestitemmember];
+}
+
+function equipPartyWithItems(party, items)
+{
+	for(let i = 0; i < items.length; i++)
+	{
+		let tempmemberlist = party.members.slice();
+		
+		let itemallocated = false;
+		
+		while (tempmemberlist.length > 0 && !itemallocated)
+		{
+			let partymember = getPartyMemberWithLeastItems(tempmemberlist);
+			let potentialdiscard = smartEquipUnequipAdventurer(partymember, items[i]);
+			
+			if (potentialdiscard == items[i])
+			{
+				tempmemberlist.splice(tempmemberlist.indexOf(partymember), 1);
+			}
+			else if (potentialdiscard != null)
+			{
+				addToAdventureSimLog(party, partymember.name + " took " +  items[i].name);
+				itemallocated = true;
+				items.push(potentialdiscard);
+			}
+			else
+			{
+				addToAdventureSimLog(party, partymember.name + " took " +  items[i].name);
+				itemallocated = true;
+			}
+		}
+		
+		if (!itemallocated)
+		{
+			addToAdventureSimLog(party, items[i].name + " was discarded");
+		}
+	}
 }
 
 function getItemBlueprintFromId(id)
@@ -14320,8 +15355,10 @@ function questComplete(party)
 	let items = [];
 	for (let i = 0; i < itemstobe.length; i++)
 	{
-		let itlvl = itemstobe[i].itlvlmin + Math.floor(Math.random()*(itemstobe[i].itlvlrandom+1));
-		items.push(createAdventureSimItem(itlvl));
+		let itlvl = itemstobe[i].itlvlmin + Math.floor(Math.random()*(itemstobe[i].itlvlrandom));
+		let newitem = createAdventureSimItem(itlvl);
+		if (newitem != null)
+			items.push(newitem);
 	}
 	equipPartyWithItems(party, items);
 }
@@ -14348,7 +15385,7 @@ function getRandomQuestOfLevel(level = -1)
 	return availableQuests[Math.floor(Math.random()*availableQuests.length)];
 }
 
-var REVIVE_COST = 7500;
+var REVIVE_COST = 750;
 
 function onReturnToTown(party)
 {
@@ -14381,8 +15418,19 @@ function startAdventure(partyid, questlevel)
 	if (isPartyDead(party))
 		return party.name + " are all dead";
 	
+	let partytotallevel = 0;
+	let partymembercount = 0;
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead")
+		{
+			partytotallevel += party.members[i].stats.level;
+			partymembercount++;
+		}
+	}
+	
 	if (questlevel == null || isNaN(questlevel))
-		questlevel = -1;
+		questlevel = Math.max(Math.floor(partytotallevel / partymembercount), 1);
 	
 	party.cstatus = "good";
 	party.quest = getRandomQuestOfLevel(questlevel);
@@ -14390,9 +15438,12 @@ function startAdventure(partyid, questlevel)
 	party.questsucceed = false;
 	party.questlocation = 0;
 	party.log = [];
+	for (let i = 0; i < party.members.length; i++)
+	{
+		party.members[i].stats.wounds = [];
+	}
 	clearPriority(party.priorities,"town");
 	addPriority(party.priorities,"adventure");
-	fullyRecuperateParty(party);
 	let nearestquestsite = findNearestLandmark(party.xpos, party.ypos, party.quest.landmark, 0.667);
 	while (nearestquestsite != null && nearestquestsite == false)
 	{
@@ -16339,6 +17390,1546 @@ function MoveHex(hex, direction)
 			hex.y--;
 		}
 	}
+}
+
+function MoveUpwardHex(hex, direction)
+{
+	direction = direction%6;
+	
+	if (hex.y%2 == 1)
+	{
+		if (direction == 5)
+		{
+			hex.y--;
+		}
+		else if (direction == 4)
+		{
+			hex.x--;
+		}
+		else if (direction == 3)
+		{
+			hex.y++;
+		}
+		else if (direction == 2)
+		{
+			hex.x++;
+			hex.y++;
+		}
+		else if (direction == 1)
+		{
+			hex.x++;
+		}
+		else if (direction == 0)
+		{
+			hex.x++;
+			hex.y--;
+		}
+	} 
+	else
+	{
+		if (direction == 5)
+		{
+			hex.x--;
+			hex.y--;
+		}
+		else if (direction == 4)
+		{
+			hex.x--;
+		}
+		else if (direction == 3)
+		{
+			hex.x--;
+			hex.y++;
+		}
+		else if (direction == 2)
+		{
+			hex.y++;
+		}
+		else if (direction == 1)
+		{
+			hex.x++;
+		}
+		else if (direction == 0)
+		{
+			hex.y--;
+		}
+	}
+}
+
+function GetHexNeighbour(hex, direction)
+{
+	direction = direction%6;
+	
+	hexNeighbour = { x: hex.x, y: hex.y }
+	
+	if (hex.y%2 == 1)
+	{
+		if (direction == 5)
+		{
+			hexNeighbour.y--;
+		}
+		else if (direction == 4)
+		{
+			hexNeighbour.x--;
+		}
+		else if (direction == 3)
+		{
+			hexNeighbour.y++;
+		}
+		else if (direction == 2)
+		{
+			hexNeighbour.x++;
+			hexNeighbour.y++;
+		}
+		else if (direction == 1)
+		{
+			hexNeighbour.x++;
+		}
+		else if (direction == 0)
+		{
+			hexNeighbour.x++;
+			hexNeighbour.y--;
+		}
+	} 
+	else
+	{
+		if (direction == 5)
+		{
+			hexNeighbour.x--;
+			hexNeighbour.y--;
+		}
+		else if (direction == 4)
+		{
+			hexNeighbour.x--;
+		}
+		else if (direction == 3)
+		{
+			hexNeighbour.x--;
+			hexNeighbour.y++;
+		}
+		else if (direction == 2)
+		{
+			hexNeighbour.y++;
+		}
+		else if (direction == 1)
+		{
+			hexNeighbour.x++;
+		}
+		else if (direction == 0)
+		{
+			hexNeighbour.y--;
+		}
+	}
+	
+	return hexNeighbour;
+}
+
+function ContainsHexInArray(hex, array)
+{
+	for (let i = 0; i < array.length; i++)
+	{
+		if (array[i].x == hex.x && array[i].y == hex.y)
+			return true;
+	}
+	
+	return false;
+}
+
+function GetContiguousLandHexes(start, map, map_width, map_height)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let doneHexes = [];
+	let priority = 0;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		if (nextinqueue < 0)
+		{
+			console.log(frontierQueue);
+			console.log("unexpected contigous land exit");
+			return doneHexes;
+		}
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		
+		let connection = { x: current.x, y: current.y };
+		for (let i = 0; i < 6; i++)
+		{
+			connection = { x: current.x, y: current.y };
+			MoveUpwardHex(connection,i);
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && !ContainsHexInArray(connection, doneHexes) && map.hexes[connection.y * map_width + connection.x].height >= 0)
+			{
+				doneHexes.push({ x: connection.x, y: connection.y });
+				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+			}
+		}
+		
+		priority++;
+	}
+	
+	return doneHexes;
+}
+
+function GetContiguousHexesAboveHeight(start, map, map_width, map_height, height_threshold)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let doneHexes = [];
+	let priority = 0;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		if (nextinqueue < 0)
+		{
+			console.log(frontierQueue);
+			console.log("unexpected contigous land exit");
+			return doneHexes;
+		}
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		
+		let connection = { x: current.x, y: current.y };
+		for (let i = 0; i < 6; i++)
+		{
+			connection = { x: current.x, y: current.y };
+			MoveUpwardHex(connection,i);
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && !ContainsHexInArray(connection, doneHexes) && map.hexes[connection.y * map_width + connection.x].height >= height_threshold)
+			{
+				doneHexes.push({ x: connection.x, y: connection.y });
+				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+			}
+		}
+		
+		priority++;
+	}
+	
+	return doneHexes;
+}
+
+function GetContiguousWaterHexes(start, map, map_width, map_height)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let doneHexes = [];
+	let priority = 0;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		if (nextinqueue < 0)
+		{
+			console.log(frontierQueue);
+			console.log("unexpected contigous water exit");
+			return doneHexes;
+		}
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		
+		let connection = { x: current.x, y: current.y };
+		for (let i = 0; i < 6; i++)
+		{
+			connection = { x: current.x, y: current.y };
+			MoveUpwardHex(connection,i);
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && !ContainsHexInArray(connection, doneHexes) && map.hexes[connection.y * map_width + connection.x].height < 0)
+			{
+				doneHexes.push({ x: connection.x, y: connection.y });
+				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+			}
+		}
+		
+		priority++;
+	}
+	
+	return doneHexes;
+}
+
+const OUTERRADIUS = 1.0;
+const INNERRADIUS = 0.866025404;
+const PERTURBSTRENGTH = 11;
+const HIGHLANDHEIGHT = 19;
+const SNOWCAPHEIGHT = 25;
+
+function PerturbHexPoint(point, noisemapX, noisemapY, width)
+{
+	xnoise = noisemapX[Math.round(point.x * width + point.y)];
+	ynoise = noisemapY[Math.round(point.x * width + point.y)];
+	
+	return { x: point.x + xnoise * PERTURBSTRENGTH, y: point.y + ynoise * PERTURBSTRENGTH }
+}
+
+function GenerateHexWorldMap(pixelsPerHex, w, h, landratio, smoothpasses)
+{
+	let hexWorldMap = 
+	{
+		pph: pixelsPerHex,
+		height: h,
+		width: w,
+		hexes: [h*w],
+		heightmax: 1,
+		heightmin: -1,
+		landmasses: 0,
+		lakes: 0,
+		highlands: 0,
+		snowcaps: 0
+	}
+	
+	let noisemapX = noiseMap2D(pixelsPerHex * h, pixelsPerHex * w, 0.67);
+		noisemapX = increaseContrast(noisemapX, pixelsPerHex * h, pixelsPerHex * w, 0.4);
+		noisemapX = smoothenMap(noisemapX, pixelsPerHex * h, pixelsPerHex * w, 0.175);
+		noisemapX = increaseContrast(noisemapX, pixelsPerHex * h, pixelsPerHex * w, 0.25);
+		
+	let noisemapY = noiseMap2D(pixelsPerHex * h, pixelsPerHex * w, 0.67);
+		noisemapY = increaseContrast(noisemapY, pixelsPerHex * h, pixelsPerHex * w, 0.4);
+		noisemapY = smoothenMap(noisemapY, pixelsPerHex * h, pixelsPerHex * w, 0.175);
+		noisemapY = increaseContrast(noisemapY, pixelsPerHex * h, pixelsPerHex * w, 0.25);
+	
+	
+	for (let i = 0; i < h; i++)
+	{
+		for (let j = 0; j < w; j++)
+		{
+			let baseX = (pixelsPerHex * INNERRADIUS) + j * pixelsPerHex * INNERRADIUS * 2;
+			let baseY = (pixelsPerHex * OUTERRADIUS) + i * pixelsPerHex * OUTERRADIUS * 1.5;
+			if (i % 2 == 1)
+			{
+				baseX += pixelsPerHex * INNERRADIUS;
+			}
+			
+			hexWorldMap.hexes[i*w + j] = 
+			{
+				p0: PerturbHexPoint({ x: baseX, y: baseY + OUTERRADIUS * pixelsPerHex }, noisemapX, noisemapY, w),
+				p1: PerturbHexPoint({ x: baseX + INNERRADIUS * pixelsPerHex, y: baseY + OUTERRADIUS * pixelsPerHex / 2 }, noisemapX, noisemapY, w),
+				p2: PerturbHexPoint({ x: baseX + INNERRADIUS * pixelsPerHex, y: baseY - OUTERRADIUS * pixelsPerHex / 2 }, noisemapX, noisemapY, w),
+				p3: PerturbHexPoint({ x: baseX, y: baseY - OUTERRADIUS * pixelsPerHex }, noisemapX, noisemapY, w),
+				p4: PerturbHexPoint({ x: baseX - INNERRADIUS * pixelsPerHex, y: baseY - OUTERRADIUS * pixelsPerHex / 2 }, noisemapX, noisemapY, w),
+				p5: PerturbHexPoint({ x: baseX - INNERRADIUS * pixelsPerHex, y: baseY + OUTERRADIUS * pixelsPerHex / 2 }, noisemapX, noisemapY, w),
+				height: -25,
+				landmass: -1,
+				lake: -1,
+				mountain: -1
+			}
+		}
+	}
+	
+	let minx = Math.min(Math.ceil(w/8), Math.ceil(h/8));
+	let maxx = w - minx;
+	let miny = minx;
+	let maxy = h - miny;
+	let avgheight = 0;
+	let landtosearatio = 0;
+	
+	let landmassVal = (h+w)*0.53;
+	
+	while (landtosearatio < landratio)
+	{
+		for (let i = 0; i < landmassVal; i++)
+		{
+			let randomx = Math.floor(Math.random() * (maxx - minx) + minx);
+			let randomy = Math.floor(Math.random() * (maxy - miny) + miny);
+			let randoml = Math.floor((Math.random() * (maxx - minx) + minx) + (Math.random() * (maxy - miny) + miny));
+			let currenthex = { x: randomx, y: randomy }
+			let startdirection = Math.floor(Math.random() * 6);
+			let heightchange = (Math.random() * 4.25) + 0.75;
+			
+			for (let j = 0; j < randoml; j++)
+			{
+				hexWorldMap.hexes[currenthex.y * w + currenthex.x].height += heightchange;
+				
+				MoveUpwardHex(currenthex, startdirection + Math.floor(Math.random() * 3 - 2));
+				
+				if (currenthex.x < minx || currenthex.x > maxx || currenthex.y < miny || currenthex.y > maxy)
+				{
+					randoml = -1;
+				}
+			}
+		}
+		
+		let smoothedHeightmap = [h*w];
+		avgheight = 0;
+		landtosearatio = 0;
+		
+		for (let i  = 0; i < h*w; i++)
+		{
+			let currenthex = { x: i % w, y: Math.floor(i / w) }
+			let nhex0 = GetHexNeighbour(currenthex, 0);
+			let nhex1 = GetHexNeighbour(currenthex, 1);
+			let nhex2 = GetHexNeighbour(currenthex, 2);
+			let nhex3 = GetHexNeighbour(currenthex, 3);
+			let nhex4 = GetHexNeighbour(currenthex, 4);
+			let nhex5 = GetHexNeighbour(currenthex, 5);
+			
+			let totalheight = hexWorldMap.hexes[currenthex.y * w + currenthex.x].height;
+			let hexcount = 1;
+			if (nhex0.x >= 0 && nhex0.x < w && nhex0.y >= 0 && nhex0.y < h)
+			{
+				totalheight += hexWorldMap.hexes[nhex0.y * w + nhex0.x].height;
+				hexcount++;
+			}
+			if (nhex1.x >= 0 && nhex1.x < w && nhex1.y >= 0 && nhex1.y < h)
+			{
+				totalheight += hexWorldMap.hexes[nhex1.y * w + nhex1.x].height;
+				hexcount++;
+			}
+			if (nhex2.x >= 0 && nhex2.x < w && nhex2.y >= 0 && nhex2.y < h)
+			{
+				totalheight += hexWorldMap.hexes[nhex2.y * w + nhex2.x].height;
+				hexcount++;
+			}
+			if (nhex3.x >= 0 && nhex3.x < w && nhex3.y >= 0 && nhex3.y < h)
+			{
+				totalheight += hexWorldMap.hexes[nhex3.y * w + nhex3.x].height;
+				hexcount++;
+			}
+			if (nhex4.x >= 0 && nhex4.x < w && nhex4.y >= 0 && nhex4.y < h)
+			{
+				totalheight += hexWorldMap.hexes[nhex4.y * w + nhex4.x].height;
+				hexcount++;
+			}
+			if (nhex5.x >= 0 && nhex5.x < w && nhex5.y >= 0 && nhex5.y < h)
+			{
+				totalheight += hexWorldMap.hexes[nhex5.y * w + nhex5.x].height;
+				hexcount++;
+			}
+			
+			smoothedHeightmap[i] = totalheight / hexcount;
+		}
+		
+		for (let j = 1; j < smoothpasses; j++)
+		{
+			for (let i  = 0; i < h*w; i++)
+			{
+				let currenthex = { x: i % w, y: Math.floor(i / w) }
+				let nhex0 = GetHexNeighbour(currenthex, 0);
+				let nhex1 = GetHexNeighbour(currenthex, 1);
+				let nhex2 = GetHexNeighbour(currenthex, 2);
+				let nhex3 = GetHexNeighbour(currenthex, 3);
+				let nhex4 = GetHexNeighbour(currenthex, 4);
+				let nhex5 = GetHexNeighbour(currenthex, 5);
+				
+				let totalheight = smoothedHeightmap[currenthex.y * w + currenthex.x];
+				let hexcount = 1;
+				if (nhex0.x >= 0 && nhex0.x < w && nhex0.y >= 0 && nhex0.y < h)
+				{
+					totalheight += smoothedHeightmap[nhex0.y * w + nhex0.x];
+					hexcount++;
+				}
+				if (nhex1.x >= 0 && nhex1.x < w && nhex1.y >= 0 && nhex1.y < h)
+				{
+					totalheight += smoothedHeightmap[nhex1.y * w + nhex1.x];
+					hexcount++;
+				}
+				if (nhex2.x >= 0 && nhex2.x < w && nhex2.y >= 0 && nhex2.y < h)
+				{
+					totalheight += smoothedHeightmap[nhex2.y * w + nhex2.x];
+					hexcount++;
+				}
+				if (nhex3.x >= 0 && nhex3.x < w && nhex3.y >= 0 && nhex3.y < h)
+				{
+					totalheight += smoothedHeightmap[nhex3.y * w + nhex3.x];
+					hexcount++;
+				}
+				if (nhex4.x >= 0 && nhex4.x < w && nhex4.y >= 0 && nhex4.y < h)
+				{
+					totalheight += smoothedHeightmap[nhex4.y * w + nhex4.x];
+					hexcount++;
+				}
+				if (nhex5.x >= 0 && nhex5.x < w && nhex5.y >= 0 && nhex5.y < h)
+				{
+					totalheight += smoothedHeightmap[nhex5.y * w + nhex5.x];
+					hexcount++;
+				}
+				
+				smoothedHeightmap[i] = totalheight / hexcount;
+			}
+		}
+		
+		for (let i = 0; i < (h*w); i++)
+		{
+			if (smoothedHeightmap[i] > 0)
+				landtosearatio++;
+			avgheight +=  smoothedHeightmap[i];
+		}
+		
+		avgheight = avgheight/(h*w);
+		landtosearatio = landtosearatio/(h*w);
+		let max = -1.0;
+		let min = 1.0;
+		if (landtosearatio > landratio)
+		{
+			for (let i = 0; i < h*w; i++)
+			{
+				hexWorldMap.hexes[i].height = smoothedHeightmap[i];
+				if (smoothedHeightmap[i] < min)
+					min = smoothedHeightmap[i];
+				if (smoothedHeightmap[i] > max)
+					max = smoothedHeightmap[i];
+			}
+			
+			hexWorldMap.heightmax = max;
+			hexWorldMap.heightmin = min;
+		}
+		
+	}
+	
+	let landmassCount = 0;
+	
+	for (let i = 0; i < h*w; i++)
+	{
+		if (hexWorldMap.hexes[i].height >= 0 && hexWorldMap.hexes[i].landmass == -1)
+		{
+			let currenthex = { x: i % w, y: Math.floor(i / w) }
+			let currentlandmass = GetContiguousLandHexes(currenthex, hexWorldMap, w, h);
+			
+			for(let j = 0; j < currentlandmass.length; j++)
+			{
+				hexWorldMap.hexes[currentlandmass[j].y * w + currentlandmass[j].x].landmass = landmassCount;
+			}
+			
+			landmassCount++;
+		}
+	}
+	
+	hexWorldMap.landmasses = landmassCount;
+	
+	let lakeCount = 0;
+	
+	for (let i = 0; i < h*w; i++)
+	{
+		if (hexWorldMap.hexes[i].height < 0 && hexWorldMap.hexes[i].lake == -1)
+		{
+			let currenthex = { x: i % w, y: Math.floor(i / w) }
+			let currentlandmass = GetContiguousWaterHexes(currenthex, hexWorldMap, w, h);
+			
+			for(let j = 0; j < currentlandmass.length; j++)
+			{
+				hexWorldMap.hexes[currentlandmass[j].y * w + currentlandmass[j].x].lake = lakeCount;
+			}
+			
+			lakeCount++;
+		}
+	}
+	
+	hexWorldMap.lakes = lakeCount;
+	
+	let highlandCount = 0;
+	
+	for (let i = 0; i < h*w; i++)
+	{
+		if (hexWorldMap.hexes[i].height >= HIGHLANDHEIGHT && hexWorldMap.hexes[i].mountain == -1)
+		{
+			let currenthex = { x: i % w, y: Math.floor(i / w) }
+			let currentlandmass = GetContiguousHexesAboveHeight(currenthex, hexWorldMap, w, h, HIGHLANDHEIGHT);
+			
+			for(let j = 0; j < currentlandmass.length; j++)
+			{
+				hexWorldMap.hexes[currentlandmass[j].y * w + currentlandmass[j].x].mountain = highlandCount;
+			}
+			
+			highlandCount++;
+		}
+	}
+	
+	hexWorldMap.highlands = highlandCount;
+	
+	let snowcapCount = highlandCount;
+	
+	for (let i = 0; i < h*w; i++)
+	{
+		if (hexWorldMap.hexes[i].height >= SNOWCAPHEIGHT && hexWorldMap.hexes[i].mountain < highlandCount)
+		{
+			let currenthex = { x: i % w, y: Math.floor(i / w) }
+			let currentlandmass = GetContiguousHexesAboveHeight(currenthex, hexWorldMap, w, h, SNOWCAPHEIGHT);
+			
+			for(let j = 0; j < currentlandmass.length; j++)
+			{
+				hexWorldMap.hexes[currentlandmass[j].y * w + currentlandmass[j].x].mountain = snowcapCount;
+			}
+			
+			snowcapCount++;
+		}
+	}
+	
+	hexWorldMap.snowcaps = snowcapCount - highlandCount;
+	
+	return hexWorldMap;
+}
+
+function DrawHexWorldMap(channel, arguments)
+{
+	let MAP_HEIGHT = 24;
+	let MAP_WIDTH = 54;
+	let LANDRATIO = 0.53;
+	let SMOOTHING = 1;
+	if (arguments != null)
+	{
+		let argumentpos = arguments.indexOf("-h");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			MAP_HEIGHT = Math.floor(parseInt(arguments[argumentpos+1]));
+			if (MAP_HEIGHT > 240)
+				MAP_HEIGHT = 240;
+			if (MAP_HEIGHT <= 0)
+				MAP_HEIGHT = 24;
+		}
+		argumentpos = arguments.indexOf("-w");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			MAP_WIDTH = Math.floor(parseInt(arguments[argumentpos+1]));
+			if (MAP_WIDTH > 540)
+				MAP_WIDTH = 540;
+			if (MAP_WIDTH <= 0)
+				MAP_WIDTH = 54;
+		}
+		argumentpos = arguments.indexOf("-land");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			LANDRATIO = parseFloat(arguments[argumentpos+1]);
+			if (LANDRATIO > 0.66)
+				LANDRATIO = 0.66;
+			if (LANDRATIO <= 0)
+				LANDRATIO = 0.005;
+		}
+		argumentpos = arguments.indexOf("-smooth");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			SMOOTHING = Math.floor(parseInt(arguments[argumentpos+1]));
+			if (SMOOTHING > 7)
+				SMOOTHING = 7;
+			if (SMOOTHING <= 0)
+				SMOOTHING = 1;
+		}
+	}
+	
+	let hexWorldMap = GenerateHexWorldMap(10, MAP_WIDTH, MAP_HEIGHT, LANDRATIO, SMOOTHING);
+	
+	let tempcanvas = new Canvas();
+	tempcanvas.width = Math.floor(10 * INNERRADIUS * MAP_WIDTH * 2) + Math.floor(10 * INNERRADIUS * 2);
+	tempcanvas.height = Math.floor(10 * OUTERRADIUS * MAP_HEIGHT * 1.5) + Math.floor(10 * OUTERRADIUS);
+	
+	if (tempcanvas.getContext)
+	{
+		let ctx = tempcanvas.getContext('2d');
+		
+		let r = 0;
+		let g = 16;
+		let b = 200;
+		ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+		ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+		ctx.fillRect(0,0,tempcanvas.width,tempcanvas.height);
+		
+		for (let i = 0; i < hexWorldMap.landmasses; i++)
+		{
+			let currenthex = { x: -1, y: -1 }
+			let startingpoint = { x: -1, y: -1 }
+			let currentpoint = { x: -1, y: -1 }
+			
+			let currentcontrol1 = { x: -1, y: -1 }
+			let currentcontrol2 = { x: -1, y: -1 }
+			
+			let currentside = 0;
+			
+			for (let j = 0; j < MAP_WIDTH * MAP_HEIGHT; j++)
+			{
+				if (hexWorldMap.hexes[j].landmass == i)
+				{
+					currenthex.x = j % MAP_WIDTH;
+					currenthex.y = Math.floor(j / MAP_WIDTH);
+					startingpoint.x = hexWorldMap.hexes[j].p3.x;
+					startingpoint.y = hexWorldMap.hexes[j].p3.y;
+					j =  MAP_WIDTH * MAP_HEIGHT + 1;
+				}
+			}
+			
+			if (currenthex.x != -1 && currenthex.y != -1)
+			{
+				/*
+				ctx.beginPath();
+				ctx.fillStyle = "#FFFFFF";
+				console.log("landmass: " + i);
+				ctx.arc(startingpoint.x, startingpoint.y, 2, 0, Math.PI*2, 0);
+				ctx.closePath
+				ctx.fill();
+				*/
+				
+				
+				ctx.beginPath();
+				ctx.moveTo(startingpoint.x, startingpoint.y);
+				//currentpoint.x = startingpoint.x;
+				//currentpoint.y = startingpoint.y;
+				let pointnum = 0;
+				do
+				{
+					let adjacentHex = GetHexNeighbour(currenthex, currentside);
+					if (hexWorldMap.hexes[adjacentHex.y * MAP_WIDTH + adjacentHex.x].landmass == i)
+					{
+						currenthex.x = adjacentHex.x;
+						currenthex.y = adjacentHex.y;
+						currentside -= 2;
+						if (currentside < 0)
+							currentside += 6;
+						if (currentside >= 6)
+							currentside -= 6;
+					}
+					
+					if (pointnum % 3 == 0)
+					{
+						if (currentside == 0)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							currentside = 0;
+						}
+					}
+					else if (pointnum % 3 == 1)
+					{
+						if (currentside == 0)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							currentside = 0;
+						}
+					}
+					else
+					{
+						if (currentside == 0)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 0;
+						}
+					}
+					pointnum++;
+				}
+				while ((currentpoint.x != startingpoint.x || currentpoint.y != startingpoint.y) && (currentcontrol2.x != startingpoint.x || currentcontrol2.y != startingpoint.y) && (currentcontrol1.x != startingpoint.x || currentcontrol1.y != startingpoint.y))
+				
+				if (pointnum % 3 == 0)
+				{
+					let tentativecontrolpoint = { x: (currentpoint.x - startingpoint.x) / 4 + startingpoint.x, y: (currentpoint.y - startingpoint.y) / 4 + startingpoint.y }
+					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, tentativecontrolpoint.x, tentativecontrolpoint.y, startingpoint.x, startingpoint.y)
+				}
+				else if (pointnum % 3 == 1)
+				{
+					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, startingpoint.x, startingpoint.y)
+				}
+			
+				//console.log("points: " + pointnum + ", " + (pointnum % 3));
+				
+				ctx.closePath();
+				r = 104;
+				g = 216;
+				b = 0;
+				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+				
+				ctx.fill();
+				//ctx.stroke();
+			}
+		}
+		
+		for (let i = 1; i < hexWorldMap.lakes; i++)
+		{
+			let currenthex = { x: -1, y: -1 }
+			let startingpoint = { x: -1, y: -1 }
+			let currentpoint = { x: -1, y: -1 }
+			
+			let currentcontrol1 = { x: -1, y: -1 }
+			let currentcontrol2 = { x: -1, y: -1 }
+			
+			let currentside = 0;
+			
+			for (let j = 0; j < MAP_WIDTH * MAP_HEIGHT; j++)
+			{
+				if (hexWorldMap.hexes[j].lake == i)
+				{
+					currenthex.x = j % MAP_WIDTH;
+					currenthex.y = Math.floor(j / MAP_WIDTH);
+					startingpoint.x = hexWorldMap.hexes[j].p3.x;
+					startingpoint.y = hexWorldMap.hexes[j].p3.y;
+					j =  MAP_WIDTH * MAP_HEIGHT + 1;
+				}
+			}
+			
+			if (currenthex.x != -1 && currenthex.y != -1)
+			{
+				/*
+				ctx.beginPath();
+				ctx.fillStyle = "#FFFFFF";
+				console.log("landmass: " + i);
+				ctx.arc(startingpoint.x, startingpoint.y, 2, 0, Math.PI*2, 0);
+				ctx.closePath
+				ctx.fill();
+				*/
+				
+				ctx.beginPath();
+				ctx.moveTo(startingpoint.x, startingpoint.y);
+				//currentpoint.x = startingpoint.x;
+				//currentpoint.y = startingpoint.y;
+				let pointnum = 0;
+				do
+				{
+					let adjacentHex = GetHexNeighbour(currenthex, currentside);
+					if (hexWorldMap.hexes[adjacentHex.y * MAP_WIDTH + adjacentHex.x].lake == i)
+					{
+						currenthex.x = adjacentHex.x;
+						currenthex.y = adjacentHex.y;
+						currentside -= 2;
+						if (currentside < 0)
+							currentside += 6;
+						if (currentside >= 6)
+							currentside -= 6;
+					}
+					
+					if (pointnum % 3 == 0)
+					{
+						if (currentside == 0)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							currentside = 0;
+						}
+					}
+					else if (pointnum % 3 == 1)
+					{
+						if (currentside == 0)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							currentside = 0;
+						}
+					}
+					else
+					{
+						if (currentside == 0)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 0;
+						}
+					}
+					pointnum++;
+				}
+				while ((currentpoint.x != startingpoint.x || currentpoint.y != startingpoint.y) && (currentcontrol2.x != startingpoint.x || currentcontrol2.y != startingpoint.y) && (currentcontrol1.x != startingpoint.x || currentcontrol1.y != startingpoint.y))
+				
+				if (pointnum % 3 == 0)
+				{
+					let tentativecontrolpoint = { x: (currentpoint.x - startingpoint.x) / 4 + startingpoint.x, y: (currentpoint.y - startingpoint.y) / 4 + startingpoint.y }
+					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, tentativecontrolpoint.x, tentativecontrolpoint.y, startingpoint.x, startingpoint.y)
+				}
+				else if (pointnum % 3 == 1)
+				{
+					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, startingpoint.x, startingpoint.y)
+				}
+				
+				ctx.closePath();
+				r = 0;
+				g = 48;
+				b = 224;
+				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+				
+				ctx.fill();
+				//ctx.stroke();
+			}
+		}
+		
+		for (let i = 0; i < hexWorldMap.highlands; i++)
+		{
+			let currenthex = { x: -1, y: -1 }
+			let startingpoint = { x: -1, y: -1 }
+			let currentpoint = { x: -1, y: -1 }
+			
+			let currentcontrol1 = { x: -1, y: -1 }
+			let currentcontrol2 = { x: -1, y: -1 }
+			
+			let currentside = 0;
+			
+			for (let j = 0; j < MAP_WIDTH * MAP_HEIGHT; j++)
+			{
+				if (hexWorldMap.hexes[j].mountain == i)
+				{
+					currenthex.x = j % MAP_WIDTH;
+					currenthex.y = Math.floor(j / MAP_WIDTH);
+					startingpoint.x = hexWorldMap.hexes[j].p3.x;
+					startingpoint.y = hexWorldMap.hexes[j].p3.y;
+					j =  MAP_WIDTH * MAP_HEIGHT + 1;
+				}
+			}
+			
+			if (currenthex.x != -1 && currenthex.y != -1)
+			{
+				/*
+				ctx.beginPath();
+				ctx.fillStyle = "#FFFFFF";
+				console.log("landmass: " + i);
+				ctx.arc(startingpoint.x, startingpoint.y, 2, 0, Math.PI*2, 0);
+				ctx.closePath
+				ctx.fill();
+				*/
+				
+				ctx.beginPath();
+				ctx.moveTo(startingpoint.x, startingpoint.y);
+				//currentpoint.x = startingpoint.x;
+				//currentpoint.y = startingpoint.y;
+				let pointnum = 0;
+				do
+				{
+					let adjacentHex = GetHexNeighbour(currenthex, currentside);
+					if (hexWorldMap.hexes[adjacentHex.y * MAP_WIDTH + adjacentHex.x].mountain == i)
+					{
+						currenthex.x = adjacentHex.x;
+						currenthex.y = adjacentHex.y;
+						currentside -= 2;
+						if (currentside < 0)
+							currentside += 6;
+						if (currentside >= 6)
+							currentside -= 6;
+					}
+					
+					if (pointnum % 3 == 0)
+					{
+						if (currentside == 0)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							currentside = 0;
+						}
+					}
+					else if (pointnum % 3 == 1)
+					{
+						if (currentside == 0)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							currentside = 0;
+						}
+					}
+					else
+					{
+						if (currentside == 0)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 0;
+						}
+					}
+					pointnum++;
+				}
+				while ((currentpoint.x != startingpoint.x || currentpoint.y != startingpoint.y) && (currentcontrol2.x != startingpoint.x || currentcontrol2.y != startingpoint.y) && (currentcontrol1.x != startingpoint.x || currentcontrol1.y != startingpoint.y))
+				
+				if (pointnum % 3 == 0)
+				{
+					let tentativecontrolpoint = { x: (currentpoint.x - startingpoint.x) / 4 + startingpoint.x, y: (currentpoint.y - startingpoint.y) / 4 + startingpoint.y }
+					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, tentativecontrolpoint.x, tentativecontrolpoint.y, startingpoint.x, startingpoint.y)
+				}
+				else if (pointnum % 3 == 1)
+				{
+					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, startingpoint.x, startingpoint.y)
+				}
+				
+				ctx.closePath();
+				r = 160;
+				g = 152;
+				b = 144;
+				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+				
+				ctx.fill();
+				//ctx.stroke();
+			}
+		}
+		
+		for (let i = hexWorldMap.highlands; i < hexWorldMap.highlands + hexWorldMap.snowcaps; i++)
+		{
+			let currenthex = { x: -1, y: -1 }
+			let startingpoint = { x: -1, y: -1 }
+			let currentpoint = { x: -1, y: -1 }
+			
+			let currentcontrol1 = { x: -1, y: -1 }
+			let currentcontrol2 = { x: -1, y: -1 }
+			
+			let currentside = 0;
+			
+			for (let j = 0; j < MAP_WIDTH * MAP_HEIGHT; j++)
+			{
+				if (hexWorldMap.hexes[j].mountain == i)
+				{
+					currenthex.x = j % MAP_WIDTH;
+					currenthex.y = Math.floor(j / MAP_WIDTH);
+					startingpoint.x = hexWorldMap.hexes[j].p3.x;
+					startingpoint.y = hexWorldMap.hexes[j].p3.y;
+					j =  MAP_WIDTH * MAP_HEIGHT + 1;
+				}
+			}
+			
+			if (currenthex.x != -1 && currenthex.y != -1)
+			{
+				/*
+				ctx.beginPath();
+				ctx.fillStyle = "#FFFFFF";
+				console.log("landmass: " + i);
+				ctx.arc(startingpoint.x, startingpoint.y, 2, 0, Math.PI*2, 0);
+				ctx.closePath
+				ctx.fill();
+				*/
+				
+				ctx.beginPath();
+				ctx.moveTo(startingpoint.x, startingpoint.y);
+				//currentpoint.x = startingpoint.x;
+				//currentpoint.y = startingpoint.y;
+				let pointnum = 0;
+				do
+				{
+					let adjacentHex = GetHexNeighbour(currenthex, currentside);
+					if (hexWorldMap.hexes[adjacentHex.y * MAP_WIDTH + adjacentHex.x].mountain == i)
+					{
+						currenthex.x = adjacentHex.x;
+						currenthex.y = adjacentHex.y;
+						currentside -= 2;
+						if (currentside < 0)
+							currentside += 6;
+						if (currentside >= 6)
+							currentside -= 6;
+					}
+					
+					if (pointnum % 3 == 0)
+					{
+						if (currentside == 0)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							currentside = 0;
+						}
+					}
+					else if (pointnum % 3 == 1)
+					{
+						if (currentside == 0)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							currentside = 0;
+						}
+					}
+					else
+					{
+						if (currentside == 0)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 1;
+						}
+						else if (currentside == 1)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 2;
+						}
+						else if (currentside == 2)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 3;
+						}
+						else if (currentside == 3)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 4;
+						}
+						else if (currentside == 4)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 5;
+						}
+						else if (currentside == 5)
+						{
+							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
+							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
+							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
+							currentside = 0;
+						}
+					}
+					pointnum++;
+				}
+				while ((currentpoint.x != startingpoint.x || currentpoint.y != startingpoint.y) && (currentcontrol2.x != startingpoint.x || currentcontrol2.y != startingpoint.y) && (currentcontrol1.x != startingpoint.x || currentcontrol1.y != startingpoint.y))
+				
+				if (pointnum % 3 == 0)
+				{
+					let tentativecontrolpoint = { x: (currentpoint.x - startingpoint.x) / 4 + startingpoint.x, y: (currentpoint.y - startingpoint.y) / 4 + startingpoint.y }
+					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, tentativecontrolpoint.x, tentativecontrolpoint.y, startingpoint.x, startingpoint.y)
+				}
+				else if (pointnum % 3 == 1)
+				{
+					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, startingpoint.x, startingpoint.y)
+				}
+				
+				ctx.closePath();
+				r = 248;
+				g = 248;
+				b = 255;
+				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+				
+				ctx.fill();
+				//ctx.stroke();
+			}
+		}
+		
+		
+		/*
+		for (let i = 0; i < MAP_WIDTH*MAP_HEIGHT; i++)
+		{
+			
+			let xpos = (10 * INNERRADIUS) + (i % MAP_WIDTH) * 10 * INNERRADIUS * 2;
+			let ypos = (10 * OUTERRADIUS) + Math.floor(i / MAP_WIDTH) * 10 * OUTERRADIUS * 1.5;
+			if (Math.floor(i / MAP_WIDTH) % 2 == 1)
+			{
+				xpos += 10 * INNERRADIUS;
+			}
+			
+			ctx.font = "8px serif";
+			ctx.fillStyle = "#000000";
+			ctx.fillText(Math.floor(hexWorldMap.hexes[i].mountain).toString(), xpos, ypos);
+			
+			
+			/*
+			//console.log("hex " + i + " height: " + hexWorldMap.hexes[i].height);
+			ctx.beginPath();
+			ctx.moveTo(hexWorldMap.hexes[i].p0.x, hexWorldMap.hexes[i].p0.y);
+			ctx.lineTo(hexWorldMap.hexes[i].p1.x, hexWorldMap.hexes[i].p1.y);
+			ctx.lineTo(hexWorldMap.hexes[i].p2.x, hexWorldMap.hexes[i].p2.y);
+			ctx.lineTo(hexWorldMap.hexes[i].p3.x, hexWorldMap.hexes[i].p3.y);
+			ctx.lineTo(hexWorldMap.hexes[i].p4.x, hexWorldMap.hexes[i].p4.y);
+			ctx.lineTo(hexWorldMap.hexes[i].p5.x, hexWorldMap.hexes[i].p5.y);
+			ctx.closePath();
+			//ctx.stroke();
+			let r = 0;
+			let g = 0;
+			let b = 0;
+			if (hexWorldMap.hexes[i].height < 0)
+			{
+				//ctx.fillStyle = "#0033CC"; // base water, "#000066" deep water
+				//ctx.strokeStyle = "#0033CC";
+				r = 0;
+				g = Math.floor(51 + hexWorldMap.hexes[i].height / hexWorldMap.heightmin * -51);
+				b = Math.floor(204 + hexWorldMap.hexes[i].height / hexWorldMap.heightmin * -102);
+				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+			}
+			else if (hexWorldMap.hexes[i].height < 32)
+			{
+				//ctx.fillStyle = "#11EE00"; // base land, "#CC1100" mountain land
+				//ctx.strokeStyle = "#11EE00";
+				// "#11EE00"; #CCDD00
+				r = Math.floor(238 + hexWorldMap.hexes[i].height / 32 * -211);
+				g = 238;
+				b = 0;
+				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+			}
+			else if (hexWorldMap.hexes[i].height < 64)
+			{
+				//ctx.fillStyle = "#11EE00"; // base land, "#CC1100" mountain land
+				//ctx.strokeStyle = "#11EE00";
+				// "#11EE00"; #CCDD00
+				r = Math.floor(17 + (hexWorldMap.hexes[i].height - 32) / 32 * 187);
+				g = Math.ceil(238 + ((hexWorldMap.hexes[i].height - 32) / 32 * -211));
+				b = 0;
+				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+			}
+			else if (hexWorldMap.hexes[i].height < 100)
+			{
+				//ctx.fillStyle = "#11EE00"; // base land, "#CC1100" mountain land
+				//ctx.strokeStyle = "#11EE00";
+				// "#11EE00"; #CCDD00
+				r = Math.floor(204 + (hexWorldMap.hexes[i].height - 64) / 36 * -160);
+				g = Math.ceil(17 + ((hexWorldMap.hexes[i].height - 64) / 36 * -17));
+				b = 0;
+				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+			}
+			ctx.fill();
+			ctx.stroke();
+			
+		}
+		*/
+		
+		
+		
+		
+		//output file
+		let file = 'drawntown.png';
+		let path = './' + file;
+		
+		let b64 = tempcanvas.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			console.log('The file has been saved!');
+			channel.send({ files: [{ attachment: path, name: file }] });
+		})
+	}
+	
 }
 
 
