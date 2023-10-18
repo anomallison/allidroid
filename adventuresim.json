@@ -397,8 +397,8 @@
 				"name": "android",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 3,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -427,8 +427,8 @@
 				"name": "leshy",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 1,
+					"wounds": 4,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -457,8 +457,8 @@
 				"name": "charr",
 				"stats":
 				{
-					"wounds": 5,
-					"woundThreshold": 3,
+					"wounds": 6,
+					"woundThreshold": 4,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -487,8 +487,8 @@
 				"name": "elf",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 1,
+					"wounds": 4,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -517,8 +517,8 @@
 				"name": "dwarf",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 3,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -547,8 +547,8 @@
 				"name": "halfling",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 1,
+					"wounds": 4,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -577,8 +577,8 @@
 				"name": "orc",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 3,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -607,8 +607,8 @@
 				"name": "gnome",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 1,
+					"wounds": 4,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -637,8 +637,8 @@
 				"name": "tengu",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 1,
+					"wounds": 4,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -667,8 +667,8 @@
 				"name": "goblin",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 3,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -697,8 +697,8 @@
 				"name": "human",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 1,
+					"wounds": 5,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -727,8 +727,8 @@
 				"name": "catfolk",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 1,
+					"wounds": 5,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -757,8 +757,8 @@
 				"name": "kitsune",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 1,
+					"wounds": 5,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -788,8 +788,8 @@
 				"stats":
 				{
 					
-					"wounds": 5,
-					"woundThreshold": 2,
+					"wounds": 6,
+					"woundThreshold": 3,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -818,8 +818,8 @@
 				"name": "dhampir",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 3,
 					"healRate": 2,
 					"initiative": 1,
 					"skills":
@@ -848,8 +848,8 @@
 				"name": "turtlefolk",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 3,
+					"wounds": 4,
+					"woundThreshold": 4,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -878,8 +878,8 @@
 				"name": "lizardfolk",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 3,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -908,8 +908,8 @@
 				"name": "plantfolk",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 1,
+					"wounds": 5,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 0,
 					"skills":
@@ -938,8 +938,8 @@
 				"name": "rockfolk",
 				"stats":
 				{
-					"wounds": 6,
-					"woundThreshold": 3,
+					"wounds": 7,
+					"woundThreshold": 4,
 					"healRate": 1,
 					"initiative": 0,
 					"skills":
@@ -968,8 +968,8 @@
 				"name": "frogfolk",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 1,
+					"wounds": 4,
+					"woundThreshold": 2,
 					"healRate": 1,
 					"initiative": 2,
 					"skills":
@@ -998,8 +998,8 @@
 				"name": "sharkfolk",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 3,
 					"healRate": 1,
 					"initiative": 1,
 					"skills":
@@ -1028,8 +1028,8 @@
 				"name": "slimefolk",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 3,
+					"wounds": 4,
+					"woundThreshold": 4,
 					"healRate": 3,
 					"initiative": 1,
 					"skills":
@@ -1061,35 +1061,37 @@
 				"name": "fighter",
 				"stats":
 				{
-					"wounds": 5,
-					"woundThreshold": 3,
+					"wounds": 7,
+					"woundThreshold": 5,
 					"initiative": 1,
 					"damagetype": "slashing",
-					"damagedienum": 1,
-					"damagediesides": 10,
+					"damageMod": 0,
+					"damagedienum": 3,
+					"damagediesides": 6,
 					"skills":
 					{
-						"acrobatics": 2,
+						"acrobatics": 3,
 						"animalHandling": 0,
 						"arcana": 0,
-						"athletics": 5,
+						"athletics": 8,
 						"deception": 0,
-						"insight": 2,
-						"intimidation": 0,
+						"insight": 3,
+						"intimidation": 3,
 						"investigation": 0,
-						"medicine": 2,
+						"medicine": 3,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
+						"persuasion": 3,
 						"religion": 0,
 						"sleightOfHand": 0,
 						"stealth": 0,
-						"survival": 2
+						"survival": 8
 					},
 					"levelup":
 					{
-						"wounds": 0.67
+						"damageMod": 1.334,
+						"wounds": 1.67
 					}
 				}
 			},
@@ -1097,35 +1099,37 @@
 				"name": "martial-artist",
 				"stats":
 				{
-					"wounds": 5,
-					"woundThreshold": 3,
+					"wounds": 7,
+					"woundThreshold": 5,
 					"initiative": 2,
 					"damagetype": "bludgeoning",
-					"damagedienum": 3,
+					"damageMod": 0,
+					"damagedienum": 6,
 					"damagediesides": 4,
 					"skills":
 					{
-						"acrobatics": 5,
+						"acrobatics": 8,
 						"animalHandling": 0,
 						"arcana": 0,
-						"athletics": 5,
+						"athletics": 8,
 						"deception": 0,
-						"insight": 2,
+						"insight": 3,
 						"intimidation": 0,
 						"investigation": 0,
-						"medicine": 2,
+						"medicine": 3,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
 						"persuasion": 0,
 						"religion": 0,
-						"sleightOfHand": 0,
-						"stealth": 0,
+						"sleightOfHand": 3,
+						"stealth": 8,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.8
+						"damageMod": 1.25,
+						"wounds": 1.8
 					}
 				}
 			},
@@ -1133,35 +1137,37 @@
 				"name": "necromancer",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 4,
 					"initiative": 1,
 					"damagetype": "necrotic",
-					"damagedienum": 1,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 2,
+					"damagediesides": 10,
 					"skills":
 					{
 						"acrobatics": 0,
 						"animalHandling": 0,
-						"arcana": 5,
+						"arcana": 8,
 						"athletics": 0,
-						"deception": 2,
-						"insight": 2,
+						"deception": 3,
+						"insight": 3,
 						"intimidation": 0,
 						"investigation": 0,
-						"medicine": 5,
+						"medicine": 8,
 						"nature": 0,
 						"perception": 0,
 						"performance": 0,
 						"persuasion": 0,
-						"religion": 0,
+						"religion": 8,
 						"sleightOfHand": 0,
 						"stealth": 0,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.4
+						"damageMod": 1.334,
+						"wounds": 1.4
 					}
 				}
 			},
@@ -1169,35 +1175,37 @@
 				"name": "wizard",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 4,
 					"initiative": 1,
 					"damagetype": "fire",
-					"damagedienum": 1,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 2,
+					"damagediesides": 10,
 					"skills":
 					{
 						"acrobatics": 0,
 						"animalHandling": 0,
-						"arcana": 5,
+						"arcana": 8,
 						"athletics": 0,
 						"deception": 0,
-						"insight": 2,
+						"insight": 3,
 						"intimidation": 0,
-						"investigation": 2,
-						"medicine": 2,
+						"investigation": 3,
+						"medicine": 3,
 						"nature": 0,
 						"perception": 0,
 						"performance": 0,
 						"persuasion": 0,
-						"religion": 0,
+						"religion": 3,
 						"sleightOfHand": 0,
 						"stealth": 0,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.35
+						"damageMod": 1.5,
+						"wounds": 1.35
 					}
 				}
 			},
@@ -1205,35 +1213,37 @@
 				"name": "rogue",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 4,
 					"initiative": 3,
 					"damagetype": "piercing",
-					"damagedienum": 2,
+					"damageMod": 0,
+					"damagedienum": 5,
 					"damagediesides": 4,
 					"skills":
 					{
-						"acrobatics": 5,
+						"acrobatics": 8,
 						"animalHandling": 0,
-						"arcana": 2,
+						"arcana": 3,
 						"athletics": 0,
-						"deception": 5,
-						"insight": 2,
+						"deception": 8,
+						"insight": 3,
 						"intimidation": 0,
-						"investigation": 2,
+						"investigation": 3,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
+						"persuasion": 3,
 						"religion": 0,
-						"sleightOfHand": 5,
-						"stealth": 5,
+						"sleightOfHand": 8,
+						"stealth": 8,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.5
+						"damageMod": 1.667,
+						"wounds": 1.5
 					}
 				}
 			},
@@ -1241,35 +1251,37 @@
 				"name": "thief",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 4,
 					"initiative": 3,
 					"damagetype": "piercing",
-					"damagedienum": 2,
+					"damageMod": 0,
+					"damagedienum": 5,
 					"damagediesides": 4,
 					"skills":
 					{
-						"acrobatics": 5,
+						"acrobatics": 8,
 						"animalHandling": 0,
-						"arcana": 2,
+						"arcana": 3,
 						"athletics": 0,
-						"deception": 5,
-						"insight": 2,
+						"deception": 8,
+						"insight": 3,
 						"intimidation": 0,
-						"investigation": 2,
+						"investigation": 3,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
+						"persuasion": 3,
 						"religion": 0,
-						"sleightOfHand": 5,
-						"stealth": 5,
+						"sleightOfHand": 8,
+						"stealth": 8,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.45
+						"damageMod": 1.575,
+						"wounds": 1.45
 					}
 				}
 			},
@@ -1277,35 +1289,37 @@
 				"name": "summoner",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 4,
 					"initiative": 1,
 					"damagetype": "lightning",
-					"damagedienum": 1,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 3,
+					"damagediesides": 8,
 					"skills":
 					{
 						"acrobatics": 0,
-						"animalHandling": 2,
-						"arcana": 5,
+						"animalHandling": 3,
+						"arcana": 8,
 						"athletics": 0,
-						"deception": 2,
-						"insight": 2,
+						"deception": 3,
+						"insight": 3,
 						"intimidation": 0,
 						"investigation": 0,
 						"medicine": 0,
-						"nature": 0,
+						"nature": 3,
 						"perception": 0,
 						"performance": 0,
-						"persuasion": 2,
-						"religion": 0,
+						"persuasion": 3,
+						"religion": 3,
 						"sleightOfHand": 0,
 						"stealth": 0,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.4
+						"damageMod": 1.25,
+						"wounds": 1.4
 					}
 				}
 			},
@@ -1313,27 +1327,28 @@
 				"name": "psychic-warrior",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 3,
+					"wounds": 6,
+					"woundThreshold": 5,
 					"initiative": 1,
 					"damagetype": "slashing",
-					"damagedienum": 1,
-					"damagediesides": 8,
+					"damageMod": 0,
+					"damagedienum": 3,
+					"damagediesides": 12,
 					"skills":
 					{
-						"acrobatics": 5,
+						"acrobatics": 8,
 						"animalHandling": 0,
-						"arcana": 2,
-						"athletics": 5,
+						"arcana": 3,
+						"athletics": 8,
 						"deception": 0,
-						"insight": 2,
+						"insight": 3,
 						"intimidation": 0,
 						"investigation": 0,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
+						"persuasion": 3,
 						"religion": 0,
 						"sleightOfHand": 0,
 						"stealth": 0,
@@ -1341,7 +1356,8 @@
 					},
 					"levelup":
 					{
-						"wounds": 0.75
+						"damageMod": 1.4,
+						"wounds": 1.75
 					}
 				}
 			},
@@ -1349,35 +1365,37 @@
 				"name": "blackguard",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 3,
+					"wounds": 6,
+					"woundThreshold": 5,
 					"initiative": 1,
 					"damagetype": "slashing",
-					"damagedienum": 2,
+					"damageMod": 0,
+					"damagedienum": 3,
 					"damagediesides": 6,
 					"skills":
 					{
 						"acrobatics": 0,
 						"animalHandling": 0,
-						"arcana": 2,
-						"athletics": 5,
+						"arcana": 3,
+						"athletics": 8,
 						"deception": 0,
-						"insight": 2,
-						"intimidation": 2,
-						"investigation": 2,
+						"insight": 3,
+						"intimidation": 3,
+						"investigation": 3,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
-						"religion": 2,
+						"persuasion": 3,
+						"religion": 3,
 						"sleightOfHand": 0,
 						"stealth": 0,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.75
+						"damageMod": 1.8,
+						"wounds": 1.75
 					}
 				}
 			},
@@ -1385,35 +1403,37 @@
 				"name": "bounty-hunter",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 2,
+					"wounds": 6,
+					"woundThreshold": 4,
 					"initiative": 2,
 					"damagetype": "piercing",
-					"damagedienum": 1,
+					"damageMod": 0,
+					"damagedienum": 2,
 					"damagediesides": 8,
 					"skills":
 					{
-						"acrobatics": 5,
+						"acrobatics": 8,
 						"animalHandling": 0,
-						"arcana": 2,
-						"athletics": 5,
-						"deception": 2,
-						"insight": 2,
+						"arcana": 3,
+						"athletics": 8,
+						"deception": 3,
+						"insight": 3,
 						"intimidation": 0,
-						"investigation": 2,
+						"investigation": 3,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
+						"persuasion": 3,
 						"religion": 0,
-						"sleightOfHand": 2,
-						"stealth": 2,
+						"sleightOfHand": 3,
+						"stealth": 3,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.65
+						"damageMod": 1.667,
+						"wounds": 1.65
 					}
 				}
 			},
@@ -1421,11 +1441,12 @@
 				"name": "vampire-slayer",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 3,
+					"wounds": 6,
+					"woundThreshold": 5,
 					"initiative": 2,
 					"damagetype": "piercing",
-					"damagedienum": 2,
+					"damageMod": 0,
+					"damagedienum": 3,
 					"damagediesides": 6,
 					"skills":
 					{
@@ -1434,22 +1455,23 @@
 						"arcana": 0,
 						"athletics": 0,
 						"deception": 0,
-						"insight": 2,
+						"insight": 3,
 						"intimidation": 0,
-						"investigation": 2,
-						"medicine": 2,
+						"investigation": 3,
+						"medicine": 3,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
 						"persuasion": 0,
-						"religion": 5,
-						"sleightOfHand": 2,
-						"stealth": 2,
+						"religion": 8,
+						"sleightOfHand": 3,
+						"stealth": 8,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.65
+						"damageMod": 1.334,
+						"wounds": 1.65
 					}
 				}
 			},
@@ -1457,35 +1479,37 @@
 				"name": "witch",
 				"stats":
 				{
-					"wounds": 2,
-					"woundThreshold": 2,
+					"wounds": 4,
+					"woundThreshold": 4,
 					"initiative": 1,
 					"damagetype": "cold",
-					"damagedienum": 1,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 2,
+					"damagediesides": 10,
 					"skills":
 					{
 						"acrobatics": 0,
-						"animalHandling": 2,
-						"arcana": 5,
+						"animalHandling": 3,
+						"arcana": 8,
 						"athletics": 0,
-						"deception": 2,
-						"insight": 2,
+						"deception": 3,
+						"insight": 3,
 						"intimidation": 0,
 						"investigation": 0,
 						"medicine": 0,
-						"nature": 5,
-						"perception": 2,
+						"nature": 8,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
+						"persuasion": 3,
 						"religion": 0,
 						"sleightOfHand": 0,
 						"stealth": 0,
-						"survival": 2
+						"survival": 3
 					},
 					"levelup":
 					{
-						"wounds": 0.35
+						"damageMod": 1.45,
+						"wounds": 1.35
 					}
 				}
 			},
@@ -1493,35 +1517,37 @@
 				"name": "druid",
 				"stats":
 				{
-					"wounds": 2,
-					"woundThreshold": 3,
+					"wounds": 4,
+					"woundThreshold": 5,
 					"initiative": 1,
 					"damagetype": "acid",
-					"damagedienum": 1,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 2,
+					"damagediesides": 10,
 					"skills":
 					{
 						"acrobatics": 0,
-						"animalHandling": 5,
-						"arcana": 2,
+						"animalHandling": 8,
+						"arcana": 3,
 						"athletics": 0,
 						"deception": 0,
-						"insight": 2,
+						"insight": 3,
 						"intimidation": 0,
 						"investigation": 0,
-						"medicine": 2,
-						"nature": 5,
-						"perception": 5,
+						"medicine": 3,
+						"nature": 8,
+						"perception": 8,
 						"performance": 0,
 						"persuasion": 0,
-						"religion": 5,
+						"religion": 8,
 						"sleightOfHand": 0,
 						"stealth": 0,
-						"survival": 5
+						"survival": 8
 					},
 					"levelup":
 					{
-						"wounds": 0.55
+						"damageMod": 1.4,
+						"wounds": 1.55
 					}
 				}
 			},
@@ -1529,35 +1555,37 @@
 				"name": "cleric",
 				"stats":
 				{
-					"wounds": 3,
-					"woundThreshold": 2,
+					"wounds": 5,
+					"woundThreshold": 4,
 					"initiative": 1,
 					"damagetype": "radiant",
-					"damagedienum": 1,
-					"damagediesides": 8,
+					"damageMod": 0,
+					"damagedienum": 3,
+					"damagediesides": 6,
 					"skills":
 					{
 						"acrobatics": 0,
 						"animalHandling": 0,
-						"arcana": 2,
-						"athletics": 2,
+						"arcana": 3,
+						"athletics": 3,
 						"deception": 0,
-						"insight": 2,
+						"insight": 3,
 						"intimidation": 0,
 						"investigation": 0,
-						"medicine": 5,
-						"nature": 2,
-						"perception": 2,
+						"medicine": 8,
+						"nature": 3,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
-						"religion": 5,
+						"persuasion": 8,
+						"religion": 8,
 						"sleightOfHand": 0,
 						"stealth": 0,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.65
+						"damageMod": 1.334,
+						"wounds": 1.65
 					}
 				}
 			},
@@ -1565,35 +1593,37 @@
 				"name": "paladin",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 3,
+					"wounds": 6,
+					"woundThreshold": 5,
 					"initiative": 1,
 					"damagetype": "bludgeoning",
-					"damagedienum": 2,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 3,
+					"damagediesides": 8,
 					"skills":
 					{
-						"acrobatics": 5,
+						"acrobatics": 0,
 						"animalHandling": 0,
-						"arcana": 2,
-						"athletics": 0,
-						"deception": 5,
-						"insight": 2,
-						"intimidation": 0,
-						"investigation": 2,
+						"arcana": 0,
+						"athletics": 8,
+						"deception": 0,
+						"insight": 3,
+						"intimidation": 8,
+						"investigation": 0,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
+						"persuasion": 8,
 						"religion": 0,
-						"sleightOfHand": 5,
-						"stealth": 5,
+						"sleightOfHand": 0,
+						"stealth": 0,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.85
+						"damageMod": 1.45,
+						"wounds": 1.85
 					}
 				}
 			},
@@ -1601,35 +1631,37 @@
 				"name": "berserker",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 3,
+					"wounds": 6,
+					"woundThreshold": 5,
 					"initiative": 1,
 					"damagetype": "slashing",
-					"damagedienum": 2,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 3,
+					"damagediesides": 8,
 					"skills":
 					{
-						"acrobatics": 2,
-						"animalHandling": 2,
+						"acrobatics": 3,
+						"animalHandling": 3,
 						"arcana": 0,
-						"athletics": 5,
+						"athletics": 8,
 						"deception": 0,
 						"insight": 0,
-						"intimidation": 5,
+						"intimidation": 8,
 						"investigation": 0,
 						"medicine": 0,
-						"nature": 2,
+						"nature": 3,
 						"perception": 0,
 						"performance": 0,
 						"persuasion": 0,
 						"religion": 0,
 						"sleightOfHand": 0,
 						"stealth": 0,
-						"survival": 0
+						"survival": 8
 					},
 					"levelup":
 					{
-						"wounds": 0.95
+						"damageMod": 1.667,
+						"wounds": 1.95
 					}
 				}
 			},
@@ -1637,35 +1669,37 @@
 				"name": "alchemist",
 				"stats":
 				{
-					"wounds": 2,
-					"woundThreshold": 2,
+					"wounds": 4,
+					"woundThreshold": 4,
 					"initiative": 1,
 					"damagetype": "acid",
-					"damagedienum": 1,
+					"damageMod": 0,
+					"damagedienum": 3,
 					"damagediesides": 6,
 					"skills":
 					{
 						"acrobatics": 0,
 						"animalHandling": 0,
-						"arcana": 5,
+						"arcana": 8,
 						"athletics": 0,
 						"deception": 0,
 						"insight": 0,
 						"intimidation": 0,
-						"investigation": 2,
-						"medicine": 5,
+						"investigation": 3,
+						"medicine": 8,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
 						"persuasion": 0,
 						"religion": 0,
 						"sleightOfHand": 0,
 						"stealth": 0,
-						"survival": 2
+						"survival": 3
 					},
 					"levelup":
 					{
-						"wounds": 0.4
+						"damageMod": 1.8,
+						"wounds": 1.4
 					}
 				}
 			},
@@ -1673,35 +1707,37 @@
 				"name": "warlock",
 				"stats":
 				{
-					"wounds": 2,
-					"woundThreshold": 2,
+					"wounds": 4,
+					"woundThreshold": 4,
 					"initiative": 1,
 					"damagetype": "necrotic",
-					"damagedienum": 1,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 2,
+					"damagediesides": 10,
 					"skills":
 					{
 						"acrobatics": 0,
 						"animalHandling": 0,
-						"arcana": 5,
+						"arcana": 8,
 						"athletics": 0,
 						"deception": 0,
 						"insight": 0,
 						"intimidation": 0,
-						"investigation": 2,
-						"medicine": 2,
-						"nature": 2,
-						"perception": 2,
+						"investigation": 3,
+						"medicine": 3,
+						"nature": 3,
+						"perception": 3,
 						"performance": 0,
 						"persuasion": 0,
-						"religion": 5,
+						"religion": 8,
 						"sleightOfHand": 0,
 						"stealth": 0,
-						"survival": 2
+						"survival": 3
 					},
 					"levelup":
 					{
-						"wounds": 0.45
+						"damageMod": 1.9,
+						"wounds": 1.45
 					}
 				}
 			},
@@ -1709,35 +1745,37 @@
 				"name": "pirate",
 				"stats":
 				{
-					"wounds": 2,
-					"woundThreshold": 3,
+					"wounds": 4,
+					"woundThreshold": 5,
 					"initiative": 2,
 					"damagetype": "slashing",
-					"damagedienum": 1,
+					"damageMod": 0,
+					"damagedienum": 2,
 					"damagediesides": 8,
 					"skills":
 					{
-						"acrobatics": 2,
+						"acrobatics": 3,
 						"animalHandling": 0,
 						"arcana": 0,
-						"athletics": 5,
-						"deception": 0,
+						"athletics": 8,
+						"deception": 3,
 						"insight": 0,
-						"intimidation": 2,
+						"intimidation": 8,
 						"investigation": 0,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
 						"persuasion": 0,
 						"religion": 0,
-						"sleightOfHand": 2,
-						"stealth": 0,
+						"sleightOfHand": 3,
+						"stealth": 3,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.5
+						"damageMod": 1.25,
+						"wounds": 1.5
 					}
 				}
 			},
@@ -1745,35 +1783,37 @@
 				"name": "psion",
 				"stats":
 				{
-					"wounds": 2,
-					"woundThreshold": 2,
+					"wounds": 4,
+					"woundThreshold": 4,
 					"initiative": 1,
 					"damagetype": "lightning",
-					"damagedienum": 1,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 2,
+					"damagediesides": 10,
 					"skills":
 					{
 						"acrobatics": 0,
 						"animalHandling": 0,
-						"arcana": 5,
+						"arcana": 8,
 						"athletics": 0,
-						"deception": 2,
-						"insight": 2,
+						"deception": 3,
+						"insight": 8,
 						"intimidation": 0,
-						"investigation": 0,
+						"investigation": 3,
 						"medicine": 0,
-						"nature": 2,
-						"perception": 2,
+						"nature": 3,
+						"perception": 3,
 						"performance": 0,
 						"persuasion": 0,
-						"religion": 2,
+						"religion": 3,
 						"sleightOfHand": 0,
 						"stealth": 0,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.35
+						"damageMod": 1.7,
+						"wounds": 1.35
 					}
 				}
 			},
@@ -1781,35 +1821,37 @@
 				"name": "samurai",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 3,
+					"wounds": 6,
+					"woundThreshold": 5,
 					"initiative": 1,
 					"damagetype": "slashing",
-					"damagedienum": 1,
-					"damagediesides": 10,
+					"damageMod": 0,
+					"damagedienum": 3,
+					"damagediesides": 8,
 					"skills":
 					{
-						"acrobatics": 2,
+						"acrobatics": 3,
 						"animalHandling": 0,
 						"arcana": 0,
-						"athletics": 5,
+						"athletics": 8,
 						"deception": 0,
-						"insight": 5,
-						"intimidation": 2,
+						"insight": 8,
+						"intimidation": 3,
 						"investigation": 0,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
-						"religion": 0,
+						"persuasion": 3,
+						"religion": 3,
 						"sleightOfHand": 0,
 						"stealth": 0,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.7
+						"damageMod": 1.5,
+						"wounds": 1.7
 					}
 				}
 			},
@@ -1817,35 +1859,37 @@
 				"name": "twink",
 				"stats":
 				{
-					"wounds": 2,
-					"woundThreshold": 2,
+					"wounds": 4,
+					"woundThreshold": 4,
 					"initiative": 3,
 					"damagetype": "piercing",
+					"damageMod": 0,
 					"damagedienum": 2,
-					"damagediesides": 4,
+					"damagediesides": 10,
 					"skills":
 					{
-						"acrobatics": 5,
-						"animalHandling": 2,
+						"acrobatics": 8,
+						"animalHandling": 3,
 						"arcana": 0,
 						"athletics": 0,
-						"deception": 5,
-						"insight": 5,
-						"intimidation": 2,
-						"investigation": 2,
+						"deception": 8,
+						"insight": 8,
+						"intimidation": 3,
+						"investigation": 3,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 5,
+						"persuasion": 8,
 						"religion": 0,
-						"sleightOfHand": 0,
-						"stealth": 0,
+						"sleightOfHand": 3,
+						"stealth": 3,
 						"survival": 0
 					},
 					"levelup":
 					{
-						"wounds": 0.6
+						"damageMod": 1.55,
+						"wounds": 1.6
 					}
 				}
 			},
@@ -1853,35 +1897,37 @@
 				"name": "himbo",
 				"stats":
 				{
-					"wounds": 4,
-					"woundThreshold": 3,
+					"wounds": 6,
+					"woundThreshold": 5,
 					"initiative": 1,
 					"damagetype": "slashing",
-					"damagedienum": 2,
-					"damagediesides": 6,
+					"damageMod": 0,
+					"damagedienum": 3,
+					"damagediesides": 8,
 					"skills":
 					{
 						"acrobatics": 0,
-						"animalHandling": 2,
+						"animalHandling": 3,
 						"arcana": 0,
-						"athletics": 5,
+						"athletics": 8,
 						"deception": 0,
-						"insight": 2,
-						"intimidation": 5,
+						"insight": 3,
+						"intimidation": 8,
 						"investigation": 0,
 						"medicine": 0,
 						"nature": 0,
-						"perception": 2,
+						"perception": 3,
 						"performance": 0,
-						"persuasion": 2,
+						"persuasion": 3,
 						"religion": 0,
 						"sleightOfHand": 0,
 						"stealth": 0,
-						"survival": 0
+						"survival": 3
 					},
 					"levelup":
 					{
-						"wounds": 0.9
+						"damageMod": 1.7,
+						"wounds": 1.9
 					}
 				}
 			}
@@ -1893,7 +1939,7 @@
 			"id": "venomoussnake",
 			"name": "Venomous Snake",
 			"plural": "Venomous Snakes",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
@@ -1909,7 +1955,7 @@
 			"id": "cyclops",
 			"name": "Cyclops",
 			"plural": "Cyclopes",
-			"exp": 400,
+			"experience": 300,
 			"stats":
 			{
 				"level": 5,
@@ -1925,11 +1971,11 @@
 			"id": "blotflyswarm",
 			"name": "Blotfly Swarm",
 			"plural": "Blotfly Swarms",
-			"exp": 100,
+			"experience": 100,
 			"stats":
 			{
 				"level": 3,
-				"wounds": 12,
+				"wounds": 8,
 				"woundThreshold": 2,
 				"initiative": 4,
 				"damagetype": "piercing",
@@ -1941,7 +1987,7 @@
 			"id": "giantblotfly",
 			"name": "Giant Blotfly",
 			"plural": "Giant Blotflies",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
@@ -1950,30 +1996,30 @@
 				"initiative": 3,
 				"damagetype": "piercing",
 				"damagedienum": 2,
-				"damagediesides": 6
+				"damagediesides": 4
 			}
 		},
 		{
 			"id": "amoebaswarm",
 			"name": "Amoeba Swarm",
 			"plural": "Amoeba Swarms",
-			"exp": 200,
+			"experience": 200,
 			"stats":
 			{
 				"level": 4,
-				"wounds": 14,
+				"wounds": 9,
 				"woundThreshold": 2,
 				"initiative": 2,
 				"damagetype": "acid",
-				"damagedienum": 3,
-				"damagediesides": 4
+				"damagedienum": 2,
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "spiderswarm",
 			"name": "Spider Swarm",
 			"plural": "Spider Swarms",
-			"exp": 200,
+			"experience": 200,
 			"stats":
 			{
 				"level": 4,
@@ -1982,19 +2028,19 @@
 				"initiative": 4,
 				"damagetype": "piercing",
 				"damagedienum": 2,
-				"damagediesides": 8
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "giantspider",
 			"name": "Giant Spider",
 			"plural": "Giant Spiders",
-			"exp": 100,
+			"experience": 100,
 			"stats":
 			{
 				"level": 3,
 				"wounds": 5,
-				"woundThreshold": 7,
+				"woundThreshold": 6,
 				"initiative": 3,
 				"damagetype": "piercing",
 				"damagedienum": 3,
@@ -2005,7 +2051,7 @@
 			"id": "giantcentipede",
 			"name": "Giant Centipede",
 			"plural": "Giant Centipedes",
-			"exp": 100,
+			"experience": 100,
 			"stats":
 			{
 				"level": 3,
@@ -2021,23 +2067,23 @@
 			"id": "bear",
 			"name": "Bear",
 			"plural": "Bears",
-			"exp": 200,
+			"experience": 200,
 			"stats":
 			{
 				"level": 4,
 				"wounds": 5,
-				"woundThreshold": 8,
+				"woundThreshold": 7,
 				"initiative": 5,
 				"damagetype": "slashing",
 				"damagedienum": 3,
-				"damagediesides": 8
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "direalligator",
 			"name": "Dire Alligator",
 			"plural": "Dire Alligators",
-			"exp": 400,
+			"experience": 300,
 			"stats":
 			{
 				"level": 5,
@@ -2046,14 +2092,14 @@
 				"initiative": 4,
 				"damagetype": "bludgeoning",
 				"damagedienum": 3,
-				"damagediesides": 8
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "giantfly",
 			"name": "Giant Fly",
 			"plural": "Giant Flies",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
@@ -2062,14 +2108,14 @@
 				"initiative": 5,
 				"damagetype": "acid",
 				"damagedienum": 1,
-				"damagediesides": 8
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "giantfrog",
 			"name": "Giant Frog",
 			"plural": "Giant Frogs",
-			"exp": 100,
+			"experience": 100,
 			"stats":
 			{
 				"level": 3,
@@ -2077,7 +2123,7 @@
 				"woundThreshold": 6,
 				"initiative": 5,
 				"damagetype": "bludgeoning",
-				"damagedienum": 4,
+				"damagedienum": 3,
 				"damagediesides": 4
 			}
 		},
@@ -2085,39 +2131,39 @@
 			"id": "wolf",
 			"name": "Wolf",
 			"plural": "Wolves",
-			"exp": 50,
+			"experience": 50,
 			"stats":
 			{
 				"level": 2,
-				"wounds": 4,
+				"wounds": 3,
 				"woundThreshold": 4,
 				"initiative": 7,
 				"damagetype": "piercing",
 				"damagedienum": 1,
-				"damagediesides": 10
+				"damagediesides": 8
 			}
 		},
 		{
 			"id": "direwolf",
 			"name": "Dire Wolf",
 			"plural": "Dire Wolves",
-			"exp": 400,
+			"experience": 300,
 			"stats":
 			{
 				"level": 5,
 				"wounds": 5,
-				"woundThreshold": 6,
+				"woundThreshold": 5,
 				"initiative": 7,
 				"damagetype": "piercing",
 				"damagedienum": 2,
-				"damagediesides": 10
+				"damagediesides": 8
 			}
 		},
 		{
 			"id": "cheetah",
 			"name": "Cheetah",
 			"plural": "Cheetahs",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
@@ -2126,14 +2172,14 @@
 				"initiative": 7,
 				"damagetype": "piercing",
 				"damagedienum": 1,
-				"damagediesides": 8
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "hyena",
 			"name": "Hyena",
 			"plural": "Hyenas",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
@@ -2142,30 +2188,30 @@
 				"initiative": 7,
 				"damagetype": "piercing",
 				"damagedienum": 1,
-				"damagediesides": 8
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "goliathstagbeetle",
 			"name": "Goliath Stag Beetle",
 			"plural": "Goliath Stag Beetles",
-			"exp": 1600,
+			"experience": 800,
 			"stats":
 			{
 				"level": 7,
 				"wounds": 8,
-				"woundThreshold": 9,
+				"woundThreshold": 8,
 				"initiative": 3,
 				"damagetype": "bludgeoning",
 				"damagedienum": 3,
-				"damagediesides": 10
+				"damagediesides": 8
 			}
 		},
 		{
 			"id": "bison",
 			"name": "Bison",
 			"plural": "Bisons",
-			"exp": 50,
+			"experience": 50,
 			"stats":
 			{
 				"level": 2,
@@ -2181,15 +2227,15 @@
 			"id": "worg",
 			"name": "Worg",
 			"plural": "Worgs",
-			"exp": 400,
+			"experience": 300,
 			"stats":
 			{
 				"level": 5,
 				"wounds": 7,
-				"woundThreshold": 8,
+				"woundThreshold": 7,
 				"initiative": 7,
 				"damagetype": "piercing",
-				"damagedienum": 4,
+				"damagedienum": 3,
 				"damagediesides": 6
 			}
 		},
@@ -2197,12 +2243,12 @@
 			"id": "ankheg",
 			"name": "Ankheg",
 			"plural": "Ankhegs",
-			"exp": 50,
+			"experience": 50,
 			"stats":
 			{
 				"level": 2,
 				"wounds": 4,
-				"woundThreshold": 5,
+				"woundThreshold": 4,
 				"initiative": 3,
 				"damagetype": "piercing",
 				"damagedienum": 3,
@@ -2213,28 +2259,28 @@
 			"id": "giantscorpion",
 			"name": "Giant Scorpion",
 			"plural": "Giant Scorpions",
-			"exp": 200,
+			"experience": 200,
 			"stats":
 			{
 				"level": 4,
 				"wounds": 4,
-				"woundThreshold": 5,
+				"woundThreshold": 4,
 				"initiative": 4,
 				"damagetype": "piercing",
 				"damagedienum": 2,
-				"damagediesides": 10
+				"damagediesides": 8
 			}
 		},
 		{
 			"id": "direbat",
 			"name": "Dire Bat",
 			"plural": "Dire Bats",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
 				"wounds": 4,
-				"woundThreshold": 4,
+				"woundThreshold": 3,
 				"initiative": 5,
 				"damagetype": "piercing",
 				"damagedienum": 3,
@@ -2245,12 +2291,12 @@
 			"id": "batswarm",
 			"name": "Bat Swarm",
 			"plural": "Bat Swarms",
-			"exp": 100,
+			"experience": 100,
 			"stats":
 			{
 				"level": 3,
-				"wounds": 11,
-				"woundThreshold": 4,
+				"wounds": 8,
+				"woundThreshold": 2,
 				"initiative": 5,
 				"damagetype": "piercing",
 				"damagedienum": 4,
@@ -2261,7 +2307,7 @@
 			"id": "tiger",
 			"name": "Tiger",
 			"plural": "Tigers",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
@@ -2270,115 +2316,115 @@
 				"initiative": 6,
 				"damagetype": "piercing",
 				"damagedienum": 1,
-				"damagediesides": 12
+				"damagediesides": 10
 			}
 		},
 		{
 			"id": "diretiger",
 			"name": "Dire Tiger",
 			"plural": "Dire Tigers",
-			"exp": 200,
+			"experience": 200,
 			"stats":
 			{
 				"level": 4,
 				"wounds": 8,
-				"woundThreshold": 7,
+				"woundThreshold": 6,
 				"initiative": 6,
 				"damagetype": "piercing",
 				"damagedienum": 2,
-				"damagediesides": 12
+				"damagediesides": 10
 			}
 		},
 		{
 			"id": "bandit",
 			"name": "Bandit",
 			"plural": "Bandits",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
 				"wounds": 3,
-				"woundThreshold": 5,
+				"woundThreshold": 4,
 				"initiative": 4,
 				"damagetype": "slashing",
 				"damagedienum": 1,
-				"damagediesides": 12
+				"damagediesides": 10
 			}
 		},
 		{
 			"id": "vampire",
 			"name": "Vampire",
 			"plural": "Vampires",
-			"exp": 400,
+			"experience": 300,
 			"stats":
 			{
 				"level": 5,
 				"wounds": 7,
-				"woundThreshold": 9,
+				"woundThreshold": 8,
 				"initiative": 7,
 				"damagetype": "necrotic",
 				"damagedienum": 3,
-				"damagediesides": 10
+				"damagediesides": 8
 			}
 		},
 		{
 			"id": "vampirespawn",
 			"name": "Vampire Spawn",
 			"plural": "Vampire Spawn",
-			"exp": 50,
+			"experience": 50,
 			"stats":
 			{
 				"level": 2,
-				"wounds": 5,
+				"wounds": 4,
 				"woundThreshold": 6,
 				"initiative": 5,
 				"damagetype": "necrotic",
 				"damagedienum": 2,
-				"damagediesides": 8
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "cultist",
 			"name": "Cultist",
 			"plural": "Cultists",
-			"exp": 25,
+			"experience": 25,
 			"stats":
 			{
 				"level": 1,
 				"wounds": 3,
-				"woundThreshold": 4,
+				"woundThreshold": 3,
 				"initiative": 5,
 				"damagetype": "radiant",
 				"damagedienum": 2,
-				"damagediesides": 6
+				"damagediesides": 4
 			}
 		},
 		{
 			"id": "cultleader",
 			"name": "Cult Leader",
 			"plural": "Cult Leaders",
-			"exp": 200,
+			"experience": 200,
 			"stats":
 			{
 				"level": 4,
 				"wounds": 6,
-				"woundThreshold": 6,
+				"woundThreshold": 5,
 				"initiative": 6,
 				"damagetype": "radiant",
 				"damagedienum": 3,
-				"damagediesides": 8
+				"damagediesides": 6
 			}
 		},
 		{
 			"id": "youngdragon",
 			"name": "Young Dragon",
 			"plural": "Young Dragons",
-			"exp": 3200,
+			"experience": 1200,
 			"stats":
 			{
 				"level": 8,
 				"wounds": 10,
-				"woundThreshold": 12,
+				"woundThreshold": 10,
 				"initiative": 5,
 				"damagetype": "fire",
 				"damagedienum": 4,
@@ -2389,12 +2435,12 @@
 			"id": "vampirelord",
 			"name": "Vampire Lord",
 			"plural": "Vampire Lords",
-			"exp": 6400,
+			"experience": 1700,
 			"stats":
 			{
 				"level": 9,
 				"wounds": 9,
-				"woundThreshold": 14,
+				"woundThreshold": 11,
 				"initiative": 5,
 				"damagetype": "necrotic",
 				"damagedienum": 3,
@@ -2409,12 +2455,33 @@
 			"landmark":"quest site",
 			"reward":
 			{
-				"silverpieces": 150,
-				"itemmin": 0,
-				"itemrandom": 1,
+				"silverpieces": 50,
+				"itemmin": -3,
+				"itemrandom": 4,
 				"items":
 				[
-					"magicitem0"
+					"magicitem2"
+				]
+			},
+			"encounters":
+			[
+				"bandit wolf",
+				"bandit bandit wolf",
+				"bandit wolf wolf",
+				"bandit bandit wolf wolf"
+			]
+		},
+		{
+			"level": 2,
+			"landmark":"quest site",
+			"reward":
+			{
+				"silverpieces": 125,
+				"itemmin": -2,
+				"itemrandom": 3,
+				"items":
+				[
+					"magicitem2"
 				]
 			},
 			"encounters":
@@ -2426,41 +2493,16 @@
 			]
 		},
 		{
-			"level": 2,
-			"landmark":"quest site",
-			"reward":
-			{
-				"silverpieces": 325,
-				"itemmin": 0,
-				"itemrandom": 2,
-				"items":
-				[
-					"magicitem0"
-				]
-			},
-			"encounters":
-			[
-				"bandit bandit wolf wolf",
-				"bandit bandit bandit bandit wolf",
-				"bandit wolf wolf wolf",
-				"bandit bandit wolf wolf wolf"
-			]
-		},
-		{
 			"level": 3,
 			"landmark":"monster lair",
 			"reward":
 			{
-				"silverpieces": 700,
-				"itemmin": 1,
-				"itemrandom": 1,
+				"silverpieces": 275,
+				"itemmin": -1,
+				"itemrandom": 3,
 				"items":
 				[
-					"magicitem0",
-					"magicitem0",
-					"magicitem0",
-					"magicitem0",
-					"magicitem1"
+					"magicitem2"
 				]
 			},
 			"encounters":
@@ -2475,15 +2517,16 @@
 			"landmark":"monster lair",
 			"reward":
 			{
-				"silverpieces": 1500,
-				"itemmin": 1,
-				"itemrandom": 1,
+				"silverpieces": 575,
+				"itemmin": -2,
+				"itemrandom": 5,
 				"items":
 				[
-					"magicitem0",
-					"magicitem0",
-					"magicitem0",
-					"magicitem1"
+					"magicitem2",
+					"magicitem2",
+					"magicitem2",
+					"magicitem2",
+					"magicitem3"
 				]
 			},
 			"encounters":
@@ -2498,15 +2541,14 @@
 			"landmark":"evil castle",
 			"reward":
 			{
-				"silverpieces": 3250,
-				"itemmin": 1,
-				"itemrandom": 2,
+				"silverpieces": 1175,
+				"itemmin": -1,
+				"itemrandom": 3,
 				"items":
 				[
-					"magicitem0",
-					"magicitem1",
-					"magicitem1",
-					"magicitem2"
+					"magicitem2",
+					"magicitem2",
+					"magicitem3"
 				]
 			},
 			"encounters":
@@ -2520,15 +2562,14 @@
 			"landmark":"evil castle",
 			"reward":
 			{
-				"silverpieces": 3250,
-				"itemmin": 1,
+				"silverpieces": 2375,
+				"itemmin": 0,
 				"itemrandom": 2,
 				"items":
 				[
-					"magicitem0",
-					"magicitem1",
-					"magicitem1",
-					"magicitem2"
+					"magicitem2",
+					"magicitem3",
+					"magicitem3"
 				]
 			},
 			"encounters":
@@ -2542,14 +2583,13 @@
 			"landmark":"monster lair",
 			"reward":
 			{
-				"silverpieces": 7500,
-				"itemmin": 2,
-				"itemrandom": 3,
+				"silverpieces": 4775,
+				"itemmin": 0,
+				"itemrandom": 2,
 				"items":
 				[
-					"magicitem1",
 					"magicitem2",
-					"magicitem2",
+					"magicitem3",
 					"magicitem3"
 				]
 			},
@@ -2564,15 +2604,18 @@
 			"landmark":"monster lair",
 			"reward":
 			{
-				"silverpieces": 7500,
-				"itemmin": 2,
-				"itemrandom": 3,
+				"silverpieces": 9575,
+				"itemmin": 1,
+				"itemrandom": 2,
 				"items":
 				[
-					"magicitem1",
 					"magicitem2",
-					"magicitem2",
-					"magicitem3"
+					"magicitem3",
+					"magicitem3",
+					"magicitem3",
+					"magicitem3",
+					"magicitem4",
+					"magicitem4"
 				]
 			},
 			"encounters":
@@ -2585,15 +2628,14 @@
 			"landmark":"evil castle",
 			"reward":
 			{
-				"silverpieces": 15000,
-				"itemmin": 2,
-				"itemrandom": 3,
+				"silverpieces": 19175,
+				"itemmin": 1,
+				"itemrandom": 2,
 				"items":
 				[
-					"magicitem2",
-					"magicitem2",
 					"magicitem3",
-					"magicitem3"
+					"magicitem3",
+					"magicitem4"
 				]
 			},
 			"encounters":
@@ -3855,20 +3897,23 @@
 		{
 			"id": "barracks0",
 			"level": 1,
+			"experience": 150,
 			"solutions":
 			[
 				{
 					"type": "skillall",
 					"skill": "stealth",
-					"dcmin": 4,
-					"dcmax": 8,
+					"bypasstext": "bypasses",
+					"dcmin": 7,
+					"dcmax": 12,
 					"failure": "fight",
 					"success": "proceed"
 				},
 				{
 					"type": "skillone",
 					"skill": "persuasion",
-					"dcmin": 6,
+					"bypasstext": "persuades",
+					"dcmin": 8,
 					"dcmax": 15,
 					"failure": "fight",
 					"success": "proceed"
@@ -3880,7 +3925,7 @@
 			"fight":
 			{
 				"enemymin": 1,
-				"enemymax": 4,
+				"enemymax": 3,
 				"enemylist":
 				[
 					"bandit",
@@ -3888,13 +3933,12 @@
 				],
 				"mandatoryenemies":
 				[
-					"bandit",
 					"bandit"
 				]
 			},
 			"trap":
 			{
-				"name": "",
+				"name": "a bandit guard",
 				"damagetype": "",
 				"damagedienum": 0,
 				"damagediesides": 0
@@ -3903,12 +3947,14 @@
 		{
 			"id": "barracks1",
 			"level": 1,
+			"experience": 75,
 			"solutions":
 			[
 				{
 					"type": "skillone",
 					"skill": "animalHandling",
-					"dcmin": 5,
+					"bypasstext": "handles",
+					"dcmin": 8,
 					"dcmax": 14,
 					"failure": "fight",
 					"success": "proceed"
@@ -3916,8 +3962,9 @@
 				{
 					"type": "skillall",
 					"skill": "stealth",
-					"dcmin": 4,
-					"dcmax": 9,
+					"bypasstext": "bypasses",
+					"dcmin": 7,
+					"dcmax": 12,
 					"failure": "fight",
 					"success": "proceed"
 				},
@@ -3940,7 +3987,7 @@
 			},
 			"trap":
 			{
-				"name": "",
+				"name": "a wolf guard",
 				"damagetype": "",
 				"damagedienum": 0,
 				"damagediesides": 0
@@ -3949,11 +3996,13 @@
 		{
 			"id": "barracks2",
 			"level": 4,
+			"experience": 250,
 			"solutions":
 			[
 				{
 					"type": "skillone",
 					"skill": "athletics",
+					"bypasstext": "pushes",
 					"dcmin": 10,
 					"dcmax": 16,
 					"failure": "fight",
@@ -3962,7 +4011,8 @@
 				{
 					"type": "skillone",
 					"skill": "persuasion",
-					"dcmin": 5,
+					"bypasstext": "persuades",
+					"dcmin": 7,
 					"dcmax": 16,
 					"failure": "fight",
 					"success": "proceed"
@@ -3970,8 +4020,9 @@
 				{
 					"type": "skillall",
 					"skill": "stealth",
-					"dcmin": 4,
-					"dcmax": 7,
+					"bypasstext": "bypasses",
+					"dcmin": 6,
+					"dcmax": 13,
 					"failure": "fight",
 					"success": "proceed"
 				},
@@ -3991,7 +4042,7 @@
 			},
 			"trap":
 			{
-				"name": "",
+				"name": "a cyclops guard",
 				"damagetype": "",
 				"damagedienum": 0,
 				"damagediesides": 0
@@ -4000,11 +4051,13 @@
 		{
 			"id": "cave",
 			"level": 1,
+			"experience": 75,
 			"solutions":
 			[
 				{
 					"type": "skillone",
 					"skill": "animalHandling",
+					"bypasstext": "handles",
 					"dcmin": 8,
 					"dcmax": 14,
 					"failure": "fight",
@@ -4013,8 +4066,9 @@
 				{
 					"type": "skillall",
 					"skill": "stealth",
-					"dcmin": 3,
-					"dcmax": 7,
+					"bypasstext": "bypasses",
+					"dcmin": 7,
+					"dcmax": 12,
 					"failure": "fight",
 					"success": "proceed"
 				},
@@ -4037,7 +4091,7 @@
 			},
 			"trap":
 			{
-				"name": "",
+				"name": "some direbats",
 				"damagetype": "",
 				"damagedienum": 0,
 				"damagediesides": 0
@@ -4046,11 +4100,13 @@
 		{
 			"id": "cave",
 			"level": 2,
+			"experience": 150,
 			"solutions":
 			[
 				{
 					"type": "skillone",
 					"skill": "animalHandling",
+					"bypasstext": "handles",
 					"dcmin": 9,
 					"dcmax": 15,
 					"failure": "fight",
@@ -4059,8 +4115,9 @@
 				{
 					"type": "skillall",
 					"skill": "stealth",
-					"dcmin": 4,
-					"dcmax": 8,
+					"bypasstext": "bypasses",
+					"dcmin": 8,
+					"dcmax": 13,
 					"failure": "fight",
 					"success": "proceed"
 				},
@@ -4084,7 +4141,7 @@
 			},
 			"trap":
 			{
-				"name": "",
+				"name": "a batswarm",
 				"damagetype": "",
 				"damagedienum": 0,
 				"damagediesides": 0
@@ -4093,11 +4150,13 @@
 		{
 			"id": "traproom0",
 			"level": 1,
+			"experience": 50,
 			"solutions":
 			[
 				{
 					"type": "skillone",
 					"skill": "sleightOfHand",
+					"bypasstext": "disables",
 					"dcmin": 7,
 					"dcmax": 11,
 					"failure": "hurtone",
@@ -4106,8 +4165,9 @@
 				{
 					"type": "skillall",
 					"skill": "acrobatics",
-					"dcmin": 3,
-					"dcmax": 7,
+					"bypasstext": "bypasses",
+					"dcmin": 6,
+					"dcmax": 9,
 					"failure": "hurtall",
 					"success": "proceed"
 				}
@@ -4130,11 +4190,13 @@
 		{
 			"id": "traproom1",
 			"level": 1,
+			"experience": 50,
 			"solutions":
 			[
 				{
 					"type": "skillone",
 					"skill": "sleightOfHand",
+					"bypasstext": "disables",
 					"dcmin": 7,
 					"dcmax": 11,
 					"failure": "hurtone",
@@ -4143,6 +4205,7 @@
 				{
 					"type": "skillone",
 					"skill": "arcana",
+					"bypasstext": "disables",
 					"dcmin": 7,
 					"dcmax": 12,
 					"failure": "hurtone",
@@ -4151,8 +4214,9 @@
 				{
 					"type": "skillall",
 					"skill": "acrobatics",
-					"dcmin": 3,
-					"dcmax": 7,
+					"bypasstext": "bypasses",
+					"dcmin": 6,
+					"dcmax": 10,
 					"failure": "hurtall",
 					"success": "proceed"
 				}
@@ -4175,11 +4239,13 @@
 		{
 			"id": "traproom2",
 			"level": 1,
+			"experience": 50,
 			"solutions":
 			[
 				{
 					"type": "skillone",
 					"skill": "sleightOfHand",
+					"bypasstext": "disables",
 					"dcmin": 7,
 					"dcmax": 11,
 					"failure": "hurtone",
@@ -4188,8 +4254,9 @@
 				{
 					"type": "skillall",
 					"skill": "acrobatics",
-					"dcmin": 3,
-					"dcmax": 7,
+					"bypasstext": "bypasses",
+					"dcmin": 6,
+					"dcmax": 9,
 					"failure": "hurtall",
 					"success": "proceed"
 				}
@@ -4212,11 +4279,13 @@
 		{
 			"id": "traproom3",
 			"level": 1,
+			"experience": 50,
 			"solutions":
 			[
 				{
 					"type": "skillone",
 					"skill": "sleightOfHand",
+					"bypasstext": "disables",
 					"dcmin": 7,
 					"dcmax": 11,
 					"failure": "hurtone",
@@ -4225,6 +4294,7 @@
 				{
 					"type": "skillone",
 					"skill": "arcana",
+					"bypasstext": "disables",
 					"dcmin": 7,
 					"dcmax": 12,
 					"failure": "hurtone",
@@ -4233,8 +4303,9 @@
 				{
 					"type": "skillall",
 					"skill": "acrobatics",
-					"dcmin": 3,
-					"dcmax": 7,
+					"bypasstext": "bypasses",
+					"dcmin": 6,
+					"dcmax": 10,
 					"failure": "hurtall",
 					"success": "proceed"
 				}

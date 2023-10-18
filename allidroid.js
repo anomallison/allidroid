@@ -11572,6 +11572,8 @@ function makeAdventurer(classname)
 				stealth: species.stats.skills.stealth + adventurerclass.stats.skills.stealth,
 				survival: species.stats.skills.survival + adventurerclass.stats.skills.survival
 			},
+			damageModLevelUp: 0,
+			damageMod: adventurerclass.stats.damageMod,
 			damagetype: adventurerclass.stats.damagetype,
 			damagedienum: adventurerclass.stats.damagedienum,
 			damagediesides: adventurerclass.stats.damagediesides,
@@ -12116,7 +12118,7 @@ function getPartyMemberStat(partymember, stat)
 	
 	if (stat == "damageMod")
 	{
-		let statvalue = 0;
+		let statvalue = partymember.stats.damageMod;
 		
 		if (partymember.magicitems.mainHand != null)
 			statvalue += partymember.magicitems.mainHand.effects.damageMod;
@@ -12277,7 +12279,7 @@ function outputPartyMemberSummary(arguments)
 		return "there is no party member with that name in this party";
 	
 	let output = partymember.name + " the " + partymember.species + " " + partymember.classname + "\n"
-		+ "Level: " + partymember.stats.level + ", Status: " + partymember.cstatus + "\n"
+		+ "Level: " + partymember.stats.level + ", Status: " + partymember.cstatus + ", Experience: " + partymember.stats.exp + "\n"
 		+ "Max Wounds: " + getPartyMemberStat(partymember, "woundMax") + ", Wound Threshold: " + getPartyMemberStat(partymember, "woundThreshold") + ", Heal Rate: " + getPartyMemberStat(partymember, "healRate") + "\n"
 		+ "Attack: " + partymember.stats.damagedienum + "d" + partymember.stats.damagediesides + " +" + getPartyMemberStat(partymember, "damageMod") + " " + partymember.stats.damagetype + "\n"
 		+ "Skills: ";
@@ -12790,7 +12792,7 @@ function getCreatureByBlueprintID(creatureid)
 				name: adventure_sim.enemyblueprints[i].name,
 				plural: adventure_sim.enemyblueprints[i].plural,
 				cstatus: "good",
-				exp: adventure_sim.enemyblueprints[i].exp,
+				experience: adventure_sim.enemyblueprints[i].experience,
 				stats:
 				{
 					level: adventure_sim.enemyblueprints[i].stats.level,
@@ -12919,7 +12921,7 @@ function woundTarget(party, target, woundlevel, attacker)
 				}
 				
 				removeFromEngagements(party, target);
-				party.encounterexp += target.exp;
+				party.encounterexp += target.experience;
 			}
 		}
 	}
@@ -13025,6 +13027,8 @@ function getWeaknesses(target)
 function attackTarget(party, attacker, target)
 {
 	let attackroll = 0;
+	if (attacker.side == 0)
+		attackroll = getPartyMemberStat(attacker, "damageMod");
 	for (let i = 0; i < Math.floor(attacker.stats.damagedienum); i++)
 	{
 		attackroll += Math.floor(Math.random()*Math.floor(attacker.stats.damagediesides))+1;
@@ -13033,22 +13037,7 @@ function attackTarget(party, attacker, target)
 	let totalWoundThreshold = target.stats.woundThreshold;
 	if (target.side == 0)
 	{
-		if (target.magicitems.mainHand != null)
-			totalWoundThreshold += target.magicitems.mainHand.effects.woundThresholdMod;
-		if (target.magicitems.offHand != null)
-			totalWoundThreshold += target.magicitems.offHand.effects.woundThresholdMod;
-		if (target.magicitems.clothes != null)
-			totalWoundThreshold += target.magicitems.clothes.effects.woundThresholdMod;
-		if (target.magicitems.armour != null)
-			totalWoundThreshold += target.magicitems.armour.effects.woundThresholdMod;
-		if (target.magicitems.accessories[0] != null)
-			totalWoundThreshold += target.magicitems.accessories[0].effects.woundThresholdMod;
-		if (target.magicitems.accessories[1] != null)
-			totalWoundThreshold += target.magicitems.accessories[1].effects.woundThresholdMod;
-		if (target.magicitems.accessories[2] != null)
-			totalWoundThreshold += target.magicitems.accessories[2].effects.woundThresholdMod;
-		if (target.magicitems.accessories[3] != null)
-			totalWoundThreshold += target.magicitems.accessories[3].effects.woundThresholdMod;
+		totalWoundThreshold = getPartyMemberStat(target, "woundThreshold");
 	}
 	
 	targetresistances = getResistances(target);
@@ -13230,9 +13219,9 @@ function doCombatTurn(party, combatant)
 	
 }
 
-function givePartyMemberExp(party, partymember, exp)
+function givePartyMemberExp(party, partymember, experience)
 {
-	partymember.stats.exp += exp;
+	partymember.stats.exp += experience;
 	let levelup = false;
 	let charclass = findClassByName(partymember.classname);
 	while (partymember.stats.exp >= expLevelUpRequirement(partymember.stats.level))
@@ -13245,6 +13234,12 @@ function givePartyMemberExp(party, partymember, exp)
 			partymember.stats.woundLevelUp--;
 			partymember.stats.woundMax++;
 		}
+		partymember.stats.damageModLevelUp += charclass.stats.levelup.damageMod;
+		while (partymember.stats.damageModLevelUp > 1)
+		{
+			partymember.stats.damageModLevelUp--;
+			partymember.stats.damageMod++;
+		}
 	}
 	if (levelup)
 		addToAdventureSimLog(party, partymember.name + " levels up to level " + partymember.stats.level);
@@ -13252,7 +13247,7 @@ function givePartyMemberExp(party, partymember, exp)
 
 function expLevelUpRequirement(characterlevel)
 {
-	return (125*characterlevel*(characterlevel+1));
+	return (375*characterlevel*(characterlevel+1));
 }
 
 
@@ -13466,7 +13461,7 @@ function generateQuestDungeon(rooms, questlevel)
 	
 	if (!hasfinalroom)
 	{
-		dungeonrooms.push({ id: "questfight", trap: { name: "", damagetype: "", damagedienum: 0, damagediesides: 0} });
+		dungeonrooms.push({ id: "questfight", trap: { name: "", experience: 0, damagetype: "", damagedienum: 0, damagediesides: 0} });
 	}
 	
 	let dungeon = [];
@@ -13476,6 +13471,7 @@ function generateQuestDungeon(rooms, questlevel)
 		let room = 
 		{
 			id: dungeonrooms[i].id,
+			experience: dungeonrooms[i].experience,
 			solutions: [],
 			fight: [],
 			trap: 
@@ -13495,6 +13491,7 @@ function generateQuestDungeon(rooms, questlevel)
 				let solution =
 				{
 					type: dungeonrooms[i].solutions[j].type,
+					bypasstext: dungeonrooms[i].solutions[j].bypasstext,
 					skill: dungeonrooms[i].solutions[j].skill,
 					dc: solutiondc,
 					failure: dungeonrooms[i].solutions[j].failure,
@@ -13529,7 +13526,7 @@ function initiateDungeonExplore(party)
 {
 	party.dungeonexplore = true;
 	party.dungeonroomnum = 0;
-	party.dungeon = generateQuestDungeon(Math.floor(Math.random()*6)+2, party.quest.level);
+	party.dungeon = generateQuestDungeon(Math.floor(Math.random()*2*party.quest.level)+1, party.quest.level);
 }
 
 function initiateRoomEncounter(party, room)
@@ -14325,7 +14322,7 @@ function partyActionAdventure(party)
 	let positionlandmark = asworldmap[party.xpos+(party.ypos*asworld_width)].landmark;
 	
 	// encounter logic
-	if (party.questlocation > 0 && Math.random() < 0.1)
+	if (party.questlocation > 0 && Math.random() < 0.12)
 	{
 		if (positionlandmark != "town" && positionlandmark != "city" && positionlandmark != "village")
 		{
@@ -14344,416 +14341,9 @@ function partyActionAdventure(party)
 
 function skillCheckOdds(partymember, skill, dc)
 {
-	let successneeds = dc;
-	let odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	
-	if (skill == "acrobatics")
-	{
-		let skillvalue = partymember.stats.skills.acrobatics;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.acrobatics;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.acrobatics;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.acrobatics;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.acrobatics;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.acrobatics;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.acrobatics;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.acrobatics;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.acrobatics;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "animalHandling")
-	{
-		let skillvalue = partymember.stats.skills.animalHandling;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.animalHandling;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.animalHandling;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.animalHandling;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.animalHandling;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.animalHandling;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.animalHandling;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.animalHandling;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.animalHandling;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "arcana")
-	{
-		let skillvalue = partymember.stats.skills.arcana;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.arcana;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.arcana;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.arcana;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.arcana;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.arcana;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.arcana;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.arcana;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.arcana;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "athletics")
-	{
-		let skillvalue = partymember.stats.skills.athletics;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.athletics;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.athletics;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.athletics;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.athletics;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.athletics;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.athletics;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.athletics;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.athletics;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "deception")
-	{
-		let skillvalue = partymember.stats.skills.deception;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.deception;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.deception;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.deception;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.deception;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.deception;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.deception;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.deception;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.deception;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "insight")
-	{
-		let skillvalue = partymember.stats.skills.insight;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.insight;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.insight;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.insight;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.insight;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.insight;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.insight;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.insight;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.insight;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "intimidation")
-	{
-		let skillvalue = partymember.stats.skills.intimidation;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.intimidation;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.intimidation;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.intimidation;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.intimidation;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.intimidation;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.intimidation;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.intimidation;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.intimidation;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "investigation")
-	{
-		let skillvalue = partymember.stats.skills.investigation;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.investigation;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.investigation;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.investigation;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.investigation;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.investigation;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.investigation;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.investigation;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.investigation;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "medicine")
-	{
-		let skillvalue = partymember.stats.skills.medicine;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.medicine;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.medicine;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.medicine;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.medicine;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.medicine;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.medicine;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.medicine;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.medicine;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "nature")
-	{
-		let skillvalue = partymember.stats.skills.nature;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.nature;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.nature;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.nature;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.nature;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.nature;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.nature;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.nature;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.nature;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "perception")
-	{
-		let skillvalue = partymember.stats.skills.perception;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.perception;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.perception;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.perception;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.perception;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.perception;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.perception;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.perception;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.perception;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "performance")
-	{
-		let skillvalue = partymember.stats.skills.performance;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.performance;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.performance;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.performance;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.performance;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.performance;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.performance;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.performance;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.performance;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "persuasion")
-	{
-		let skillvalue = partymember.stats.skills.persuasion;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.persuasion;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.persuasion;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.persuasion;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.persuasion;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.persuasion;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.persuasion;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.persuasion;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.persuasion;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "religion")
-	{
-		let skillvalue = partymember.stats.skills.religion;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.religion;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.religion;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.religion;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.religion;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.religion;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.religion;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.religion;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.religion;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "sleightOfHand")
-	{
-		let skillvalue = partymember.stats.skills.sleightOfHand;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.sleightOfHand;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "stealth")
-	{
-		let skillvalue = partymember.stats.skills.stealth;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.stealth;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.stealth;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.stealth;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.stealth;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.stealth;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.stealth;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.stealth;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.stealth;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
-	
-	if (skill == "survival")
-	{
-		let skillvalue = partymember.stats.skills.survival;
-		if (partymember.magicitems.mainHand != null)
-			skillvalue += partymember.magicitems.mainHand.effects.skillMod.survival;
-		if (partymember.magicitems.offHand != null)
-			skillvalue += partymember.magicitems.offHand.effects.skillMod.survival;
-		if (partymember.magicitems.clothes != null)
-			skillvalue += partymember.magicitems.clothes.effects.skillMod.survival;
-		if (partymember.magicitems.armour != null)
-			skillvalue += partymember.magicitems.armour.effects.skillMod.survival;
-		if (partymember.magicitems.accessories[0] != null)
-			skillvalue += partymember.magicitems.accessories[0].effects.skillMod.survival;
-		if (partymember.magicitems.accessories[1] != null)
-			skillvalue += partymember.magicitems.accessories[1].effects.skillMod.survival;
-		if (partymember.magicitems.accessories[2] != null)
-			skillvalue += partymember.magicitems.accessories[2].effects.skillMod.survival;
-		if (partymember.magicitems.accessories[3] != null)
-			skillvalue += partymember.magicitems.accessories[3].effects.skillMod.survival;
-		
-		successneeds -= skillvalue;
-		odds = Math.max(Math.min((21 - dc) / 20, 1), 0);
-	}
+	let skillvalue = getPartyMemberStat(partymember, skill);
+	let successneeds = dc - skillvalue;
+	let odds = Math.max(Math.min((21 - successneeds) / 20, 1), 0);
 	
 	return odds;
 }
@@ -14802,9 +14392,9 @@ function roomResolutionOddCalc(party, solution)
 	
 	if (solution.type == "fight")
 	{
-		//don't do odds, just do as 45% ?
+		//don't do odds, just do as 25% ?
 		
-		return { odds: 0.375, member: -1 };
+		return { odds: 0.25, member: -1 };
 	}
 }
 
@@ -14819,9 +14409,29 @@ function resolveRoomViaSolution(party, room, solution, resolver)
 		let resolveOdds = roomResolutionOddCalc(party, solution);
 		let randomroll = Math.random();
 		
-		if (randomroll < resolveOdds)
+		if (randomroll < resolveOdds.odds)
 		{
+			if (solution.type == "skillone")
+			{
+				addToAdventureSimLog(party,party.members[resolver].name + " " + solution.bypasstext + " " + party.dungeon[party.dungeonroomnum].trap.name);
+			}
+			else if (solution.type == "skillall")
+			{
+				addToAdventureSimLog(party,party.name + " " + solution.bypasstext + " " + party.dungeon[party.dungeonroomnum].trap.name);
+			}
 			
+			let livingpartycount = 0;
+			for (let i = 0; i < party.members.length; i++)
+			{
+				if (party.members[i].cstatus != "dead")
+					livingpartycount++;
+			}
+			
+			for (let i = 0; i < party.members.length; i++)
+			{
+				if (party.members[i].cstatus != "dead")
+					givePartyMemberExp(party, party.members[i], Math.ceil(party.dungeon[party.dungeonroomnum].experience / livingpartycount));
+			}
 		}
 		else
 		{
@@ -14843,6 +14453,8 @@ function resolveRoomViaSolution(party, room, solution, resolver)
 				}
 				
 				attackTarget(party, attacker, party.members[resolver]);
+				addToAdventureSimLog(party,party.members[resolver].name + " sets off " + party.dungeon[party.dungeonroomnum].trap.name);
+				
 			}
 			else if (solution.failure == "hurtall")
 			{
@@ -14862,6 +14474,8 @@ function resolveRoomViaSolution(party, room, solution, resolver)
 					if (party.members[i].cstatus != "dead")
 						attackTarget(party, attacker, party.members[i]);
 				}
+				
+				addToAdventureSimLog(party,"Someone sets off " + party.dungeon[party.dungeonroomnum].trap.name);
 			}
 		}
 	}
@@ -15063,16 +14677,6 @@ function createAdventureSimItem(itemlevel)
 	}
 	
 	return item;
-}
-
-function getIndexOfMagicItem(adventurer, item)
-{
-	for (let i = 0; i < adventurer.magicitems.length; i++)
-	{
-		if (item === adventurer.magicitems[i])
-			return i;
-	}
-	return -1;
 }
 
 function unequipAdventurerWithItem(adventurer, item)
@@ -15360,10 +14964,11 @@ function questComplete(party)
 		if (newitem != null)
 			items.push(newitem);
 	}
-	equipPartyWithItems(party, items);
+	if (items.length > 0)
+		equipPartyWithItems(party, items);
 }
 
-var MAX_QUEST_LEVEL = 7;
+var MAX_QUEST_LEVEL = 9;
 
 //filter where a quests level is equal to the passed 'this' variable
 function filterQuestsByLevel(quest)
