@@ -15068,8 +15068,45 @@ function startAdventure(partyid, questlevel)
 	return outputAdventureSimLog(arguments); //output to discord
 }
 
+function verifyAdventuringPartiesExperience()
+{
+	for (let i = 0; i < adventuringparties.length; i++)
+	{
+		for (let j = 0; j < adventuringparties[i].members.length; j++)
+		{
+			if (!isNaN(adventuringparties[i].members[j].stats.exp))
+			{
+				adventuringparties[i].members[j].stats.backupexp = adventuringparties[i].members[j].stats.exp;
+			}
+			else if (isNaN(adventuringparties[i].members[j].stats.exp) || adventuringparties[i].members[j].stats.exp == null)
+			{
+				adventuringparties[i].members[j].stats.exp = adventuringparties[i].members[j].stats.backupexp;
+			}
+		}
+	}
+}
+
+function setAdventuringPartiesBackupExperience()
+{
+	for (let i = 0; i < adventuringparties.length; i++)
+	{
+		for (let j = 0; j < adventuringparties[i].members.length; j++)
+		{
+			if (!isNaN(adventuringparties[i].members[j].stats.exp))
+			{
+				adventuringparties[i].members[j].stats.backupexp = adventuringparties[i].members[j].stats.exp;
+			}
+			else 
+			{
+				adventuringparties[i].members[j].stats.backupexp = 0;
+			}
+		}
+	}
+}
+
 function saveAdventuringParties()
 {
+	verifyAdventuringPartiesExperience();
 	let file = 'savedadventuringparties.json';
 	let path = './' + file;
 	let data = JSON.stringify(adventuringparties);
@@ -15086,6 +15123,7 @@ function loadAdventuringParties()
 	{
 		adventuringparties = JSON.parse(fs.readFileSync('savedadventuringparties.json'));
 		console.log('adventuring parties loaded');
+		setAdventuringPartiesBackupExperience();
 	}
 	catch (err)
 	{
