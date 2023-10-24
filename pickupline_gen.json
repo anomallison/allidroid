@@ -1,0 +1,150 @@
+{
+	"prefixes":
+	[
+		"Damn!",
+		"Babe!",
+		"Oh baby!",
+		"Oh my!",
+		"Oh my gosh!",
+		"Oh my goodness!",
+		"Oh my god!"
+	],
+	"startups":
+	[
+		"Are you [an] [object]?",
+		"Did you hurt yourself when you fell from heaven?",
+		"Did it hurt being sculpted?",
+		"Did it hurt when [that] [bodypart] [was] being made?",
+		"Did you climb all the way out of hell yourself?",
+		"Bend over and show me [that] [bodypart].",
+		"Lie back and show me [that] [bodypart]."
+	],
+	"followups":
+	[
+		"Coz you're my [object]",
+		"Coz your [bodypart] [is] damn fine!",
+		"Coz [that] [bodypart] don't quit!",
+		"Coz I'd like to employ it",
+		"Coz you're made of gold",
+		"Coz you're a work of art",
+		"Coz I've got [an] [object] for you"
+	],
+	"bodyparts":
+	[
+		{
+			"name": "eyes",
+			"an": "some",
+			"is": "are",
+			"that": "those",
+			"was": "were"
+		},
+		{
+			"name": "legs",
+			"an": "some",
+			"is": "are",
+			"that": "those",
+			"was": "were"
+		},
+		{
+			"name": "arms",
+			"an": "some",
+			"is": "are",
+			"that": "those",
+			"was": "were"
+		},
+		{
+			"name": "hands",
+			"an": "some",
+			"is": "are",
+			"that": "those",
+			"was": "were"
+		},
+		{
+			"name": "feet",
+			"an": "some",
+			"is": "are",
+			"that": "those",
+			"was": "were"
+		},
+		{
+			"name": "ass",
+			"an": "an",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "face",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "hair",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "boobs",
+			"an": "some",
+			"is": "are",
+			"that": "those",
+			"was": "were"
+		}
+	],
+	"objects":
+	[
+		{
+			"name": "toy",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "fleshlight",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "vibrator",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "octopus",
+			"an": "an",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "angel",
+			"an": "an",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "devil",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "slut",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		}
+	]
+}

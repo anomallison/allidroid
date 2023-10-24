@@ -124,6 +124,9 @@ var oneshotrpg_gen = JSON.parse(fs.readFileSync('oneshotrpggenerator.json'));
 //sapphichelper file
 var sapphichelper = JSON.parse(fs.readFileSync('sapphichelper.json'));
 
+// monster files
+var pickupline_gen = JSON.parse(fs.readFileSync('pickupline_gen.json'));
+
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
@@ -696,6 +699,21 @@ function processCommand(receivedMessage)
 	{
 		DrawHexWorldMap(receivedMessage.channel,arguments);
 	}
+	else if (normalizedCommand == "pickupline") 
+	{
+		output = generatePickUpLine();
+		
+		if (output == null)
+		{
+			console.log("failed command: pickupline");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    }
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -2816,6 +2834,93 @@ function generatePhonemeName(maxsyllables = 8, minimumsyllables = 1)
 	}
 	
 	return "\[" + pronounciation + "\] " + grammarCapitalFirstLetter(spelling); 
+}
+
+//
+//
+// insert fields into pickupline
+
+function insertFieldsIntoLine(pickupline, fields)
+{
+	let position = pickupline.indexOf("\[");
+	let endposition = -1;
+	let fieldsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = pickupline.indexOf("\]");
+		fieldsubstr = pickupline.substring(position+1,endposition);
+		
+		if (fieldsubstr == "bodypart" || fieldsubstr == "object")
+		{
+			pickupline = pickupline.substr(0,position) + fields.name + pickupline.substr(endposition+1);
+		}
+		else if (fieldsubstr == "an")
+		{
+			pickupline = pickupline.substr(0,position) + fields.an + pickupline.substr(endposition+1);
+		}
+		else if (fieldsubstr == "is")
+		{
+			pickupline = pickupline.substr(0,position) + fields.is + pickupline.substr(endposition+1);
+		}
+		else if (fieldsubstr == "that")
+		{
+			pickupline = pickupline.substr(0,position) + fields.that + pickupline.substr(endposition+1);
+		}
+		else if (fieldsubstr == "was")
+		{
+			pickupline = pickupline.substr(0,position) + fields.was + pickupline.substr(endposition+1);
+		}
+		
+		position = pickupline.indexOf("\[");
+	}
+	
+	return pickupline;
+}
+
+//
+//
+// generate pickup line
+
+function generatePickUpLine()
+{
+	let pickupline = "";
+	pickupline_gen
+	
+	if (Math.random() < 0.36)
+	{
+		pickupline += pickupline_gen.prefixes[Math.floor(Math.random()*pickupline_gen.prefixes.length)] + " ";
+	}
+	
+	pickupline += pickupline_gen.startups[Math.floor(Math.random()*pickupline_gen.startups.length)];
+	
+	let fields = null;
+	
+	if (pickupline.includes("\[object\]"))
+	{
+		fields = pickupline_gen.objects[Math.floor(Math.random()*pickupline_gen.objects.length)];
+		pickupline = insertFieldsIntoLine(pickupline, fields);
+	}
+	else if (pickupline.includes("\[bodypart\]"))
+	{
+		fields = pickupline_gen.bodyparts[Math.floor(Math.random()*pickupline_gen.bodyparts.length)];
+		pickupline = insertFieldsIntoLine(pickupline, fields);
+	}
+	
+	pickupline += " " + pickupline_gen.followups[Math.floor(Math.random()*pickupline_gen.followups.length)];
+	
+	if (pickupline.includes("\[object\]"))
+	{
+		fields = pickupline_gen.objects[Math.floor(Math.random()*pickupline_gen.objects.length)];
+		pickupline = insertFieldsIntoLine(pickupline, fields);
+	}
+	else if (pickupline.includes("\[bodypart\]"))
+	{
+		fields = pickupline_gen.bodyparts[Math.floor(Math.random()*pickupline_gen.bodyparts.length)];
+		pickupline = insertFieldsIntoLine(pickupline, fields);
+	}
+	
+	return pickupline;
 }
 
 
@@ -13398,6 +13503,8 @@ function combatRound(party)
 	{
 		addToAdventureSimLog(party,party.name + " have been defeated by the " + party.encountersummary);
 		party.currentlyinencounter = false;
+		party.xpos = party.questpath[0].x;
+		party.ypos = party.questpath[0].y;
 		saveAdventuringParties();
 	}
 }
@@ -14899,11 +15006,25 @@ function getPartyMemberWithLeastItems(party)
 	return party[lowestitemmember];
 }
 
+function getLivingPartyMembers(party)
+{
+	let temppartymemberlist = [];
+	for (let i = 0; i < party.members.length; i++)
+	{
+		if (party.members[i].cstatus != "dead")
+		{
+			temppartymemberlist.push(party.members[i]);
+		}
+	}
+	
+	return temppartymemberlist;
+}
+
 function equipPartyWithItems(party, items)
 {
 	for(let i = 0; i < items.length; i++)
 	{
-		let tempmemberlist = party.members.slice();
+		let tempmemberlist = getLivingPartyMembers(party);
 		
 		let itemallocated = false;
 		
