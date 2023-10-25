@@ -283,7 +283,7 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "gay") 
 	{
-		output = howgay();
+		output = howgay(arguments[0]);
 		if (output == null)
 		{
 			console.log("failed command: howgay");
@@ -908,18 +908,46 @@ function helpCommand(user, arguments)
 //
 //
 
-function howgay()
+const MAX_COIN_INSERT = 768;
+
+function howgay(value)
 {
-	currentgay++;
-	let gayresult = "You put a coin in the gay jar. There are currently " + currentgay + " coins in the gay jar.";
-	if (currentgay == 1)
+	let intvalue = parseInt(value);
+	
+	
+	if (intvalue < 0)
+		return "You cannot take out coins, you must !shake the gay jar";
+	
+	if (intvalue > MAX_COIN_INSERT)
 	{
-		gayresult = "You put a coin in the gay jar. There is currently 1 coin in the gay jar.";
+		currentgay = 0;
+		saveCurrentGayValue();
+		return "You try to shove too many coins in at once, causing the jar to explode!"
 	}
-	let baserand = Math.random()+(currentgay*0.01)
+	
+	let gayresult = "";
+	if (intvalue == 1 || intvalue == null || isNaN(intvalue))
+	{
+		currentgay++;
+		gayresult = "You put a coin in the gay jar. There are currently " + currentgay + " coins in the gay jar.";
+		if (currentgay == 1)
+		{
+			gayresult = "You put a coin in the gay jar. There is currently 1 coin in the gay jar.";
+		}
+	}
+	else
+	{
+		currentgay += intvalue;
+		gayresult = "You put " + intvalue.toString() + " coins in the gay jar. There are currently " + currentgay + " coins in the gay jar.";
+	}
+	
+	
+	let baserand = Math.random()+(currentgay*0.01);
 	
 	if (baserand > 0.98)
 		gayresult += " :tada:";
+	
+	saveCurrentGayValue();
 	
 	return gayresult;
 }
@@ -930,7 +958,7 @@ function howgay()
 
 function gaygacha(coins)
 {
-	let baserand = Math.random() - coins*0.1;
+	let baserand = Math.random() - coins*0.003;
 
 	let rarity = getGachaRarity(baserand);
 	let hero_base = generateMonster("gaycha",0,0,1);
@@ -949,8 +977,8 @@ function gaygacha(coins)
 //
 //
 
-var MAX_COIN_PERCENTAGE = 0.20;
-var MAX_COINS = 100;
+var MAX_COIN_PERCENTAGE = 0.1666;
+var MAX_COINS = 255;
 
 function shakethejar()
 {
@@ -967,6 +995,8 @@ function shakethejar()
 		while (randomcoins == 0)
 		{
 			randomcoins = Math.floor((Math.random()+Math.random()/2)*MAX_COIN_PERCENTAGE*currentgay);
+			if (Math.random() < 0.08)
+				shaketime++;
 			shaketime++;
 		}
 	} 
@@ -988,12 +1018,42 @@ function shakethejar()
 	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"];
 	let baseitem = generateItemFromTypes(baseitemtypes);
 	
+	
+	let markovname = MarkovPhonemeGenerateName();
+	while (markovname.length < 4)
+	{
+		markovname = MarkovPhonemeGenerateName();
+	}
+	let spelledname = "";
+	for (let i = 0; i < markovname.length; i++)
+	{
+		let phonemechar = GetPhonemeByCharacter(markovname[i]);
+		spelledname += getPhonemeSpelling(phonemechar);
+	}
+	artifact = "the " +  grammarCapitalFirstLetter(spelledname);
+	
+	/*
 	baserand  = Math.random();
-	if (baserand < 0.06) // single first word name
+	if (baserand < 0.19) // single first word name
+	{
+		let markovname = MarkovPhonemeGenerateName();
+		while (markovname.length < 4)
+		{
+			markovname = MarkovPhonemeGenerateName();
+		}
+		let spelledname = "";
+		for (let i = 0; i < markovname.length; i++)
+		{
+			let phonemechar = GetPhonemeByCharacter(markovname[i]);
+			spelledname += getPhonemeSpelling(phonemechar);
+		}
+		artifact = "the " +  grammarCapitalFirstLetter(spelledname);
+	}
+	else if (baserand < 0.31) // single first word name
 	{
 		artifact = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))];
 	}
-	else if (baserand < 0.12) // single last word name
+	else if (baserand < 0.43) // single last word name
 	{
 		artifact = "the " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
 	}
@@ -1001,12 +1061,12 @@ function shakethejar()
 	{
 		artifact = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))] + " " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
 	}
-	
+	*/
 	
 	let fullstring = hero + " and their artifact " + artifact + ", the " + item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + baseitem.item;
 	
 	let shakestring = ""
-	if (shaketime > 2)
+	if (shaketime > 1)
 	{
 		shakestring = "You give the jar a good shake, getting ";
 	}
@@ -1014,8 +1074,13 @@ function shakethejar()
 	{
 		shakestring = "You shake ";
 	}
+	
+	if (randomcoins > 1)
+		fullstring = shakestring + randomcoins + " coins from the jar and spend them on the gaycha! You get: \n" + fullstring;
+	else
+		fullstring = shakestring + " 1 coin from the jar and spend it on the gaycha! You get: \n" + fullstring;
 		
-	fullstring = shakestring + randomcoins + " coins from the jar and spend them on the gaycha! You get: \n" + fullstring;
+	saveCurrentGayValue();
 	
 	return fullstring;
 }
@@ -2851,7 +2916,7 @@ function insertFieldsIntoLine(pickupline, fields)
 		endposition = pickupline.indexOf("\]");
 		fieldsubstr = pickupline.substring(position+1,endposition);
 		
-		if (fieldsubstr == "bodypart" || fieldsubstr == "object")
+		if (fieldsubstr == "bodypart" || fieldsubstr == "object" || fieldsubstr == "phrase")
 		{
 			pickupline = pickupline.substr(0,position) + fields.name + pickupline.substr(endposition+1);
 		}
@@ -2887,7 +2952,7 @@ function generatePickUpLine()
 	let pickupline = "";
 	pickupline_gen
 	
-	if (Math.random() < 0.36)
+	if (Math.random() < 0.299)
 	{
 		pickupline += pickupline_gen.prefixes[Math.floor(Math.random()*pickupline_gen.prefixes.length)] + " ";
 	}
@@ -2906,6 +2971,11 @@ function generatePickUpLine()
 		fields = pickupline_gen.bodyparts[Math.floor(Math.random()*pickupline_gen.bodyparts.length)];
 		pickupline = insertFieldsIntoLine(pickupline, fields);
 	}
+	else if (pickupline.includes("\[phrase\]"))
+	{
+		fields = pickupline_gen.startupphrases[Math.floor(Math.random()*pickupline_gen.startupphrases.length)];
+		pickupline = insertFieldsIntoLine(pickupline, fields);
+	}
 	
 	pickupline += " " + pickupline_gen.followups[Math.floor(Math.random()*pickupline_gen.followups.length)];
 	
@@ -2917,6 +2987,11 @@ function generatePickUpLine()
 	else if (pickupline.includes("\[bodypart\]"))
 	{
 		fields = pickupline_gen.bodyparts[Math.floor(Math.random()*pickupline_gen.bodyparts.length)];
+		pickupline = insertFieldsIntoLine(pickupline, fields);
+	}
+	else if (pickupline.includes("\[phrase\]"))
+	{
+		fields = pickupline_gen.followupphrases[Math.floor(Math.random()*pickupline_gen.followupphrases.length)];
 		pickupline = insertFieldsIntoLine(pickupline, fields);
 	}
 	
@@ -15317,17 +15392,20 @@ function MarkovPhonemeNameGen(arguments)
 	let minlength = 3;
 	let maxlength = 6
 	let numberOfNames = 1;
-	let argumentpos = arguments.indexOf("-min");
-	if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 25)
-		minlength = arguments[argumentpos+1];
-	argumentpos = arguments.indexOf("-max")
-	if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 25 && arguments[argumentpos+1] > minlength)
-		maxlength = arguments[argumentpos+1];
-	else if (minlength > 6)
-		maxlength = minlength;
-	argumentpos = arguments.indexOf("-n")
-	if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 21)
-		numberOfNames = arguments[argumentpos+1];
+	if (arguments != null && arguments.length > 0)
+	{
+		let argumentpos = arguments.indexOf("-min");
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 25)
+			minlength = arguments[argumentpos+1];
+		argumentpos = arguments.indexOf("-max")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 25 && arguments[argumentpos+1] > minlength)
+			maxlength = arguments[argumentpos+1];
+		else if (minlength > 6)
+			maxlength = minlength;
+		argumentpos = arguments.indexOf("-n")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0 && arguments[argumentpos+1] < 21)
+			numberOfNames = arguments[argumentpos+1];
+	}
 	
 	let names = [];
 	
@@ -18696,6 +18774,40 @@ function DrawHexWorldMap(channel, arguments)
 	
 }
 
+//
+// save/load currentgay variable
+
+function saveCurrentGayValue()
+{
+	let gayvalue = { gay: currentgay };
+	
+	let file = 'currentgay.json';
+	let path = './' + file;
+	let data = JSON.stringify(gayvalue);
+	
+	fs.writeFile(path, data, (err) => {
+		if (err) throw err;
+		console.log('currentgay saved');
+		});
+}
+
+function loadCurrentGayValue()
+{
+	try
+	{
+		let gayvalue = JSON.parse(fs.readFileSync('currentgay.json'));
+		currentgay += gayvalue.gay;
+		console.log('currentgay loaded: ' + currentgay.toString());
+	}
+	catch (err)
+	{
+		currentgay = 0;
+		console.log('currentgay reset');
+	}
+	
+	currentgay += (Math.floor((Math.random()*6) + 1) * 10) + Math.floor((Math.random()*10) + 1);
+}
+
 
 //
 // handle errors??? no
@@ -18708,5 +18820,6 @@ client.on('error', console.error);
 
 client.login(logintoken); //allidroid logon
 
+loadCurrentGayValue();
 initializeAndStartAdventureSim();
 MarkovPhonemeNameTrain();

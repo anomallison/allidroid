@@ -12,10 +12,8 @@
 	"startups":
 	[
 		"Are you [an] [object]?",
-		"Did you hurt yourself when you fell from heaven?",
-		"Did it hurt being sculpted?",
+		"[phrase]",
 		"Did it hurt when [that] [bodypart] [was] being made?",
-		"Did you climb all the way out of hell yourself?",
 		"Bend over and show me [that] [bodypart].",
 		"Lie back and show me [that] [bodypart]."
 	],
@@ -24,9 +22,7 @@
 		"Coz you're my [object]",
 		"Coz your [bodypart] [is] damn fine!",
 		"Coz [that] [bodypart] don't quit!",
-		"Coz I'd like to employ it",
-		"Coz you're made of gold",
-		"Coz you're a work of art",
+		"Coz [phrase]",
 		"Coz I've got [an] [object] for you"
 	],
 	"bodyparts":
@@ -145,6 +141,50 @@
 			"is": "is",
 			"that": "that",
 			"was": "was"
+		},
+		{
+			"name": "prince",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		},
+		{
+			"name": "princess",
+			"an": "a",
+			"is": "is",
+			"that": "that",
+			"was": "was"
+		}
+	],
+	"startupphrases":
+	[
+		{
+			"name": "Did it hurt when you fell from heaven?"
+		},
+		{
+			"name": "Did you climb out of hell?"
+		},
+		{
+			"name": "Did it hurt being sculpted?"
+		},
+		{
+			"name": "Why aren't you in a gallery?"
+		}
+	],
+	"followupphrases":
+	[
+		{
+			"name": "you're a work of art"
+		},
+		{
+			"name": "you're made of gold"
+		},
+		{
+			"name": "you're sculpted from marble"
+		},
+		{
+			"name": "I'd like to employ it"
 		}
 	]
 }
