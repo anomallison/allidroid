@@ -124,8 +124,12 @@ var oneshotrpg_gen = JSON.parse(fs.readFileSync('oneshotrpggenerator.json'));
 //sapphichelper file
 var sapphichelper = JSON.parse(fs.readFileSync('sapphichelper.json'));
 
-// monster files
+// pickup line files
 var pickupline_gen = JSON.parse(fs.readFileSync('pickupline_gen.json'));
+
+// diner menu files
+var dinermenu_gen = JSON.parse(fs.readFileSync('dinermenu_gen.json'));
+
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -714,6 +718,21 @@ function processCommand(receivedMessage)
 			return;
 		}
     }
+	else if (normalizedCommand == "kronk") 
+	{
+		output = orderFromDiner(arguments[0]);
+		
+		if (output == null)
+		{
+			console.log("failed command: kronk");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    }
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -1084,6 +1103,89 @@ function shakethejar()
 	
 	return fullstring;
 }
+
+function orderFromDiner(coins)
+{
+	if (coins == null || isNaN(coins))
+	{
+		if (currentgay > 5)
+		{
+			coins = 0;
+			while (coins == 0)
+			{
+				coins = Math.floor((Math.random()+Math.random()/2)*MAX_COIN_PERCENTAGE*currentgay);
+			}
+		} 
+		else
+		{
+			coins = 1 + Math.floor(Math.random()*2);
+		}
+		
+		if (coins > currentgay)
+			coins = currentgay;
+	}
+	
+	if (coins < 1)
+		return "You cannot dine and dash at the diner";
+	
+	if (coins > currentgay)
+		return "There aren't enough coins in the gay jar for an order that big";
+	
+	let dinerorder = generateDinerOrder(coins);
+	currentgay -= coins;
+	saveCurrentGayValue();
+	return dinerorder;
+}
+
+let MAX_MEAL_VALUE = 21;
+
+function generateDinerOrder(coins)
+{
+	let mealvalue = Math.floor(coins / ((Math.random() * 5) + 2));
+	
+	if (mealvalue < 1)
+		mealvalue = 1;
+	if (mealvalue > MAX_MEAL_VALUE)
+		mealvalue = MAX_MEAL_VALUE;
+	
+	let orderup = "";
+	
+	for(let i = 0; i < mealvalue; i++)
+	{
+		if (i > 0)
+		{
+			orderup += ", ";
+			if (i == (mealvalue - 1))
+				orderup += "and ";
+		}
+		
+		let meal = dinermenu_gen.meals[Math.floor(Math.random()*dinermenu_gen.meals.length)];
+		let drink = dinermenu_gen.drinks[Math.floor(Math.random()*dinermenu_gen.drinks.length)];
+		let mealedit = dinermenu_gen.mealedits[Math.floor(Math.random()*dinermenu_gen.mealedits.length)];
+		let baserand = Math.random();
+		
+		if (baserand < 0.33)
+		{
+			orderup += grammarAorAn(meal.substr(0,1)) + " " + meal;
+		}
+		else if (baserand < 0.87)
+		{
+			orderup += grammarAorAn(meal.substr(0,1)) + " " + meal + ", " + mealedit;
+		}
+		else
+		{
+			orderup += grammarAorAn(drink.substr(0,1)) + " " + drink;
+		}
+	}
+	
+	if (coins == 1)
+		orderup += "\nThat'll be 1 coin";
+	else
+		orderup += "\nThat'll be " + coins.toString() + " coins";
+	
+	return grammarCapitalFirstLetter(orderup);
+}
+
 
 
 //
