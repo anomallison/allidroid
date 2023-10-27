@@ -130,6 +130,9 @@ var pickupline_gen = JSON.parse(fs.readFileSync('pickupline_gen.json'));
 // diner menu files
 var dinermenu_gen = JSON.parse(fs.readFileSync('dinermenu_gen.json'));
 
+// trinket gen files
+var trinket_gen = JSON.parse(fs.readFileSync('trinket_gen.json'));
+
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -733,6 +736,21 @@ function processCommand(receivedMessage)
 			return;
 		}
     }
+	else if (normalizedCommand == "trinket") 
+	{
+		output = buyTrinket();
+		
+		if (output == null)
+		{
+			console.log("failed command: trinket");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    }
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -1184,6 +1202,137 @@ function generateDinerOrder(coins)
 		orderup += "\nThat'll be " + coins.toString() + " coins";
 	
 	return grammarCapitalFirstLetter(orderup);
+}
+
+
+//
+//
+// trinket generation
+
+function generateTrinket()
+{
+	let trinkettext = trinket_gen.bodytexts[Math.floor(Math.random()*trinket_gen.bodytexts.length)];
+	
+	let position = trinkettext.indexOf("\[");
+	let endposition = -1;
+	let trinketsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = trinkettext.indexOf("\]");
+		trinketsubstr = trinkettext.substring(position+1,endposition);
+		substrcommands = trinketsubstr.split(" ");
+		if (substrcommands[0] == "an")
+		{
+			let primaryword = "";
+			if (substrcommands[1] == "adjective")
+			{
+				primaryword = trinket_gen.adjectives[Math.floor(Math.random()*trinket_gen.adjectives.length)];
+			}
+			else if (substrcommands[1] == "hardmaterials")
+			{
+				primaryword = trinket_gen.hardmaterials[Math.floor(Math.random()*trinket_gen.hardmaterials.length)];
+			}
+			else if (substrcommands[1] == "softmaterials")
+			{
+				primaryword = trinket_gen.softmaterials[Math.floor(Math.random()*trinket_gen.softmaterials.length)];
+			}
+			else if (substrcommands[1] == "gemstone")
+			{
+				primaryword = trinket_gen.gemstones[Math.floor(Math.random()*trinket_gen.gemstones.length)];
+			}
+			else if (substrcommands[1] == "smalleritem")
+			{
+				primaryword = trinket_gen.smalleritems[Math.floor(Math.random()*trinket_gen.smalleritems.length)];
+			}
+			else if (substrcommands[1] == "book")
+			{
+				primaryword = trinket_gen.books[Math.floor(Math.random()*trinket_gen.books.length)];
+			}
+			else if (substrcommands[1] == "factoid")
+			{
+				primaryword = trinket_gen.factoids[Math.floor(Math.random()*trinket_gen.factoids.length)];
+			}
+			else if (substrcommands[1] == "character")
+			{
+				primaryword = trinket_gen.characters[Math.floor(Math.random()*trinket_gen.characters.length)];
+			}
+			else if (substrcommands[1] == "creature")
+			{
+				primaryword = trinket_gen.creatures[Math.floor(Math.random()*trinket_gen.creatures.length)];
+			}
+			else if (substrcommands[1] == "bodypart")
+			{
+				primaryword = trinket_gen.bodyparts[Math.floor(Math.random()*trinket_gen.bodyparts.length)];
+			}
+			let aan = grammarAorAn(primaryword.substr(0,1));
+			trinkettext = trinkettext.substr(0,position) + aan + " " + primaryword + trinkettext.substr(endposition+1);
+		}
+		else
+		{
+			let primaryword = "";
+			if (substrcommands[0] == "adjective")
+			{
+				primaryword = trinket_gen.adjectives[Math.floor(Math.random()*trinket_gen.adjectives.length)];
+			}
+			else if (substrcommands[0] == "hardmaterials")
+			{
+				primaryword = trinket_gen.hardmaterials[Math.floor(Math.random()*trinket_gen.hardmaterials.length)];
+			}
+			else if (substrcommands[0] == "softmaterials")
+			{
+				primaryword = trinket_gen.softmaterials[Math.floor(Math.random()*trinket_gen.softmaterials.length)];
+			}
+			else if (substrcommands[0] == "gemstone")
+			{
+				primaryword = trinket_gen.gemstones[Math.floor(Math.random()*trinket_gen.gemstones.length)];
+			}
+			else if (substrcommands[0] == "smalleritem")
+			{
+				primaryword = trinket_gen.smalleritems[Math.floor(Math.random()*trinket_gen.smalleritems.length)];
+			}
+			else if (substrcommands[0] == "book")
+			{
+				primaryword = trinket_gen.books[Math.floor(Math.random()*trinket_gen.books.length)];
+			}
+			else if (substrcommands[0] == "factoid")
+			{
+				primaryword = trinket_gen.factoids[Math.floor(Math.random()*trinket_gen.factoids.length)];
+			}
+			else if (substrcommands[0] == "character")
+			{
+				primaryword = trinket_gen.characters[Math.floor(Math.random()*trinket_gen.characters.length)];
+			}
+			else if (substrcommands[0] == "creature")
+			{
+				primaryword = trinket_gen.creatures[Math.floor(Math.random()*trinket_gen.creatures.length)];
+			}
+			else if (substrcommands[0] == "bodypart")
+			{
+				primaryword = trinket_gen.bodyparts[Math.floor(Math.random()*trinket_gen.bodyparts.length)];
+			}
+			trinkettext = trinkettext.substr(0,position) + primaryword + trinkettext.substr(endposition+1);
+		}
+		position = trinkettext.indexOf("\[");
+	}
+	
+	return grammarCapitalFirstLetter(trinkettext);
+}
+
+function buyTrinket()
+{
+	let coins = 2 + Math.floor(Math.random()*9);
+	if (coins > currentgay)
+		coins = currentgay;
+	
+	if (coins < 2)
+		return "You don't have enough coins to buy a trinket";
+
+	let trinketpurchase = generateTrinket();
+	currentgay -= coins;
+	saveCurrentGayValue();
+	trinketpurchase += "\nThat's " + coins.toString() + " coins";
+	return trinketpurchase;
 }
 
 
@@ -2815,7 +2964,7 @@ function getPrincessType(list = "")
 }
 
 //
-// generate a weird princess, based on ??? from polyamorousQ
+// generate a weird princess, based on ??? from Quill
 
 function generateWeirdPrincess()
 {
