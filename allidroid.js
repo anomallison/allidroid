@@ -59,6 +59,9 @@ var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'))
 //fren generator files
 var fren_gen = JSON.parse(fs.readFileSync('friend_gen/fren_gen.json'));
 
+//turtle generator files
+var turtle_gen = JSON.parse(fs.readFileSync('turtle_gen/turtle_gen.json'));
+
 //slime generator files
 var slime_gen = JSON.parse(fs.readFileSync('slime_gen/slime_gen.json'));
 
@@ -656,6 +659,9 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "frog") 
 	{
 		generateFren(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "turt" || normalizedCommand == "turtle") 
+	{
+		generateTurtle(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "slime") 
 	{
 		generateSlime(receivedMessage.channel,arguments);
@@ -8427,6 +8433,46 @@ function generateFren(channel, arguments)
 	let path = './' + file;
 	
 	mergeImages(fullfren, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+		
+}
+
+function generateTurtle(channel, arguments)
+{
+	let fullturtle = [];
+	
+	let feet_int = Math.floor(Math.random()*turtle_gen.feet.length);
+	let feet_back = turtle_gen.feet[feet_int].back;
+	fullturtle.push(feet_back);
+	
+	let random_int = Math.floor(Math.random()*turtle_gen.tail.length);
+	let tail = turtle_gen.tail[random_int];
+	fullturtle.push(tail);
+	
+	random_int = Math.floor(Math.random()*turtle_gen.shell.length);
+	let shell = turtle_gen.shell[random_int];
+	fullturtle.push(shell);
+	
+	random_int = Math.floor(Math.random()*turtle_gen.head.length);
+	let head = turtle_gen.head[random_int];
+	fullturtle.push(head);
+	
+	let feet_front = turtle_gen.feet[feet_int].front;
+	fullturtle.push(feet_front);
+	
+	let file = 'newestfren.png';
+	let path = './' + file;
+	
+	mergeImages(fullturtle, 
 	{
 		Canvas: Canvas,
 		Image: Image

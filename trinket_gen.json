@@ -214,6 +214,7 @@
 		"It’s a cookbook. Every recipe uses [creature].",
 		"It’s a saucy erotic novel about [an character] being seduced by [an character].",
 		"It’s a saucy erotic novel about [an character] being seduced by a tentacle monster.",
+		"It’s a saucy erotic novel about a tentacle monster being seduced by [an character].",
 		"There’s a centerfold of [an character] with big naturals.",
 		"It seems to be the handwritten diary of [an character].",
 		"It seems to be the handwritten diary of… the princess! How did they get this??",
@@ -282,7 +283,8 @@
 		"clown",
 		"gorgon",
 		"tengu",
-		"demigod"
+		"demigod",
+		"aboleth"
 	],
 	"creatures":
 	[

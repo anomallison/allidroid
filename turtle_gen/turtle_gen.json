@@ -1,0 +1,35 @@
+{
+	"feet":
+	[
+		{
+			"front": "./turtle_gen/front_feet_0.png",
+			"back": "./turtle_gen/back_feet_0.png"
+		},
+		{
+			"front": "./turtle_gen/front_feet_1.png",
+			"back": "./turtle_gen/back_feet_1.png"
+		},
+		{
+			"front": "./turtle_gen/front_feet_2.png",
+			"back": "./turtle_gen/back_feet_2.png"
+		}
+	],
+	"head":
+	[
+		"./turtle_gen/head_0.png",
+		"./turtle_gen/head_1.png",
+		"./turtle_gen/head_2.png"
+	],
+	"shell":
+	[
+		"./turtle_gen/shell_0.png",
+		"./turtle_gen/shell_1.png",
+		"./turtle_gen/shell_2.png"
+	],
+	"tail":
+	[
+		"./turtle_gen/tail_0.png",
+		"./turtle_gen/tail_1.png",
+		"./turtle_gen/tail_2.png"
+	]
+}
