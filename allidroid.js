@@ -18193,7 +18193,7 @@ function generateVoronoiMap(numberOfPoints, margin, w, h, waterpasses, relaxatio
 	{
 		let randomCell = Math.floor(Math.random()*diagram.cells.length);
 		let neighbours = diagram.cells[randomCell].getNeighborIds();
-		let peakheight = 2.1 + Math.random()*4.2;
+		let peakheight = 1.8 + Math.random()*3.6;
 		
 		let cellBbox = diagram.cells[randomCell].getBbox();
 		if (cellBbox.x > watercellborder && (cellBbox.x + cellBbox.width) < w - watercellborder && cellBbox.y > watercellborder && (cellBbox.y + cellBbox.height) < h - watercellborder)
@@ -18379,7 +18379,7 @@ function generateVoronoiMap(numberOfPoints, margin, w, h, waterpasses, relaxatio
 function DrawVoronoiMapMap(channel, arguments)
 {
 	let p = 4000;
-	let m = 4;
+	let m = 0.75;
 	let w = 1920;
 	let h = 1080;
 	let wp = 4;
@@ -18392,8 +18392,8 @@ function DrawVoronoiMapMap(channel, arguments)
 		let argumentpos = arguments.indexOf("-p");
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			p = parseInt(arguments[argumentpos+1]);
-		if (p > 40000)
-			p = 40000;
+		if (p > 16000)
+			p = 16000;
 		argumentpos = arguments.indexOf("-w")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			w = parseInt(arguments[argumentpos+1]);
@@ -18403,19 +18403,17 @@ function DrawVoronoiMapMap(channel, arguments)
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			h = parseInt(arguments[argumentpos+1]);
 		argumentpos = arguments.indexOf("-m")
-		if (h > 4500)
-			h = 4500;
+		if (h > 4800)
+			h = 4800;
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
-			m = parseInt(arguments[argumentpos+1]);
+			m = parseFloat(arguments[argumentpos+1]);
 		if (m < 0)
 			m = 0;
-		if (m > w/2 || m > h/2)
-			m = Math.min(w/2, h/2);
 		argumentpos = arguments.indexOf("-wp")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			wp = parseInt(arguments[argumentpos+1]);
-		if (wp > 250)
-			r = 250;
+		if (wp > 100)
+			wp = 100;
 		argumentpos = arguments.indexOf("-r")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			r = parseInt(arguments[argumentpos+1]);
@@ -18433,12 +18431,14 @@ function DrawVoronoiMapMap(channel, arguments)
 			s = 100;
 	}
 	
-	let mountains = p / 97;
+	let plog = Math.log2(p);
+	let mountains = (Math.random()*0.333 + 0.667) * plog * plog * m; // p / 61;
 	let mountainsL = mountains / 7;
 	let rivers = mountains / 6;
 	let riversL = rivers / 9;
+	let margin = 4;
 	
-	let diagram = generateVoronoiMap(p, m, w, h, wp, r, s, lm, mountains, mountainsL);
+	let diagram = generateVoronoiMap(p, margin, w, h, wp, r, s, lm, mountains, mountainsL);
 	
 	findOceanCells(diagram.cells);
 	
