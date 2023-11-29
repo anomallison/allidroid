@@ -20,6 +20,8 @@ const { Canvas, Image } = require('canvas');
 
 const paper = require('paper-jsdom-canvas');
 
+const Voronoi = require('voronoi');
+
 var fs = require("fs");
 
 const monster_types = 
@@ -708,9 +710,9 @@ function processCommand(receivedMessage)
 	{
 		DrawTownMap(receivedMessage.channel,arguments);
 	}
-	else if (normalizedCommand == "renderhexworldmap")
+	else if (normalizedCommand == "polygonmap")
 	{
-		DrawHexWorldMap(receivedMessage.channel,arguments);
+		DrawVoronoiMapMap(receivedMessage.channel,arguments);
 	}
 	else if (normalizedCommand == "pickupline") 
 	{
@@ -10693,8 +10695,8 @@ function noisemaptopng(channel, arguments)
 	
 	let imagemap = [];
 	let noisemap = noiseMap2D(map_height, map_width, 0.23, 045);
-	noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
-	//noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
+	noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
 	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
 	
 	for (let y = 0; y < map_height; y++)
@@ -17788,1276 +17790,803 @@ function GetContiguousWaterHexes(start, map, map_width, map_height)
 	return doneHexes;
 }
 
-const OUTERRADIUS = 1.0;
-const INNERRADIUS = 0.866025404;
-const PERTURBSTRENGTH = 11;
-const HIGHLANDHEIGHT = 19;
-const SNOWCAPHEIGHT = 25;
-
-function PerturbHexPoint(point, noisemapX, noisemapY, width)
+function addToBasicDictionary(dictionary, key, value)
 {
-	xnoise = noisemapX[Math.round(point.x * width + point.y)];
-	ynoise = noisemapY[Math.round(point.x * width + point.y)];
+	for(let i = 0; i < dictionary.length; i++)
+	{
+		if (dictionary[i].key == key)
+		{
+			dictionary[i].value = value;
+			return;
+		}
+	}
 	
-	return { x: point.x + xnoise * PERTURBSTRENGTH, y: point.y + ynoise * PERTURBSTRENGTH }
+	dictionary.push({ key: key, value: value });
 }
 
-function GenerateHexWorldMap(pixelsPerHex, w, h, landratio, smoothpasses)
+function getFromBasicDictionary(dictionary, key)
 {
-	let hexWorldMap = 
+	for(let i = 0; i < dictionary.length; i++)
 	{
-		pph: pixelsPerHex,
-		height: h,
-		width: w,
-		hexes: [h*w],
-		heightmax: 1,
-		heightmin: -1,
-		landmasses: 0,
-		lakes: 0,
-		highlands: 0,
-		snowcaps: 0
-	}
-	
-	let noisemapX = noiseMap2D(pixelsPerHex * h, pixelsPerHex * w, 0.67);
-		noisemapX = increaseContrast(noisemapX, pixelsPerHex * h, pixelsPerHex * w, 0.4);
-		noisemapX = smoothenMap(noisemapX, pixelsPerHex * h, pixelsPerHex * w, 0.175);
-		noisemapX = increaseContrast(noisemapX, pixelsPerHex * h, pixelsPerHex * w, 0.25);
-		
-	let noisemapY = noiseMap2D(pixelsPerHex * h, pixelsPerHex * w, 0.67);
-		noisemapY = increaseContrast(noisemapY, pixelsPerHex * h, pixelsPerHex * w, 0.4);
-		noisemapY = smoothenMap(noisemapY, pixelsPerHex * h, pixelsPerHex * w, 0.175);
-		noisemapY = increaseContrast(noisemapY, pixelsPerHex * h, pixelsPerHex * w, 0.25);
-	
-	
-	for (let i = 0; i < h; i++)
-	{
-		for (let j = 0; j < w; j++)
+		if (dictionary[i].key == key)
 		{
-			let baseX = (pixelsPerHex * INNERRADIUS) + j * pixelsPerHex * INNERRADIUS * 2;
-			let baseY = (pixelsPerHex * OUTERRADIUS) + i * pixelsPerHex * OUTERRADIUS * 1.5;
-			if (i % 2 == 1)
-			{
-				baseX += pixelsPerHex * INNERRADIUS;
-			}
-			
-			hexWorldMap.hexes[i*w + j] = 
-			{
-				p0: PerturbHexPoint({ x: baseX, y: baseY + OUTERRADIUS * pixelsPerHex }, noisemapX, noisemapY, w),
-				p1: PerturbHexPoint({ x: baseX + INNERRADIUS * pixelsPerHex, y: baseY + OUTERRADIUS * pixelsPerHex / 2 }, noisemapX, noisemapY, w),
-				p2: PerturbHexPoint({ x: baseX + INNERRADIUS * pixelsPerHex, y: baseY - OUTERRADIUS * pixelsPerHex / 2 }, noisemapX, noisemapY, w),
-				p3: PerturbHexPoint({ x: baseX, y: baseY - OUTERRADIUS * pixelsPerHex }, noisemapX, noisemapY, w),
-				p4: PerturbHexPoint({ x: baseX - INNERRADIUS * pixelsPerHex, y: baseY - OUTERRADIUS * pixelsPerHex / 2 }, noisemapX, noisemapY, w),
-				p5: PerturbHexPoint({ x: baseX - INNERRADIUS * pixelsPerHex, y: baseY + OUTERRADIUS * pixelsPerHex / 2 }, noisemapX, noisemapY, w),
-				height: -25,
-				landmass: -1,
-				lake: -1,
-				mountain: -1
-			}
+			return dictionary[i].value;
 		}
 	}
 	
-	let minx = Math.min(Math.ceil(w/8), Math.ceil(h/8));
-	let maxx = w - minx;
-	let miny = minx;
-	let maxy = h - miny;
-	let avgheight = 0;
-	let landtosearatio = 0;
-	
-	let landmassVal = (h+w)*0.53;
-	
-	while (landtosearatio < landratio)
-	{
-		for (let i = 0; i < landmassVal; i++)
-		{
-			let randomx = Math.floor(Math.random() * (maxx - minx) + minx);
-			let randomy = Math.floor(Math.random() * (maxy - miny) + miny);
-			let randoml = Math.floor((Math.random() * (maxx - minx) + minx) + (Math.random() * (maxy - miny) + miny));
-			let currenthex = { x: randomx, y: randomy }
-			let startdirection = Math.floor(Math.random() * 6);
-			let heightchange = (Math.random() * 4.25) + 0.75;
-			
-			for (let j = 0; j < randoml; j++)
-			{
-				hexWorldMap.hexes[currenthex.y * w + currenthex.x].height += heightchange;
-				
-				MoveUpwardHex(currenthex, startdirection + Math.floor(Math.random() * 3 - 2));
-				
-				if (currenthex.x < minx || currenthex.x > maxx || currenthex.y < miny || currenthex.y > maxy)
-				{
-					randoml = -1;
-				}
-			}
-		}
-		
-		let smoothedHeightmap = [h*w];
-		avgheight = 0;
-		landtosearatio = 0;
-		
-		for (let i  = 0; i < h*w; i++)
-		{
-			let currenthex = { x: i % w, y: Math.floor(i / w) }
-			let nhex0 = GetHexNeighbour(currenthex, 0);
-			let nhex1 = GetHexNeighbour(currenthex, 1);
-			let nhex2 = GetHexNeighbour(currenthex, 2);
-			let nhex3 = GetHexNeighbour(currenthex, 3);
-			let nhex4 = GetHexNeighbour(currenthex, 4);
-			let nhex5 = GetHexNeighbour(currenthex, 5);
-			
-			let totalheight = hexWorldMap.hexes[currenthex.y * w + currenthex.x].height;
-			let hexcount = 1;
-			if (nhex0.x >= 0 && nhex0.x < w && nhex0.y >= 0 && nhex0.y < h)
-			{
-				totalheight += hexWorldMap.hexes[nhex0.y * w + nhex0.x].height;
-				hexcount++;
-			}
-			if (nhex1.x >= 0 && nhex1.x < w && nhex1.y >= 0 && nhex1.y < h)
-			{
-				totalheight += hexWorldMap.hexes[nhex1.y * w + nhex1.x].height;
-				hexcount++;
-			}
-			if (nhex2.x >= 0 && nhex2.x < w && nhex2.y >= 0 && nhex2.y < h)
-			{
-				totalheight += hexWorldMap.hexes[nhex2.y * w + nhex2.x].height;
-				hexcount++;
-			}
-			if (nhex3.x >= 0 && nhex3.x < w && nhex3.y >= 0 && nhex3.y < h)
-			{
-				totalheight += hexWorldMap.hexes[nhex3.y * w + nhex3.x].height;
-				hexcount++;
-			}
-			if (nhex4.x >= 0 && nhex4.x < w && nhex4.y >= 0 && nhex4.y < h)
-			{
-				totalheight += hexWorldMap.hexes[nhex4.y * w + nhex4.x].height;
-				hexcount++;
-			}
-			if (nhex5.x >= 0 && nhex5.x < w && nhex5.y >= 0 && nhex5.y < h)
-			{
-				totalheight += hexWorldMap.hexes[nhex5.y * w + nhex5.x].height;
-				hexcount++;
-			}
-			
-			smoothedHeightmap[i] = totalheight / hexcount;
-		}
-		
-		for (let j = 1; j < smoothpasses; j++)
-		{
-			for (let i  = 0; i < h*w; i++)
-			{
-				let currenthex = { x: i % w, y: Math.floor(i / w) }
-				let nhex0 = GetHexNeighbour(currenthex, 0);
-				let nhex1 = GetHexNeighbour(currenthex, 1);
-				let nhex2 = GetHexNeighbour(currenthex, 2);
-				let nhex3 = GetHexNeighbour(currenthex, 3);
-				let nhex4 = GetHexNeighbour(currenthex, 4);
-				let nhex5 = GetHexNeighbour(currenthex, 5);
-				
-				let totalheight = smoothedHeightmap[currenthex.y * w + currenthex.x];
-				let hexcount = 1;
-				if (nhex0.x >= 0 && nhex0.x < w && nhex0.y >= 0 && nhex0.y < h)
-				{
-					totalheight += smoothedHeightmap[nhex0.y * w + nhex0.x];
-					hexcount++;
-				}
-				if (nhex1.x >= 0 && nhex1.x < w && nhex1.y >= 0 && nhex1.y < h)
-				{
-					totalheight += smoothedHeightmap[nhex1.y * w + nhex1.x];
-					hexcount++;
-				}
-				if (nhex2.x >= 0 && nhex2.x < w && nhex2.y >= 0 && nhex2.y < h)
-				{
-					totalheight += smoothedHeightmap[nhex2.y * w + nhex2.x];
-					hexcount++;
-				}
-				if (nhex3.x >= 0 && nhex3.x < w && nhex3.y >= 0 && nhex3.y < h)
-				{
-					totalheight += smoothedHeightmap[nhex3.y * w + nhex3.x];
-					hexcount++;
-				}
-				if (nhex4.x >= 0 && nhex4.x < w && nhex4.y >= 0 && nhex4.y < h)
-				{
-					totalheight += smoothedHeightmap[nhex4.y * w + nhex4.x];
-					hexcount++;
-				}
-				if (nhex5.x >= 0 && nhex5.x < w && nhex5.y >= 0 && nhex5.y < h)
-				{
-					totalheight += smoothedHeightmap[nhex5.y * w + nhex5.x];
-					hexcount++;
-				}
-				
-				smoothedHeightmap[i] = totalheight / hexcount;
-			}
-		}
-		
-		for (let i = 0; i < (h*w); i++)
-		{
-			if (smoothedHeightmap[i] > 0)
-				landtosearatio++;
-			avgheight +=  smoothedHeightmap[i];
-		}
-		
-		avgheight = avgheight/(h*w);
-		landtosearatio = landtosearatio/(h*w);
-		let max = -1.0;
-		let min = 1.0;
-		if (landtosearatio > landratio)
-		{
-			for (let i = 0; i < h*w; i++)
-			{
-				hexWorldMap.hexes[i].height = smoothedHeightmap[i];
-				if (smoothedHeightmap[i] < min)
-					min = smoothedHeightmap[i];
-				if (smoothedHeightmap[i] > max)
-					max = smoothedHeightmap[i];
-			}
-			
-			hexWorldMap.heightmax = max;
-			hexWorldMap.heightmin = min;
-		}
-		
-	}
-	
-	let landmassCount = 0;
-	
-	for (let i = 0; i < h*w; i++)
-	{
-		if (hexWorldMap.hexes[i].height >= 0 && hexWorldMap.hexes[i].landmass == -1)
-		{
-			let currenthex = { x: i % w, y: Math.floor(i / w) }
-			let currentlandmass = GetContiguousLandHexes(currenthex, hexWorldMap, w, h);
-			
-			for(let j = 0; j < currentlandmass.length; j++)
-			{
-				hexWorldMap.hexes[currentlandmass[j].y * w + currentlandmass[j].x].landmass = landmassCount;
-			}
-			
-			landmassCount++;
-		}
-	}
-	
-	hexWorldMap.landmasses = landmassCount;
-	
-	let lakeCount = 0;
-	
-	for (let i = 0; i < h*w; i++)
-	{
-		if (hexWorldMap.hexes[i].height < 0 && hexWorldMap.hexes[i].lake == -1)
-		{
-			let currenthex = { x: i % w, y: Math.floor(i / w) }
-			let currentlandmass = GetContiguousWaterHexes(currenthex, hexWorldMap, w, h);
-			
-			for(let j = 0; j < currentlandmass.length; j++)
-			{
-				hexWorldMap.hexes[currentlandmass[j].y * w + currentlandmass[j].x].lake = lakeCount;
-			}
-			
-			lakeCount++;
-		}
-	}
-	
-	hexWorldMap.lakes = lakeCount;
-	
-	let highlandCount = 0;
-	
-	for (let i = 0; i < h*w; i++)
-	{
-		if (hexWorldMap.hexes[i].height >= HIGHLANDHEIGHT && hexWorldMap.hexes[i].mountain == -1)
-		{
-			let currenthex = { x: i % w, y: Math.floor(i / w) }
-			let currentlandmass = GetContiguousHexesAboveHeight(currenthex, hexWorldMap, w, h, HIGHLANDHEIGHT);
-			
-			for(let j = 0; j < currentlandmass.length; j++)
-			{
-				hexWorldMap.hexes[currentlandmass[j].y * w + currentlandmass[j].x].mountain = highlandCount;
-			}
-			
-			highlandCount++;
-		}
-	}
-	
-	hexWorldMap.highlands = highlandCount;
-	
-	let snowcapCount = highlandCount;
-	
-	for (let i = 0; i < h*w; i++)
-	{
-		if (hexWorldMap.hexes[i].height >= SNOWCAPHEIGHT && hexWorldMap.hexes[i].mountain < highlandCount)
-		{
-			let currenthex = { x: i % w, y: Math.floor(i / w) }
-			let currentlandmass = GetContiguousHexesAboveHeight(currenthex, hexWorldMap, w, h, SNOWCAPHEIGHT);
-			
-			for(let j = 0; j < currentlandmass.length; j++)
-			{
-				hexWorldMap.hexes[currentlandmass[j].y * w + currentlandmass[j].x].mountain = snowcapCount;
-			}
-			
-			snowcapCount++;
-		}
-	}
-	
-	hexWorldMap.snowcaps = snowcapCount - highlandCount;
-	
-	return hexWorldMap;
+	return null;
 }
 
-function DrawHexWorldMap(channel, arguments)
+function getDistanceBetweenCells(a, b)
 {
-	let MAP_HEIGHT = 24;
-	let MAP_WIDTH = 54;
-	let LANDRATIO = 0.53;
-	let SMOOTHING = 1;
-	if (arguments != null)
+	let x = (b.site.x - a.site.x) * (b.site.x - a.site.x);
+	let y = (b.site.y - a.site.y) * (b.site.y - a.site.y);
+	
+	let h = Math.sqrt(x+y);
+	
+	return h;
+}
+
+function dictionaryToCellPath(dictionary, start, end)
+{
+	let current = end;
+	let reversepath = [];
+	
+	while (current != start && current != null)
 	{
-		let argumentpos = arguments.indexOf("-h");
-		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		reversepath.push(current);
+		current = getFromBasicDictionary(dictionary, current.site.voronoiId);
+	}
+	
+	let path = [];
+	
+	for (let i = reversepath.length - 1; i > -1; i--)
+	{
+		path.push(reversepath[i]);
+	}
+	
+	return path;
+}
+
+function pathToCell(startcell, targetcell, cells)
+{
+	let frontierQueue = [{ cell: startcell, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let closest = startcell;
+	let closestHeuristic = 99999999;
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		if (nextinqueue < 0)
 		{
-			MAP_HEIGHT = Math.floor(parseInt(arguments[argumentpos+1]));
-			if (MAP_HEIGHT > 240)
-				MAP_HEIGHT = 240;
-			if (MAP_HEIGHT <= 0)
-				MAP_HEIGHT = 24;
+			//unexpected Path End
+			return dictionaryToCellPath(dictionaryCameFrom, startcell, closest);
 		}
-		argumentpos = arguments.indexOf("-w");
-		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		current = frontierQueue[nextinqueue].cell;
+		frontierQueue.splice(nextinqueue,1);
+		
+		if (current == targetcell)
 		{
-			MAP_WIDTH = Math.floor(parseInt(arguments[argumentpos+1]));
-			if (MAP_WIDTH > 540)
-				MAP_WIDTH = 540;
-			if (MAP_WIDTH <= 0)
-				MAP_WIDTH = 54;
+			return dictionaryToCellPath(dictionaryCameFrom, startcell, targetcell);
 		}
-		argumentpos = arguments.indexOf("-land");
-		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		
+		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current.site.voronoiId)
+		if (tempcost != null)
 		{
-			LANDRATIO = parseFloat(arguments[argumentpos+1]);
-			if (LANDRATIO > 0.66)
-				LANDRATIO = 0.66;
-			if (LANDRATIO <= 0)
-				LANDRATIO = 0.005;
+			newcost = tempcost;
 		}
-		argumentpos = arguments.indexOf("-smooth");
-		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		
+		let neighbours = current.getNeighborIds();
+		
+		for (let i = 0; i < neighbours.length; i++)
 		{
-			SMOOTHING = Math.floor(parseInt(arguments[argumentpos+1]));
-			if (SMOOTHING > 7)
-				SMOOTHING = 7;
-			if (SMOOTHING <= 0)
-				SMOOTHING = 1;
+			neighbourCell = cells[neighbours[i]];
+			let heightweight = neighbourCell.height < 0 ? (neighbourCell.height + 1) * (neighbourCell.height + 1) : (neighbourCell.height * neighbourCell.height)
+			if (neighbourCell.height < 0)
+				heightweight = 0.25;
+			let connectioncost = newcost + 1 + heightweight;
+			tempcost = getFromBasicDictionary(dictionaryCostSoFar, neighbours[i])
+			if (tempcost != null)
+			{
+				oldcost = tempcost;
+				if (connectioncost < oldcost)
+				{
+					addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+					priority = connectioncost + getDistanceBetweenCells(neighbourCell, targetcell);
+					if (priority - connectioncost < closestHeuristic)
+					{
+						closest = neighbourCell;
+						closestHeuristic = priority - connectioncost;
+					}
+					frontierQueue.push({ cell: neighbourCell, priority: priority });
+					addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+				}
+			}
+			else
+			{
+				addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+				priority = connectioncost + getDistanceBetweenCells(neighbourCell, targetcell);
+				if (priority - connectioncost < closestHeuristic)
+				{
+					closest = neighbourCell;
+					closestHeuristic = priority - connectioncost;
+				}
+				frontierQueue.push({ cell: neighbourCell, priority: priority });
+				addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+			}
 		}
 	}
 	
-	let hexWorldMap = GenerateHexWorldMap(10, MAP_WIDTH, MAP_HEIGHT, LANDRATIO, SMOOTHING);
+	return dictionaryToCellPath(dictionaryCameFrom, startcell, closest);
+}
+
+function findOceanCells(cells)
+{
+	let topleftcorner = cells[0];
+	let topleftcornerBbox = topleftcorner.getBbox();
+	cells.forEach(cell => {
+		let cellBbox = cell.getBbox();
+		if (cellBbox.x < topleftcornerBbox.x)
+		{
+			topleftcorner = cell;
+			topleftcornerBbox = topleftcorner.getBbox();
+		}
+		else if (cellBbox.x == topleftcornerBbox.x && cellBbox.y < topleftcornerBbox.y)
+		{
+			topleftcorner = cell;
+			topleftcornerBbox = topleftcorner.getBbox();
+		}
+	});
+	
+	let frontierQueue = [{ cell: topleftcorner, priority: 0 }];
+	let doneCells = [];
+	let priority;
+	
+	let current;
+	
+	doneCells.push(topleftcorner.site.voronoiId);
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		if (nextinqueue < 0)
+		{
+			//unexpected ocean end
+			return false;
+		}
+		current = frontierQueue[nextinqueue].cell;
+		priority = frontierQueue[nextinqueue].priority;
+		frontierQueue.splice(nextinqueue,1);
+		
+		let neighbours = current.getNeighborIds();
+		
+		for (let i = 0; i < neighbours.length; i++)
+		{
+			neighbourCell = cells[neighbours[i]];
+			
+			if (!doneCells.includes(neighbours[i]))
+			{
+				if (neighbourCell.height < 0)
+				{
+					neighbourCell.oceanCell = true;
+					frontierQueue.push({ cell: neighbourCell, priority: priority + 1});
+				}
+				doneCells.push(neighbours[i]);
+			}
+		}
+	}
+	
+	return true
+}
+
+
+function nearestOceanCell(startcell, cells)
+{
+	let frontierQueue = [{ cell: startcell, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		if (nextinqueue < 0)
+		{
+			//unexpected Path End
+			return null;
+		}
+		current = frontierQueue[nextinqueue].cell;
+		frontierQueue.splice(nextinqueue,1);
+		
+		if (current.oceanCell)
+		{
+			return current;
+		}
+		
+		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current.site.voronoiId)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+		}
+		
+		let neighbours = current.getNeighborIds();
+		
+		for (let i = 0; i < neighbours.length; i++)
+		{
+			neighbourCell = cells[neighbours[i]];
+			let heightweight = neighbourCell.height < 1 ? (neighbourCell.height + 1) * (neighbourCell.height + 1) : (neighbourCell.height * neighbourCell.height)
+			if (neighbourCell.height < 0)
+				heightweight = 10 - neighbourCell.height;
+			let connectioncost = newcost + 1 + heightweight;
+			tempcost = getFromBasicDictionary(dictionaryCostSoFar, neighbours[i])
+			if (tempcost != null)
+			{
+				oldcost = tempcost;
+				if (connectioncost < oldcost)
+				{
+					addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+					priority = connectioncost + 1;
+					frontierQueue.push({ cell: neighbourCell, priority: priority });
+					addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+				}
+			}
+			else
+			{
+				addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+				priority = connectioncost + 1;
+				frontierQueue.push({ cell: neighbourCell, priority: priority });
+				addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+			}
+		}
+	}
+	
+	return null;
+}
+
+function nearestCellBelowXHeight(startcell, targetHeight, cells)
+{
+	let frontierQueue = [{ cell: startcell, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		if (nextinqueue < 0)
+		{
+			//unexpected Path End
+			return null;
+		}
+		current = frontierQueue[nextinqueue].cell;
+		frontierQueue.splice(nextinqueue,1);
+		
+		if (current.height < targetHeight)
+		{
+			return current;
+		}
+		
+		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current.site.voronoiId)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+		}
+		
+		let neighbours = current.getNeighborIds();
+		
+		for (let i = 0; i < neighbours.length; i++)
+		{
+			neighbourCell = cells[neighbours[i]];
+			let heightweight = neighbourCell.height < 1 ? (neighbourCell.height + 1) * (neighbourCell.height + 1) : (neighbourCell.height * neighbourCell.height)
+			let connectioncost = newcost + 1 + heightweight;
+			tempcost = getFromBasicDictionary(dictionaryCostSoFar, neighbours[i])
+			if (tempcost != null)
+			{
+				oldcost = tempcost;
+				if (connectioncost < oldcost)
+				{
+					addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+					priority = connectioncost + 1;
+					frontierQueue.push({ cell: neighbourCell, priority: priority });
+					addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+				}
+			}
+			else
+			{
+				addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+				priority = connectioncost + 1;
+				frontierQueue.push({ cell: neighbourCell, priority: priority });
+				addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+			}
+		}
+	}
+	
+	return null;
+}
+
+function generateVoronoiMap(numberOfPoints, margin, w, h, waterpasses, relaxation, smoothingIterations, landmassCount, mountainsCount, mountainsLength)
+{
+	if (h <= 0 || w <= 0)
+		return false;
+	
+	let points = [];
+	
+	for (let i = 0; i < numberOfPoints; i++)
+	{
+		let newx = Math.floor(((w - margin*2) * Math.random()) + margin);
+		let newy = Math.floor(((h - margin*2) * Math.random()) + margin);
+		let newpoint = { x: newx, y: newy };
+		if (!ContainsIdenticalXY(points, newpoint))
+		{
+			points.push(newpoint);
+		}
+	}
+	
+	let boundbox = { xl: margin, xr: w - margin, yt: margin, yb: h - margin };
+	
+	let diagram = new Voronoi().compute(points, boundbox);
+	
+	//let noisemapHeight = noiseMap2D(h, w, 0.64);
+	//noisemapHeight = increaseContrast(noisemapHeight, h, w, 0.66);
+	//noisemapHeight = smoothenMap(noisemapHeight, h, w, 0.25);
+	
+	for (let i = 0; i < relaxation; i++)
+	{
+		points = [];
+		
+		diagram.cells.forEach(cell => {
+			let cellBbox = cell.getBbox();
+			let newpoint = { x: Math.floor((cellBbox.x + (cellBbox.width/2))), y: Math.floor((cellBbox.y + (cellBbox.height/2))) };
+			points.push(newpoint);
+		});
+		
+		diagram = new Voronoi().compute(points, boundbox);
+	}
+	
+	diagram.cells.forEach(cell => {
+		cell.height = -10;
+	});
+	
+	// random landmasses
+	
+	let watercellborder = Math.min(w/4, h/4);
+	for (let i = 0; i < landmassCount; i++)
+	{
+		let centrePoint = { x: w/8 + Math.random()*w*6/8, y: h/8 + Math.random()*h*6/8 };
+		let radius = Math.random() * Math.min(w/4, h/4) + Math.min(w/4, h/4);
+		let maxDistance = Math.min(w - watercellborder - centrePoint.x, centrePoint.x - watercellborder, h - watercellborder - centrePoint.y, centrePoint.y - watercellborder, radius);
+		if (maxDistance < 0)
+		{
+			i--;
+		}
+		else
+		{
+			diagram.cells.forEach(cell => {
+				let heightmapindex = cell.site.x + (cell.site.y * w);
+				let distanceFromC = LengthBetweenPoints(cell.site, centrePoint);
+				let propDistance = Math.max(1 - (distanceFromC / maxDistance), 0);
+				let newheight = 4 * propDistance;
+				if (newheight > 0)
+					cell.height = newheight;
+			});
+		}
+	}
+	
+	let attempts = 0;
+	//random mountains
+	for (let j = 0; j < mountainsCount; j++)
+	{
+		let randomCell = Math.floor(Math.random()*diagram.cells.length);
+		let neighbours = diagram.cells[randomCell].getNeighborIds();
+		let peakheight = 2.1 + Math.random()*4.2;
+		
+		let cellBbox = diagram.cells[randomCell].getBbox();
+		if (cellBbox.x > watercellborder && (cellBbox.x + cellBbox.width) < w - watercellborder && cellBbox.y > watercellborder && (cellBbox.y + cellBbox.height) < h - watercellborder)
+		{
+			diagram.cells[randomCell].height += peakheight;
+			for (let i = 0; i < neighbours.length; i++)
+			{
+				diagram.cells[neighbours[i]].height += peakheight*2/3;
+			}
+			
+			let nextCell = neighbours[Math.floor(Math.random()*neighbours.length)];
+			let forbiddenCells = [];
+			
+			for (let i = 0; i < mountainsLength; i++)
+			{
+				diagram.cells[nextCell].height += peakheight/2;
+				let nextNeighbours = diagram.cells[nextCell].getNeighborIds();
+				for (let k = 0; k < nextNeighbours.length; k++)
+				{
+					diagram.cells[nextNeighbours[k]].height += peakheight/3;
+				}
+				forbiddenCells.push(nextCell);
+				nextCell = nextNeighbours[Math.floor(Math.random()*nextNeighbours.length)];
+				let nextAttempts = 0;
+				while (forbiddenCells.includes(nextCell))
+				{
+					nextCell = nextNeighbours[Math.floor(Math.random()*nextNeighbours.length)];
+					nextAttempts++;
+					if (nextAttempts > 128)
+					{
+						i = mountainsLength;
+						break;
+					}
+				}
+			}
+			
+			attempts = 0;
+		}
+		else if (attempts < 24)
+		{
+			attempts++;
+			j--;
+		}
+		else
+		{
+			attempts = 0;
+		}			
+	}
+	
+	let lakescount = 0; //mountainsCount/3;
+	
+	//random lakes
+	for (let j = 0; j < lakescount; j++)
+	{
+		let randomCell = Math.floor(Math.random()*diagram.cells.length);
+		let neighbours = diagram.cells[randomCell].getNeighborIds();
+		let peakheight = 0.75 + Math.random()*1.25;
+		
+		let cellBbox = diagram.cells[randomCell].getBbox();
+		if (cellBbox.x > watercellborder && (cellBbox.x + cellBbox.width) < w - watercellborder && cellBbox.y > watercellborder && (cellBbox.y + cellBbox.height) < h - watercellborder)
+		{
+			diagram.cells[randomCell].height -= peakheight;
+			for (let i = 0; i < neighbours.length; i++)
+			{
+				diagram.cells[neighbours[i]].height -= peakheight;
+			}
+			
+			let nextCell = neighbours[Math.floor(Math.random()*neighbours.length)];
+			let forbiddenCells = [];
+			
+			for (let i = 0; i < mountainsLength; i++)
+			{
+				diagram.cells[nextCell].height -= peakheight;
+				let nextNeighbours = diagram.cells[nextCell].getNeighborIds();
+				for (let k = 0; k < nextNeighbours.length; k++)
+				{
+					diagram.cells[nextNeighbours[k]].height -= peakheight;
+				}
+				forbiddenCells.push(nextCell);
+				nextCell = nextNeighbours[Math.floor(Math.random()*nextNeighbours.length)];
+				let nextAttempts = 0;
+				while (forbiddenCells.includes(nextCell))
+				{
+					nextCell = nextNeighbours[Math.floor(Math.random()*nextNeighbours.length)];
+					nextAttempts++;
+					if (nextAttempts > 128)
+					{
+						i = mountainsLength;
+						break;
+					}
+				}
+			}
+			
+			attempts = 0;
+		}
+		else if (attempts < 24)
+		{
+			attempts++;
+			j--;
+		}
+		else
+		{
+			attempts = 0;
+		}			
+	}
+	
+	// land/water automata
+	for (let j = 0; j < waterpasses; j++)
+	{
+		let automataChanges = [];
+		diagram.cells.forEach(cell => {
+			let neighbours = cell.getNeighborIds();
+			let surroundingWater = 0;
+			for (let i = 0; i < neighbours.length; i++)
+			{
+				if (diagram.cells[neighbours[i]].height < 0)
+				{
+					surroundingWater++;
+				}
+			}
+			if (surroundingWater/neighbours.length > 0.667 && cell.height > 0)
+			{
+				automataChanges.push({ voronoiId: cell.site.voronoiId, newHeight: -1 });
+			}
+			else if (surroundingWater/neighbours.length < 0.333 && cell.height < 0)
+			{
+				automataChanges.push({ voronoiId: cell.site.voronoiId, newHeight: 1 });
+			}
+		});
+		
+		for (let i = 0; i < automataChanges.length; i++)
+		{
+			diagram.cells[automataChanges[i].voronoiId].height = automataChanges[i].newHeight;
+		}
+	}
+	
+	//smooth heights
+	
+	for (let j = 0; j < smoothingIterations; j++);
+	{
+		let cellChanges = [];
+	
+		diagram.cells.forEach(cell => {
+			let neighbours = cell.getNeighborIds();
+			let totalHeight = 0;
+			let totalCount = 0;
+			
+			for (let i = 0; i < neighbours.length; i++)
+			{
+				totalHeight += diagram.cells[neighbours[i]].height;
+				totalCount++;
+			}
+			
+			let stddev = (totalHeight/totalCount);
+			
+			let heightChange;
+			
+			heightChange = (stddev + cell.height)/2;
+			
+			/*			
+			if (cell.height < 0)
+			{
+				heightChange = (stddev + stddev + stddev + cell.height)/4;
+			}
+			else if (Math.abs(stddev - cell.height) > cell.height/2)
+				heightChange = (stddev + cell.height + cell.height + cell.height)/4;
+			else
+				heightChange = (stddev + cell.height)/2;
+			*/
+			
+			cellChanges.push({ voronoiId: cell.site.voronoiId, newHeight: heightChange });
+		});
+		
+		for (let i = 0; i < cellChanges.length; i++)
+		{
+			diagram.cells[cellChanges[i].voronoiId].height = cellChanges[i].newHeight;
+		}
+	}
+	
+	return diagram;
+}
+
+function DrawVoronoiMapMap(channel, arguments)
+{
+	let p = 4000;
+	let m = 4;
+	let w = 1920;
+	let h = 1080;
+	let wp = 4;
+	let r = 4;
+	let s = 64;
+	let lm = 16;
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		let argumentpos = arguments.indexOf("-p");
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			p = parseInt(arguments[argumentpos+1]);
+		if (p > 40000)
+			p = 40000;
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			w = parseInt(arguments[argumentpos+1]);
+		if (w > 6400)
+			w = 6400;
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			h = parseInt(arguments[argumentpos+1]);
+		argumentpos = arguments.indexOf("-m")
+		if (h > 4500)
+			h = 4500;
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+			m = parseInt(arguments[argumentpos+1]);
+		if (m < 0)
+			m = 0;
+		if (m > w/2 || m > h/2)
+			m = Math.min(w/2, h/2);
+		argumentpos = arguments.indexOf("-wp")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			wp = parseInt(arguments[argumentpos+1]);
+		if (wp > 250)
+			r = 250;
+		argumentpos = arguments.indexOf("-r")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			r = parseInt(arguments[argumentpos+1]);
+		if (r > 9)
+			r = 8;
+		argumentpos = arguments.indexOf("-lm")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			lm = parseInt(arguments[argumentpos+1]);
+		if (lm > 64)
+			lm = 64;
+		argumentpos = arguments.indexOf("-s")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			s = parseInt(arguments[argumentpos+1]);
+		if (s > 100)
+			s = 100;
+	}
+	
+	let mountains = p / 97;
+	let mountainsL = mountains / 7;
+	let rivers = mountains / 6;
+	let riversL = rivers / 9;
+	
+	let diagram = generateVoronoiMap(p, m, w, h, wp, r, s, lm, mountains, mountainsL);
+	
+	findOceanCells(diagram.cells);
 	
 	let tempcanvas = new Canvas();
-	tempcanvas.width = Math.floor(10 * INNERRADIUS * MAP_WIDTH * 2) + Math.floor(10 * INNERRADIUS * 2);
-	tempcanvas.height = Math.floor(10 * OUTERRADIUS * MAP_HEIGHT * 1.5) + Math.floor(10 * OUTERRADIUS);
+	tempcanvas.width = w;
+	tempcanvas.height = h;
 	
 	if (tempcanvas.getContext)
 	{
 		let ctx = tempcanvas.getContext('2d');
 		
-		let r = 0;
-		let g = 16;
-		let b = 200;
-		ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-		ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-		ctx.fillRect(0,0,tempcanvas.width,tempcanvas.height);
+		ctx.fillStyle =  '#0030C0' //"#0055FF";
+		ctx.fillRect(0,0,w,h);
 		
-		for (let i = 0; i < hexWorldMap.landmasses; i++)
-		{
-			let currenthex = { x: -1, y: -1 }
-			let startingpoint = { x: -1, y: -1 }
-			let currentpoint = { x: -1, y: -1 }
-			
-			let currentcontrol1 = { x: -1, y: -1 }
-			let currentcontrol2 = { x: -1, y: -1 }
-			
-			let currentside = 0;
-			
-			for (let j = 0; j < MAP_WIDTH * MAP_HEIGHT; j++)
-			{
-				if (hexWorldMap.hexes[j].landmass == i)
+		let randomColorString = "6dABCDEF123456789";
+		
+		ctx.strokeStyle = "#000000"
+		
+		diagram.cells.forEach(cell => {
+			//let randomColor = "#" + dieRoll(randomColorString);
+			//ctx.fillStyle = randomColor;
+			if (cell && cell.halfedges.length > 2) {
+				ctx.beginPath();
+				let colorval = "#";
+				let rval;
+				let gval;
+				let bval;
+				let rstr;
+				let gstr;
+				let bstr;
+				if (cell.height < 0)
 				{
-					currenthex.x = j % MAP_WIDTH;
-					currenthex.y = Math.floor(j / MAP_WIDTH);
-					startingpoint.x = hexWorldMap.hexes[j].p3.x;
-					startingpoint.y = hexWorldMap.hexes[j].p3.y;
-					j =  MAP_WIDTH * MAP_HEIGHT + 1;
+					rval = 0;
+					gval = 48;
+					bval = 192;
 				}
+				else if (cell.height <= 2)
+				{
+					rval = Math.floor(16 - (cell.height / 2) * 16);
+					gval = 192;
+					bval = 0;
+				}
+				else if (cell.height <= 9)
+				{
+					rval = 0;
+					gval = 192 // Math.floor(192 - ((cell.height - 2) / 9) * 80);
+					bval = 0;
+				}
+				else if (cell.height <= 20)
+				{
+					rval = Math.min(Math.ceil(64 + ((cell.height - 9) / 20) * 128), 192);
+					gval = 192; //Math.min(Math.ceil(160 + (((cell.height - 9) / 20) * 32)), 192);
+					bval = Math.min(Math.ceil(((cell.height - 9) / 20) * 192), 192);
+				}
+				else
+				{
+					rval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
+					gval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
+					bval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
+				}
+				if (rval < 16)
+				{
+					rstr = "0" + rval.toString(16);
+				}
+				else
+				{
+					rstr = rval.toString(16);
+				}
+				if (gval < 16)
+				{
+					gstr = "0" + gval.toString(16);
+				}
+				else
+				{
+					gstr = gval.toString(16)
+				}
+				if (bval < 16)
+				{
+					bstr = "0" + bval.toString(16);
+				}
+				else
+				{
+					bstr = bval.toString(16);
+				}
+				colorval += rstr + gstr + bstr;
+				ctx.fillStyle = colorval.toUpperCase();
+				ctx.strokeStyle = colorval.toUpperCase();
+				ctx.moveTo(cell.halfedges[0].getStartpoint().x, cell.halfedges[0].getStartpoint().y);
+				cell.halfedges.forEach(halfedge => {
+					ctx.lineTo(halfedge.getEndpoint().x, halfedge.getEndpoint().y);
+				});
+				ctx.closePath();
+				ctx.stroke();
+				ctx.fill()
 			}
 			
-			if (currenthex.x != -1 && currenthex.y != -1)
+			//ctx.fillStyle = '#FFFFFF';
+			//ctx.fillRect(cell.site.x,cell.site.y,2,2);
+		});
+		
+		ctx.strokeStyle =  '#0030C0' //"#0055FF";
+		ctx.lineWidth = Math.ceil(w / 1200);
+		
+		for (let i = 0; i < rivers; i++)
+		{
+			let randomCell = Math.floor(Math.random()*diagram.cells.length);
+			while (diagram.cells[randomCell].oceanCell)
 			{
-				/*
-				ctx.beginPath();
-				ctx.fillStyle = "#FFFFFF";
-				console.log("landmass: " + i);
-				ctx.arc(startingpoint.x, startingpoint.y, 2, 0, Math.PI*2, 0);
-				ctx.closePath
-				ctx.fill();
-				*/
+				randomCell = Math.floor(Math.random()*diagram.cells.length);
+			}
+			
+			let currentCell = diagram.cells[randomCell];
+			
+			let closestWater;
+			if (currentCell.height > 0)
+			{
+				closestWater = nearestCellBelowXHeight(currentCell, 0, diagram.cells);
+			}
+			else
+			{
+				closestWater = nearestOceanCell(currentCell, diagram.cells);
+			}
+			
+			if (closestWater != null)
+			{
+				let pathToClosestWater = pathToCell(currentCell, closestWater, diagram.cells);
 				
-				
-				ctx.beginPath();
-				ctx.moveTo(startingpoint.x, startingpoint.y);
-				//currentpoint.x = startingpoint.x;
-				//currentpoint.y = startingpoint.y;
-				let pointnum = 0;
-				do
-				{
-					let adjacentHex = GetHexNeighbour(currenthex, currentside);
-					if (hexWorldMap.hexes[adjacentHex.y * MAP_WIDTH + adjacentHex.x].landmass == i)
+				if (pathToClosestWater.length > 7)
+				{				
+					ctx.beginPath();
+					ctx.moveTo(currentCell.site.x, currentCell.site.y);
+					
+					for(let j = 0; j < pathToClosestWater.length; j++)
 					{
-						currenthex.x = adjacentHex.x;
-						currenthex.y = adjacentHex.y;
-						currentside -= 2;
-						if (currentside < 0)
-							currentside += 6;
-						if (currentside >= 6)
-							currentside -= 6;
+						ctx.lineTo(pathToClosestWater[j].site.x, pathToClosestWater[j].site.y);
 					}
 					
-					if (pointnum % 3 == 0)
-					{
-						if (currentside == 0)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							currentside = 0;
-						}
-					}
-					else if (pointnum % 3 == 1)
-					{
-						if (currentside == 0)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							currentside = 0;
-						}
-					}
-					else
-					{
-						if (currentside == 0)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 0;
-						}
-					}
-					pointnum++;
+					ctx.stroke();
 				}
-				while ((currentpoint.x != startingpoint.x || currentpoint.y != startingpoint.y) && (currentcontrol2.x != startingpoint.x || currentcontrol2.y != startingpoint.y) && (currentcontrol1.x != startingpoint.x || currentcontrol1.y != startingpoint.y))
-				
-				if (pointnum % 3 == 0)
+				else
 				{
-					let tentativecontrolpoint = { x: (currentpoint.x - startingpoint.x) / 4 + startingpoint.x, y: (currentpoint.y - startingpoint.y) / 4 + startingpoint.y }
-					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, tentativecontrolpoint.x, tentativecontrolpoint.y, startingpoint.x, startingpoint.y)
+					i--;
 				}
-				else if (pointnum % 3 == 1)
-				{
-					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, startingpoint.x, startingpoint.y)
-				}
-			
-				//console.log("points: " + pointnum + ", " + (pointnum % 3));
-				
-				ctx.closePath();
-				r = 104;
-				g = 216;
-				b = 0;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-				
-				ctx.fill();
-				//ctx.stroke();
 			}
 		}
-		
-		for (let i = 1; i < hexWorldMap.lakes; i++)
-		{
-			let currenthex = { x: -1, y: -1 }
-			let startingpoint = { x: -1, y: -1 }
-			let currentpoint = { x: -1, y: -1 }
-			
-			let currentcontrol1 = { x: -1, y: -1 }
-			let currentcontrol2 = { x: -1, y: -1 }
-			
-			let currentside = 0;
-			
-			for (let j = 0; j < MAP_WIDTH * MAP_HEIGHT; j++)
-			{
-				if (hexWorldMap.hexes[j].lake == i)
-				{
-					currenthex.x = j % MAP_WIDTH;
-					currenthex.y = Math.floor(j / MAP_WIDTH);
-					startingpoint.x = hexWorldMap.hexes[j].p3.x;
-					startingpoint.y = hexWorldMap.hexes[j].p3.y;
-					j =  MAP_WIDTH * MAP_HEIGHT + 1;
-				}
-			}
-			
-			if (currenthex.x != -1 && currenthex.y != -1)
-			{
-				/*
-				ctx.beginPath();
-				ctx.fillStyle = "#FFFFFF";
-				console.log("landmass: " + i);
-				ctx.arc(startingpoint.x, startingpoint.y, 2, 0, Math.PI*2, 0);
-				ctx.closePath
-				ctx.fill();
-				*/
-				
-				ctx.beginPath();
-				ctx.moveTo(startingpoint.x, startingpoint.y);
-				//currentpoint.x = startingpoint.x;
-				//currentpoint.y = startingpoint.y;
-				let pointnum = 0;
-				do
-				{
-					let adjacentHex = GetHexNeighbour(currenthex, currentside);
-					if (hexWorldMap.hexes[adjacentHex.y * MAP_WIDTH + adjacentHex.x].lake == i)
-					{
-						currenthex.x = adjacentHex.x;
-						currenthex.y = adjacentHex.y;
-						currentside -= 2;
-						if (currentside < 0)
-							currentside += 6;
-						if (currentside >= 6)
-							currentside -= 6;
-					}
-					
-					if (pointnum % 3 == 0)
-					{
-						if (currentside == 0)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							currentside = 0;
-						}
-					}
-					else if (pointnum % 3 == 1)
-					{
-						if (currentside == 0)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							currentside = 0;
-						}
-					}
-					else
-					{
-						if (currentside == 0)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 0;
-						}
-					}
-					pointnum++;
-				}
-				while ((currentpoint.x != startingpoint.x || currentpoint.y != startingpoint.y) && (currentcontrol2.x != startingpoint.x || currentcontrol2.y != startingpoint.y) && (currentcontrol1.x != startingpoint.x || currentcontrol1.y != startingpoint.y))
-				
-				if (pointnum % 3 == 0)
-				{
-					let tentativecontrolpoint = { x: (currentpoint.x - startingpoint.x) / 4 + startingpoint.x, y: (currentpoint.y - startingpoint.y) / 4 + startingpoint.y }
-					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, tentativecontrolpoint.x, tentativecontrolpoint.y, startingpoint.x, startingpoint.y)
-				}
-				else if (pointnum % 3 == 1)
-				{
-					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, startingpoint.x, startingpoint.y)
-				}
-				
-				ctx.closePath();
-				r = 0;
-				g = 48;
-				b = 224;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-				
-				ctx.fill();
-				//ctx.stroke();
-			}
-		}
-		
-		for (let i = 0; i < hexWorldMap.highlands; i++)
-		{
-			let currenthex = { x: -1, y: -1 }
-			let startingpoint = { x: -1, y: -1 }
-			let currentpoint = { x: -1, y: -1 }
-			
-			let currentcontrol1 = { x: -1, y: -1 }
-			let currentcontrol2 = { x: -1, y: -1 }
-			
-			let currentside = 0;
-			
-			for (let j = 0; j < MAP_WIDTH * MAP_HEIGHT; j++)
-			{
-				if (hexWorldMap.hexes[j].mountain == i)
-				{
-					currenthex.x = j % MAP_WIDTH;
-					currenthex.y = Math.floor(j / MAP_WIDTH);
-					startingpoint.x = hexWorldMap.hexes[j].p3.x;
-					startingpoint.y = hexWorldMap.hexes[j].p3.y;
-					j =  MAP_WIDTH * MAP_HEIGHT + 1;
-				}
-			}
-			
-			if (currenthex.x != -1 && currenthex.y != -1)
-			{
-				/*
-				ctx.beginPath();
-				ctx.fillStyle = "#FFFFFF";
-				console.log("landmass: " + i);
-				ctx.arc(startingpoint.x, startingpoint.y, 2, 0, Math.PI*2, 0);
-				ctx.closePath
-				ctx.fill();
-				*/
-				
-				ctx.beginPath();
-				ctx.moveTo(startingpoint.x, startingpoint.y);
-				//currentpoint.x = startingpoint.x;
-				//currentpoint.y = startingpoint.y;
-				let pointnum = 0;
-				do
-				{
-					let adjacentHex = GetHexNeighbour(currenthex, currentside);
-					if (hexWorldMap.hexes[adjacentHex.y * MAP_WIDTH + adjacentHex.x].mountain == i)
-					{
-						currenthex.x = adjacentHex.x;
-						currenthex.y = adjacentHex.y;
-						currentside -= 2;
-						if (currentside < 0)
-							currentside += 6;
-						if (currentside >= 6)
-							currentside -= 6;
-					}
-					
-					if (pointnum % 3 == 0)
-					{
-						if (currentside == 0)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							currentside = 0;
-						}
-					}
-					else if (pointnum % 3 == 1)
-					{
-						if (currentside == 0)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							currentside = 0;
-						}
-					}
-					else
-					{
-						if (currentside == 0)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 0;
-						}
-					}
-					pointnum++;
-				}
-				while ((currentpoint.x != startingpoint.x || currentpoint.y != startingpoint.y) && (currentcontrol2.x != startingpoint.x || currentcontrol2.y != startingpoint.y) && (currentcontrol1.x != startingpoint.x || currentcontrol1.y != startingpoint.y))
-				
-				if (pointnum % 3 == 0)
-				{
-					let tentativecontrolpoint = { x: (currentpoint.x - startingpoint.x) / 4 + startingpoint.x, y: (currentpoint.y - startingpoint.y) / 4 + startingpoint.y }
-					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, tentativecontrolpoint.x, tentativecontrolpoint.y, startingpoint.x, startingpoint.y)
-				}
-				else if (pointnum % 3 == 1)
-				{
-					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, startingpoint.x, startingpoint.y)
-				}
-				
-				ctx.closePath();
-				r = 160;
-				g = 152;
-				b = 144;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-				
-				ctx.fill();
-				//ctx.stroke();
-			}
-		}
-		
-		for (let i = hexWorldMap.highlands; i < hexWorldMap.highlands + hexWorldMap.snowcaps; i++)
-		{
-			let currenthex = { x: -1, y: -1 }
-			let startingpoint = { x: -1, y: -1 }
-			let currentpoint = { x: -1, y: -1 }
-			
-			let currentcontrol1 = { x: -1, y: -1 }
-			let currentcontrol2 = { x: -1, y: -1 }
-			
-			let currentside = 0;
-			
-			for (let j = 0; j < MAP_WIDTH * MAP_HEIGHT; j++)
-			{
-				if (hexWorldMap.hexes[j].mountain == i)
-				{
-					currenthex.x = j % MAP_WIDTH;
-					currenthex.y = Math.floor(j / MAP_WIDTH);
-					startingpoint.x = hexWorldMap.hexes[j].p3.x;
-					startingpoint.y = hexWorldMap.hexes[j].p3.y;
-					j =  MAP_WIDTH * MAP_HEIGHT + 1;
-				}
-			}
-			
-			if (currenthex.x != -1 && currenthex.y != -1)
-			{
-				/*
-				ctx.beginPath();
-				ctx.fillStyle = "#FFFFFF";
-				console.log("landmass: " + i);
-				ctx.arc(startingpoint.x, startingpoint.y, 2, 0, Math.PI*2, 0);
-				ctx.closePath
-				ctx.fill();
-				*/
-				
-				ctx.beginPath();
-				ctx.moveTo(startingpoint.x, startingpoint.y);
-				//currentpoint.x = startingpoint.x;
-				//currentpoint.y = startingpoint.y;
-				let pointnum = 0;
-				do
-				{
-					let adjacentHex = GetHexNeighbour(currenthex, currentside);
-					if (hexWorldMap.hexes[adjacentHex.y * MAP_WIDTH + adjacentHex.x].mountain == i)
-					{
-						currenthex.x = adjacentHex.x;
-						currenthex.y = adjacentHex.y;
-						currentside -= 2;
-						if (currentside < 0)
-							currentside += 6;
-						if (currentside >= 6)
-							currentside -= 6;
-					}
-					
-					if (pointnum % 3 == 0)
-					{
-						if (currentside == 0)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentcontrol1.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentcontrol1.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							currentside = 0;
-						}
-					}
-					else if (pointnum % 3 == 1)
-					{
-						if (currentside == 0)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentcontrol2.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentcontrol2.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							currentside = 0;
-						}
-					}
-					else
-					{
-						if (currentside == 0)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p2.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 1;
-						}
-						else if (currentside == 1)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p1.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 2;
-						}
-						else if (currentside == 2)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p0.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 3;
-						}
-						else if (currentside == 3)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p5.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 4;
-						}
-						else if (currentside == 4)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p4.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 5;
-						}
-						else if (currentside == 5)
-						{
-							currentpoint.x = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.x;
-							currentpoint.y = hexWorldMap.hexes[currenthex.y * MAP_WIDTH + currenthex.x].p3.y;
-							ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, currentpoint.x, currentpoint.y)
-							currentside = 0;
-						}
-					}
-					pointnum++;
-				}
-				while ((currentpoint.x != startingpoint.x || currentpoint.y != startingpoint.y) && (currentcontrol2.x != startingpoint.x || currentcontrol2.y != startingpoint.y) && (currentcontrol1.x != startingpoint.x || currentcontrol1.y != startingpoint.y))
-				
-				if (pointnum % 3 == 0)
-				{
-					let tentativecontrolpoint = { x: (currentpoint.x - startingpoint.x) / 4 + startingpoint.x, y: (currentpoint.y - startingpoint.y) / 4 + startingpoint.y }
-					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, tentativecontrolpoint.x, tentativecontrolpoint.y, startingpoint.x, startingpoint.y)
-				}
-				else if (pointnum % 3 == 1)
-				{
-					ctx.bezierCurveTo(currentcontrol1.x, currentcontrol1.y, currentcontrol2.x, currentcontrol2.y, startingpoint.x, startingpoint.y)
-				}
-				
-				ctx.closePath();
-				r = 248;
-				g = 248;
-				b = 255;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-				
-				ctx.fill();
-				//ctx.stroke();
-			}
-		}
-		
-		
-		/*
-		for (let i = 0; i < MAP_WIDTH*MAP_HEIGHT; i++)
-		{
-			
-			let xpos = (10 * INNERRADIUS) + (i % MAP_WIDTH) * 10 * INNERRADIUS * 2;
-			let ypos = (10 * OUTERRADIUS) + Math.floor(i / MAP_WIDTH) * 10 * OUTERRADIUS * 1.5;
-			if (Math.floor(i / MAP_WIDTH) % 2 == 1)
-			{
-				xpos += 10 * INNERRADIUS;
-			}
-			
-			ctx.font = "8px serif";
-			ctx.fillStyle = "#000000";
-			ctx.fillText(Math.floor(hexWorldMap.hexes[i].mountain).toString(), xpos, ypos);
-			
-			
-			/*
-			//console.log("hex " + i + " height: " + hexWorldMap.hexes[i].height);
-			ctx.beginPath();
-			ctx.moveTo(hexWorldMap.hexes[i].p0.x, hexWorldMap.hexes[i].p0.y);
-			ctx.lineTo(hexWorldMap.hexes[i].p1.x, hexWorldMap.hexes[i].p1.y);
-			ctx.lineTo(hexWorldMap.hexes[i].p2.x, hexWorldMap.hexes[i].p2.y);
-			ctx.lineTo(hexWorldMap.hexes[i].p3.x, hexWorldMap.hexes[i].p3.y);
-			ctx.lineTo(hexWorldMap.hexes[i].p4.x, hexWorldMap.hexes[i].p4.y);
-			ctx.lineTo(hexWorldMap.hexes[i].p5.x, hexWorldMap.hexes[i].p5.y);
-			ctx.closePath();
-			//ctx.stroke();
-			let r = 0;
-			let g = 0;
-			let b = 0;
-			if (hexWorldMap.hexes[i].height < 0)
-			{
-				//ctx.fillStyle = "#0033CC"; // base water, "#000066" deep water
-				//ctx.strokeStyle = "#0033CC";
-				r = 0;
-				g = Math.floor(51 + hexWorldMap.hexes[i].height / hexWorldMap.heightmin * -51);
-				b = Math.floor(204 + hexWorldMap.hexes[i].height / hexWorldMap.heightmin * -102);
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-			}
-			else if (hexWorldMap.hexes[i].height < 32)
-			{
-				//ctx.fillStyle = "#11EE00"; // base land, "#CC1100" mountain land
-				//ctx.strokeStyle = "#11EE00";
-				// "#11EE00"; #CCDD00
-				r = Math.floor(238 + hexWorldMap.hexes[i].height / 32 * -211);
-				g = 238;
-				b = 0;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-			}
-			else if (hexWorldMap.hexes[i].height < 64)
-			{
-				//ctx.fillStyle = "#11EE00"; // base land, "#CC1100" mountain land
-				//ctx.strokeStyle = "#11EE00";
-				// "#11EE00"; #CCDD00
-				r = Math.floor(17 + (hexWorldMap.hexes[i].height - 32) / 32 * 187);
-				g = Math.ceil(238 + ((hexWorldMap.hexes[i].height - 32) / 32 * -211));
-				b = 0;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-			}
-			else if (hexWorldMap.hexes[i].height < 100)
-			{
-				//ctx.fillStyle = "#11EE00"; // base land, "#CC1100" mountain land
-				//ctx.strokeStyle = "#11EE00";
-				// "#11EE00"; #CCDD00
-				r = Math.floor(204 + (hexWorldMap.hexes[i].height - 64) / 36 * -160);
-				g = Math.ceil(17 + ((hexWorldMap.hexes[i].height - 64) / 36 * -17));
-				b = 0;
-				ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-				ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-			}
-			ctx.fill();
-			ctx.stroke();
-			
-		}
-		*/
-		
-		
-		
 		
 		//output file
-		let file = 'drawntown.png';
+		let file = 'voronoimap.png';
 		let path = './' + file;
 		
 		let b64 = tempcanvas.toDataURL('image/png', 0.92);
@@ -19068,7 +18597,6 @@ function DrawHexWorldMap(channel, arguments)
 			channel.send({ files: [{ attachment: path, name: file }] });
 		})
 	}
-	
 }
 
 //

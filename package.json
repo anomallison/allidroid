@@ -8,7 +8,8 @@
     "discord.js": "^13.16.0",
     "merge-images": "^2.0.0",
     "paper": "^0.12.15",
-    "paper-jsdom-canvas": "^0.12.17"
+    "paper-jsdom-canvas": "^0.12.17",
+    "voronoi": "^1.0.0"
   },
   "scripts": {
     "test": "!monster",
