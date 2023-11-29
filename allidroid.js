@@ -18409,6 +18409,8 @@ function DrawVoronoiMapMap(channel, arguments)
 			m = parseFloat(arguments[argumentpos+1]);
 		if (m < 0)
 			m = 0;
+		if (m > 5)
+			m = 5;
 		argumentpos = arguments.indexOf("-wp")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			wp = parseInt(arguments[argumentpos+1]);
