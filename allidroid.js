@@ -11068,7 +11068,10 @@ function outputAdventureSimLog(partyid)
 		output += party.log[i] + "\n";
 	}
 	if (output.length < 2000) //just to double check
+	{
+		console.log("partylog length:" + output.length);
 		return output.trim();
+	}
 }
 
 function addToAdventureSimLog(party, logtext)
@@ -14667,7 +14670,7 @@ function findNearestLandmark(xpos, ypos, landmark, probability = 1)
 					let start = { x: xpos, y: ypos };
 					let end = { x: currenthex.x, y: currenthex.y };
 					let pathToTown = pathToPosition(start, end);
-					
+
 					if (pathToTown[pathToTown.length-1].x == end.x && pathToTown[pathToTown.length-1].y == end.y)
 						return { x: currenthex.x, y: currenthex.y };
 				}
@@ -15329,7 +15332,7 @@ function smartEquipUnequipAdventurer(adventurer, item)
 				}
 			}
 			
-			if (lowestiti > -1)
+			if (lowestiti > -1 && adventurer.magicitems.accessories[lowestiti].itlvl < item.itlvl)
 			{
 				let lostitem = adventurer.magicitems.accessories[lowestiti];
 				unequipAdventurerWithItem(adventurer, adventurer.magicitems.accessories[lowestiti]);
@@ -15401,12 +15404,11 @@ function equipPartyWithItems(party, items)
 		let tempmemberlist = getLivingPartyMembers(party);
 		
 		let itemallocated = false;
-		
 		while (tempmemberlist.length > 0 && !itemallocated)
 		{
 			let partymember = getPartyMemberWithLeastItems(tempmemberlist);
 			let potentialdiscard = smartEquipUnequipAdventurer(partymember, items[i]);
-			
+
 			if (potentialdiscard == items[i])
 			{
 				tempmemberlist.splice(tempmemberlist.indexOf(partymember), 1);
@@ -15553,7 +15555,6 @@ function startAdventure(partyid, questlevel)
 		throw "no quest site found";
 	let start = { x: party.xpos, y: party.ypos };
 	party.questpath = pathToPosition(start, nearestquestsite);
-	
 	while (party.cstatus != "intown" && !isPartyDead(party))
 	{
 		simulateAdventuring(party);

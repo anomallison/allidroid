@@ -4324,6 +4324,55 @@
 				"damagedienum": 3,
 				"damagediesides": 6
 			}
+		},
+		{
+			"id": "testroom9",
+			"level": 9,
+			"experience": 500,
+			"solutions":
+			[
+				{
+					"type": "skillone",
+					"skill": "sleightOfHand",
+					"bypasstext": "disables",
+					"dcmin": 7,
+					"dcmax": 11,
+					"failure": "hurtone",
+					"success": "proceed"
+				},
+				{
+					"type": "skillone",
+					"skill": "arcana",
+					"bypasstext": "disables",
+					"dcmin": 7,
+					"dcmax": 12,
+					"failure": "hurtone",
+					"success": "proceed"
+				},
+				{
+					"type": "skillall",
+					"skill": "acrobatics",
+					"bypasstext": "bypasses",
+					"dcmin": 6,
+					"dcmax": 10,
+					"failure": "hurtall",
+					"success": "proceed"
+				}
+			],
+			"fight":
+			{
+				"enemymin": 0,
+				"enemymax": 0,
+				"enemylist": [],
+				"mandatoryenemies":	[]
+			},
+			"trap":
+			{
+				"name": "an acid trap",
+				"damagetype": "acid",
+				"damagedienum": 3,
+				"damagediesides": 6
+			}
 		}
 	]
 }
