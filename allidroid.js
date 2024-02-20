@@ -73,6 +73,9 @@ var familiar_gen = JSON.parse(fs.readFileSync('familiar_gen/familiar_gen.json'))
 //psyduck generator files
 var psyduck_gen = JSON.parse(fs.readFileSync('psyduck_gen/psyduck_gen.json'));
 
+//mini map generator files
+var minimap_gen = JSON.parse(fs.readFileSync('minimap_gen/minimap_gen.json'));
+
 //city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
 var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
@@ -652,6 +655,9 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generatemap") 
 	{
 		generateMap(receivedMessage.channel,arguments);
+	} else if (normalizedCommand == "minimap") 
+	{
+		GenerateMiniMap(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "generategoblin") 
 	{
 		generateGoblin(receivedMessage.channel,arguments);
@@ -5881,6 +5887,42 @@ function CountTerrainAroundHex(map, pointx, pointy, terrain, map_width, map_heig
 	return count;
 }
 
+function MiniMapCountTileAroundHex(tile, premapmap, x, y, MAP_WIDTH)
+{
+	let count = 0;
+	let position;
+	
+	
+	if (x+1+(y*MAP_WIDTH) < premapmap.length && premapmap[x+1+(y*MAP_WIDTH)].tile == tile)
+		count++;
+	if (x-1+(y*MAP_WIDTH) > -1 && premapmap[x-1+(y*MAP_WIDTH)].tile == tile)
+		count++;
+	if (y%2 == 0)
+	{
+		if (x+((y-1)*MAP_WIDTH) > -1 && x+((y-1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y-1)*MAP_WIDTH)].tile == tile)
+			count++;
+		if ((x-1)+((y-1)*MAP_WIDTH) > -1 && premapmap[(x-1)+((y-1)*MAP_WIDTH)].tile == tile)
+			count++;
+		if (x+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y+1)*MAP_WIDTH)].tile == tile)
+			count++;
+		if ((x-1)+((y+1)*MAP_WIDTH) < premapmap.length && (x-1)+((y+1)*MAP_WIDTH) > -1 && premapmap[(x-1)+((y+1)*MAP_WIDTH)].tile == tile)
+			count++;
+	}
+	else
+	{
+		if ((x+1)+((y-1)*MAP_WIDTH) > -1 && ((x+1)+((y-1)*MAP_WIDTH)) < premapmap.length && premapmap[(x+1)+((y-1)*MAP_WIDTH)].tile == tile)
+			count++;
+		if ((x+1)+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+((y+1)*MAP_WIDTH)].tile == tile)
+			count++;
+		if (x+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y+1)*MAP_WIDTH)].tile == tile)
+			count++;
+		if (x+((y-1)*MAP_WIDTH) > -1 && premapmap[x+((y-1)*MAP_WIDTH)].tile == tile)
+			count++;
+	}
+	
+	return count;
+}
+
 function CountRiversAroundHex(riverarray, pointx, pointy, map_width, map_height)
 {
 	let count = 0;
@@ -8063,6 +8105,657 @@ function generateMap(channel, arguments)
 	})*/
 }
 
+function GenerateMiniMap(channel, arguments)
+{
+	let LAND_LEVEL = 0.37;
+	let HILL_LEVEL = 0.721;
+	let MOUNTAIN_LEVEL = 0.908;
+
+	let FOREST_LEVEL = 0.0052;
+	
+	let MAP_HEIGHT = 50;
+	let MAP_WIDTH = 80;
+	
+	let LANDMASSES = 1;
+	let Map_Size = MAP_HEIGHT+MAP_WIDTH;
+	
+	let citiesCheck = true;
+	let townsCheck = true;
+	let villagesCheck = true;
+	
+	let grid_opacity = 0;
+	
+	if (arguments != null)
+	{
+		let argumentpos = arguments.indexOf("-h");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			MAP_HEIGHT = Math.floor(parseInt(arguments[argumentpos+1]));
+			if (MAP_HEIGHT > 256)
+				MAP_HEIGHT = 256;
+		}
+		argumentpos = arguments.indexOf("-w");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			MAP_WIDTH = Math.floor(parseInt(arguments[argumentpos+1]));
+			if (MAP_WIDTH > 160)
+				MAP_WIDTH = 160;
+		}
+		Map_Size = MAP_HEIGHT+MAP_WIDTH;
+		argumentpos = arguments.indexOf("-l");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			LANDMASSES = Math.floor(parseInt(arguments[argumentpos+1]));
+		}
+		else
+		{
+			LANDMASSES = Math.ceil(Math.log2(Map_Size)*Math.log2(Map_Size)/2);
+		}
+		argumentpos = arguments.indexOf("-g");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			grid_opacity =  parseFloat(arguments[argumentpos+1]);
+		}
+		argumentpos = arguments.indexOf("-nocities");
+		if (argumentpos > -1)
+		{
+			citiesCheck = false;
+		}
+		argumentpos = arguments.indexOf("-notowns");
+		if (argumentpos > -1)
+		{
+			townsCheck = false;
+		}
+		argumentpos = arguments.indexOf("-novillages");
+		if (argumentpos > -1)
+		{
+			villagesCheck = false;
+		}
+	}
+	
+	if (MAP_WIDTH < 1)
+		return null;
+	if (MAP_HEIGHT < 1)
+		return null;
+	
+	grid_opacity = Math.min(grid_opacity,1);
+	grid_opacity = Math.max(grid_opacity,0);
+	
+	
+	MAP_HEIGHT = Math.min(MAP_HEIGHT,MAX_MAP_HEIGHT);
+	MAP_WIDTH = Math.min(MAP_WIDTH,MAX_MAP_WIDTH);
+	
+	let heightmap = noiseMap2D(MAP_HEIGHT,MAP_WIDTH, 0.99);
+		heightmap = increaseContrast(heightmap, MAP_HEIGHT, MAP_WIDTH, 0.4);
+		heightmap = smoothenMap(heightmap, MAP_HEIGHT, MAP_WIDTH, 0.175);
+		heightmap = increaseContrast(heightmap, MAP_HEIGHT, MAP_WIDTH, 0.25);
+	
+	let landmap = [];
+	//initialize landmap
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			landmap.push(0);
+		}
+	}
+	
+	// landmass map
+	
+	let landmassmap = [];
+	let landmassstarts = [];
+	
+	for (let x = 0; x < MAP_WIDTH; x++)
+	{
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			landmassmap.push(-1);
+		}
+	}
+	
+	let premapmap = [];
+	//initialize the premapmap
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			premapmap.push({ tile: "water" });
+		}
+	}
+	
+	//do Landmasses
+	
+	for (let i = 0; i < LANDMASSES; i++)
+	{
+		let tempcontigmap = [];
+		//initialize the tempcontigmap
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				tempcontigmap.push(false);
+			}
+		}
+		
+		let temppremap = [];
+		//initialize the temppremap
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				temppremap.push({ tile: "water" });
+			}
+		}
+		
+		let randomsize = Math.floor(Math.random()*(MAP_HEIGHT*MAP_WIDTH/9)+(Map_Size*2/3));
+		let randomx = Math.floor(Math.random()*(MAP_WIDTH*3/4)+(MAP_WIDTH/8));
+		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*3/4)+(MAP_HEIGHT/8));
+		
+		temppremap[randomx+(randomy*MAP_WIDTH)].tile = "grass";
+		tempcontigmap[randomx+(randomy*MAP_WIDTH)] = true;
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		landmassstarts.push({ x: randomx, y: randomy });
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			
+			startpos.x = startpos.x+1;
+			
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < MAP_WIDTH && currenthex.y < MAP_HEIGHT && currenthex.x > -1 && currenthex.y > -1)
+				{
+					let position = currenthex.x+(currenthex.y*MAP_WIDTH);
+					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+					let probability = LAND_EROSION * Math.log2(Map_Size) * Math.sqrt(randomsize);
+					
+					if (Math.random()*distance < probability)
+					{
+						if (AdjacentMapHexContiguous(tempcontigmap, currenthex.x, currenthex.y, MAP_WIDTH, MAP_HEIGHT, true))
+						{
+							tempcontigmap[position] = true;
+							temppremap[position].tile = "grass";
+						}
+					}
+				}
+				
+				MoveUpwardHex(currenthex, direction);
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				if (temppremap[x+(y*MAP_WIDTH)].tile == "grass")
+				{
+					landmassmap[x+(y*MAP_WIDTH)] = i+1;
+					landmap[x+(y*MAP_WIDTH)] += LAND_LEVEL;
+				}
+			}
+		}
+	}
+	
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			if (landmap[x+(y*MAP_WIDTH)] == 0)
+				heightmap[x+(y*MAP_WIDTH)] = 0;
+			else if (heightmap[x+(y*MAP_WIDTH)] < LAND_LEVEL)
+				heightmap[x+(y*MAP_WIDTH)] = LAND_LEVEL;
+		}
+	}
+	
+	
+	//do mountains
+	
+	let mountain_count = Math.floor(LANDMASSES*9/13);
+	
+	for (let i = 0; i < mountain_count; i++)
+	{
+		let tempcontigmap = [];
+		//initialize the tempcontigmap
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				tempcontigmap.push(false);
+			}
+		}
+		
+		let temppremap = [];
+		//initialize the temppremap
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				temppremap.push(0);
+			}
+		}
+		
+		let randomsize = Math.floor(Math.random()*(MAP_HEIGHT*MAP_WIDTH/2)+(MAP_HEIGHT*MAP_WIDTH/4));
+		let randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		
+		while (heightmap[randomx+(randomy*MAP_WIDTH)] < LAND_LEVEL)
+		{
+			randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+			randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		}
+		
+		let randomheight = (Math.random()*0.345)+0.486;
+		let lastdistance = 0;
+		let lastheight = randomheight;
+		
+		temppremap[randomx+(randomy*MAP_WIDTH)] = randomheight;
+		tempcontigmap[randomx+(randomy*MAP_WIDTH)] = true;
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			
+			startpos.x = startpos.x+1;
+			
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < MAP_WIDTH && currenthex.y < MAP_HEIGHT && currenthex.x > -1 && currenthex.y > -1)
+				{
+					let position = currenthex.x+(currenthex.y*MAP_WIDTH);
+					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+					let probability = MOUNTAIN_EROSION * Math.log2(Map_Size) * Math.sqrt(randomsize);
+					let ddh = 0.028;
+					let dh = Math.random()*(0.0901-ddh);
+					let nextheight = 0;
+					
+					if (Math.random()*distance < probability)
+					{
+						dh = Math.random()*(0.0901-ddh);
+						if (Math.random() < 0.333)
+							dh -= Math.random()*(0.0199+ddh);
+						
+						nextheight = Math.min(Math.max(lastheight-dh,0),1);
+					}
+					
+					ddh -= 0.003;
+					
+					if (!tempcontigmap[position] && nextheight >= LAND_LEVEL)
+					{
+						if (AdjacentMapHexContiguous(tempcontigmap, currenthex.x, currenthex.y, MAP_WIDTH, MAP_HEIGHT, true))
+						{
+							tempcontigmap[position] = true;
+							temppremap[position] = nextheight;
+						}
+						lastheight = nextheight;
+					}
+					
+				}
+				
+				MoveHex(currenthex, direction);
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+			lastdistance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+		}
+		
+		//temppremap = NormalizeMap(temppremap, 1, 0);
+		
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+					heightmap[x+(y*MAP_WIDTH)] += temppremap[x+(y*MAP_WIDTH)];
+			}
+		}
+		
+	}
+	
+	
+	
+	//heightmap = NormalizeMap(heightmap, 3, 0);
+	
+	for (let x = 0; x < MAP_WIDTH; x++)
+	{
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			if (heightmap[x+(y*MAP_WIDTH)] >= MOUNTAIN_LEVEL)
+			{
+				premapmap[x+(y*MAP_WIDTH)].tile = "mountain";
+			}
+			else if (heightmap[x+(y*MAP_WIDTH)] >= HILL_LEVEL)
+			{
+				premapmap[x+(y*MAP_WIDTH)].tile = "hills";
+			}
+			else if (heightmap[x+(y*MAP_WIDTH)] >= LAND_LEVEL)
+			{
+				premapmap[x+(y*MAP_WIDTH)].tile = "grass";
+			}
+		}
+	}
+	
+	for (let i = 0; i < SMOOTHING_ITERATIONS; i++)
+	{
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				let waterCount = 6;
+				if (x+1+(y*MAP_WIDTH) < premapmap.length && premapmap[x+1+(y*MAP_WIDTH)].tile == "grass")
+					waterCount--;
+				if (x-1+(y*MAP_WIDTH) > -1 && premapmap[x-1+(y*MAP_WIDTH)].tile == "grass")
+					waterCount--
+				if (y%2 == 0)
+				{
+					if (x+((y-1)*MAP_WIDTH) > -1 && x+((y-1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y-1)*MAP_WIDTH)].tile == "grass")
+						waterCount--;
+					if ((x-1)+((y-1)*MAP_WIDTH) > -1 && premapmap[(x-1)+((y-1)*MAP_WIDTH)].tile == "grass")
+						waterCount--;
+					if (x+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y+1)*MAP_WIDTH)].tile == "grass")
+						waterCount--;
+					if ((x-1)+((y+1)*MAP_WIDTH) < premapmap.length && (x-1)+((y+1)*MAP_WIDTH) > -1 && premapmap[(x-1)+((y+1)*MAP_WIDTH)].tile == "grass")
+						waterCount--;
+				}
+				else
+				{
+					if ((x+1)+((y-1)*MAP_WIDTH) > -1 && ((x+1)+((y-1)*MAP_WIDTH)) < premapmap.length && premapmap[(x+1)+((y-1)*MAP_WIDTH)].tile == "grass")
+						waterCount--;
+					if ((x+1)+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[(x+1)+((y+1)*MAP_WIDTH)].tile == "grass")
+						waterCount--;
+					if (x+((y+1)*MAP_WIDTH) < premapmap.length && premapmap[x+((y+1)*MAP_WIDTH)].tile == "grass")
+						waterCount--;
+					if (x+((y-1)*MAP_WIDTH) > -1 && premapmap[x+((y-1)*MAP_WIDTH)].tile == "grass")
+						waterCount--;
+				}
+				
+				if (waterCount == 6)
+				{
+					premapmap[x+(y*MAP_WIDTH)].tile = "water";
+				}
+				else if (waterCount < 3 && premapmap[x+(y*MAP_WIDTH)].tile == "water")
+				{
+					premapmap[x+(y*MAP_WIDTH)].tile = "grass";
+				}
+			}
+		}
+	}
+	
+	
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			if (premapmap[x+(y*MAP_WIDTH)].sealevel == "land")
+			{
+				if (heightmap[x+(y*MAP_WIDTH)] > MOUNTAIN_LEVEL)
+				{
+					premapmap[x+(y*MAP_WIDTH)].tile = "mountain";
+				}
+				else if (heightmap[x+(y*MAP_WIDTH)] > HILL_LEVEL)
+				{
+					premapmap[x+(y*MAP_WIDTH)].tile = "hills";
+				}
+			}
+		}
+	}
+	
+	// do water border
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		position = (y*MAP_WIDTH);
+		premapmap[position].tile = "water";
+		
+		position = (MAP_WIDTH-1+y*MAP_WIDTH);
+		premapmap[position].tile = "water";
+	}
+	for (let x = 0; x < MAP_WIDTH; x++)
+	{
+		position = (x);
+		premapmap[position].tile = "water";
+		
+		position = (x+(MAP_HEIGHT-1)*MAP_WIDTH);
+		premapmap[position].tile = "water";
+	}
+	
+	//do forests
+	let forest_count = Math.floor(Math.random()* LANDMASSES * (Math.sqrt(Map_Size)/9 +1)) +1;
+	for (let i = 0; i < forest_count; i++)
+	{
+		let temptreemap = [];
+		//initialize the tempmap
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				temptreemap.push("none");
+			}
+		}
+		
+		let randomsize = Math.floor((Math.random()*(MAP_HEIGHT*MAP_WIDTH/6)+MAP_HEIGHT+MAP_WIDTH)*3/4);
+		let randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+		let randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		while (premapmap[randomx+randomy*MAP_WIDTH].tile == "water" || premapmap[randomx+randomy*MAP_WIDTH].tile == "mountain")
+		{
+			randomx = Math.floor(Math.random()*(MAP_WIDTH*5/6)+(MAP_WIDTH/12));
+			randomy = Math.floor(Math.random()*(MAP_HEIGHT*5/6)+(MAP_HEIGHT/12));
+		}
+		
+		temptreemap[randomx+(randomy*MAP_WIDTH)] = "forest";
+		
+		let totalloops = 1;
+		let sizecovered = 7;
+
+		while (randomsize > sizecovered)
+		{
+			totalloops++;
+			sizecovered += totalloops*6;
+		}
+		
+		let startpos = { x: randomx, y: randomy };
+		let currenthex = { x:0, y:0 };
+		let curdirdur = 0;
+		let dirduration = 1;
+		let loopend = 6;
+		let sizereached = 1;
+		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
+		{
+			let direction = 3;
+			
+			startpos.x = startpos.x+1;
+			
+			currenthex.x = startpos.x;
+			currenthex.y = startpos.y;
+			
+			for(let k = 0; k < loopend && sizereached < randomsize; k++)
+			{
+				if (currenthex.x < MAP_WIDTH && currenthex.y < MAP_HEIGHT && currenthex.x > -1 && currenthex.y > -1)
+				{
+					let position = currenthex.x+(currenthex.y*MAP_WIDTH);
+					if ((premapmap[position].tile == "grass" || premapmap[position].tile == "hills"))
+					{
+						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
+						let probability = FOREST_LEVEL * Math.log2(Map_Size) * Math.sqrt(randomsize);
+						
+						if (Math.random()*distance < probability)
+						{
+							temptreemap[position] = "forest";
+						}
+					}
+				}
+				
+				MoveHex(currenthex, direction);
+				curdirdur++;
+				if (curdirdur == dirduration)
+				{
+					curdirdur = 0;
+					direction++;
+					if (direction == 6)
+						direction = 0;
+				}
+				sizereached++;
+			}
+			
+			loopend += 6;
+			dirduration++;
+		}
+		
+		temptreemap = TreesContiguousToPoint(temptreemap, "forest", randomx, randomy, MAP_WIDTH, MAP_HEIGHT, randomsize);
+		
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			for (let x  = 0; x < MAP_WIDTH; x++)
+			{
+				if (temptreemap[x+(y*MAP_WIDTH)] == "forest")
+				{
+					premapmap[x+(y*MAP_WIDTH)].tile = "forest";
+				}
+			}
+		}
+		
+	}
+	
+	// do swamps
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			if (premapmap[x+(y*MAP_WIDTH)].tile == "grass")
+			{
+				let higherground = MiniMapCountTileAroundHex("hills", premapmap, x, y, MAP_WIDTH);
+				higherground += MiniMapCountTileAroundHex("hills", premapmap, x, y, MAP_WIDTH)+1;
+				let marshchance = higherground*higherground*0.00223;
+				if (Math.random() < marshchance)
+				{
+					premapmap[x+(y*MAP_WIDTH)].tile = "swamp";
+				}
+			}
+		}
+	}
+	
+	//do deep water
+	for (let x = 0; x < MAP_WIDTH; x++)
+	{
+		for (let y = 0; y < MAP_HEIGHT; y++)
+		{
+			let nonwaterTiles = 0;
+			nonwaterTiles += MiniMapCountTileAroundHex("grass", premapmap, x, y, MAP_WIDTH);
+			nonwaterTiles += MiniMapCountTileAroundHex("hills", premapmap, x, y, MAP_WIDTH);
+			nonwaterTiles += MiniMapCountTileAroundHex("mountain", premapmap, x, y, MAP_WIDTH);
+			nonwaterTiles += MiniMapCountTileAroundHex("forest", premapmap, x, y, MAP_WIDTH);
+			nonwaterTiles += MiniMapCountTileAroundHex("swamp", premapmap, x, y, MAP_WIDTH);
+			if (nonwaterTiles == 0)
+			{
+				premapmap[x+(y*MAP_WIDTH)].tile = "deepwater"
+			}
+		}
+	}
+	
+	let mapmap = [];
+	
+	for (let y = 0; y < MAP_HEIGHT; y++)
+	{
+		for (let x  = 0; x < MAP_WIDTH; x++)
+		{
+			let xpos = (10*x+((y%2)*5));
+			let ypos = (8*y);
+			
+			if (premapmap[x+(y*MAP_WIDTH)].tile == "deepwater")
+				mapmap.push({ src: minimap_gen.deepwater[Math.floor(Math.random()*minimap_gen.deepwater.length)], x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].tile == "water")
+				mapmap.push({ src: minimap_gen.water[Math.floor(Math.random()*minimap_gen.water.length)], x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].tile == "grass")
+				mapmap.push({ src: minimap_gen.grass[Math.floor(Math.random()*minimap_gen.grass.length)], x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].tile == "hills")
+				mapmap.push({ src: minimap_gen.hills[Math.floor(Math.random()*minimap_gen.hills.length)], x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].tile == "mountain")
+				mapmap.push({ src: minimap_gen.mountain[Math.floor(Math.random()*minimap_gen.mountain.length)], x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].tile == "swamp")
+				mapmap.push({ src: minimap_gen.swamp[Math.floor(Math.random()*minimap_gen.swamp.length)], x: xpos, y: ypos});
+			else if (premapmap[x+(y*MAP_WIDTH)].tile == "forest")
+				mapmap.push({ src: minimap_gen.forest[Math.floor(Math.random()*minimap_gen.forest.length)], x: xpos, y: ypos});
+			
+			if (grid_opacity > 0)
+			{
+				mapmap.push({ src: minimap_gen.grid[Math.floor(Math.random()*minimap_gen.grid.length)], x: xpos, y: ypos, opacity: grid_opacity });
+			}
+		}
+	}
+	
+	let file = 'generatedmap.png';
+	let path = './' + file;
+	
+	mergeImages(mapmap, 
+	{
+		width: (10*MAP_WIDTH + 5),
+		height: (8*MAP_HEIGHT + 2),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+}
+
 function outputAdventureWorldMap(channel, arguments)
 {
 	
@@ -8165,88 +8858,6 @@ function outputAdventureWorldMap(channel, arguments)
 			}
 		}
 	}
-	
-	/*
-	for (i in rivers)
-	{
-		let xpos = (12*rivers[i].x);
-		let ypos = (14*rivers[i].y+((rivers[i].x%2)*7));
-		let tile = '';
-		
-		if (rivers[i].direction == 0)
-		{
-			ypos -= 14;
-			tile =  Math.random() < 0.5 ? './terrain_river_vertical_0.png' : './terrain_river_vertical_1.png';
-		}
-		else if (rivers[i].direction == 1)
-		{
-			ypos -= 7;
-			tile =  Math.random() < 0.5 ? './terrain_river_horizontalA_0.png' : './terrain_river_horizontalA_1.png';
-		}
-		else if (rivers[i].direction == 2)
-		{
-			tile =  Math.random() < 0.5 ? './terrain_river_horizontalB_0.png' : './terrain_river_horizontalB_1.png';
-		}
-		else if (rivers[i].direction == 3)
-		{
-			tile =  Math.random() < 0.5 ? './terrain_river_vertical_0.png' : './terrain_river_vertical_1.png';
-		}
-		else if (rivers[i].direction == 4)
-		{
-			xpos -= 12;
-			tile =  Math.random() < 0.5 ? './terrain_river_horizontalA_0.png' : './terrain_river_horizontalA_1.png';
-		}
-		else if (rivers[i].direction == 5)
-		{
-			ypos -= 7;
-			xpos -= 12;
-			tile =  Math.random() < 0.5 ? './terrain_river_horizontalB_0.png' : './terrain_river_horizontalB_1.png';
-		}
-		
-		mapmap.push({ src: tile, x: xpos, y: ypos });
-	}
-	*/
-	
-	/*
-	for (i in roads)
-	{
-		let xpos = (12*roads[i].x);
-		let ypos = (14*roads[i].y+((roads[i].x%2)*7));
-		let tile = './terrain_roads_horizontalA.png';
-		
-		if (roads[i].direction == 0)
-		{
-			ypos -= 14;
-			tile = './terrain_roads_vertical.png';
-		}
-		else if (roads[i].direction == 1)
-		{
-			ypos -= 7;
-			tile = './terrain_roads_horizontalA.png';
-		}
-		else if (roads[i].direction == 2)
-		{
-			tile = './terrain_roads_horizontalB.png';
-		}
-		else if (roads[i].direction == 3)
-		{
-			tile = './terrain_roads_vertical.png';
-		}
-		else if (roads[i].direction == 4)
-		{
-			xpos -= 12;
-			tile = './terrain_roads_horizontalA.png';
-		}
-		else if (roads[i].direction == 5)
-		{
-			ypos -= 7;
-			xpos -= 12;
-			tile = './terrain_roads_horizontalB.png';
-		}
-		
-		mapmap.push({ src: tile, x: xpos, y: ypos });
-	}
-	*/
 	
 	for (let y = 0; y < asworld_height; y++)
 	{
