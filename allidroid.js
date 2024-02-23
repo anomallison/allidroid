@@ -20138,7 +20138,10 @@ function GenerateDungeonMap(arguments)
 			let changeattempt = 1;
 			let trynextside = false;
 			
-			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1) && !trynextside)
+			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20169,7 +20172,10 @@ function GenerateDungeonMap(arguments)
 			let changeattempt = 1;
 			let trynextside = false;
 			
-			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1) && !trynextside)
+			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20200,7 +20206,10 @@ function GenerateDungeonMap(arguments)
 			let changeattempt = 1;
 			let trynextside = false;
 			
-			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1) && !trynextside)
+			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20231,7 +20240,10 @@ function GenerateDungeonMap(arguments)
 			let changeattempt = 1;
 			let trynextside = false;
 			
-			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1) && !trynextside)
+			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20275,7 +20287,10 @@ function GenerateDungeonMap(arguments)
 			let changeattempt = 1;
 			let trynextside = false;
 			
-			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1) && !trynextside)
+			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20306,7 +20321,10 @@ function GenerateDungeonMap(arguments)
 			let changeattempt = 1;
 			let trynextside = false;
 			
-			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1) && !trynextside)
+			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20337,7 +20355,10 @@ function GenerateDungeonMap(arguments)
 			let changeattempt = 1;
 			let trynextside = false;
 			
-			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1) && !trynextside)
+			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20368,7 +20389,10 @@ function GenerateDungeonMap(arguments)
 			let changeattempt = 1;
 			let trynextside = false;
 			
-			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1) && !trynextside)
+			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
+			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
