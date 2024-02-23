@@ -19711,18 +19711,18 @@ function GenerateDungeonMap(arguments)
 		argumentpos = arguments.indexOf("-w")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			w = parseInt(arguments[argumentpos+1]);
-		if (w > 240)
-			w = 240;
+		if (w > 60)
+			w = 60;
 		argumentpos = arguments.indexOf("-h")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			h = parseInt(arguments[argumentpos+1]);
-		if (h > 180)
-			h = 180;
+		if (h > 45)
+			h = 45;
 		argumentpos = arguments.indexOf("-r")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			rooms = parseInt(arguments[argumentpos+1]);
-		if (rooms > 360)
-			rooms = 360;
+		if (rooms > 36)
+			rooms = 36;
 		argumentpos = arguments.indexOf("-nostairs")
 		if (argumentpos > -1)
 			add_stairs = false;;
