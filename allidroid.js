@@ -19569,7 +19569,7 @@ function TileMapPathToPosition(start, end, tilemap, map_width, map_height)
 			}
 		}
 	}
-	console.log("full path not found");
+	//console.log("full path not found");
 	return dictionaryToDirection(dictionaryCameFrom, closest, start);
 }
 
@@ -19699,6 +19699,10 @@ function CheckRoomNoOverlap(roommap, room)
 	return true;
 }
 
+var DUNGEONMAP_MAX_WIDTH = 60;
+var DUNGEONMAP_MAX_HEIGHT = 45;
+var DUNGEONMAP_MAX_ROOMS = 36;
+
 function GenerateDungeonMap(arguments)
 {
 	let w = 32;
@@ -19711,18 +19715,18 @@ function GenerateDungeonMap(arguments)
 		argumentpos = arguments.indexOf("-w")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			w = parseInt(arguments[argumentpos+1]);
-		if (w > 60)
-			w = 60;
+		if (w > DUNGEONMAP_MAX_WIDTH)
+			w = DUNGEONMAP_MAX_WIDTH;
 		argumentpos = arguments.indexOf("-h")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			h = parseInt(arguments[argumentpos+1]);
-		if (h > 45)
-			h = 45;
+		if (h > DUNGEONMAP_MAX_HEIGHT)
+			h = DUNGEONMAP_MAX_HEIGHT;
 		argumentpos = arguments.indexOf("-r")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			rooms = parseInt(arguments[argumentpos+1]);
-		if (rooms > 36)
-			rooms = 36;
+		if (rooms > DUNGEONMAP_MAX_ROOMS)
+			rooms = DUNGEONMAP_MAX_ROOMS;
 		argumentpos = arguments.indexOf("-nostairs")
 		if (argumentpos > -1)
 			add_stairs = false;;
@@ -20438,7 +20442,7 @@ function GenerateDungeonMap(arguments)
 	
 	if (reachablerooms < roommap.length*2/3)
 	{
-		return GenerateDungeonMap(arguments);
+		return false;
 	}
 	else
 	{
@@ -20458,24 +20462,43 @@ function OutputTileMap(channel, arguments)
 		argumentpos = arguments.indexOf("-w")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			w = parseInt(arguments[argumentpos+1]);
-		if (w > 60)
-			w = 60;
+		if (w > DUNGEONMAP_MAX_WIDTH)
+			w = DUNGEONMAP_MAX_WIDTH;
+		if (w < 15)
+			w = 15;
 		argumentpos = arguments.indexOf("-h")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			h = parseInt(arguments[argumentpos+1]);
-		if (h > 45)
-			h = 45;
+		if (h > DUNGEONMAP_MAX_HEIGHT)
+			h = DUNGEONMAP_MAX_HEIGHT;
+		if (h < 15)
+			h = 15;
 		argumentpos = arguments.indexOf("-r")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			rooms = parseInt(arguments[argumentpos+1]);
-		if (rooms > 36)
-			rooms = 36;
+		if (rooms > DUNGEONMAP_MAX_ROOMS)
+			rooms = DUNGEONMAP_MAX_ROOMS;
+		if (rooms < 3)
+			rooms = 3;
 		argumentpos = arguments.indexOf("-nostairs")
 		if (argumentpos > -1)
 			add_stairs = false;;
 	}
 	
-	let tilemap = GenerateDungeonMap(arguments);
+	let tilemap = false;
+	let attempts = 0;
+	while (tilemap == false && attempts < 256)
+	{
+		attempts++;
+		tilemap = GenerateDungeonMap(arguments);
+	}
+	
+	if (attempts >= 256)
+	{
+		channel.send("I failed to make a dungeon with those parameters");
+		console.log("failed to generatemap");
+		return 0;
+	}
 	
 	let mapmap = [];
 	
