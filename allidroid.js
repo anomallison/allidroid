@@ -19700,8 +19700,11 @@ function CheckRoomNoOverlap(roommap, room)
 }
 
 var DUNGEONMAP_MAX_WIDTH = 60;
+var DUNGEONMAP_MIN_WIDTH = 15;
 var DUNGEONMAP_MAX_HEIGHT = 45;
+var DUNGEONMAP_MIN_HEIGHT = 15;
 var DUNGEONMAP_MAX_ROOMS = 36;
+var DUNGEONMAP_MIN_ROOMS = 3;
 
 function GenerateDungeonMap(arguments)
 {
@@ -19717,16 +19720,22 @@ function GenerateDungeonMap(arguments)
 			w = parseInt(arguments[argumentpos+1]);
 		if (w > DUNGEONMAP_MAX_WIDTH)
 			w = DUNGEONMAP_MAX_WIDTH;
+		if (w < DUNGEONMAP_MIN_WIDTH)
+			w = DUNGEONMAP_MIN_WIDTH;
 		argumentpos = arguments.indexOf("-h")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			h = parseInt(arguments[argumentpos+1]);
 		if (h > DUNGEONMAP_MAX_HEIGHT)
 			h = DUNGEONMAP_MAX_HEIGHT;
+		if (h < DUNGEONMAP_MIN_HEIGHT)
+			h = DUNGEONMAP_MIN_HEIGHT;
 		argumentpos = arguments.indexOf("-r")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			rooms = parseInt(arguments[argumentpos+1]);
 		if (rooms > DUNGEONMAP_MAX_ROOMS)
 			rooms = DUNGEONMAP_MAX_ROOMS;
+		if (rooms < DUNGEONMAP_MIN_ROOMS)
+			rooms = DUNGEONMAP_MIN_ROOMS;
 		argumentpos = arguments.indexOf("-nostairs")
 		if (argumentpos > -1)
 			add_stairs = false;;
@@ -20464,22 +20473,22 @@ function OutputTileMap(channel, arguments)
 			w = parseInt(arguments[argumentpos+1]);
 		if (w > DUNGEONMAP_MAX_WIDTH)
 			w = DUNGEONMAP_MAX_WIDTH;
-		if (w < 15)
-			w = 15;
+		if (w < DUNGEONMAP_MIN_WIDTH)
+			w = DUNGEONMAP_MIN_WIDTH;
 		argumentpos = arguments.indexOf("-h")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			h = parseInt(arguments[argumentpos+1]);
 		if (h > DUNGEONMAP_MAX_HEIGHT)
 			h = DUNGEONMAP_MAX_HEIGHT;
-		if (h < 15)
-			h = 15;
+		if (h < DUNGEONMAP_MIN_HEIGHT)
+			h = DUNGEONMAP_MIN_HEIGHT;
 		argumentpos = arguments.indexOf("-r")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
 			rooms = parseInt(arguments[argumentpos+1]);
 		if (rooms > DUNGEONMAP_MAX_ROOMS)
 			rooms = DUNGEONMAP_MAX_ROOMS;
-		if (rooms < 3)
-			rooms = 3;
+		if (rooms < DUNGEONMAP_MIN_ROOMS)
+			rooms = DUNGEONMAP_MIN_ROOMS;
 		argumentpos = arguments.indexOf("-nostairs")
 		if (argumentpos > -1)
 			add_stairs = false;;
