@@ -76,6 +76,12 @@ var psyduck_gen = JSON.parse(fs.readFileSync('psyduck_gen/psyduck_gen.json'));
 //mini map generator files
 var minimap_gen = JSON.parse(fs.readFileSync('minimap_gen/minimap_gen.json'));
 
+//mini map generator files
+var dungeon_gen_assets = JSON.parse(fs.readFileSync('dungeon_gen_assets/dungeon_gen_assets.json'));
+
+// D&D 5e adventure generator files
+var dnd_adventure_gen = JSON.parse(fs.readFileSync('dd5e_adventure_gen.json'));
+
 //city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
 var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
@@ -658,9 +664,68 @@ function processCommand(receivedMessage)
 	} else if (normalizedCommand == "minimap") 
 	{
 		GenerateMiniMap(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "dndadventure") 
+	{
+		output = GenerateDnDAdventure();
+		
+		if (output == null)
+		{
+			console.log("failed command: dndadventure");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dndnpc") 
+	{
+		output = GenerateDnDNPC();
+		
+		if (output == null)
+		{
+			console.log("failed command: dndnpc");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dndvillain") 
+	{
+		output = GenerateDnDVillain();
+		
+		if (output == null)
+		{
+			console.log("failed command: dndvillain");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dnddungeon") 
+	{
+		output = GenerateDnDDungeon();
+		
+		if (output == null)
+		{
+			console.log("failed command: dnddungeon");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
     } else if (normalizedCommand == "generategoblin") 
 	{
 		generateGoblin(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "generatedungeonmap") 
+	{
+		OutputTileMap(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "psyduck") 
 	{
 		generatePsyduck(receivedMessage.channel,arguments);
@@ -19212,6 +19277,1215 @@ function DrawVoronoiMapMap(channel, arguments)
 		})
 	}
 }
+
+// D&D 5e adventure generation
+//
+
+function RandomArrayEntry(array, nesting, nestingcode)
+{
+	let entry = array[Math.floor(Math.random()*array.length)];
+	while (nesting == false && entry.includes(nestingcode))
+	{
+		entry = array[Math.floor(Math.random()*array.length)];
+	}
+	return array[Math.floor(Math.random()*array.length)];
+}
+
+function RandomNPCAbilities()
+{
+	let high = "high ";
+	let low = "low ";
+	let hAbility = Math.floor(Math.random()*dnd_adventure_gen.NPCHighAbilities.length);
+	let lAbility = Math.floor(Math.random()*dnd_adventure_gen.NPCLowAbilities.length);
+	while (lAbility == hAbility)
+	{
+		lAbility = Math.floor(Math.random()*dnd_adventure_gen.NPCLowAbilities.length);
+	}
+	high += dnd_adventure_gen.NPCHighAbilities[hAbility];
+	low += dnd_adventure_gen.NPCLowAbilities[lAbility];
+	
+	return high + ", " + low;
+}
+
+function GenerateDnDNPC()
+{
+	let npcappearance = RandomArrayEntry(dnd_adventure_gen.NPCAppearances, true, "[NPCAppearances]") + ".";
+	let npcabilities = RandomNPCAbilities();
+	let npctalent = RandomArrayEntry(dnd_adventure_gen.NPCTalents, true, "[NPCTalents]") + ".";
+	let npcmannerism = RandomArrayEntry(dnd_adventure_gen.NPCMannerisms, true, "[NPCMannerisms]") + ".";
+	let npcinterpersonal = RandomArrayEntry(dnd_adventure_gen.NPCInterpsonalTraits, true, "[NPCInterpsonalTraits]") + ".";
+	let npcbond = RandomArrayEntry(dnd_adventure_gen.NPCBonds, true, "[NPCBonds]") + ".";
+	let npcsecret = RandomArrayEntry(dnd_adventure_gen.NPCFlawsAndSecrets, true, "[NPCFlawsAndSecrets]") + ".";
+	
+	let fullnpc = "Notable physical feature: " + npcappearance + "\n"
+				+ "Abilities: " + npcabilities + "\n"
+				+ "Talent: " + npctalent + "\n"
+				+ "Mannerism: " + npcmannerism + "\n"
+				+ "Disposition: " + npcinterpersonal + "\n"
+				+ "Bonds: " + npcbond + "\n"
+				+ "Flaws/Secrets: " + npcsecret;
+	
+	let position = fullnpc.indexOf("\[");
+	let endposition = -1;
+	let fieldsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = fullnpc.indexOf("\]");
+		fieldsubstr = fullnpc.substring(position+1,endposition);
+		
+		if (fieldsubstr == "NPCBonds")
+		{
+			fullnpc = fullnpc.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.NPCBonds, false, "[NPCBonds]") + fullnpc.substr(endposition+1);
+		}
+		
+		position = fullnpc.indexOf("\[");
+	}
+	
+	return fullnpc;
+}
+
+function GenerateDnDVillain()
+{
+	let villainscheme = "Scheme: " + RandomArrayEntry(dnd_adventure_gen.VillainSchemes, true, "[VillainSchemes]") + ".";
+	let villainmethod = "Method: " + RandomArrayEntry(dnd_adventure_gen.VillainMethods, true, "[VillainMethods]") + ".";
+
+	let fullvillain = GenerateDnDNPC() + "\n" + villainscheme + "\n" + villainmethod;
+	
+	return fullvillain;
+}
+
+function GenerateDnDDungeon()
+{
+	let dungeonlocation = "Location: " + RandomArrayEntry(dnd_adventure_gen.DungeonLocation, true, "[DungeonLocation]") + ".";
+	let dungeoncreator = "Creator: " + RandomArrayEntry(dnd_adventure_gen.DungeonCreator, true, "[DungeonCreator]") + ".";
+	let dungeonpurpose = "Purpose: " + RandomArrayEntry(dnd_adventure_gen.DungeonPurpose, true, "[DungeonPurpose]") + ".";
+	let dungeonhistory = "History: " + RandomArrayEntry(dnd_adventure_gen.DungeonHistory, true, "[DungeonHistory]") + ".";
+	
+	
+	let fulldungeon = dungeonlocation + "\n"
+					+ dungeoncreator + "\n"
+					+ dungeonpurpose + "\n"
+					+ dungeonhistory;
+	
+	let position = fulldungeon.indexOf("\[");
+	let endposition = -1;
+	let fieldsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = fulldungeon.indexOf("\]");
+		fieldsubstr = fulldungeon.substring(position+1,endposition);
+		
+		if (fieldsubstr == "ExoticLocation")
+		{
+			fulldungeon = fulldungeon.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.ExoticLocation, false, "[ExoticLocation]") + fulldungeon.substr(endposition+1);
+		}
+		else if (fieldsubstr == "CultsAndReligiousGroups")
+		{
+			fulldungeon = fulldungeon.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.CultsAndReligiousGroups, false, "[CultsAndReligiousGroups]") + fulldungeon.substr(endposition+1);
+		}
+		position = fulldungeon.indexOf("\[");
+	}
+	
+	return fulldungeon;
+}
+
+function GenerateDnDAdventure()
+{
+	let adventuretype = Math.random();
+	let adventuregoals = "";
+	let eventbaseadventure = false;
+	if (adventuretype <= 0.25)
+	{
+		adventuregoals = RandomArrayEntry(dnd_adventure_gen.DungeonGoals, true, "[DungeonGoals]") + ".";
+	}
+	else if (adventuretype <= 0.5)
+	{
+		adventuregoals = RandomArrayEntry(dnd_adventure_gen.WildernessGoals, true, "[WildernessGoals]") + ".";
+	}
+	else if (adventuretype <= 0.75)
+	{
+		adventuregoals = RandomArrayEntry(dnd_adventure_gen.OtherGoals, true, "[OtherGoals]") + ".";
+	}
+	else
+	{
+		adventuregoals = RandomArrayEntry(dnd_adventure_gen.EventBasedGoals, true, "[EventBasedGoals]") + ".";
+		eventbaseadventure = true;
+	}
+	
+	let adventurevillain = RandomArrayEntry(dnd_adventure_gen.AdventureVillains, true, "[AdventureVillains]") + ".";
+	let adventureally = RandomArrayEntry(dnd_adventure_gen.AdventureAllies, true, "[AdventureAllies]") + ".";
+	let adventurepatron = RandomArrayEntry(dnd_adventure_gen.AdventurePatrons, true, "[AdventurePatrons]") + ".";
+	let adventureintro = RandomArrayEntry(dnd_adventure_gen.AdventureIntroductions, true, "[AdventureIntroductions]") + ".";
+	let adventureclimax = RandomArrayEntry(dnd_adventure_gen.AdventureClimax, true, "[AdventureClimax]") + ".";
+	let adventurequandry = RandomArrayEntry(dnd_adventure_gen.MoralQuandries, true, "[MoralQuandries]") + ".";
+	let adventuretwist = RandomArrayEntry(dnd_adventure_gen.Twists, true, "[Twists]") + ".";
+	let sidequest = RandomArrayEntry(dnd_adventure_gen.SideQuests, true, "[SideQuests]") + ".";
+	
+	let fulladventure = "Intro: " + adventureintro + "\n"
+						+ "Goals: " + adventuregoals + "\n"
+						+ "Side Objectives: " + sidequest + "\n"
+						+ "Villain: " + adventurevillain + "\n"
+						+ "Ally: " + adventureally + "\n"
+						+ "Patron: " + adventurepatron + "\n"
+						+ "Quandry: " + adventurequandry + "\n"
+						+ "Climax: " + adventureclimax + "\n"
+						+ "Twist: " + adventuretwist;
+	
+	if (eventbaseadventure == true)
+	{
+		let eventvillainstyle = RandomArrayEntry(dnd_adventure_gen.EventBasedVillainActions, true, "[EventBasedVillainActions]") + ".";
+		let framingevent = RandomArrayEntry(dnd_adventure_gen.FramingEvents, true, "[FramingEvents]") + ".";
+		
+		fulladventure = "Villain's Style: " + eventvillainstyle + "\n"
+						+ "Framing Event: " + framingevent + "\n"
+						+ "Intro: " + adventureintro + "\n"
+						+ "Goals: " + adventuregoals + "\n"
+						+ "Side Objectives: " + sidequest + "\n"
+						+ "Villain: " + adventurevillain + "\n"
+						+ "Ally: " + adventureally + "\n"
+						+ "Patron: " + adventurepatron + "\n"
+						+ "Quandry: " + adventurequandry + "\n"
+						+ "Climax: " + adventureclimax + "\n"
+						+ "Twist: " + adventuretwist;
+	}
+	
+	let position = fulladventure.indexOf("\[");
+	let endposition = -1;
+	let fieldsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = fulladventure.indexOf("\]");
+		fieldsubstr = fulladventure.substring(position+1,endposition);
+		
+		if (fieldsubstr == "DungeonGoals")
+		{
+			fulladventure = fulladventure.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.DungeonGoals, false, "[DungeonGoals]") + fulladventure.substr(endposition+1);
+		}
+		else if (fieldsubstr == "WildernessGoals")
+		{
+			fulladventure = fulladventure.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.WildernessGoals, false, "[WildernessGoals]") + fulladventure.substr(endposition+1);
+		}
+		else if (fieldsubstr == "EventBasedGoals")
+		{
+			fulladventure = fulladventure.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.EventBasedGoals, false, "[EventBasedGoals]") + fulladventure.substr(endposition+1);
+		}
+		else if (fieldsubstr == "FramingEvents")
+		{
+			fulladventure = fulladventure.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.FramingEvents, false, "[FramingEvents]") + fulladventure.substr(endposition+1);
+		}
+		
+		position = fulladventure.indexOf("\[");
+	}
+	
+	return fulladventure;
+}
+
+function MoveTile(tile, direction)
+{
+	if (direction == 0)
+		tile.x += 1;
+	else if (direction == 1)
+		tile.y += 1;
+	else if (direction == 2)
+		tile.x -= 1;
+	else if (direction == 3)
+		tile.y -= 1;
+}
+
+function TileMapPathToPosition(start, end, tilemap, map_width, map_height)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let closest = { x: start.x, y: start.y };
+	let closestHexHeuristic = 99999999;
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		if (current.x == end.x && current.y == end.y)
+		{
+			//console.log("path found");
+			//console.log(dictionaryCameFrom);
+			return dictionaryToDirection(dictionaryCameFrom, end, start);
+		}
+		
+		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+			//newcost += 1;
+		}
+		let connection = { x: current.x, y: current.y };
+		for (let i = 0; i < 4; i++)
+		{
+			connection = { x: current.x, y: current.y };
+			MoveTile(connection,i);
+			let tilemapPos = connection.x + (connection.y * map_width);
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "unknown"))
+			{
+				let connectioncost = newcost + 1;
+				if (tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "open")
+					connectioncost += 0.5;
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (connectioncost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+						priority = connectioncost + pathHeuristic(connection, end);
+						if (priority - connectioncost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - connectioncost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+					priority = connectioncost + pathHeuristic(connection, end);
+					if (priority - connectioncost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - connectioncost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+		}
+	}
+	console.log("full path not found");
+	return dictionaryToDirection(dictionaryCameFrom, closest, start);
+}
+
+function TileMapCanReachPosition(start, end, tilemap, map_width, map_height)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let closest = { x: start.x, y: start.y };
+	let closestHexHeuristic = 99999999;
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		if (current.x == end.x && current.y == end.y)
+		{
+			//console.log("path found");
+			//console.log(dictionaryCameFrom);
+			let pathLength = dictionaryToDirection(dictionaryCameFrom, end, start).length;
+			return pathLength;
+		}
+		
+		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+			//newcost += 1;
+		}
+		let connection = { x: current.x, y: current.y };
+		for (let i = 0; i < 4; i++)
+		{
+			connection = { x: current.x, y: current.y };
+			MoveTile(connection,i);
+			let tilemapPos = connection.x + (connection.y * map_width);
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height 
+				&& (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "door_horizontal"
+				|| tilemap[tilemapPos] == "door_vertical" || tilemap[tilemapPos] == "grate_horizontal" || tilemap[tilemapPos] == "grate_vertical"))
+			{
+				let connectioncost = newcost + 1;
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (connectioncost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+						priority = connectioncost + pathHeuristic(connection, end);
+						if (priority - connectioncost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - connectioncost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+					priority = connectioncost + pathHeuristic(connection, end);
+					if (priority - connectioncost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - connectioncost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+		}
+	}
+	//console.log("full path not found");
+	return -1;
+}
+
+function CountAdjacentTileType(x, y, tilemap, tiletype, width, height)
+{
+	let count = 0;
+	let tileIndex = x + 1 + (y * width);
+	if (x < width - 1 && tilemap[tileIndex] == tiletype)
+		count++;
+	tileIndex = x - 1 + (y * width);
+	if (x > 0 && tilemap[tileIndex] == tiletype)
+		count++;
+	tileIndex = x + ((y + 1) * width);
+	if (y < height - 1 && tilemap[tileIndex] == tiletype)
+		count++;
+	tileIndex = x + ((y - 1) * width);
+	if (y > 0 && tilemap[tileIndex] == tiletype)
+		count++;
+	
+	return count;
+}
+
+function CheckRoomInBounds(room, width, height)
+{
+	if (room.x + room.w + 1 >= width)
+		return false;
+	if (room.x - 1 < 0)
+		return false;
+	if (room.y + room.h + 1 >= height)
+		return false;
+	if (room.y - 1 < 0)
+		return false;
+	
+	return true;
+}
+
+function CheckRoomNoOverlap(roommap, room)
+{
+	for(let i = 0; i < roommap.length; i++)
+	{
+		if (roommap[i].x + roommap[i].w + 1 > room.x && roommap[i].x - 1 < room.x + room.w)
+		{
+			if (roommap[i].y + roommap[i].h + 1 > room.y && roommap[i].y - 1 < room.y + room.h)
+				return false;
+		}
+	}
+	
+	return true;
+}
+
+function GenerateDungeonMap(arguments)
+{
+	let w = 40;
+	let h = 30;
+	let rooms = 8;
+	
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			w = parseInt(arguments[argumentpos+1]);
+		if (w > 240)
+			w = 240;
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			h = parseInt(arguments[argumentpos+1]);
+		if (h > 180)
+			h = 180;
+		argumentpos = arguments.indexOf("-r")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			rooms = parseInt(arguments[argumentpos+1]);
+		if (rooms > 360)
+			rooms = 360;
+	}
+	
+	
+	let tilemap = [];
+	
+	for (let y = 0; y < h; y++)
+	{
+		for (let x = 0; x < w; x++)
+		{
+			tilemap.push("unknown");
+		}
+	}
+	
+	let roommap = [];
+	
+	let roomconnections = [];
+	
+	let roomattempts = 0;
+	
+	for (let r = 0; r < rooms && roomattempts < 5000; r++)
+	{
+		let randomw = Math.floor(Math.random() * 6) + 5;
+		let randomh = Math.floor(Math.random() * 6) + 5;
+		let randomx = Math.floor(Math.random() * (w - 4 - randomw)) + 2;
+		let randomy = Math.floor(Math.random() * (h - 4 - randomh)) + 2;
+		
+		let adjacentroom = Math.floor(Math.random() * roommap.length);
+		let roomside = Math.random();
+		
+		let randomgap = Math.floor(Math.random() * 2) + 3;
+		
+		
+		if (roommap.length > 0)
+		{	
+			if (roomside < 0.25) // west side
+			{
+				randomx = roommap[adjacentroom].x - randomw - randomgap;
+				randomy = Math.floor(Math.random() * roommap[adjacentroom].h + randomh) + roommap[adjacentroom].y - randomh;
+			}
+			else if (roomside < 0.5) // east side
+			{
+				randomx = roommap[adjacentroom].x + roommap[adjacentroom].w + randomgap;
+				randomy = Math.floor(Math.random() * roommap[adjacentroom].h + randomh) + roommap[adjacentroom].y - randomh;
+			}
+			else if (roomside < 0.75) // south side
+			{
+				randomx = Math.floor(Math.random() * roommap[adjacentroom].w + randomw) + roommap[adjacentroom].x - randomw;
+				randomy = roommap[adjacentroom].y - randomh - randomgap;
+			}
+			else // north side
+			{
+				randomx = Math.floor(Math.random() * roommap[adjacentroom].w + randomw) + roommap[adjacentroom].x - randomw;
+				randomy = roommap[adjacentroom].y + roommap[adjacentroom].h + randomgap;
+			}
+		}
+		
+		let newroom = { x: randomx, y: randomy, w: randomw, h: randomh };
+		
+		if (!CheckRoomInBounds(newroom, w, h))
+		{
+			roomattempts++;
+			r--;
+		}
+		else if (!CheckRoomNoOverlap(roommap, newroom))
+		{
+			roomattempts++;
+			r--;
+		}
+		else if (roomattempts < 5000)
+		{
+			for (let y = newroom.y; y <= newroom.h + newroom.y; y++)
+			{
+				tilemap[newroom.x + (y * w)] = "closed";
+				tilemap[newroom.x + newroom.w + (y * w)] = "closed";
+			}
+			for (let x = newroom.x; x <= newroom.w + newroom.x; x++)
+			{
+				tilemap[x + (newroom.y * w)] = "closed";
+				tilemap[x + ((newroom.y + newroom.h) * w)] = "closed";
+			}
+			for (let y = newroom.y + 1; y <= newroom.h + newroom.y - 1; y++)
+			{
+				for (let x = newroom.x + 1; x <= newroom.w + newroom.x - 1; x++)
+				{
+					tilemap[x + (y * w)] = "open";
+				}
+			}
+			roommap.push(newroom);
+			roomconnections.push({ start: adjacentroom, end: roommap.length - 1, side: roomside});
+		}
+	}
+	
+	for(let i = 0; i < roomconnections.length; i++)
+	{
+		let tileIndex = 0;
+		
+		// make doorways
+		let doorApos = { x: 0, y: 0 };
+		let doorBpos = { x: 0, y: 0 };
+		let Adoor = true;
+		let Bdoor = true;
+		if (roomconnections[i].side <= 0.25)
+		{
+			let randomy = Math.floor((Math.random() * (roommap[roomconnections[i].start].h - 2)) + roommap[roomconnections[i].start].y + 2);
+			doorApos = { x: roommap[roomconnections[i].start].x, y: randomy };
+			
+			randomy = Math.floor((Math.random() * (roommap[roomconnections[i].end].h - 2)) + roommap[roomconnections[i].end].y + 2);
+			doorBpos = { x: roommap[roomconnections[i].end].x + roommap[roomconnections[i].end].w, y: randomy };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			
+			while ((CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "coridoor", w, h) > 0) && Adoor == true)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (doorApos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1  && doorApos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
+					Adoor = false;
+			}
+			
+			doorApos.y += change;
+			
+			change = 0;
+			changesign = -1;
+			changeattempt = 1;
+			
+			while ((CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "coridoor", w, h) > 0) && Bdoor == true)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (doorBpos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1  && doorBpos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
+					Bdoor = false;
+			}
+			
+			doorBpos.y += change;
+		}
+		else if (roomconnections[i].side <= 0.5)
+		{
+			let randomy = Math.floor((Math.random() * (roommap[roomconnections[i].start].h - 2)) + roommap[roomconnections[i].start].y + 2);
+			doorApos = { x: roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w, y: randomy };
+			
+			randomy = Math.floor((Math.random() * (roommap[roomconnections[i].end].h - 2)) + roommap[roomconnections[i].end].y + 2);
+			doorBpos = { x: roommap[roomconnections[i].end].x, y: randomy };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			
+			while ((CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "coridoor", w, h) > 0) && Adoor == true)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (doorApos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1 && doorApos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
+					Adoor = false;
+			}
+			
+			doorApos.y += change;
+			
+			change = 0;
+			changesign = -1;
+			changeattempt = 1;
+			
+			while ((CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "coridoor", w, h) > 0) && Bdoor == true)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (doorBpos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1 && doorBpos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
+					Bdoor = false;
+			}
+			
+			doorBpos.y += change;
+		}
+		else if (roomconnections[i].side <= 0.75)
+		{
+			let randomx = Math.floor((Math.random() * (roommap[roomconnections[i].start].w - 2)) + roommap[roomconnections[i].start].x + 2);
+			doorApos = { x: randomx, y: roommap[roomconnections[i].start].y };
+			
+			randomx = Math.floor((Math.random() * (roommap[roomconnections[i].end].w - 2)) + roommap[roomconnections[i].end].x + 2);
+			doorBpos = { x: randomx, y: roommap[roomconnections[i].end].y + roommap[roomconnections[i].end].h };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			
+			while ((CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "coridoor", w, h) > 0) && Adoor == true)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (doorApos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1 && doorApos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
+					Adoor = false;
+			}
+			
+			doorApos.y += change;
+			
+			change = 0;
+			changesign = -1;
+			changeattempt = 1;
+			
+			while ((CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "coridoor", w, h) > 0) && Bdoor == true)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (doorBpos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1 && doorBpos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
+					Bdoor = false;
+			}
+			
+			doorBpos.y += change;
+		}
+		else
+		{
+			let randomx = Math.floor((Math.random() * (roommap[roomconnections[i].start].w - 2)) + roommap[roomconnections[i].start].x + 2);
+			doorApos = { x: randomx, y: roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h };
+			
+			randomx = Math.floor((Math.random() * (roommap[roomconnections[i].end].w - 2)) + roommap[roomconnections[i].end].x + 2);
+			doorBpos = { x: randomx, y: roommap[roomconnections[i].end].y };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			
+			while ((CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "coridoor", w, h) > 0) && Adoor == true)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (doorApos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1 && doorApos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
+					Adoor = false;
+			}
+			
+			doorApos.y += change;
+			
+			change = 0;
+			changesign = -1;
+			changeattempt = 1;
+			
+			while ((CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "coridoor", w, h) > 0) && Bdoor == true)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (doorBpos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1 && doorBpos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
+					Bdoor = false;
+			}
+			
+			doorBpos.y += change;
+		}
+		
+		if (Adoor == true)
+		{
+			tileIndex = doorApos.x + (doorApos.y * w);
+			tilemap[tileIndex] = "open";
+		}
+		
+		if (Bdoor == true)
+		{
+			tileIndex = doorBpos.x + (doorBpos.y * w);
+			tilemap[tileIndex] = "open";
+		}
+		
+		let startx = Math.floor(roommap[roomconnections[i].start].x + (roommap[roomconnections[i].start].w / 2));
+		let starty = Math.floor(roommap[roomconnections[i].start].y + (roommap[roomconnections[i].start].h / 2));
+		let endx = Math.floor(roommap[roomconnections[i].end].x + (roommap[roomconnections[i].end].w / 2));
+		let endy = Math.floor(roommap[roomconnections[i].end].y + (roommap[roomconnections[i].end].h / 2));
+		
+		let startpos = { x: startx, y: starty };
+		let endpos = { x: endx, y: endy };
+		
+		let path = TileMapPathToPosition(startpos, endpos, tilemap, w, h);
+		{
+			for (let j = 0; j < path.length; j++)
+			{
+				tileIndex = path[j].x + (path[j].y * w);
+				tilemap[tileIndex] = "coridoor";
+			}
+		}
+		
+	}
+	
+	for (let r = 0; r < roommap.length; r++)
+	{
+		for (let y = roommap[r].y; y <= roommap[r].h + roommap[r].y; y++)
+		{
+			if (tilemap[roommap[r].x + (y * w)] == "coridoor")
+			{
+				let randomfloat = Math.random();
+				let entrancetype = "door_vertical";
+				if (randomfloat < 0.334)
+					entrancetype = "grate_vertical";
+				tilemap[roommap[r].x + (y * w)] = entrancetype;
+			}
+			else
+				tilemap[roommap[r].x + (y * w)] = "closed";
+			
+			if (tilemap[roommap[r].x + roommap[r].w + (y * w)] == "coridoor"){
+				let randomfloat = Math.random();
+				let entrancetype = "door_vertical";
+				if (randomfloat < 0.334)
+					entrancetype = "grate_vertical";
+				tilemap[roommap[r].x + roommap[r].w + (y * w)] = entrancetype;
+			}
+			else
+				tilemap[roommap[r].x + roommap[r].w + (y * w)] = "closed";
+		}
+		for (let x = roommap[r].x; x <= roommap[r].w + roommap[r].x; x++)
+		{
+			if (tilemap[x + (roommap[r].y * w)] == "coridoor")
+			{
+				let randomfloat = Math.random();
+				let entrancetype = "door_horizontal";
+				if (randomfloat < 0.334)
+					entrancetype = "grate_horizontal";
+				tilemap[x + (roommap[r].y * w)] = entrancetype;
+			}
+			else
+				tilemap[x + (roommap[r].y * w)] = "closed";
+			
+			if (tilemap[x + ((roommap[r].y + roommap[r].h) * w)] == "coridoor")
+			{
+				let randomfloat = Math.random();
+				let entrancetype = "door_horizontal";
+				if (randomfloat < 0.334)
+					entrancetype = "grate_horizontal";
+				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = entrancetype;
+			}
+			else
+				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = "closed";
+		}
+		for (let y = roommap[r].y + 1; y <= roommap[r].h + roommap[r].y - 1; y++)
+		{
+			for (let x = roommap[r].x + 1; x <= roommap[r].w + roommap[r].x - 1; x++)
+			{
+				tilemap[x + (y * w)] = "open";
+			}
+		}
+	}
+	
+	let start_room = Math.floor(Math.random() * roommap.length);
+	let end_room = -1;
+	
+	let startx = Math.floor(roommap[start_room].x + (roommap[start_room].w / 2));
+	let starty = Math.floor(roommap[start_room].y + (roommap[start_room].h / 2));
+	
+	let startpos = { x: startx, y: starty };
+	
+	let reachablerooms = 0
+	let furthestdistance = -1;
+	let furthestroom = -1;
+	
+	for(let r = 0; r < roommap.length; r++)
+	{
+		if (r != start_room)
+		{
+			let endx = Math.floor(roommap[r].x + (roommap[r].w / 2));
+			let endy = Math.floor(roommap[r].y + (roommap[r].h / 2));
+			
+			let endpos = { x: endx, y: endy };
+			let roomDistance = TileMapCanReachPosition(startpos, endpos, tilemap, w, h);
+
+			if(roomDistance == -1)
+			{
+				for (let y = roommap[r].y; y <= roommap[r].h + roommap[r].y; y++)
+				{
+					for (let x = roommap[r].x; x <= roommap[r].w + roommap[r].x; x++)
+					{
+						tilemap[x + (y * w)] = "unknown";
+					}
+				}
+			}
+			else
+			{
+				if (roomDistance > furthestdistance)
+				{
+					furthestdistance = roomDistance;
+					furthestroom = r;
+				}
+				reachablerooms++;
+			}	
+		}
+	}
+	
+	//stairs up
+	
+	let stairs_side = Math.random();
+	let stairs_unplaced = true;
+	
+	while (stairs_unplaced)
+	{
+		if (stairs_side > 1)
+			stairs_side -= 1;
+		
+		if (stairs_side <= 0.25) //west wall
+		{
+			let randomy = Math.floor((Math.random() * (roommap[start_room].h - 2)) + roommap[start_room].y + 2);
+			stairspos = { x: roommap[start_room].x, y: randomy };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			let trynextside = false;
+			
+			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1) && !trynextside)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (stairspos.y + Math.abs(change) > roommap[start_room].y + roommap[start_room].h - 1  && stairspos.y - Math.abs(change) < roommap[start_room].y + 1)
+				{
+					stairs_side += 0.25;
+					trynextside = true;
+				}
+			}
+			
+			if (!trynextside)
+			{
+				stairspos.y += change;
+				tileIndex = stairspos.x + (stairspos.y * w);
+				tilemap[tileIndex] = "stairs_west";
+				stairs_unplaced = false;
+			}
+		}
+		else if (stairs_side <= 0.5) //east wall
+		{
+			let randomy = Math.floor((Math.random() * (roommap[start_room].h - 2)) + roommap[start_room].y + 2);
+			stairspos = { x: roommap[start_room].x + roommap[start_room].w, y: randomy };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			let trynextside = false;
+			
+			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1) && !trynextside)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (stairspos.y + Math.abs(change) > roommap[start_room].y + roommap[start_room].h - 1  && stairspos.y - Math.abs(change) < roommap[start_room].y + 1)
+				{
+					stairs_side += 0.25;
+					trynextside = true;
+				}
+			}
+			
+			if (!trynextside)
+			{
+				stairspos.y += change;
+				tileIndex = stairspos.x + (stairspos.y * w);
+				tilemap[tileIndex] = "stairs_east";
+				stairs_unplaced = false;
+			}
+		}
+		else if (stairs_side <= 0.75) //south wall
+		{
+			let randomx = Math.floor((Math.random() * (roommap[start_room].w - 2)) + roommap[start_room].x + 2);
+			stairspos = { x: randomx, y: roommap[start_room].y };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			let trynextside = false;
+			
+			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1) && !trynextside)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (stairspos.x + Math.abs(change) > roommap[start_room].x + roommap[start_room].w - 1  && stairspos.x - Math.abs(change) < roommap[start_room].x + 1)
+				{
+					stairs_side += 0.25;
+					trynextside = true;
+				}
+			}
+			
+			if (!trynextside)
+			{
+				stairspos.y += change;
+				tileIndex = stairspos.x + (stairspos.y * w);
+				tilemap[tileIndex] = "stairs_south";
+				stairs_unplaced = false;
+			}
+		}
+		else //north wall
+		{
+			let randomx = Math.floor((Math.random() * (roommap[start_room].w - 2)) + roommap[start_room].x + 2);
+			stairspos = { x: randomx, y: roommap[start_room].y + roommap[start_room].h };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			let trynextside = false;
+			
+			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1) && !trynextside)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (stairspos.x + Math.abs(change) > roommap[start_room].x + roommap[start_room].w - 1  && stairspos.x - Math.abs(change) < roommap[start_room].x + 1)
+				{
+					stairs_side += 0.25;
+					trynextside = true;
+				}
+			}
+			
+			if (!trynextside)
+			{
+				stairspos.y += change;
+				tileIndex = stairspos.x + (stairspos.y * w);
+				tilemap[tileIndex] = "stairs_north";
+				stairs_unplaced = false;
+			}
+		}
+	}
+	
+	
+	//stairs down
+	
+	stairs_side = Math.random();
+	stairs_unplaced = true;
+	
+	while (stairs_unplaced)
+	{
+		if (stairs_side > 1)
+			stairs_side -= 1;
+		
+		if (stairs_side <= 0.25) //west wall
+		{
+			let randomy = Math.floor((Math.random() * (roommap[furthestroom].h - 2)) + roommap[furthestroom].y + 2);
+			stairspos = { x: roommap[furthestroom].x, y: randomy };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			let trynextside = false;
+			
+			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1) && !trynextside)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (stairspos.y + Math.abs(change) > roommap[furthestroom].y + roommap[furthestroom].h - 1  && stairspos.y - Math.abs(change) < roommap[furthestroom].y + 1)
+				{
+					stairs_side += 0.25;
+					trynextside = true;
+				}
+			}
+			
+			if (!trynextside)
+			{
+				stairspos.y += change;
+				tileIndex = stairspos.x + (stairspos.y * w);
+				tilemap[tileIndex] = "stairs_east";
+				stairs_unplaced = false;
+			}
+		}
+		else if (stairs_side <= 0.5) //east wall
+		{
+			let randomy = Math.floor((Math.random() * (roommap[furthestroom].h - 2)) + roommap[furthestroom].y + 2);
+			stairspos = { x: roommap[furthestroom].x + roommap[furthestroom].w, y: randomy };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			let trynextside = false;
+			
+			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1) && !trynextside)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (stairspos.y + Math.abs(change) > roommap[furthestroom].y + roommap[furthestroom].h - 1  && stairspos.y - Math.abs(change) < roommap[furthestroom].y + 1)
+				{
+					stairs_side += 0.25;
+					trynextside = true;
+				}
+			}
+			
+			if (!trynextside)
+			{
+				stairspos.y += change;
+				tileIndex = stairspos.x + (stairspos.y * w);
+				tilemap[tileIndex] = "stairs_west";
+				stairs_unplaced = false;
+			}
+		}
+		else if (stairs_side <= 0.75) //south wall
+		{
+			let randomx = Math.floor((Math.random() * (roommap[furthestroom].w - 2)) + roommap[furthestroom].x + 2);
+			stairspos = { x: randomx, y: roommap[furthestroom].y };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			let trynextside = false;
+			
+			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1) && !trynextside)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (stairspos.x + Math.abs(change) > roommap[furthestroom].x + roommap[furthestroom].w - 1  && stairspos.x - Math.abs(change) < roommap[furthestroom].x + 1)
+				{
+					stairs_side += 0.25;
+					trynextside = true;
+				}
+			}
+			
+			if (!trynextside)
+			{
+				stairspos.y += change;
+				tileIndex = stairspos.x + (stairspos.y * w);
+				tilemap[tileIndex] = "stairs_north";
+				stairs_unplaced = false;
+			}
+		}
+		else //north wall
+		{
+			let randomx = Math.floor((Math.random() * (roommap[furthestroom].w - 2)) + roommap[furthestroom].x + 2);
+			stairspos = { x: randomx, y: roommap[furthestroom].y + roommap[furthestroom].h };
+			
+			let change = 0;
+			let changesign = -1;
+			let changeattempt = 1;
+			let trynextside = false;
+			
+			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1) && !trynextside)
+			{
+				change += Math.floor(changeattempt) * changesign;
+				changesign *= -1;
+				changeattempt += 0.5;
+				
+				if (stairspos.x + Math.abs(change) > roommap[furthestroom].x + roommap[furthestroom].w - 1  && stairspos.x - Math.abs(change) < roommap[furthestroom].x + 1)
+				{
+					stairs_side += 0.25;
+					trynextside = true;
+				}
+			}
+			
+			if (!trynextside)
+			{
+				stairspos.y += change;
+				tileIndex = stairspos.x + (stairspos.y * w);
+				tilemap[tileIndex] = "stairs_south";
+				stairs_unplaced = false;
+			}
+		}
+	}
+	
+	if (reachablerooms < roommap.length*2/3)
+	{
+		return GenerateDungeonMap(arguments);
+	}
+	else
+	{
+		return tilemap;
+	}
+}
+
+function OutputTileMap(channel, arguments)
+{
+	let w = 40;
+	let h = 30;
+	
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			w = parseInt(arguments[argumentpos+1]);
+		if (w > 240)
+			w = 240;
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			h = parseInt(arguments[argumentpos+1]);
+		if (h > 180)
+			h = 180;
+	}
+	
+	let tilemap = GenerateDungeonMap(arguments);
+	
+	let mapmap = [];
+	
+	for (let y = 0; y < h; y++)
+	{
+		for (let x  = 0; x < w; x++)
+		{
+			let xpos = (100*x);
+			let ypos = (100*y);
+			
+			if (tilemap[x+(y*w)] == "closed")
+				mapmap.push({ src: dungeon_gen_assets.closed[Math.floor(Math.random()*dungeon_gen_assets.closed.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "open")
+				mapmap.push({ src: dungeon_gen_assets.open[Math.floor(Math.random()*dungeon_gen_assets.open.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "coridoor")
+				mapmap.push({ src: dungeon_gen_assets.open[Math.floor(Math.random()*dungeon_gen_assets.open.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "door_horizontal")
+				mapmap.push({ src: dungeon_gen_assets.door_horizontal[Math.floor(Math.random()*dungeon_gen_assets.door_horizontal.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "door_vertical")
+				mapmap.push({ src: dungeon_gen_assets.door_vertical[Math.floor(Math.random()*dungeon_gen_assets.door_vertical.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "grate_horizontal")
+				mapmap.push({ src: dungeon_gen_assets.grate_horizontal[Math.floor(Math.random()*dungeon_gen_assets.grate_horizontal.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "grate_vertical")
+				mapmap.push({ src: dungeon_gen_assets.grate_vertical[Math.floor(Math.random()*dungeon_gen_assets.grate_vertical.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "stairs_north")
+				mapmap.push({ src: dungeon_gen_assets.stairs_north[Math.floor(Math.random()*dungeon_gen_assets.stairs_north.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "stairs_south")
+				mapmap.push({ src: dungeon_gen_assets.stairs_south[Math.floor(Math.random()*dungeon_gen_assets.stairs_south.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "stairs_east")
+				mapmap.push({ src: dungeon_gen_assets.stairs_east[Math.floor(Math.random()*dungeon_gen_assets.stairs_east.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "stairs_west")
+				mapmap.push({ src: dungeon_gen_assets.stairs_west[Math.floor(Math.random()*dungeon_gen_assets.stairs_west.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "test")
+				mapmap.push({ src: dungeon_gen_assets.test[Math.floor(Math.random()*dungeon_gen_assets.test.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "unknown")
+				mapmap.push({ src: dungeon_gen_assets.closed[Math.floor(Math.random()*dungeon_gen_assets.closed.length)], x: xpos, y: ypos});
+			
+			/*
+			if (grid_opacity > 0)
+			{
+				mapmap.push({ src: minimap_gen.grid[Math.floor(Math.random()*minimap_gen.grid.length)], x: xpos, y: ypos, opacity: grid_opacity });
+			}
+			*/
+		}
+	}
+	
+	let file = 'generatedmap.png';
+	let path = './' + file;
+	
+	mergeImages(mapmap, 
+	{
+		width: (100*w),
+		height: (100*h),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+}
+
 
 //
 // save/load currentgay variable
