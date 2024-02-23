@@ -19704,7 +19704,7 @@ function GenerateDungeonMap(arguments)
 	let w = 40;
 	let h = 30;
 	let rooms = 8;
-	
+	let add_stairs = true;
 	
 	if (arguments != null && arguments.length > 0)
 	{
@@ -19723,6 +19723,9 @@ function GenerateDungeonMap(arguments)
 			rooms = parseInt(arguments[argumentpos+1]);
 		if (rooms > 360)
 			rooms = 360;
+		argumentpos = arguments.indexOf("-nostairs")
+		if (argumentpos > -1)
+			add_stairs = false;;
 	}
 	
 	
@@ -20117,303 +20120,321 @@ function GenerateDungeonMap(arguments)
 			}	
 		}
 	}
-	
-	//stairs up
-	
-	let stairs_side = Math.random();
-	let stairs_unplaced = true;
-	
-	while (stairs_unplaced)
+
+
+	if (add_stairs)
 	{
-		if (stairs_side > 1)
-			stairs_side -= 1;
+		//stairs up
 		
-		if (stairs_side <= 0.25) //west wall
+		let stairs_side = Math.random();
+		let sides_attempted = 0;
+		let stairs_unplaced = true;
+		
+		while (stairs_unplaced && sides_attempted < 1)
 		{
-			let randomy = Math.floor((Math.random() * (roommap[start_room].h - 2)) + roommap[start_room].y + 2);
-			stairspos = { x: roommap[start_room].x, y: randomy };
+			if (stairs_side > 1)
+				stairs_side -= 1;
 			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			let trynextside = false;
-			
-			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
+			if (stairs_side <= 0.25) //west wall
 			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
+				let randomy = Math.floor((Math.random() * (roommap[start_room].h - 2)) + roommap[start_room].y + 2);
+				let stairspos = { x: roommap[start_room].x, y: randomy };
 				
-				if (stairspos.y + Math.abs(change) > roommap[start_room].y + roommap[start_room].h - 1  && stairspos.y - Math.abs(change) < roommap[start_room].y + 1)
+				let change = 0;
+				let changesign = -1;
+				let changeattempt = 1;
+				let trynextside = false;
+				
+				while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
+				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
+				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
+				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
 				{
-					stairs_side += 0.25;
-					trynextside = true;
+					change += Math.floor(changeattempt) * changesign;
+					changesign *= -1;
+					changeattempt += 0.5;
+					
+					if (stairspos.y + Math.abs(change) > roommap[start_room].y + roommap[start_room].h - 2  && stairspos.y - Math.abs(change) < roommap[start_room].y + 2)
+					{
+						stairs_side += 0.25;
+						sides_attempted += 0.25;
+						trynextside = true;
+					}
+				}
+				
+				if (!trynextside)
+				{
+					stairspos.y += change;
+					tileIndex = stairspos.x + (stairspos.y * w);
+					tilemap[tileIndex] = "stairs_west";
+					stairs_unplaced = false;
 				}
 			}
-			
-			if (!trynextside)
+			else if (stairs_side <= 0.5) //east wall
 			{
-				stairspos.y += change;
-				tileIndex = stairspos.x + (stairspos.y * w);
-				tilemap[tileIndex] = "stairs_west";
-				stairs_unplaced = false;
+				let randomy = Math.floor((Math.random() * (roommap[start_room].h - 2)) + roommap[start_room].y + 2);
+				let stairspos = { x: roommap[start_room].x + roommap[start_room].w, y: randomy };
+				
+				let change = 0;
+				let changesign = -1;
+				let changeattempt = 1;
+				let trynextside = false;
+				
+				while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
+				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
+				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
+				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
+				{
+					change += Math.floor(changeattempt) * changesign;
+					changesign *= -1;
+					changeattempt += 0.5;
+					
+					if (stairspos.y + Math.abs(change) > roommap[start_room].y + roommap[start_room].h - 2  && stairspos.y - Math.abs(change) < roommap[start_room].y + 2)
+					{
+						stairs_side += 0.25;
+						sides_attempted += 0.25;
+						trynextside = true;
+					}
+				}
+				
+				if (!trynextside)
+				{
+					stairspos.y += change;
+					tileIndex = stairspos.x + (stairspos.y * w);
+					tilemap[tileIndex] = "stairs_east";
+					stairs_unplaced = false;
+				}
+			}
+			else if (stairs_side <= 0.75) //north wall
+			{
+				let randomx = Math.floor((Math.random() * (roommap[start_room].w - 2)) + roommap[start_room].x + 2);
+				let stairspos = { x: randomx, y: roommap[start_room].y };
+				
+				let change = 0;
+				let changesign = -1;
+				let changeattempt = 1;
+				let trynextside = false;
+				
+				while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
+				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
+				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
+				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
+				{
+					change += Math.floor(changeattempt) * changesign;
+					changesign *= -1;
+					changeattempt += 0.5;
+					
+					if (stairspos.x + Math.abs(change) > roommap[start_room].x + roommap[start_room].w - 1  && stairspos.x - Math.abs(change) < roommap[start_room].x + 1)
+					{
+						stairs_side += 0.25;
+						sides_attempted += 0.25;
+						trynextside = true;
+					}
+				}
+				
+				if (!trynextside)
+				{
+					stairspos.x += change;
+					tileIndex = stairspos.x + (stairspos.y * w);
+					tilemap[tileIndex] = "stairs_north";
+					stairs_unplaced = false;
+				}
+			}
+			else //south wall
+			{
+				let randomx = Math.floor((Math.random() * (roommap[start_room].w - 2)) + roommap[start_room].x + 2);
+				let stairspos = { x: randomx, y: roommap[start_room].y + roommap[start_room].h };
+				
+				let change = 0;
+				let changesign = -1;
+				let changeattempt = 1;
+				let trynextside = false;
+				
+				while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
+				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
+				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
+				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
+				{
+					change += Math.floor(changeattempt) * changesign;
+					changesign *= -1;
+					changeattempt += 0.5;
+					
+					if (stairspos.x + Math.abs(change) > roommap[start_room].x + roommap[start_room].w - 1  && stairspos.x - Math.abs(change) < roommap[start_room].x + 1)
+					{
+						stairs_side += 0.25;
+						sides_attempted += 0.25;
+						trynextside = true;
+					}
+				}
+				
+				if (!trynextside)
+				{
+					stairspos.x += change;
+					tileIndex = stairspos.x + (stairspos.y * w);
+					tilemap[tileIndex] = "stairs_south";
+					stairs_unplaced = false;
+				}
 			}
 		}
-		else if (stairs_side <= 0.5) //east wall
+		
+		
+		//stairs down
+		
+		stairs_side = Math.random();
+		sides_attempted = 0;
+		stairs_unplaced = true;
+		
+		if (furthestroom > -1)
 		{
-			let randomy = Math.floor((Math.random() * (roommap[start_room].h - 2)) + roommap[start_room].y + 2);
-			stairspos = { x: roommap[start_room].x + roommap[start_room].w, y: randomy };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			let trynextside = false;
-			
-			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
+			while (stairs_unplaced && sides_attempted < 1)
 			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
+				if (stairs_side > 1)
+					stairs_side -= 1;
 				
-				if (stairspos.y + Math.abs(change) > roommap[start_room].y + roommap[start_room].h - 1  && stairspos.y - Math.abs(change) < roommap[start_room].y + 1)
+				if (stairs_side <= 0.25) //west wall
 				{
-					stairs_side += 0.25;
-					trynextside = true;
+					let randomy = Math.floor((Math.random() * (roommap[furthestroom].h - 2)) + roommap[furthestroom].y + 2);
+					let stairspos = { x: roommap[furthestroom].x, y: randomy };
+					
+					let change = 0;
+					let changesign = -1;
+					let changeattempt = 1;
+					let trynextside = false;
+					
+					while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
+					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
+					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
+					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
+					{
+						change += Math.floor(changeattempt) * changesign;
+						changesign *= -1;
+						changeattempt += 0.5;
+						
+						if (stairspos.y + Math.abs(change) > roommap[furthestroom].y + roommap[furthestroom].h - 1  && stairspos.y - Math.abs(change) < roommap[furthestroom].y + 1)
+						{
+							stairs_side += 0.25;
+							sides_attempted += 0.25;
+							trynextside = true;
+						}
+					}
+					
+					if (!trynextside)
+					{
+						stairspos.y += change;
+						tileIndex = stairspos.x + (stairspos.y * w);
+						tilemap[tileIndex] = "stairs_east";
+						stairs_unplaced = false;
+					}
 				}
-			}
-			
-			if (!trynextside)
-			{
-				stairspos.y += change;
-				tileIndex = stairspos.x + (stairspos.y * w);
-				tilemap[tileIndex] = "stairs_east";
-				stairs_unplaced = false;
-			}
-		}
-		else if (stairs_side <= 0.75) //south wall
-		{
-			let randomx = Math.floor((Math.random() * (roommap[start_room].w - 2)) + roommap[start_room].x + 2);
-			stairspos = { x: randomx, y: roommap[start_room].y };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			let trynextside = false;
-			
-			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (stairspos.x + Math.abs(change) > roommap[start_room].x + roommap[start_room].w - 1  && stairspos.x - Math.abs(change) < roommap[start_room].x + 1)
+				else if (stairs_side <= 0.5) //east wall
 				{
-					stairs_side += 0.25;
-					trynextside = true;
+					let randomy = Math.floor((Math.random() * (roommap[furthestroom].h - 2)) + roommap[furthestroom].y + 2);
+					let stairspos = { x: roommap[furthestroom].x + roommap[furthestroom].w, y: randomy };
+					
+					let change = 0;
+					let changesign = -1;
+					let changeattempt = 1;
+					let trynextside = false;
+					
+					while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
+					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
+					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
+					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
+					{
+						change += Math.floor(changeattempt) * changesign;
+						changesign *= -1;
+						changeattempt += 0.5;
+						
+						if (stairspos.y + Math.abs(change) > roommap[furthestroom].y + roommap[furthestroom].h - 1  && stairspos.y - Math.abs(change) < roommap[furthestroom].y + 1)
+						{
+							stairs_side += 0.25;
+							sides_attempted += 0.25;
+							trynextside = true;
+						}
+					}
+					
+					if (!trynextside)
+					{
+						stairspos.y += change;
+						tileIndex = stairspos.x + (stairspos.y * w);
+						tilemap[tileIndex] = "stairs_west";
+						stairs_unplaced = false;
+					}
 				}
-			}
-			
-			if (!trynextside)
-			{
-				stairspos.y += change;
-				tileIndex = stairspos.x + (stairspos.y * w);
-				tilemap[tileIndex] = "stairs_south";
-				stairs_unplaced = false;
-			}
-		}
-		else //north wall
-		{
-			let randomx = Math.floor((Math.random() * (roommap[start_room].w - 2)) + roommap[start_room].x + 2);
-			stairspos = { x: randomx, y: roommap[start_room].y + roommap[start_room].h };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			let trynextside = false;
-			
-			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (stairspos.x + Math.abs(change) > roommap[start_room].x + roommap[start_room].w - 1  && stairspos.x - Math.abs(change) < roommap[start_room].x + 1)
+				else if (stairs_side <= 0.75) //north wall
 				{
-					stairs_side += 0.25;
-					trynextside = true;
+					let randomx = Math.floor((Math.random() * (roommap[furthestroom].w - 2)) + roommap[furthestroom].x + 2);
+					let stairspos = { x: randomx, y: roommap[furthestroom].y };
+					
+					let change = 0;
+					let changesign = -1;
+					let changeattempt = 1;
+					let trynextside = false;
+					
+					while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
+					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
+					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
+					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
+					{
+						change += Math.floor(changeattempt) * changesign;
+						changesign *= -1;
+						changeattempt += 0.5;
+						
+						if (stairspos.x + Math.abs(change) > roommap[furthestroom].x + roommap[furthestroom].w - 1  && stairspos.x - Math.abs(change) < roommap[furthestroom].x + 1)
+						{
+							stairs_side += 0.25;
+							sides_attempted += 0.25;
+							trynextside = true;
+						}
+					}
+					
+					if (!trynextside)
+					{
+						stairspos.x += change;
+						tileIndex = stairspos.x + (stairspos.y * w);
+						tilemap[tileIndex] = "stairs_south";
+						stairs_unplaced = false;
+					}
 				}
-			}
-			
-			if (!trynextside)
-			{
-				stairspos.y += change;
-				tileIndex = stairspos.x + (stairspos.y * w);
-				tilemap[tileIndex] = "stairs_north";
-				stairs_unplaced = false;
+				else //south wall
+				{
+					let randomx = Math.floor((Math.random() * (roommap[furthestroom].w - 2)) + roommap[furthestroom].x + 2);
+					let stairspos = { x: randomx, y: roommap[furthestroom].y + roommap[furthestroom].h };
+					
+					let change = 0;
+					let changesign = -1;
+					let changeattempt = 1;
+					let trynextside = false;
+					
+					while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
+					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
+					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
+					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
+					{
+						change += Math.floor(changeattempt) * changesign;
+						changesign *= -1;
+						changeattempt += 0.5;
+						
+						if (stairspos.x + Math.abs(change) > roommap[furthestroom].x + roommap[furthestroom].w - 1  && stairspos.x - Math.abs(change) < roommap[furthestroom].x + 1)
+						{
+							stairs_side += 0.25;
+							sides_attempted += 0.25;
+							trynextside = true;
+						}
+					}
+					
+					if (!trynextside)
+					{
+						stairspos.x += change;
+						tileIndex = stairspos.x + (stairspos.y * w);
+						tilemap[tileIndex] = "stairs_north";
+						stairs_unplaced = false;
+					}
+				}
 			}
 		}
 	}
 	
-	
-	//stairs down
-	
-	stairs_side = Math.random();
-	stairs_unplaced = true;
-	
-	while (stairs_unplaced)
-	{
-		if (stairs_side > 1)
-			stairs_side -= 1;
-		
-		if (stairs_side <= 0.25) //west wall
-		{
-			let randomy = Math.floor((Math.random() * (roommap[furthestroom].h - 2)) + roommap[furthestroom].y + 2);
-			stairspos = { x: roommap[furthestroom].x, y: randomy };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			let trynextside = false;
-			
-			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (stairspos.y + Math.abs(change) > roommap[furthestroom].y + roommap[furthestroom].h - 1  && stairspos.y - Math.abs(change) < roommap[furthestroom].y + 1)
-				{
-					stairs_side += 0.25;
-					trynextside = true;
-				}
-			}
-			
-			if (!trynextside)
-			{
-				stairspos.y += change;
-				tileIndex = stairspos.x + (stairspos.y * w);
-				tilemap[tileIndex] = "stairs_east";
-				stairs_unplaced = false;
-			}
-		}
-		else if (stairs_side <= 0.5) //east wall
-		{
-			let randomy = Math.floor((Math.random() * (roommap[furthestroom].h - 2)) + roommap[furthestroom].y + 2);
-			stairspos = { x: roommap[furthestroom].x + roommap[furthestroom].w, y: randomy };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			let trynextside = false;
-			
-			while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0) && !trynextside) 
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (stairspos.y + Math.abs(change) > roommap[furthestroom].y + roommap[furthestroom].h - 1  && stairspos.y - Math.abs(change) < roommap[furthestroom].y + 1)
-				{
-					stairs_side += 0.25;
-					trynextside = true;
-				}
-			}
-			
-			if (!trynextside)
-			{
-				stairspos.y += change;
-				tileIndex = stairspos.x + (stairspos.y * w);
-				tilemap[tileIndex] = "stairs_west";
-				stairs_unplaced = false;
-			}
-		}
-		else if (stairs_side <= 0.75) //south wall
-		{
-			let randomx = Math.floor((Math.random() * (roommap[furthestroom].w - 2)) + roommap[furthestroom].x + 2);
-			stairspos = { x: randomx, y: roommap[furthestroom].y };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			let trynextside = false;
-			
-			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (stairspos.x + Math.abs(change) > roommap[furthestroom].x + roommap[furthestroom].w - 1  && stairspos.x - Math.abs(change) < roommap[furthestroom].x + 1)
-				{
-					stairs_side += 0.25;
-					trynextside = true;
-				}
-			}
-			
-			if (!trynextside)
-			{
-				stairspos.y += change;
-				tileIndex = stairspos.x + (stairspos.y * w);
-				tilemap[tileIndex] = "stairs_north";
-				stairs_unplaced = false;
-			}
-		}
-		else //north wall
-		{
-			let randomx = Math.floor((Math.random() * (roommap[furthestroom].w - 2)) + roommap[furthestroom].x + 2);
-			stairspos = { x: randomx, y: roommap[furthestroom].y + roommap[furthestroom].h };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			let trynextside = false;
-			
-			while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
-			|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0) && !trynextside)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (stairspos.x + Math.abs(change) > roommap[furthestroom].x + roommap[furthestroom].w - 1  && stairspos.x - Math.abs(change) < roommap[furthestroom].x + 1)
-				{
-					stairs_side += 0.25;
-					trynextside = true;
-				}
-			}
-			
-			if (!trynextside)
-			{
-				stairspos.y += change;
-				tileIndex = stairspos.x + (stairspos.y * w);
-				tilemap[tileIndex] = "stairs_south";
-				stairs_unplaced = false;
-			}
-		}
-	}
 	
 	if (reachablerooms < roommap.length*2/3)
 	{
