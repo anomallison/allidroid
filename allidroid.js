@@ -157,6 +157,7 @@ var logintoken = fs.readFileSync('token.txt').toString();
 var reminder_array = [];
 var reminder_idcounter = 0;
 
+
 //
 //
 // extremely important Gay variable
@@ -855,6 +856,29 @@ function processCommand(receivedMessage)
 	else if (normalizedCommand == "polygonmap")
 	{
 		DrawVoronoiMapMap(receivedMessage.channel,arguments);
+	}
+	else if (normalizedCommand == "battleships") 
+	{
+		PlayBattleshipsGame(receivedMessage.channel, arguments);
+    }
+	else if (normalizedCommand == "startbattleships") 
+	{
+		InitializeNewBattleshipsGame(receivedMessage.channel, arguments);
+    }
+	else if (normalizedCommand == "viewbattleships") 
+	{
+		output = ViewBattleshipsBoard(receivedMessage.channel);
+		
+		if (output == null)
+		{
+			console.log("failed command: viewbattleships");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
 	}
 	else if (normalizedCommand == "pickupline") 
 	{
@@ -21008,6 +21032,513 @@ function loadCurrentGayValue()
 	currentgay += (Math.floor((Math.random()*6) + 1) * 10) + Math.floor((Math.random()*10) + 1);
 }
 
+//
+// BATTLESHIPS
+
+var battleships_games = [];
+
+var DESTROYER_ID = 2;
+var SUBMARINE_ID = 4;
+var CRUISER_ID = 6;
+var BATTLESHIP_ID = 8;
+var CARRIER_ID = 10;
+
+var TOP_ROW = ":blue_square::one::two::three::four::five::six::seven::eight::nine::zero:";
+var HIT_EMOJI = ":red_square:";
+var MISS_EMOJI = ":yellow_square:";
+var UNKOWN_EMOJI = ":blue_square:";
+var A_EMOJI = ":regional_indicator_a:";
+var B_EMOJI = ":regional_indicator_b:";
+var C_EMOJI = ":regional_indicator_c:";
+var D_EMOJI = ":regional_indicator_d:";
+var E_EMOJI = ":regional_indicator_e:";
+var F_EMOJI = ":regional_indicator_f:";
+var G_EMOJI = ":regional_indicator_g:";
+var H_EMOJI = ":regional_indicator_h:";
+var I_EMOJI = ":regional_indicator_i:";
+var J_EMOJI = ":regional_indicator_j:";
+
+var ALIGNMENT_VERTICAL = 0;
+var ALIGNMENT_HORIZONTAL = 1;
+
+//
+// returns true if a ship is placed, otherwise returns false
+function PlaceShip(board, ship_id, coords, alignment)
+{
+	let ship_length = 2;
+	if (ship_id == CARRIER_ID)
+	{
+		ship_length = 5;
+	}
+	else if (ship_id == BATTLESHIP_ID)
+	{
+		ship_length = 4;
+	}
+	else if (ship_id == CRUISER_ID || ship_id == SUBMARINE_ID)
+	{
+		ship_length = 3;
+	}
+	
+	if (alignment != ALIGNMENT_VERTICAL && alignment != ALIGNMENT_HORIZONTAL)
+	{
+		console.log("Invalid ship alignment");
+		return false;
+	}
+	
+	if (alignment == ALIGNMENT_VERTICAL)
+	{
+		for (let i = 0; i < ship_length; i++)
+		{
+			let tempy = coords.y + i;
+			
+			if (tempy > 10)
+			{
+				return false;
+			}
+			
+			board_index = coords.x + (tempy * 10);
+			if (board[board_index] != 0)
+			{
+				return false;
+			}
+		}
+	}
+	else if (alignment == ALIGNMENT_HORIZONTAL)
+	{
+		for (let i = 0; i < ship_length; i++)
+		{
+			let tempx = coords.x + i;
+			
+			if (tempx > 10)
+			{
+				return false;
+			}
+			
+			board_index = tempx + (coords.y * 10);
+			if (board[board_index] != 0)
+			{
+				return false;
+			}
+		}
+	}
+	
+	if (alignment == ALIGNMENT_VERTICAL)
+	{
+		for (let i = 0; i < ship_length; i++)
+		{
+			let tempy = coords.y + i;
+			board_index = coords.x + (tempy * 10);
+			board[board_index] = ship_id;
+		}
+	}
+	else if (alignment == ALIGNMENT_HORIZONTAL)
+	{
+		for (let i = 0; i < ship_length; i++)
+		{
+			let tempx = coords.x + i;
+			board_index = tempx + (coords.y * 10);
+			board[board_index] = ship_id;
+		}
+	}
+	
+	return true;
+}
+
+function GetBattleshipsGameByChannelId(channelid)
+{
+	for(let i = 0; i < battleships_games.length; i++)
+	{
+		if (battleships_games[i].channelid == channelid)
+			return battleships_games[i];
+	}
+	
+	return null;
+}
+
+function OverwriteBattleshipsGame(gamestate)
+{
+	let index = -1;
+	for(let i = 0; i < battleships_games.length; i++)
+	{
+		if (battleships_games[i].channelid == gamestate.channelid)
+		{
+			index = i;
+			break;
+		}
+	}
+	
+	if (index == -1)
+		return false;
+	
+	battleships_games[index] = gamestate;
+	return true;
+	
+}
+
+function InitializeNewBattleshipsGame(channel, arguments)
+{
+	let newgame = { board: [], channelid: channel.id, turns: 0 };
+	
+	for(let y = 0; y < 10; y++)
+	{
+		for(let x = 0; x < 10; x++)
+		{
+			newgame.board.push(0);
+		}
+	}
+	
+	//place ships
+	
+	for (let newship = CARRIER_ID; newship >= DESTROYER_ID; newship -= 2)
+	{
+		let tryplaceship = true;
+		while (tryplaceship == true)
+		{
+			let coords = { x: Math.floor(Math.random()*10), y: Math.floor(Math.random()*10) };
+			tryplaceship = !PlaceShip(newgame.board, newship, coords, Math.floor(Math.random()*2));
+		}
+	}
+	
+	let currentgame = GetBattleshipsGameByChannelId(channel.id);
+	
+	if (!OverwriteBattleshipsGame(newgame))
+	{
+		battleships_games.push(newgame);
+	}
+	
+	
+	SaveBattleshipsGames();
+	channel.send("Game set up, use !battleships (letter) (number) to play");
+}
+
+function OutputBoardToString(board)
+{
+	let board_string = TOP_ROW + "\n";
+	board_string += A_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + B_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 10;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + C_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 20;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + D_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 30;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + E_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 40;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + F_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 50;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + G_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 60;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + H_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 70;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + I_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 80;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	board_string += "\n" + J_EMOJI;
+	for (let i = 0; i < 10; i++)
+	{
+		board_index = i + 90;
+		if ((board[board_index] & 1) == 1)
+		{
+			if (board[board_index] - 1 == 0)
+			{
+				board_string += MISS_EMOJI;
+			}
+			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
+			{
+				board_string += HIT_EMOJI;
+			}
+		}
+		else
+		{
+			board_string += UNKOWN_EMOJI;
+		}
+	}
+	
+	return board_string;
+}
+
+function ViewBattleshipsBoard(channel)
+{
+	let gamestate = GetBattleshipsGameByChannelId(channel.id);
+	if (gamestate == null)
+		return "No game in this channel.";
+	
+	let board_string = OutputBoardToString(gamestate.board);
+	
+	return board_string;
+}
+
+
+function CheckBoardState(board)
+{
+	for(let y = 0; y < 10; y++)
+	{
+		for(let x = 0; x < 10; x++)
+		{
+			board_index = x + (y * 10);
+			if ((board[board_index] & 1) == 0)
+			{
+				if (board[board_index] > 0)
+					return false;
+			}
+		}
+	}
+	
+	return true;
+}
+
+function PlayBattleshipsGame(channel, arguments)
+{
+	let gamestate = GetBattleshipsGameByChannelId(channel.id)
+	if (gamestate == null)
+	{
+		channel.send("No game in this channel.");
+		return;
+	}
+	
+	if (CheckBoardState(gamestate.board))
+	{
+		channel.send("You have already won this game of Battleships (turns: " + gamestate.turns + ")");
+		return;
+	}
+	
+	let coords = { x: parseInt(arguments[1]) - 1, y: arguments[0].toLowerCase().charCodeAt(0) - 97 };
+	
+	if (isNaN(coords.x) || isNaN(coords.y))
+	{
+		channel.send("Invalid co-ordinates.");
+		return;
+	}
+	
+	if (coords.x == -1)
+		coords.x += 10;
+	
+	if (coords.x > 9 || coords.y > 9 || coords.x < 0 || coords.y < 0)
+	{
+		channel.send("Invalid co-ordinates.");
+		return;
+	}
+	
+	let board_index = coords.x + (coords.y * 10);
+	
+	if ((gamestate.board[board_index] & 1) == 1)
+	{
+		channel.send("You have already fired on that position.");
+		return;
+	}
+	else
+	{
+		gamestate.turns++;
+		gamestate.board[board_index] += 1;
+		if ((gamestate.board[board_index] - 1) == 0)
+		{
+			let message = "Miss.\n" + OutputBoardToString(gamestate.board);
+			channel.send(message);
+		}
+		else
+		{
+			let message = "Hit.\n" + OutputBoardToString(gamestate.board);
+			if (CheckBoardState(gamestate.board))
+			{
+				message += "You won in " + gamestate.turns + " turns.";
+				channel.send(message);
+			}
+			else
+			{
+				channel.send(message);
+			}
+		}
+	}
+	
+	SaveBattleshipsGames();
+}
+
+function SaveBattleshipsGames()
+{
+	let file = 'battleships.json';
+	let path = './' + file;
+	let data = JSON.stringify(battleships_games);
+	
+	fs.writeFile(path, data, (err) => {
+		if (err) throw err;
+		console.log('battleships saved');
+		});
+}
+
+function LoadBattleshipsGames()
+{
+	try
+	{
+		battleships_games = JSON.parse(fs.readFileSync('battleships.json'));
+		console.log('battleships loaded');
+	}
+	catch (err)
+	{
+		battleships_games = [];
+		console.log('battleships reset');
+	}
+}
 
 //
 // handle errors??? no
@@ -21023,3 +21554,4 @@ client.login(logintoken); //allidroid logon
 loadCurrentGayValue();
 initializeAndStartAdventureSim();
 MarkovPhonemeNameTrain();
+LoadBattleshipsGames();
