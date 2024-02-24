@@ -763,6 +763,34 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
+    } else if (normalizedCommand == "dndlootpile") 
+	{
+		output = GenerateDnDLoot(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: dndlootpile");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dndmagicitem") 
+	{
+		output = GenerateDnDMagicItemGeneric();
+		
+		if (output == null)
+		{
+			console.log("failed command: dndmagicitem");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
     } else if (normalizedCommand == "generategoblin") 
 	{
 		generateGoblin(receivedMessage.channel,arguments);
@@ -19625,6 +19653,110 @@ function GenerateDnDAdventure()
 	}
 	
 	return fulladventure;
+}
+
+function GenerateDnDLoot(arguments)
+{	
+	let filterlist = null;
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-gems")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			filterlist = "gems";
+		argumentpos = arguments.indexOf("-art")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			filterlist = "art";
+	}
+	
+	let goldvalue = arguments[0];
+	if (isNaN(goldvalue) || goldvalue < 1)
+		return "I need a non-negative gold value greater than 10 to generate a pile of loot";
+	else if (goldvalue < 10)
+		return goldvalue + " gold pieces (I need a non-negative gold value greater than 10 to generate a pile of loot)";
+	
+	let lootpile = [];
+	
+	let templootlist = dnd_adventure_gen.NonGoldLootItems.slice();
+	
+	if (filterlist != null)
+		templootlist = dnd_adventure_gen.NonGoldLootItems.filter(filterByList,filterlist);
+	
+	while (goldvalue >= 10)
+	{
+		let randomlootitem = dnd_adventure_gen.NonGoldLootItems[Math.floor(Math.random() * dnd_adventure_gen.NonGoldLootItems.length)];
+		
+		while (randomlootitem.value > goldvalue)
+		{
+			randomlootitem = dnd_adventure_gen.NonGoldLootItems[Math.floor(Math.random() * dnd_adventure_gen.NonGoldLootItems.length)];
+		}
+		
+		let itemadded = false;
+		
+		for (let i = 0; i < lootpile.length; i++)
+		{
+			if (randomlootitem.item == lootpile[i].item)
+			{
+				lootpile[i].amount += 1;
+				itemadded = true;
+				break;
+			}
+		}
+		
+		if (!itemadded)
+		{
+			lootpile.push({item: randomlootitem.item, value: randomlootitem.value, amount: 1});
+		}
+		
+		goldvalue -= randomlootitem.value;
+	}
+	
+	let pile_string = "";
+	let total = 0;
+	
+	for (let i = 0; i < lootpile.length; i++)
+	{
+		total += lootpile[i].amount * lootpile[i].value;
+		if (i == 0)
+			pile_string += lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount) + "gp)";
+		else if (i == lootpile.length - 1)
+			pile_string += ", and " + lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount) + "gp)";
+		else
+			pile_string += ", " + lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount) + "gp)";
+	}
+	
+	pile_string += "\n total: **" + total + "gp**";
+	
+	return pile_string;
+}
+
+function GenerateDnDMagicItemGeneric()
+{
+	let itemcreator = "Creator: " + RandomArrayEntry(dnd_adventure_gen.MagicItemCreator, true, "[MagicItemCreator]");
+	let itemhistory = "History: " + RandomArrayEntry(dnd_adventure_gen.MagicItemHistory, true, "[MagicItemHistory]");
+	let itemproperty = "Property: " + RandomArrayEntry(dnd_adventure_gen.MagicItemMinorProperty, true, "[MagicItemMinorProperty]");
+	let itemquirk = "Quirk: " + RandomArrayEntry(dnd_adventure_gen.MagicItemQuirks, true, "[MagicItemQuirks]");
+	
+	
+	let item_full = itemcreator + "\n" + itemhistory + "\n" + itemproperty + "\n" + itemquirk;
+	
+	let position = item_full.indexOf("\[");
+	let endposition = -1;
+	let fieldsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = item_full.indexOf("\]");
+		fieldsubstr = item_full.substring(position+1,endposition);
+		
+		if (fieldsubstr == "MagicItemMinorProperty")
+		{
+			item_full = item_full.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.MagicItemMinorProperty, false, "[MagicItemMinorProperty]") + item_full.substr(endposition+1);
+		}
+		
+		position = item_full.indexOf("\[");
+	}
+	
+	return item_full;
 }
 
 function MoveTile(tile, direction)
