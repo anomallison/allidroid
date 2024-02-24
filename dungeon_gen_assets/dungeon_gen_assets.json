@@ -19,6 +19,14 @@
 	[
 		"./dungeon_gen_assets/door_vertical.png"
 	],
+	"secret_door_horizontal":
+	[
+		"./dungeon_gen_assets/secret_door_horizontal.png"
+	],
+	"secret_door_vertical":
+	[
+		"./dungeon_gen_assets/secret_door_vertical.png"
+	],
 	"grate_horizontal":
 	[
 		"./dungeon_gen_assets/grate_horizontal.png"

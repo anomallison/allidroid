@@ -300,7 +300,8 @@ function processCommand(receivedMessage)
 		return;
     } else if (normalizedCommand == "roll") 
 	{
-		receivedMessage.channel.send(rollManyDice(arguments[0], arguments[1]));
+		output = rollManyDice(arguments[0], arguments[1]);
+		receivedMessage.channel.send("**" + output.total + "** " + output.details);
 		return;
     } else if (normalizedCommand == "gay") 
 	{
@@ -713,6 +714,48 @@ function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: dnddungeon");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dndchamber") 
+	{
+		output = GenerateDnDDungeonChamber();
+		
+		if (output == null)
+		{
+			console.log("failed command: dndchamber");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dndtrap") 
+	{
+		output = GenerateDnDDungeonTrap();
+		
+		if (output == null)
+		{
+			console.log("failed command: dndtrap");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dndtrick") 
+	{
+		output = GenerateDnDDungeonTrick();
+		
+		if (output == null)
+		{
+			console.log("failed command: dndtrick");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -2336,7 +2379,10 @@ function rollManyDice(r, advDisadv = "")
 	let dice = []
 	let positionu43 = fulldicestring.indexOf("+");
 	let positionu45 = fulldicestring.indexOf("-");
+	let positionmulti = fulldicestring.indexOf("*");
+	let positionmulti2 = fulldicestring.indexOf("\*");
 	let position = -1;
+	let positions = [];
 	let disadvantage = false;
 	let advantage = false;
 	
@@ -2345,18 +2391,19 @@ function rollManyDice(r, advDisadv = "")
 	else if (advDisadv == "advantage")
 		advantage = true;
 	
-	if (positionu43 == -1)
-	{
-		position = positionu45;
-	}
-	else if (positionu45 == -1)
-	{
-		position = positionu43;
-	}
+	if (positionu43 != -1)
+		positions.push(positionu43)
+	if (positionu45 != -1)
+		positions.push(positionu45)
+	if (positionmulti != -1)
+		positions.push(positionmulti)
+	if (positionmulti2 != -1)
+		positions.push(positionmulti2)
+	
+	if (positions.length > 1)
+		position = Math.min(...positions);
 	else
-	{
-		position = Math.min(positionu43, positionu45);
-	}
+		position = positions[0];
 	
 	if (position != -1)
 	{
@@ -2370,38 +2417,49 @@ function rollManyDice(r, advDisadv = "")
 	}
 	
 	let charat = fulldicestring.charAt(0);
-	while (charat != "")
+	while (charat != "" && charat != undefined)
 	{
 		let positionu43 = fulldicestring.substr(1).indexOf("+");
 		let positionu45 = fulldicestring.substr(1).indexOf("-");
+		let positionmulti = fulldicestring.substr(1).indexOf("*");
+		let positionmulti2 = fulldicestring.substr(1).indexOf("\*");
 		let end = -1;
-		if (positionu43 == -1)
-		{
-			end = positionu45;
-		}
-		else if (positionu45 == -1)
-		{
-			end = positionu43;
-		}
+		let positions = [];
+		let position = -1;
+		
+		if (positionu43 != -1)
+			positions.push(positionu43)
+		if (positionu45 != -1)
+			positions.push(positionu45)
+		if (positionmulti != -1)
+			positions.push(positionmulti)
+		if (positionmulti2 != -1)
+			positions.push(positionmulti2)
+		
+		if (positions.length > 1)
+			position = Math.min(...positions);
+		else if (positions.length == 1)
+			position = positions[0];
+		
+		if (position > -1)
+			end = position;
 		else
-		{
-			end = Math.min(positionu43, positionu45);
-		}
-		
-		if (end == -1)
 			end = fulldicestring.length-1;
-		
 		
 		if (charat == "+")
 			dice.push({ die: fulldicestring.substr(1,end), operation: "+"});
 		else if (charat == "-")
 			dice.push({ die: fulldicestring.substr(1,end), operation: "-" });
+		else if (charat == "*")
+			dice.push({ die: fulldicestring.substr(1,end), operation: "*" });
+		else if (charat == "\*")
+			dice.push({ die: fulldicestring.substr(1,end), operation: "*" });
 		
-		if (end != -1)
-			fulldicestring = fulldicestring.substring(end+1);
+		if (position != -1)
+			fulldicestring = fulldicestring.substring(position+1);
 		else
 			fulldicestring = "";
-		console.log(fulldicestring);
+		
 		charat = fulldicestring.charAt(0);
 	}
 	
@@ -2429,15 +2487,20 @@ function rollManyDice(r, advDisadv = "")
 				else
 					resultstring += " - " + current.details;
 			}
+			else if (dice[i].operation == "\*")
+			{
+				total *= current.result;
+				if (i == 0)
+					resultstring += current.details;
+				else
+					resultstring += " \* " + current.details;
+			}
 		}
 	}
 	
 	resultstring += ")";
 	
-	if (dice.length == 1)
-		return "**" + current.result + "** " + current.details;
-	
-	return "**" + total + "** " + resultstring;
+	return { total: total, details: resultstring };
 }
 
 function dieRoll(r, advantage = false, disadvantage = false)
@@ -2625,13 +2688,6 @@ function dieRoll(r, advantage = false, disadvantage = false)
 		return { result: totalroll, details: totalroll };
 	}
 	
-	
-	
-	//resultString = "**" + totalroll + "** " + resultString;
-	//if (resultString.length > 2000)
-	//	return totalroll + ", I will not be fielding any questions, thank you."
-	//if (numberOfDice < 2 && diceMod == 0)
-	//	return totalroll;
 	return { result: totalroll, details: resultString };
 }
 
@@ -19307,6 +19363,63 @@ function RandomNPCAbilities()
 	return high + ", " + low;
 }
 
+function GenerateDnDDungeonTrap()
+{
+	let trap = "Severity: " + RandomArrayEntry(dnd_adventure_gen.DungeonTrapDamageSeverity, true, "[DungeonTrapDamageSeverity]") + "; " + RandomArrayEntry(dnd_adventure_gen.DungeonTrapEffects, true, "[DungeonTrapEffects]");
+	
+	return trap;
+}
+
+function GenerateDnDDungeonTrick()
+{
+	let trick = RandomArrayEntry(dnd_adventure_gen.DungeonTrickObjects, true, "[DungeonTrickObjects]") + ", effect: " + RandomArrayEntry(dnd_adventure_gen.DungeonTrickEffects, true, "[DungeonTrickEffects]");
+	
+	return trick;
+}
+
+function GenerateDnDDungeonChamber()
+{
+	let chamberstate = "Chamber State: " + RandomArrayEntry(dnd_adventure_gen.DungeonChamberState, true, "[DungeonChamberState]") + ".";
+	let chambercontents = "Contents: " + RandomArrayEntry(dnd_adventure_gen.DungeonChamberContents, true, "[DungeonChamberContents]") + ".";
+	let chamberfeatures = "Features: " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]") + ", " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]") + ", and " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]") + ".";
+	
+	let fullchamber = chamberstate + "\n"
+					+ chambercontents + "\n"
+					+ chamberfeatures;
+	
+	let position = fullchamber.indexOf("\[");
+	let endposition = -1;
+	let fieldsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = fullchamber.indexOf("\]");
+		fieldsubstr = fullchamber.substring(position+1,endposition);
+		
+		if (fieldsubstr == "DungeonObstacles")
+		{
+			fullchamber = fullchamber.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.DungeonObstacles, false, "[DungeonObstacles]") + fullchamber.substr(endposition+1);
+		}
+		else if (fieldsubstr == "DungeonTrap")
+		{
+			fullchamber = fullchamber.substr(0,position) + GenerateDnDDungeonTrap() + fullchamber.substr(endposition+1);
+		}
+		else if (fieldsubstr == "DungeonTrick")
+		{
+			fullchamber = fullchamber.substr(0,position) + GenerateDnDDungeonTrick() + fullchamber.substr(endposition+1);
+		}
+		else
+		{
+			fullchamber = fullchamber.substr(0,position) + rollManyDice(fieldsubstr, false, false).total + fullchamber.substr(endposition+1);
+		}
+		
+		
+		position = fullchamber.indexOf("\[");
+	}
+	
+	return fullchamber;
+}
+
 function GenerateDnDNPC()
 {
 	let npcappearance = RandomArrayEntry(dnd_adventure_gen.NPCAppearances, true, "[NPCAppearances]") + ".";
@@ -19712,6 +19825,8 @@ function GenerateDungeonMap(arguments)
 	let h = 24;
 	let rooms = 8;
 	let add_stairs = true;
+	let add_loops = false;
+	let secret_doors = false;
 	
 	if (arguments != null && arguments.length > 0)
 	{
@@ -19738,7 +19853,13 @@ function GenerateDungeonMap(arguments)
 			rooms = DUNGEONMAP_MIN_ROOMS;
 		argumentpos = arguments.indexOf("-nostairs")
 		if (argumentpos > -1)
-			add_stairs = false;;
+			add_stairs = false;
+		argumentpos = arguments.indexOf("-loops")
+		if (argumentpos > -1)
+			add_loops = true;
+		argumentpos = arguments.indexOf("-secretdoors")
+		if (argumentpos > -1)
+			secret_doors = true;
 	}
 	
 	
@@ -19748,7 +19869,10 @@ function GenerateDungeonMap(arguments)
 	{
 		for (let x = 0; x < w; x++)
 		{
-			tilemap.push("unknown");
+			if (x == 0 || y == 0 || x == w - 1 || y == h - 1)
+				tilemap.push("closed");
+			else
+				tilemap.push("unknown");
 		}
 	}
 	
@@ -19831,6 +19955,68 @@ function GenerateDungeonMap(arguments)
 		}
 	}
 	
+	// add loops, optionally
+	
+	let loopconnections = [];
+	
+	if (add_loops)
+	{
+		for (let l = 0; l < rooms/2; l++)
+		{
+			let randomroomA = Math.floor(Math.random() * roommap.length);
+			let possible_connections = [];
+			let already_connected = [];
+			let randomroomB = -1;
+			
+			for (let i = 0; i < roommap.length; i++)
+			{
+				if (i != randomroomA)
+					possible_connections.push(i);
+			}
+			
+			for (let c = 0; c < possible_connections.length; c++)
+			{
+				if (roomconnections[c].start == randomroomA)
+				{
+					for (let i = 0; i < possible_connections.length; i++)
+					{
+						if (possible_connections[i] == roomconnections[c].end)
+						{
+							possible_connections.splice(i);
+							break;
+						}
+					}
+					already_connected.push(roomconnections[c].end);
+				}
+				else if (roomconnections[c].end == randomroomA)
+				{
+					for (let i = 0; i < possible_connections.length; i++)
+					{
+						if (possible_connections[i] == roomconnections[c].start)
+						{
+							possible_connections.splice(i);
+							break;
+						}
+					}
+					already_connected.push(roomconnections[c].start);
+				}
+			}
+			
+			if (possible_connections.length == 0)
+			{
+				l--;
+			}
+			else
+			{
+				randomroomB = possible_connections[Math.floor(Math.random() * possible_connections.length)];
+				
+				loopconnections.push({ start: randomroomA, end: randomroomB, side: 0});
+			}
+		}
+	}
+	
+	// add doors and paths between rooms
+
 	for(let i = 0; i < roomconnections.length; i++)
 	{
 		let tileIndex = 0;
@@ -20032,6 +20218,33 @@ function GenerateDungeonMap(arguments)
 		
 	}
 	
+	// make loop paths (no doorways, will use existing doorways)
+	
+	for(let i = 0; i < loopconnections.length; i++)
+	{
+		let tileIndex = 0;
+		
+		let startx = Math.floor(roommap[loopconnections[i].start].x + (roommap[loopconnections[i].start].w / 2));
+		let starty = Math.floor(roommap[loopconnections[i].start].y + (roommap[loopconnections[i].start].h / 2));
+		let endx = Math.floor(roommap[loopconnections[i].end].x + (roommap[loopconnections[i].end].w / 2));
+		let endy = Math.floor(roommap[loopconnections[i].end].y + (roommap[loopconnections[i].end].h / 2));
+		
+		let startpos = { x: startx, y: starty };
+		let endpos = { x: endx, y: endy };
+		
+		let path = TileMapPathToPosition(startpos, endpos, tilemap, w, h);
+		{
+			for (let j = 0; j < path.length; j++)
+			{
+				tileIndex = path[j].x + (path[j].y * w);
+				tilemap[tileIndex] = "coridoor";
+			}
+		}
+		
+	}
+	
+	// add doors/portcullis
+	
 	for (let r = 0; r < roommap.length; r++)
 	{
 		for (let y = roommap[r].y; y <= roommap[r].h + roommap[r].y; y++)
@@ -20040,8 +20253,12 @@ function GenerateDungeonMap(arguments)
 			{
 				let randomfloat = Math.random();
 				let entrancetype = "door_vertical";
-				if (randomfloat < 0.334)
+				if (!secret_doors && randomfloat < 0.42)
 					entrancetype = "grate_vertical";
+				else if (secret_doors && randomfloat < 0.36)
+					entrancetype = "grate_vertical";
+				else if (secret_doors && randomfloat < 0.63)
+					entrancetype = "secret_door_vertical";
 				tilemap[roommap[r].x + (y * w)] = entrancetype;
 			}
 			else
@@ -20050,8 +20267,12 @@ function GenerateDungeonMap(arguments)
 			if (tilemap[roommap[r].x + roommap[r].w + (y * w)] == "coridoor"){
 				let randomfloat = Math.random();
 				let entrancetype = "door_vertical";
-				if (randomfloat < 0.334)
+				if (!secret_doors && randomfloat < 0.42)
 					entrancetype = "grate_vertical";
+				else if (secret_doors && randomfloat < 0.36)
+					entrancetype = "grate_vertical";
+				else if (secret_doors && randomfloat < 0.63)
+					entrancetype = "secret_door_vertical";
 				tilemap[roommap[r].x + roommap[r].w + (y * w)] = entrancetype;
 			}
 			else
@@ -20063,8 +20284,12 @@ function GenerateDungeonMap(arguments)
 			{
 				let randomfloat = Math.random();
 				let entrancetype = "door_horizontal";
-				if (randomfloat < 0.334)
+				if (!secret_doors && randomfloat < 0.42)
 					entrancetype = "grate_horizontal";
+				else if (secret_doors && randomfloat < 0.36)
+					entrancetype = "grate_horizontal";
+				else if (secret_doors && randomfloat < 0.63)
+					entrancetype = "secret_door_horizontal";
 				tilemap[x + (roommap[r].y * w)] = entrancetype;
 			}
 			else
@@ -20074,8 +20299,12 @@ function GenerateDungeonMap(arguments)
 			{
 				let randomfloat = Math.random();
 				let entrancetype = "door_horizontal";
-				if (randomfloat < 0.334)
+				if (!secret_doors && randomfloat < 0.42)
 					entrancetype = "grate_horizontal";
+				else if (secret_doors && randomfloat < 0.36)
+					entrancetype = "grate_horizontal";
+				else if (secret_doors && randomfloat < 0.63)
+					entrancetype = "secret_door_horizontal";
 				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = entrancetype;
 			}
 			else
@@ -20089,6 +20318,8 @@ function GenerateDungeonMap(arguments)
 			}
 		}
 	}
+	
+	// determine stairs and furthest rooms
 	
 	let start_room = Math.floor(Math.random() * roommap.length);
 	let end_room = -1;
@@ -20532,6 +20763,10 @@ function OutputTileMap(channel, arguments)
 				mapmap.push({ src: dungeon_gen_assets.grate_horizontal[Math.floor(Math.random()*dungeon_gen_assets.grate_horizontal.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "grate_vertical")
 				mapmap.push({ src: dungeon_gen_assets.grate_vertical[Math.floor(Math.random()*dungeon_gen_assets.grate_vertical.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "secret_door_horizontal")
+				mapmap.push({ src: dungeon_gen_assets.secret_door_horizontal[Math.floor(Math.random()*dungeon_gen_assets.secret_door_horizontal.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "secret_door_vertical")
+				mapmap.push({ src: dungeon_gen_assets.secret_door_vertical[Math.floor(Math.random()*dungeon_gen_assets.secret_door_vertical.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "stairs_north")
 				mapmap.push({ src: dungeon_gen_assets.stairs_north[Math.floor(Math.random()*dungeon_gen_assets.stairs_north.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "stairs_south")
