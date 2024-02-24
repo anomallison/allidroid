@@ -19813,7 +19813,7 @@ function CheckRoomNoOverlap(roommap, room)
 }
 
 var DUNGEONMAP_MAX_WIDTH = 60;
-var DUNGEONMAP_MIN_WIDTH = 15;
+var DUNGEONMAP_MIN_WIDTH = 20;
 var DUNGEONMAP_MAX_HEIGHT = 45;
 var DUNGEONMAP_MIN_HEIGHT = 15;
 var DUNGEONMAP_MAX_ROOMS = 36;
@@ -19961,7 +19961,9 @@ function GenerateDungeonMap(arguments)
 	
 	if (add_loops)
 	{
-		for (let l = 0; l < rooms/2; l++)
+		let loopattempts = 0;
+		
+		for (let l = 0; l < rooms/2 && loopattempts < 256; l++)
 		{
 			let randomroomA = Math.floor(Math.random() * roommap.length);
 			let possible_connections = [];
@@ -20004,6 +20006,7 @@ function GenerateDungeonMap(arguments)
 			
 			if (possible_connections.length == 0)
 			{
+				loopattempts++;
 				l--;
 			}
 			else

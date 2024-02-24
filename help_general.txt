@@ -20,6 +20,9 @@ There are the following commands:
 ``!dndnpc``
 ``!dndvillain``
 ``!dnddungeon``
+``!dndchamber``
+``!dndtrap``
+``!dndtrick``
 ``!how``
 ``!gacha``
 ``!princess``
