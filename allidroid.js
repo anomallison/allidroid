@@ -19365,14 +19365,14 @@ function RandomNPCAbilities()
 
 function GenerateDnDDungeonTrap()
 {
-	let trap = "Severity: " + RandomArrayEntry(dnd_adventure_gen.DungeonTrapDamageSeverity, true, "[DungeonTrapDamageSeverity]") + "; " + RandomArrayEntry(dnd_adventure_gen.DungeonTrapEffects, true, "[DungeonTrapEffects]");
+	let trap = "Trap- " + RandomArrayEntry(dnd_adventure_gen.DungeonTrapEffects, true, "[DungeonTrapEffects]") + " (severity: " + RandomArrayEntry(dnd_adventure_gen.DungeonTrapDamageSeverity, true, "[DungeonTrapDamageSeverity]") + ")";
 	
 	return trap;
 }
 
 function GenerateDnDDungeonTrick()
 {
-	let trick = RandomArrayEntry(dnd_adventure_gen.DungeonTrickObjects, true, "[DungeonTrickObjects]") + ", effect: " + RandomArrayEntry(dnd_adventure_gen.DungeonTrickEffects, true, "[DungeonTrickEffects]");
+	let trick = "Trick- " + RandomArrayEntry(dnd_adventure_gen.DungeonTrickObjects, true, "[DungeonTrickObjects]") + ", effect: " + RandomArrayEntry(dnd_adventure_gen.DungeonTrickEffects, true, "[DungeonTrickEffects]");
 	
 	return trick;
 }
@@ -19381,11 +19381,41 @@ function GenerateDnDDungeonChamber()
 {
 	let chamberstate = "Chamber State: " + RandomArrayEntry(dnd_adventure_gen.DungeonChamberState, true, "[DungeonChamberState]") + ".";
 	let chambercontents = "Contents: " + RandomArrayEntry(dnd_adventure_gen.DungeonChamberContents, true, "[DungeonChamberContents]") + ".";
-	let chamberfeatures = "Features: " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]") + ", " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]") + ", and " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]") + ".";
+	
+	let randomnumber = Math.floor(Math.random()*4)+2;
+	let chamberfeatures = "Features: ";
+	
+	for (let i = 0; i < randomnumber; i++)
+	{
+		if (i == 0)
+			chamberfeatures += RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]")
+		else if (i == randomnumber - 1)
+			chamberfeatures += " and " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]")
+		else
+			chamberfeatures += ", " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFeatures, true, "[DungeonGeneralFeatures]")
+	}
+	
+	chamberfeatures += ".";
+	
+	randomnumber = Math.floor(Math.random()*4)+3;
+	let chamberfurnishings = "Furnishings: ";
+	
+	for (let i = 0; i < randomnumber; i++)
+	{
+		if (i == 0)
+			chamberfurnishings += RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFunishings, true, "[DungeonGeneralFunishings]")
+		else if (i == randomnumber - 1)
+			chamberfurnishings += " and " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFunishings, true, "[DungeonGeneralFunishings]")
+		else
+			chamberfurnishings += ", " + RandomArrayEntry(dnd_adventure_gen.DungeonGeneralFunishings, true, "[DungeonGeneralFunishings]")
+	}
+	
+	chamberfurnishings += ".";
 	
 	let fullchamber = chamberstate + "\n"
 					+ chambercontents + "\n"
-					+ chamberfeatures;
+					+ chamberfeatures + "\n"
+					+ chamberfurnishings;
 	
 	let position = fullchamber.indexOf("\[");
 	let endposition = -1;
@@ -19474,12 +19504,13 @@ function GenerateDnDDungeon()
 	let dungeoncreator = "Creator: " + RandomArrayEntry(dnd_adventure_gen.DungeonCreator, true, "[DungeonCreator]") + ".";
 	let dungeonpurpose = "Purpose: " + RandomArrayEntry(dnd_adventure_gen.DungeonPurpose, true, "[DungeonPurpose]") + ".";
 	let dungeonhistory = "History: " + RandomArrayEntry(dnd_adventure_gen.DungeonHistory, true, "[DungeonHistory]") + ".";
-	
+	let dungeonatmosphere = "Atmosphere: Air- " + RandomArrayEntry(dnd_adventure_gen.DungeonAir, true, "[DungeonAir]") + "; Smell- " + RandomArrayEntry(dnd_adventure_gen.DungeonOdor, true, "[DungeonOdor]") + ".";;
 	
 	let fulldungeon = dungeonlocation + "\n"
 					+ dungeoncreator + "\n"
 					+ dungeonpurpose + "\n"
-					+ dungeonhistory;
+					+ dungeonhistory + "\n"
+					+ dungeonatmosphere;
 	
 	let position = fulldungeon.indexOf("\[");
 	let endposition = -1;
