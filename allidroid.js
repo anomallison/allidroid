@@ -21461,7 +21461,7 @@ function ViewBattleshipsBoard(channel)
 				{
 					mapmap.push({ src: BATTLESHIPS_MISS_PATH, x: xpos, y: ypos});
 				}
-				else if (gamestate.board[board_index] - 1 == DESTROYER_ID || gamestate.board[board_index] - 1 == gamestate.SUBMARINE_ID || gamestate.board[board_index] - 1 == CRUISER_ID || gamestate.board[board_index] - 1 == BATTLESHIP_ID || gamestate.board[board_index] - 1 == CARRIER_ID)
+				else
 				{
 					mapmap.push({ src: BATTLESHIPS_HIT_PATH, x: xpos, y: ypos});
 				}
