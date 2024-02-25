@@ -305,7 +305,12 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "roll") 
 	{
 		output = rollManyDice(arguments[0], arguments[1]);
-		receivedMessage.channel.send("**" + output.total + "** " + output.details);
+		if (output.total.toString().length > 1960)
+			receivedMessage.channel.send("Output too large to display.");
+		else if (output.total.toString().length + output.details.length + 5 > 2000)
+			receivedMessage.channel.send("**" + output.total + "** (Details are too long to display)");
+		else
+			receivedMessage.channel.send("**" + output.total + "** " + output.details);
 		return;
     } else if (normalizedCommand == "gay") 
 	{
@@ -1907,6 +1912,19 @@ function filterByAtleastOneList(object)
 	return false;
 }
 
+function filterByListArray(array)
+{
+	for (let j in this)
+	{
+		for (let i in array)
+		{
+			if (this[j] == array[i])
+				return true;
+		}
+	}
+	return false;
+}
+
 
 //
 // filter the objects by removing where 'this' is one of the lists it is on
@@ -1922,6 +1940,18 @@ function removeByList(object)
 	return true;
 }
 
+function removeByListArray(array)
+{
+	for (let j in this)
+	{
+		for (let i in array)
+		{
+			if (this[j] == array[i])
+				return false;
+		}
+	}
+	return true;
+}
 
 //
 // filter the objects by whether 'this' is one of the slots on this object
@@ -1965,11 +1995,11 @@ function filterByManyList(object)
 	{
 		for (let i in object.lists)
 		{
-			if (this[l] == object.lists[i])
-				return true;
+			if (this[l] != object.lists[i])
+				return false;
 		}
 	}
-	return false;
+	return true;
 }
 
 //
@@ -2269,7 +2299,7 @@ function slashfic(pairing = "a/a", charlist = "any", sublists = "")
 	if(sublists.length > 0)
 	{
 		let sublistfull = sublists.split("\,");
-		tempcharlist = tempcharlist.filter(filterByManyList,sublistfull);
+		tempcharlist = tempcharlist.filter(filterByAtleastOneList,sublistfull);
 	}
 	
 	
@@ -3298,19 +3328,19 @@ function generatePhonemeName(maxsyllables = 8, minimumsyllables = 1)
 			{
 				tempphonemelist = phonemes_english.filter(filterByList,"vowels");
 				tempmultilist = ["mid","open"];
-				tempphonemelist = tempphonemelist.filter(filterByManyList,tempmultilist);
+				tempphonemelist = tempphonemelist.filter(filterByAtleastOneList,tempmultilist);
 			}
 			else if (last.lists.includes("mid"))
 			{
 				tempphonemelist = phonemes_english.filter(filterByList,"vowels");
 				tempmultilist = ["close","open"];
-				tempphonemelist = tempphonemelist.filter(filterByManyList,tempmultilist);
+				tempphonemelist = tempphonemelist.filter(filterByAtleastOneList,tempmultilist);
 			}
 			else
 			{
 				tempphonemelist = phonemes_english.filter(filterByList,"vowels");
 				tempmultilist = ["close","mid"];
-				tempphonemelist = tempphonemelist.filter(filterByManyList,tempmultilist);
+				tempphonemelist = tempphonemelist.filter(filterByAtleastOneList,tempmultilist);
 			}
 			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants"));
 			tempphonemelist = tempphonemelist.concat(phonemes_english.filter(filterByList,"consonants"));
@@ -19687,37 +19717,76 @@ function GenerateDnDAdventure()
 
 function GenerateDnDLoot(arguments)
 {	
-	let filterlist = null;
+	let filterlist = [];
+	let removelist = [];
 	if (arguments != null && arguments.length > 0)
 	{
 		argumentpos = arguments.indexOf("-gems")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			filterlist = "gems";
+		if (argumentpos > -1)
+			filterlist.push("gems");
 		argumentpos = arguments.indexOf("-art")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			filterlist = "art";
+		if (argumentpos > -1)
+			filterlist.push("art");
+		argumentpos = arguments.indexOf("-coins")
+		if (argumentpos > -1)
+		{
+			filterlist.push("coins");
+			removelist.push("imperialcoins");
+		}
+		argumentpos = arguments.indexOf("-imperialcoins")
+		if (argumentpos > -1)
+		{
+			filterlist.push("imperialcoins");
+			removelist.push("coins");
+		}
+		else
+		{
+			removelist.push("imperialcoins");
+		}
 	}
 	
-	let goldvalue = arguments[0];
+	let goldvalue = parseFloat(arguments[0]);
 	if (isNaN(goldvalue) || goldvalue < 1)
 		return "I need a non-negative gold value greater than 10 to generate a pile of loot";
-	else if (goldvalue < 10)
-		return goldvalue + " gold pieces (I need a non-negative gold value greater than 10 to generate a pile of loot)";
 	
 	let lootpile = [];
 	
-	let templootlist = dnd_adventure_gen.NonGoldLootItems.slice();
+	let templootlist = [];
 	
-	if (filterlist != null)
-		templootlist = dnd_adventure_gen.NonGoldLootItems.filter(filterByList,filterlist);
-	
-	while (goldvalue >= 10)
+	if (filterlist.length > 0)
 	{
-		let randomlootitem = dnd_adventure_gen.NonGoldLootItems[Math.floor(Math.random() * dnd_adventure_gen.NonGoldLootItems.length)];
+		templootlist = templootlist.concat(dnd_adventure_gen.NonGoldLootItems.filter(filterByListArray,filterlist));
+	}
+	else
+	{
+		templootlist = dnd_adventure_gen.NonGoldLootItems.slice();
+	}
+	
+	if (removelist.length > 0)
+	{
+		templootlist = templootlist.filter(removeByListArray,removelist);
+	}
+	
+	if (templootlist.length == 0)
+	{
+		console.log("error, templootlist is empty");
+		return "-coins and -imperialcoins are mutually exclusive";
+	}
+	
+	let smallestvalue = templootlist[0].value;
+	for(let i = 0; i < templootlist.length; i++)
+	{
+		if (templootlist[i].value < smallestvalue)
+			smallestvalue = templootlist[0].value;
+	}
+	
+	while (goldvalue >= templootlist[0].value)
+	{
+		let randomlootitem = templootlist[Math.floor(Math.random() * templootlist.length)];
 		
 		while (randomlootitem.value > goldvalue)
 		{
-			randomlootitem = dnd_adventure_gen.NonGoldLootItems[Math.floor(Math.random() * dnd_adventure_gen.NonGoldLootItems.length)];
+			randomlootitem = templootlist[Math.floor(Math.random() * templootlist.length)];
 		}
 		
 		let itemadded = false;
@@ -19747,14 +19816,14 @@ function GenerateDnDLoot(arguments)
 	{
 		total += lootpile[i].amount * lootpile[i].value;
 		if (i == 0)
-			pile_string += lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount) + "gp)";
+			pile_string += lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount).toFixed(2) + "gp)";
 		else if (i == lootpile.length - 1)
-			pile_string += ", and " + lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount) + "gp)";
+			pile_string += ", and " + lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount).toFixed(2) + "gp)";
 		else
-			pile_string += ", " + lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount) + "gp)";
+			pile_string += ", " + lootpile[i].amount + "x " + lootpile[i].item + " (" + (lootpile[i].value * lootpile[i].amount).toFixed(2) + "gp)";
 	}
 	
-	pile_string += "\n total: **" + total + "gp**";
+	pile_string += "\n total: **" + total.toFixed(2) + "gp**";
 	
 	return pile_string;
 }

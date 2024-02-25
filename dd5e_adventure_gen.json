@@ -929,18 +929,18 @@
 		"leaves and twigs",
 		"mold (common)",
 		"pick handle",
-		"pole, broken (5 ft. long)",
+		"broken pole (5 ft. long)",
 		"pottery shards",
 		"rags",
 		"rotten rope",
 		"rubble and dirt",
-		"sack, torn",
+		"torn sack",
 		"slime (harmless)",
 		"rusted spike ",
 		"sticks",
-		"stones, small",
+		"small stones",
 		"straw",
-		"sword blade, broken",
+		"broken sword blade",
 		"scattered teeth or fangs",
 		"torch stub",
 		"wall scratchings",
@@ -1045,6 +1045,46 @@
 	],
 	"NonGoldLootItems":
 	[
+		{
+			"item": "copper piece",
+			"value": 0.0041666,
+			"lists": ["imperialcoins"]
+		},
+		{
+			"item": "copper piece",
+			"value": 0.01,
+			"lists": ["coins"]
+		},
+		{
+			"item": "silver piece",
+			"value": 0.05,
+			"lists": ["imperialcoins"]
+		},
+		{
+			"item": "silver piece",
+			"value": 0.1,
+			"lists": ["coins"]
+		},
+		{
+			"item": "gold piece",
+			"value": 1,
+			"lists": ["coins"]
+		},
+		{
+			"item": "gold piece",
+			"value": 1,
+			"lists": ["imperialcoins"]
+		},
+		{
+			"item": "platinum piece",
+			"value": 10,
+			"lists": ["coins"]
+		},
+		{
+			"item": "platinum piece",
+			"value": 16,
+			"lists": ["imperialcoins"]
+		},
 		{
 			"item": "azurite",
 			"value": 10,
