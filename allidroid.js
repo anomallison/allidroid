@@ -884,18 +884,7 @@ function processCommand(receivedMessage)
     }
 	else if (normalizedCommand == "viewbattleships") 
 	{
-		output = ViewBattleshipsBoard(receivedMessage.channel);
-		
-		if (output == null)
-		{
-			console.log("failed command: viewbattleships");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
+		ViewBattleshipsBoard(receivedMessage.channel);
 	}
 	else if (normalizedCommand == "pickupline") 
 	{
@@ -21082,6 +21071,10 @@ var J_EMOJI = ":regional_indicator_j:";
 var ALIGNMENT_VERTICAL = 0;
 var ALIGNMENT_HORIZONTAL = 1;
 
+var BATTLESHIPS_GRID_PATH = './battleships_grid.png';
+var BATTLESHIPS_MISS_PATH = './battleships_miss.png';
+var BATTLESHIPS_HIT_PATH = './battleships_hit.png';
+
 //
 // returns true if a ship is placed, otherwise returns false
 function PlaceShip(board, ship_id, coords, alignment)
@@ -21445,11 +21438,72 @@ function ViewBattleshipsBoard(channel)
 	if (gamestate == null)
 		return "No game in this channel.";
 	
-	let board_string = OutputBoardToString(gamestate.board);
+	//let board_string = OutputBoardToString(gamestate.board);
 	
-	return board_string;
+	//return board_string;
+	
+	let mapmap = [];
+	
+	mapmap.push({ src: BATTLESHIPS_GRID_PATH, x: 0, y: 0})
+	
+	for (let y = 0; y < 10; y++)
+	{
+		for (let x  = 0; x < 10; x++)
+		{
+			let xpos = (24*x)+24;
+			let ypos = (24*y)+24;
+			
+			board_index = x + (y*10);
+			
+			if ((gamestate.board[board_index] & 1) == 1)
+			{
+				if (gamestate.board[board_index] - 1 == 0)
+				{
+					mapmap.push({ src: BATTLESHIPS_MISS_PATH, x: xpos, y: ypos});
+				}
+				else if (gamestate.board[board_index] - 1 == DESTROYER_ID || gamestate.board[board_index] - 1 == gamestate.SUBMARINE_ID || gamestate.board[board_index] - 1 == CRUISER_ID || gamestate.board[board_index] - 1 == BATTLESHIP_ID || gamestate.board[board_index] - 1 == CARRIER_ID)
+				{
+					mapmap.push({ src: BATTLESHIPS_HIT_PATH, x: xpos, y: ypos});
+				}
+			}
+		}
+	}
+	
+	let file = 'battleships_game.png';
+	let path = './' + file;
+	
+	mergeImages(mapmap, 
+	{
+		width: 264,
+		height: 264,
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The battleships_game file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+	
+	
+	
 }
 
+function CheckShipSunk(board, ship_id)
+{
+	for(let y = 0; y < 10; y++)
+	{
+		for(let x = 0; x < 10; x++)
+		{
+			board_index = x + (y * 10);
+			if (board[board_index] == ship_id)
+				return false;
+		}
+	}
+	
+	return true;
+}
 
 function CheckBoardState(board)
 {
@@ -21484,7 +21538,21 @@ function PlayBattleshipsGame(channel, arguments)
 		return;
 	}
 	
-	let coords = { x: parseInt(arguments[1]) - 1, y: arguments[0].toLowerCase().charCodeAt(0) - 97 };
+	if (arguments.length == 0)
+		channel.send("You need to provide target coordinates. (letter) (number)");
+	
+	let coords = { x: 0, y: 0 };
+	
+	if (arguments.length == 1)
+	{
+		coords.x = parseInt(arguments[0].charAt(1)) - 1;
+		coords.y = arguments[0].toLowerCase().charCodeAt(0) - 97;
+	}
+	else
+	{
+		coords.x = parseInt(arguments[1]) - 1;
+		coords.y = arguments[0].toLowerCase().charCodeAt(0) - 97;
+	}
 	
 	if (isNaN(coords.x) || isNaN(coords.y))
 	{
@@ -21512,26 +21580,38 @@ function PlayBattleshipsGame(channel, arguments)
 	{
 		gamestate.turns++;
 		gamestate.board[board_index] += 1;
+		let message = "";
 		if ((gamestate.board[board_index] - 1) == 0)
 		{
-			let message = "Miss.\n" + OutputBoardToString(gamestate.board);
-			channel.send(message);
+			message = "Miss."
 		}
 		else
 		{
-			let message = "Hit.\n" + OutputBoardToString(gamestate.board);
+			message = "Hit."
+			let ship_id = gamestate.board[board_index] - 1;
+			if (CheckShipSunk(gamestate.board, ship_id))
+			{
+				if (ship_id == DESTROYER_ID)
+					message += "\nYou sunk a destroyer (2 length)";
+				else if (ship_id == SUBMARINE_ID)
+					message += "\nYou sunk a submarine (3 length)";
+				else if (ship_id == CRUISER_ID)
+					message += "\nYou sunk a cruiser (3 length)";
+				else if (ship_id == BATTLESHIP_ID)
+					message += "\nYou sunk a battleship (4 length)";
+				else if (ship_id == CARRIER_ID)
+					message += "\nYou sunk a carrier (5 length)";
+			}
 			if (CheckBoardState(gamestate.board))
 			{
 				message += "\nYou won in " + gamestate.turns + " turns.";
-				channel.send(message);
-			}
-			else
-			{
-				channel.send(message);
 			}
 		}
+		if (message.length > 0)
+			channel.send(message);
 	}
 	
+	ViewBattleshipsBoard(channel);
 	SaveBattleshipsGames();
 }
 
