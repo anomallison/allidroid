@@ -82,6 +82,9 @@ var dungeon_gen_assets = JSON.parse(fs.readFileSync('dungeon_gen_assets/dungeon_
 // D&D 5e adventure generator files
 var dnd_adventure_gen = JSON.parse(fs.readFileSync('dd5e_adventure_gen.json'));
 
+// blaseballer generator files
+var blaseballer_gen = JSON.parse(fs.readFileSync('blaseballer_gen.json'));
+
 //city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
 var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
@@ -785,6 +788,20 @@ function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: dndmagicitem");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "blaseballer") 
+	{
+		output = GenerateBlaseballer();
+		
+		if (output == null)
+		{
+			console.log("failed command: blaseballer");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -19783,6 +19800,10 @@ function GenerateDnDMagicItemGeneric()
 	return item_full;
 }
 
+//
+// Dungeon Generation
+//
+
 function MoveTile(tile, direction)
 {
 	if (direction == 0)
@@ -21501,7 +21522,7 @@ function PlayBattleshipsGame(channel, arguments)
 			let message = "Hit.\n" + OutputBoardToString(gamestate.board);
 			if (CheckBoardState(gamestate.board))
 			{
-				message += "You won in " + gamestate.turns + " turns.";
+				message += "\nYou won in " + gamestate.turns + " turns.";
 				channel.send(message);
 			}
 			else
@@ -21540,6 +21561,48 @@ function LoadBattleshipsGames()
 	}
 }
 
+//
+//
+// BLASEBALL GENERATOR
+
+
+function GenerateBlaseballer()
+{
+	let name = "**" + RandomArrayEntry(blaseballer_gen.FirstNames, true, "[FirstNames]") + " " + RandomArrayEntry(blaseballer_gen.LastNames, true, "[LastNames]") + "**";
+	let rating = Math.floor((Math.random() * 34.5) + (Math.random() * 34.5)) / 10;
+	let position = RandomArrayEntry(blaseballer_gen.Positions, true, "[Positions]");
+	let team = RandomArrayEntry(blaseballer_gen.TeamNames, true, "[TeamNames]");
+	let coffee = "Coffee: " + RandomArrayEntry(blaseballer_gen.Coffees, true, "[Coffees]");
+	let bloodtype = "Blood type: " + RandomArrayEntry(blaseballer_gen.Bloodtypes, true, "[Bloodtypes]");
+	let pregameritual = "Pregame ritual: " + RandomArrayEntry(blaseballer_gen.PreGameRituals, true, "[PreGameRituals]")
+	
+	
+	let blaseballer = name + ", " + rating.toString() + "-star " + position + " for the " + team + "\n"
+					+ coffee + "\n" + bloodtype + "\n" + pregameritual;
+	
+	/*
+	let position = item_full.indexOf("\[");
+	let endposition = -1;
+	let fieldsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = item_full.indexOf("\]");
+		fieldsubstr = item_full.substring(position+1,endposition);
+		
+		if (fieldsubstr == "MagicItemMinorProperty")
+		{
+			item_full = item_full.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.MagicItemMinorProperty, false, "[MagicItemMinorProperty]") + item_full.substr(endposition+1);
+		}
+		
+		position = item_full.indexOf("\[");
+	}
+	*/
+	return blaseballer;
+}
+
+//
+//
 //
 // handle errors??? no
 
