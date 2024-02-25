@@ -21071,7 +21071,8 @@ var J_EMOJI = ":regional_indicator_j:";
 var ALIGNMENT_VERTICAL = 0;
 var ALIGNMENT_HORIZONTAL = 1;
 
-var BATTLESHIPS_GRID_PATH = './battleships_grid.png';
+var BATTLESHIPS_GRID_PATH = './battleships_grid_top.png';
+var BATTLESHIPS_BG_PATH = './battleships_grid_bg.png';
 var BATTLESHIPS_MISS_PATH = './battleships_miss.png';
 var BATTLESHIPS_HIT_PATH = './battleships_hit.png';
 
@@ -21444,7 +21445,7 @@ function ViewBattleshipsBoard(channel)
 	
 	let mapmap = [];
 	
-	mapmap.push({ src: BATTLESHIPS_GRID_PATH, x: 0, y: 0})
+	mapmap.push({ src: BATTLESHIPS_BG_PATH, x: 0, y: 0})
 	
 	for (let y = 0; y < 10; y++)
 	{
@@ -21468,6 +21469,8 @@ function ViewBattleshipsBoard(channel)
 			}
 		}
 	}
+	
+	mapmap.push({ src: BATTLESHIPS_GRID_PATH, x: 0, y: 0})
 	
 	let file = 'battleships_game.png';
 	let path = './' + file;
