@@ -800,6 +800,20 @@ function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
+    } else if (normalizedCommand == "dndworldshakingevent") 
+	{
+		output = GenerateDnDWorldShakingEvent();
+		
+		if (output == null)
+		{
+			console.log("failed command: dndworldshakingevent");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
     } else if (normalizedCommand == "blaseballer") 
 	{
 		output = GenerateBlaseballer();
@@ -19856,6 +19870,58 @@ function GenerateDnDMagicItemGeneric()
 	}
 	
 	return item_full;
+}
+
+function GenerateDnDWorldShakingEvent()
+{
+	let worldevent = RandomArrayEntry(dnd_adventure_gen.WorldShakingEvents, true, "[WorldShakingEvents]");
+	
+	let position = worldevent.indexOf("\[");
+	let endposition = -1;
+	let fieldsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = worldevent.indexOf("\]");
+		fieldsubstr = worldevent.substring(position+1,endposition);
+		
+		if (fieldsubstr == "LeaderTypes")
+		{
+			worldevent = worldevent.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.LeaderTypes, false, "[LeaderTypes]") + worldevent.substr(endposition+1);
+		}
+		else if (fieldsubstr == "CataclysmicDisasters")
+		{
+			worldevent = worldevent.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.CataclysmicDisasters, false, "[CataclysmicDisasters]") + worldevent.substr(endposition+1);
+		}
+		else if (fieldsubstr == "InvadingForces")
+		{
+			worldevent = worldevent.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.InvadingForces, false, "[InvadingForces]") + worldevent.substr(endposition+1);
+		}
+		else if (fieldsubstr == "LostResources")
+		{
+			worldevent = worldevent.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.LostResources, false, "[LostResources]") + worldevent.substr(endposition+1);
+		}
+		else if (fieldsubstr == "Organizations")
+		{
+			worldevent = worldevent.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.Organizations, false, "[Organizations]") + worldevent.substr(endposition+1);
+		}
+		else if (fieldsubstr == "Discoveries")
+		{
+			worldevent = worldevent.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.Discoveries, false, "[Discoveries]") + worldevent.substr(endposition+1);
+		}
+		else if (fieldsubstr == "WorldShakingEvents")
+		{
+			worldevent = worldevent.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.WorldShakingEvents, false, "[WorldShakingEvents]") + worldevent.substr(endposition+1);
+		}
+		else
+		{
+			worldevent = worldevent.substr(0,position) + worldevent.substr(endposition+1);
+		}
+		
+		position = worldevent.indexOf("\[");
+	}
+	
+	return worldevent;
 }
 
 //

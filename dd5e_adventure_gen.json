@@ -1638,5 +1638,88 @@
 		"**Possessive.** The item demands attunement when first wielded or worn, and it doesn't allow its bearer to attune to other items. (Other items already attuned to the bearer remain so until their attunement ends.)",
 		"**Repulsive.** The bearer feels a sense of distaste when in contact with the item, and continues to sense discomfort while bearing it.",
 		"**Slothful.** The bearer of this item feels slothful and lethargic. While attuned to the item, the bearer requires 10 hours to finish a long rest."
+	],
+	"WorldShakingEvents":
+	[
+		"Rise of a [LeaderTypes] leader or era",
+		"Fall of a [LeaderTypes] leader or era",
+		"Cataclysmic disaster: [CataclysmicDisasters]",
+		"Assault or invasion: [InvadingForces]",
+		"Rebellion, revolution, overthrow",
+		"Extinction or depletion: [LostResources]",
+		"New organization: [Organizations]",
+		"Discovery, expansion, invention: [Discoveries]",
+		"Prediction, omen, prophecy: [WorldShakingEvents]",
+		"Myth and legend: [WorldShakingEvents]"
+	],
+	"LeaderTypes":
+	[
+		"political",
+		"religious",
+		"military",
+		"crime/underworld",
+		"art/culture",
+		"philosophy/learning/magic"
+	],
+	"CataclysmicDisasters":
+	[
+		"earthquake",
+		"famine/drought",
+		"fire",
+		"flood",
+		"plague/disease",
+		"rain of fire (meteoric impact)",
+		"storm (hurricane, tornado, tsunami)",
+		"volcanic eruption",
+		"magic gone awry or a planar warp",
+		"divine judgement"
+	],
+	"InvadingForces":
+	[
+		"a criminal enterprise",
+		"monsters or a unique monster",
+		"a planar threat",
+		"a past adversary reawakened, reborn, or resurgent",
+		"a splinter faction",
+		"a savage tribe",
+		"a secret society",
+		"a traitorous aly"
+	],
+	"LostResources":
+	[
+		"a kind of animal (insect, bird, fish, livestock)",
+		"habitable land",
+		"magic or magic-users (all magic, or specific kinds or schools of magic)",
+		"a mineral resource (gems, metals, ores)",
+		"a type of monster (unicorn, manticore, dragon)",
+		"a people (family line, clan, culture, race)",
+		"a kind of plant (crop, tree, herb, forest)",
+		"a waterway (river, lake, ocean)"
+	],
+	"Organizations":
+	[
+		"crime syndicate/bandit confederacy",
+		"guild (masons, apothecaries, goldsmiths)",
+		"magical circle/society",
+		"military/knightly order",
+		"new family dynasty/tribe/clan",
+		"philosophy/discipline dedicated to a principle or ideal",
+		"realm (village, town, duchy, kingdom)",
+		"religion/sect/denomination",
+		"school/university",
+		"secret society/cult/cabal"
+	],
+	"Discoveries":
+	[
+		"ancient ruin/lost city of a legendary race",
+		"animal/monster/magical mutation",
+		"invention/technology/magic (helpful, destructive)",
+		"new (or forgotten) god or planar entity",
+		"new (or rediscovered) artifact or religious relic",
+		"new land (island, continent, lost world, demiplane)",
+		"otherworldly object (planar portal, alien spacecraft)",
+		"people (race, tribe, lost civilization, colony)",
+		"plant (miracle herb, fungal parasite, sentient plant)",
+		"resource or wealth (gold, gems, mithral)"
 	]
 }
