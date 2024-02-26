@@ -19981,7 +19981,7 @@ function TileMapPathToPosition(start, end, tilemap, map_width, map_height)
 			{
 				let connectioncost = newcost + 1;
 				if (tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "open")
-					connectioncost -= 0.25;
+					connectioncost -= 0.9;
 				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
 				if (tempcost != null)
 				{
