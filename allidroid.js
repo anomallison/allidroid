@@ -20638,9 +20638,9 @@ function GenerateDungeonMap(arguments)
 				let entrancetype = "door_vertical";
 				if (!secret_doors && randomfloat < 0.42)
 					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < 0.36)
+				else if (secret_doors && randomfloat < 0.38)
 					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < 0.63)
+				else if (secret_doors && randomfloat < 0.69)
 					entrancetype = "secret_door_vertical";
 				tilemap[roommap[r].x + (y * w)] = entrancetype;
 			}
@@ -20652,9 +20652,9 @@ function GenerateDungeonMap(arguments)
 				let entrancetype = "door_vertical";
 				if (!secret_doors && randomfloat < 0.42)
 					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < 0.36)
+				else if (secret_doors && randomfloat < 0.38)
 					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < 0.63)
+				else if (secret_doors && randomfloat < 0.69)
 					entrancetype = "secret_door_vertical";
 				tilemap[roommap[r].x + roommap[r].w + (y * w)] = entrancetype;
 			}
@@ -20669,9 +20669,9 @@ function GenerateDungeonMap(arguments)
 				let entrancetype = "door_horizontal";
 				if (!secret_doors && randomfloat < 0.42)
 					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < 0.36)
+				else if (secret_doors && randomfloat < 0.38)
 					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < 0.63)
+				else if (secret_doors && randomfloat < 0.69)
 					entrancetype = "secret_door_horizontal";
 				tilemap[x + (roommap[r].y * w)] = entrancetype;
 			}
@@ -20684,9 +20684,9 @@ function GenerateDungeonMap(arguments)
 				let entrancetype = "door_horizontal";
 				if (!secret_doors && randomfloat < 0.42)
 					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < 0.36)
+				else if (secret_doors && randomfloat < 0.38)
 					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < 0.63)
+				else if (secret_doors && randomfloat < 0.69)
 					entrancetype = "secret_door_horizontal";
 				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = entrancetype;
 			}
@@ -20912,6 +20912,10 @@ function GenerateDungeonMap(arguments)
 					tilemap[tileIndex] = "stairs_south";
 					stairs_unplaced = false;
 				}
+				else if (sides_attempted == 1)
+				{
+					return false; //fail if no stairs up
+				}
 			}
 		}
 		
@@ -21124,13 +21128,13 @@ function OutputTileMap(channel, arguments)
 	
 	let tilemap = false;
 	let attempts = 0;
-	while (tilemap == false && attempts < 256)
+	while (tilemap == false && attempts < 32)
 	{
 		attempts++;
 		tilemap = GenerateDungeonMap(arguments);
 	}
 	
-	if (attempts >= 256)
+	if (attempts >= 32)
 	{
 		channel.send("I failed to make a dungeon with those parameters");
 		console.log("failed to generatemap");
