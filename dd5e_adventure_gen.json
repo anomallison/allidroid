@@ -1721,5 +1721,22 @@
 		"people (race, tribe, lost civilization, colony)",
 		"plant (miracle herb, fungal parasite, sentient plant)",
 		"resource or wealth (gold, gems, mithral)"
+	],
+	"CreatureTypes":
+	[
+		"aberration",
+		"beast",
+		"celestial",
+		"construct",
+		"dragon",
+		"elemental",
+		"fey",
+		"fiend",
+		"giant",
+		"humanoid",
+		"monstrosity",
+		"ooze",
+		"plant",
+		"undead"
 	]
 }

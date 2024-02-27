@@ -834,6 +834,9 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generatedungeonmap") 
 	{
 		OutputTileMap(receivedMessage.channel,arguments);
+    } else if (normalizedCommand == "testdungeonmap") 
+	{
+		TestTileMapGeneration(arguments);
     } else if (normalizedCommand == "psyduck") 
 	{
 		generatePsyduck(receivedMessage.channel,arguments);
@@ -20550,7 +20553,7 @@ function GenerateDungeonMap(arguments)
 			roomattempts++;
 			r--;
 		}
-		else if (roomattempts < 5000)
+		else if (roomattempts < 4096)
 		{
 			for (let y = newroom.y; y <= newroom.h + newroom.y; y++)
 			{
@@ -21015,7 +21018,7 @@ function GenerateDungeonMap(arguments)
 
 		if(roomDistance == -1)
 		{
-			console.log("could not reach stairs");
+			//console.log("could not reach stairs");
 			return false;
 		}
 	}
@@ -21178,14 +21181,14 @@ function GenerateDungeonMap(arguments)
 					tilemap[tileIndex] = "stairs_south";
 					stairs_unplaced = false;
 				}
-				else if (sides_attempted == 1)
-				{
-					console.log("no stairs up");
-					return false; //fail if no stairs up
-				}
+			}
+			
+			if (sides_attempted == 1)
+			{
+				//console.log("no stairs up");
+				return false; //fail if no stairs up
 			}
 		}
-		
 		
 		//stairs down
 		
@@ -21350,13 +21353,52 @@ function GenerateDungeonMap(arguments)
 	
 	if (reachablerooms < roommap.length*2/3)
 	{
-		console.log("not enough rooms");
+		//console.log("not enough rooms");
 		return false;
 	}
 	else
 	{
 		return tilemap;
 	}
+}
+
+function TestTileMapGeneration(arguments)
+{
+	if (arguments == null || arguments == undefined)
+		arguments = [];
+	
+	let successful_tests = 0;
+	for (let x = DUNGEONMAP_MIN_WIDTH; x < DUNGEONMAP_MAX_WIDTH + 1; x++)
+	{
+		for (let y = DUNGEONMAP_MIN_HEIGHT; y < DUNGEONMAP_MAX_HEIGHT + 1; y++)
+		{
+			let testarguments = arguments.slice();
+			testarguments.push("-w");
+			testarguments.push(x.toString());
+			testarguments.push("-h")
+			testarguments.push(y.toString())
+			console.log("Testing at " + x + " by " + y);
+			console.log(testarguments);
+			let tilemap = false;
+			let attempts = 0;
+			while (tilemap == false && attempts < 32)
+			{
+				attempts++;
+				tilemap = GenerateDungeonMap(arguments);
+			}
+			
+			if (tilemap != false)
+			{
+				successful_tests++;
+				console.log("map generated");
+			}
+			else
+			{
+				console.log("map not generated");
+			}
+		}
+	}
+	console.log("Dungeon Map Generation test successful: " + successful_tests + " maps generated");
 }
 
 function OutputTileMap(channel, arguments)
@@ -22134,24 +22176,6 @@ function GenerateBlaseballer()
 	let blaseballer = name + ", " + rating.toString() + "-star " + position + " for the " + team + "\n"
 					+ coffee + "\n" + bloodtype + "\n" + pregameritual;
 	
-	/*
-	let position = item_full.indexOf("\[");
-	let endposition = -1;
-	let fieldsubstr = "";
-	
-	while (position != -1)
-	{
-		endposition = item_full.indexOf("\]");
-		fieldsubstr = item_full.substring(position+1,endposition);
-		
-		if (fieldsubstr == "MagicItemMinorProperty")
-		{
-			item_full = item_full.substr(0,position) + RandomArrayEntry(dnd_adventure_gen.MagicItemMinorProperty, false, "[MagicItemMinorProperty]") + item_full.substr(endposition+1);
-		}
-		
-		position = item_full.indexOf("\[");
-	}
-	*/
 	return blaseballer;
 }
 

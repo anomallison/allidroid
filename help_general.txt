@@ -23,6 +23,7 @@ There are the following commands:
 ``!dndchamber``
 ``!dndtrap``
 ``!dndtrick``
+``!dndlootpile``
 ``!how``
 ``!gacha``
 ``!princess``
