@@ -834,9 +834,6 @@ function processCommand(receivedMessage)
     } else if (normalizedCommand == "generatedungeonmap") 
 	{
 		OutputTileMap(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "testdungeonmap") 
-	{
-		TestTileMapGeneration(arguments);
     } else if (normalizedCommand == "psyduck") 
 	{
 		generatePsyduck(receivedMessage.channel,arguments);
