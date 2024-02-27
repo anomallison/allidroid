@@ -27,6 +27,10 @@
 	[
 		"./dungeon_gen_assets/secret_door_vertical.png"
 	],
+	"secret_door_other":
+	[
+		"./dungeon_gen_assets/secret_door_other.png"
+	],
 	"grate_horizontal":
 	[
 		"./dungeon_gen_assets/grate_horizontal.png"

@@ -6651,6 +6651,20 @@ function addToBasicDictionary(dictionary, key, value)
 	dictionary.push({ key: key, value: value });
 }
 
+function reassignToBasicDictionary(dictionary, key, value)
+{
+	for(let i = 0; i < dictionary.length; i++)
+	{
+		if (dictionary[i].key == key)
+		{
+			dictionary[i].value = value;
+			return;
+		}
+	}
+	
+	dictionary.push({ key: key, value: value });
+}
+
 function getFromBasicDictionary(dictionary, key)
 {
 	for(let i = 0; i < dictionary.length; i++)
@@ -18625,6 +18639,7 @@ function GetContiguousWaterHexes(start, map, map_width, map_height)
 	return doneHexes;
 }
 
+/*
 function addToBasicDictionary(dictionary, key, value)
 {
 	for(let i = 0; i < dictionary.length; i++)
@@ -18651,6 +18666,7 @@ function getFromBasicDictionary(dictionary, key)
 	
 	return null;
 }
+*/
 
 function getDistanceBetweenCells(a, b)
 {
@@ -18733,7 +18749,7 @@ function pathToCell(startcell, targetcell, cells)
 				oldcost = tempcost;
 				if (connectioncost < oldcost)
 				{
-					addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+					reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
 					priority = connectioncost + getDistanceBetweenCells(neighbourCell, targetcell);
 					if (priority - connectioncost < closestHeuristic)
 					{
@@ -18741,12 +18757,12 @@ function pathToCell(startcell, targetcell, cells)
 						closestHeuristic = priority - connectioncost;
 					}
 					frontierQueue.push({ cell: neighbourCell, priority: priority });
-					addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+					reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
 				}
 			}
 			else
 			{
-				addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+				reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
 				priority = connectioncost + getDistanceBetweenCells(neighbourCell, targetcell);
 				if (priority - connectioncost < closestHeuristic)
 				{
@@ -18754,7 +18770,7 @@ function pathToCell(startcell, targetcell, cells)
 					closestHeuristic = priority - connectioncost;
 				}
 				frontierQueue.push({ cell: neighbourCell, priority: priority });
-				addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+				reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
 			}
 		}
 	}
@@ -18870,18 +18886,18 @@ function nearestOceanCell(startcell, cells)
 				oldcost = tempcost;
 				if (connectioncost < oldcost)
 				{
-					addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+					reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
 					priority = connectioncost + 1;
 					frontierQueue.push({ cell: neighbourCell, priority: priority });
-					addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+					reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
 				}
 			}
 			else
 			{
-				addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+				reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
 				priority = connectioncost + 1;
 				frontierQueue.push({ cell: neighbourCell, priority: priority });
-				addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+				reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
 			}
 		}
 	}
@@ -18935,18 +18951,18 @@ function nearestCellBelowXHeight(startcell, targetHeight, cells)
 				oldcost = tempcost;
 				if (connectioncost < oldcost)
 				{
-					addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+					reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
 					priority = connectioncost + 1;
 					frontierQueue.push({ cell: neighbourCell, priority: priority });
-					addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+					reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
 				}
 			}
 			else
 			{
-				addToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
+				reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
 				priority = connectioncost + 1;
 				frontierQueue.push({ cell: neighbourCell, priority: priority });
-				addToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
+				reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
 			}
 		}
 	}
@@ -19977,11 +19993,11 @@ function TileMapPathToPosition(start, end, tilemap, map_width, map_height)
 			connection = { x: current.x, y: current.y };
 			MoveTile(connection,i);
 			let tilemapPos = connection.x + (connection.y * map_width);
-			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "unknown"))
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "doorway" || tilemap[tilemapPos] == "unknown"))
 			{
 				let connectioncost = newcost + 1;
-				if (tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "open")
-					connectioncost -= 0.9;
+				if (tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "doorway")
+					connectioncost -= 0.99;
 				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
 				if (tempcost != null)
 				{
@@ -20018,7 +20034,7 @@ function TileMapPathToPosition(start, end, tilemap, map_width, map_height)
 	return dictionaryToDirection(dictionaryCameFrom, closest, start);
 }
 
-function TileMapCanReachPosition(start, end, tilemap, map_width, map_height)
+function TileMapCanReachPosition(start, end, tilemap, map_width, map_height, include_secret_doors)
 {
 	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
 	let dictionaryCameFrom = [];
@@ -20057,8 +20073,11 @@ function TileMapCanReachPosition(start, end, tilemap, map_width, map_height)
 			MoveTile(connection,i);
 			let tilemapPos = connection.x + (connection.y * map_width);
 			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height 
-				&& (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "door_horizontal"
-				|| tilemap[tilemapPos] == "door_vertical" || tilemap[tilemapPos] == "grate_horizontal" || tilemap[tilemapPos] == "grate_vertical"))
+				&& (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" ||  tilemap[tilemapPos] == "doorway"
+				|| tilemap[tilemapPos] == "door_horizontal" || tilemap[tilemapPos] == "door_vertical" 
+				|| tilemap[tilemapPos] == "grate_horizontal" || tilemap[tilemapPos] == "grate_vertical"
+				|| (include_secret_doors && tilemap[tilemapPos] == "secret_door_horizontal") || (include_secret_doors && tilemap[tilemapPos] == "secret_door_vertical")
+				|| (include_secret_doors && tilemap[tilemapPos] == "secret_door_other")))
 			{
 				let connectioncost = newcost + 1;
 				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
@@ -20147,6 +20166,7 @@ function CheckRoomNoOverlap(roommap, room)
 function RemoveExtraneousTilesFromTilemap(tilemap, tile, width, height)
 {
 	let tile_to_do = [];
+	let tiles_visited = [];
 	for (let y = 0; y < height; y++)
 	{
 		for (let x = 0; x < width; x++)
@@ -20160,20 +20180,22 @@ function RemoveExtraneousTilesFromTilemap(tilemap, tile, width, height)
 	while (tile_to_do.length > 0)
 	{
 		let tilemapIndex = tile_to_do[0].x + (tile_to_do[0].y * width);
-		if (tilemap[tilemapIndex] == tile)
+		if (tiles_visited.includes(tilemapIndex) && tilemap[tilemapIndex] == tile)
 		{
-			let connections = 0;
-			connections += CountAdjacentTileType(tile_to_do[0].x, tile_to_do[0].y, tilemap, "coridoor", width, height);
-			connections += CountAdjacentTileType(tile_to_do[0].x, tile_to_do[0].y, tilemap, "open", width, height);
-			connections += CountAdjacentTileType(tile_to_do[0].x, tile_to_do[0].y, tilemap, "door_horizontal", width, height);
-			connections += CountAdjacentTileType(tile_to_do[0].x, tile_to_do[0].y, tilemap, "door_vertical", width, height);
-			connections += CountAdjacentTileType(tile_to_do[0].x, tile_to_do[0].y, tilemap, "grate_horizontal", width, height);
-			connections += CountAdjacentTileType(tile_to_do[0].x, tile_to_do[0].y, tilemap, "grate_vertical", width, height);
-			connections += CountAdjacentTileType(tile_to_do[0].x, tile_to_do[0].y, tilemap, "secret_door_horizontal", width, height);
-			connections += CountAdjacentTileType(tile_to_do[0].x, tile_to_do[0].y, tilemap, "secret_door_vertical", width, height);
+			let connections_number = 0;
+			let connections_code = GetConnectionsAsInt(tile_to_do[0].x, tile_to_do[0].y, tilemap, width, height)
+			if ((connections_code & 1) == 1)
+				connections_number++;
+			if ((connections_code & 2) == 2)
+				connections_number++;
+			if ((connections_code & 4) == 4)
+				connections_number++;
+			if ((connections_code & 8) == 8)
+				connections_number++;
 			
-			if (connections < 2)
+			if (connections_number < 2)
 			{
+				tiles_visited.push(tilemapIndex);
 				tilemap[tilemapIndex] = "unknown";
 				//removed_tile_count++;
 				if (tile_to_do[0].x > 0)
@@ -20192,6 +20214,216 @@ function RemoveExtraneousTilesFromTilemap(tilemap, tile, width, height)
 	//console.log("removed " + tile + " tiles: " + removed_tile_count);
 }
 
+function GetConnectionsAsInt(x, y, tilemap, width, height)
+{
+	let code = 0;
+	let tileIndex = x + 1 + (y * width);
+	if (x < width - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
+		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"
+		|| tilemap[tileIndex] == "secret_door_horizontal" || tilemap[tileIndex] == "secret_door_vertical"))
+	{
+		code += 1;
+	}
+	
+	tileIndex = x - 1 + (y * width);
+	if (x > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
+		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"
+		|| tilemap[tileIndex] == "secret_door_horizontal" || tilemap[tileIndex] == "secret_door_vertical"))
+	{
+		code += 4;
+	}
+
+	tileIndex = x + ((y + 1) * width);
+	if (y < height - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
+		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"
+		|| tilemap[tileIndex] == "secret_door_horizontal" || tilemap[tileIndex] == "secret_door_vertical"))
+	{
+		code += 2;
+	}
+	
+	tileIndex = x + ((y - 1) * width);
+	if (y > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
+		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"
+		|| tilemap[tileIndex] == "secret_door_horizontal" || tilemap[tileIndex] == "secret_door_vertical"))
+	{
+		code += 8;
+	}
+	
+	return code;
+}
+
+function GetNotSecretConnectionsAsInt(x, y, tilemap, width, height)
+{
+	let code = 0;
+	let tileIndex = x + 1 + (y * width);
+	if (x < width - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
+		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"))
+	{
+		code += 1;
+	}
+	
+	tileIndex = x - 1 + (y * width);
+	if (x > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
+		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"))
+	{
+		code += 4;
+	}
+
+	tileIndex = x + ((y + 1) * width);
+	if (y < height - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
+		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"))
+	{
+		code += 2;
+	}
+	
+	tileIndex = x + ((y - 1) * width);
+	if (y > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
+		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"))
+	{
+		code += 8;
+	}
+	
+	return code;
+}
+
+function IsRoomCorner(x, y, tilemap, width, height)
+{
+	let code = GetConnectionsAsInt(x, y, tilemap, width, height);
+	if (code == (1 + 2))
+	{
+		let tileIndex = x + 1 + ((y + 1) * width);
+		if (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor")
+		{
+			return true;
+		}
+	}
+	else if (code == (1 + 8))
+	{
+		let tileIndex = x + 1 + ((y - 1) * width);
+		if (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor")
+		{
+			return true;
+		}
+	}
+	else if (code == (4 + 2))
+	{
+		let tileIndex = x - 1 + ((y + 1) * width);
+		if (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor")
+		{
+			return true;
+		}
+	}
+	else if (code == (4 + 8))
+	{
+		let tileIndex = x - 1 + ((y - 1) * width);
+		if (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor")
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+function DictionaryToRoomPath(dictionary, end, start)
+{
+	let backwards = [];
+	let forwards = [];
+	let current = end;
+	backwards.push(end)
+	while (current != start)
+	{
+		current = getFromBasicDictionary(dictionary, current).index;
+		backwards.push(current);
+	}
+	
+	for (let i = backwards.length-1; i >= 0; i--)
+	{
+		forwards.push(backwards[i]);
+	}
+	
+	return forwards;
+}
+
+function DetermineMandatoryRoomPath(roomconnections, start, end)
+{
+	let frontierQueue = [{ index: start, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		if (current.index == end)
+		{
+			//console.log("mandatory room path found");
+			//console.log(dictionaryCameFrom);
+			return DictionaryToRoomPath(dictionaryCameFrom, end, start);
+		}
+		
+		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+			//newcost += 1;
+		}
+		let individual_room_connections = [];
+		for (let i = 0; i < roomconnections.length; i++)
+		{
+			if(roomconnections[i].start == current.index)
+			{
+				individual_room_connections.push(roomconnections[i].end);
+			}
+			else if (roomconnections[i].end == current.index)
+			{
+				individual_room_connections.push(roomconnections[i].start);
+			}
+		}
+		let connection = -1;
+		for (let i = 0; i < individual_room_connections.length; i++)
+		{
+			connection = individual_room_connections[i];
+			let connectioncost = newcost + 1;
+			tempcost = getFromBasicDictionary(dictionaryCostSoFar, connection)
+			if (tempcost != null)
+			{
+				oldcost = tempcost;
+				if (connectioncost < oldcost)
+				{
+					reassignToBasicDictionary(dictionaryCostSoFar, connection, connectioncost);
+					frontierQueue.push({ index: connection, priority: connectioncost });
+					reassignToBasicDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			else
+			{
+				reassignToBasicDictionary(dictionaryCostSoFar, connection, connectioncost);
+				priority = connectioncost + pathHeuristic(connection, end);
+				frontierQueue.push({ index: connection, priority: connectioncost });
+				reassignToBasicDictionary(dictionaryCameFrom, connection, current);
+			}
+		}
+		//console.log(frontierQueue);
+	}
+	//console.log("mandatory room path not found");
+	return false;
+}
+
 var DUNGEONMAP_MAX_WIDTH = 60;
 var DUNGEONMAP_MIN_WIDTH = 20;
 var DUNGEONMAP_MAX_HEIGHT = 45;
@@ -20207,6 +20439,7 @@ function GenerateDungeonMap(arguments)
 	let add_stairs = true;
 	let add_loops = false;
 	let secret_doors = false;
+	let secret_next_level = false;
 	
 	if (arguments != null && arguments.length > 0)
 	{
@@ -20240,6 +20473,12 @@ function GenerateDungeonMap(arguments)
 		argumentpos = arguments.indexOf("-secretdoors")
 		if (argumentpos > -1)
 			secret_doors = true;
+		argumentpos = arguments.indexOf("-secret_next_level")
+		if (argumentpos > -1)
+		{
+			secret_doors = true;
+			secret_next_level = true;
+		}
 	}
 	
 	
@@ -20299,7 +20538,7 @@ function GenerateDungeonMap(arguments)
 			}
 		}
 		
-		let newroom = { x: randomx, y: randomy, w: randomw, h: randomh };
+		let newroom = { x: randomx, y: randomy, w: randomw, h: randomh, secret: false };
 		
 		if (!CheckRoomInBounds(newroom, w, h))
 		{
@@ -20421,7 +20660,7 @@ function GenerateDungeonMap(arguments)
 			let changesign = -1;
 			let changeattempt = 1;
 			
-			while ((CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "coridoor", w, h) > 0) && Adoor == true)
+			while ((CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Adoor == true)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20437,7 +20676,7 @@ function GenerateDungeonMap(arguments)
 			changesign = -1;
 			changeattempt = 1;
 			
-			while ((CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "coridoor", w, h) > 0) && Bdoor == true)
+			while ((CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Bdoor == true)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20461,7 +20700,7 @@ function GenerateDungeonMap(arguments)
 			let changesign = -1;
 			let changeattempt = 1;
 			
-			while ((CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "coridoor", w, h) > 0) && Adoor == true)
+			while ((CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Adoor == true)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20477,7 +20716,7 @@ function GenerateDungeonMap(arguments)
 			changesign = -1;
 			changeattempt = 1;
 			
-			while ((CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "coridoor", w, h) > 0) && Bdoor == true)
+			while ((CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Bdoor == true)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20501,7 +20740,7 @@ function GenerateDungeonMap(arguments)
 			let changesign = -1;
 			let changeattempt = 1;
 			
-			while ((CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "coridoor", w, h) > 0) && Adoor == true)
+			while ((CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Adoor == true)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20517,7 +20756,7 @@ function GenerateDungeonMap(arguments)
 			changesign = -1;
 			changeattempt = 1;
 			
-			while ((CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "coridoor", w, h) > 0) && Bdoor == true)
+			while ((CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Bdoor == true)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20541,7 +20780,7 @@ function GenerateDungeonMap(arguments)
 			let changesign = -1;
 			let changeattempt = 1;
 			
-			while ((CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "coridoor", w, h) > 0) && Adoor == true)
+			while ((CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Adoor == true)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20557,7 +20796,7 @@ function GenerateDungeonMap(arguments)
 			changesign = -1;
 			changeattempt = 1;
 			
-			while ((CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "coridoor", w, h) > 0) && Bdoor == true)
+			while ((CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Bdoor == true)
 			{
 				change += Math.floor(changeattempt) * changesign;
 				changesign *= -1;
@@ -20598,7 +20837,6 @@ function GenerateDungeonMap(arguments)
 				tilemap[tileIndex] = "coridoor";
 			}
 		}
-		
 	}
 	
 	// make loop paths (no doorways, will use existing doorways)
@@ -20626,86 +20864,9 @@ function GenerateDungeonMap(arguments)
 		
 	}
 	
-	// add doors/portcullis
-	
-	for (let r = 0; r < roommap.length; r++)
-	{
-		for (let y = roommap[r].y; y <= roommap[r].h + roommap[r].y; y++)
-		{
-			if (tilemap[roommap[r].x + (y * w)] == "coridoor")
-			{
-				let randomfloat = Math.random();
-				let entrancetype = "door_vertical";
-				if (!secret_doors && randomfloat < 0.42)
-					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < 0.38)
-					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < 0.69)
-					entrancetype = "secret_door_vertical";
-				tilemap[roommap[r].x + (y * w)] = entrancetype;
-			}
-			else
-				tilemap[roommap[r].x + (y * w)] = "closed";
-			
-			if (tilemap[roommap[r].x + roommap[r].w + (y * w)] == "coridoor"){
-				let randomfloat = Math.random();
-				let entrancetype = "door_vertical";
-				if (!secret_doors && randomfloat < 0.42)
-					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < 0.38)
-					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < 0.69)
-					entrancetype = "secret_door_vertical";
-				tilemap[roommap[r].x + roommap[r].w + (y * w)] = entrancetype;
-			}
-			else
-				tilemap[roommap[r].x + roommap[r].w + (y * w)] = "closed";
-		}
-		for (let x = roommap[r].x; x <= roommap[r].w + roommap[r].x; x++)
-		{
-			if (tilemap[x + (roommap[r].y * w)] == "coridoor")
-			{
-				let randomfloat = Math.random();
-				let entrancetype = "door_horizontal";
-				if (!secret_doors && randomfloat < 0.42)
-					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < 0.38)
-					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < 0.69)
-					entrancetype = "secret_door_horizontal";
-				tilemap[x + (roommap[r].y * w)] = entrancetype;
-			}
-			else
-				tilemap[x + (roommap[r].y * w)] = "closed";
-			
-			if (tilemap[x + ((roommap[r].y + roommap[r].h) * w)] == "coridoor")
-			{
-				let randomfloat = Math.random();
-				let entrancetype = "door_horizontal";
-				if (!secret_doors && randomfloat < 0.42)
-					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < 0.38)
-					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < 0.69)
-					entrancetype = "secret_door_horizontal";
-				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = entrancetype;
-			}
-			else
-				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = "closed";
-		}
-		for (let y = roommap[r].y + 1; y <= roommap[r].h + roommap[r].y - 1; y++)
-		{
-			for (let x = roommap[r].x + 1; x <= roommap[r].w + roommap[r].x - 1; x++)
-			{
-				tilemap[x + (y * w)] = "open";
-			}
-		}
-	}
-	
 	// determine stairs and furthest rooms
 	
 	let start_room = Math.floor(Math.random() * roommap.length);
-	let end_room = -1;
 	
 	let startx = Math.floor(roommap[start_room].x + (roommap[start_room].w / 2));
 	let starty = Math.floor(roommap[start_room].y + (roommap[start_room].h / 2));
@@ -20724,7 +20885,7 @@ function GenerateDungeonMap(arguments)
 			let endy = Math.floor(roommap[r].y + (roommap[r].h / 2));
 			
 			let endpos = { x: endx, y: endy };
-			let roomDistance = TileMapCanReachPosition(startpos, endpos, tilemap, w, h);
+			let roomDistance = TileMapCanReachPosition(startpos, endpos, tilemap, w, h, true);
 
 			if(roomDistance == -1)
 			{
@@ -20749,12 +20910,117 @@ function GenerateDungeonMap(arguments)
 	}
 	
 	RemoveExtraneousTilesFromTilemap(tilemap, "coridoor", w, h);
-	RemoveExtraneousTilesFromTilemap(tilemap, "door_horizontal", w, h);
-	RemoveExtraneousTilesFromTilemap(tilemap, "door_vertical", w, h);
-	RemoveExtraneousTilesFromTilemap(tilemap, "grate_horizontal", w, h);
-	RemoveExtraneousTilesFromTilemap(tilemap, "grate_vertical", w, h);
-	RemoveExtraneousTilesFromTilemap(tilemap, "secret_door_horizontal", w, h);
-	RemoveExtraneousTilesFromTilemap(tilemap, "secret_door_vertical", w, h);
+	RemoveExtraneousTilesFromTilemap(tilemap, "doorway", w, h);
+	
+	let mandatory_room_path = []
+	if (furthestroom > 0)
+		mandatory_room_path = DetermineMandatoryRoomPath(roomconnections, start_room, furthestroom);
+
+
+	// add doors/portcullis
+	
+	for (let r = 0; r < roommap.length; r++)
+	{
+		let grate_chance = 0.29;
+		let secret_door_chance = 0.67;
+		if (mandatory_room_path.includes(r)) //room is on path to next floor
+		{
+			grate_chance = 0.31;
+			secret_door_chance = 0.5;
+		}
+		else if (Math.random() < 0.33) // room is not on path, and is a secret room (all doors secret doors)
+		{
+			grate_chance = -1;
+			secret_door_chance = 1;
+		}
+		for (let y = roommap[r].y; y <= roommap[r].h + roommap[r].y; y++)
+		{
+			if (tilemap[roommap[r].x + (y * w)] == "coridoor")
+			{
+				let randomfloat = Math.random();
+				let entrancetype = "door_vertical";
+				if (!secret_doors && randomfloat < 0.42)
+					entrancetype = "grate_vertical";
+				else if (secret_doors && randomfloat < grate_chance)
+					entrancetype = "grate_vertical";
+				else if (secret_doors && randomfloat < secret_door_chance)
+					entrancetype = "secret_door_vertical";
+				tilemap[roommap[r].x + (y * w)] = entrancetype;
+			}
+			else
+				tilemap[roommap[r].x + (y * w)] = "closed";
+			
+			if (tilemap[roommap[r].x + roommap[r].w + (y * w)] == "coridoor"){
+				let randomfloat = Math.random();
+				let entrancetype = "door_vertical";
+				if (!secret_doors && randomfloat < 0.42)
+					entrancetype = "grate_vertical";
+				else if (secret_doors && randomfloat < grate_chance)
+					entrancetype = "grate_vertical";
+				else if (secret_doors && randomfloat < secret_door_chance)
+					entrancetype = "secret_door_vertical";
+				tilemap[roommap[r].x + roommap[r].w + (y * w)] = entrancetype;
+			}
+			else
+				tilemap[roommap[r].x + roommap[r].w + (y * w)] = "closed";
+		}
+		for (let x = roommap[r].x; x <= roommap[r].w + roommap[r].x; x++)
+		{
+			if (tilemap[x + (roommap[r].y * w)] == "coridoor")
+			{
+				let randomfloat = Math.random();
+				let entrancetype = "door_horizontal";
+				if (!secret_doors && randomfloat < 0.42)
+					entrancetype = "grate_horizontal";
+				else if (secret_doors && randomfloat < grate_chance)
+					entrancetype = "grate_horizontal";
+				else if (secret_doors && randomfloat < secret_door_chance)
+					entrancetype = "secret_door_horizontal";
+				tilemap[x + (roommap[r].y * w)] = entrancetype;
+			}
+			else
+				tilemap[x + (roommap[r].y * w)] = "closed";
+			
+			if (tilemap[x + ((roommap[r].y + roommap[r].h) * w)] == "coridoor")
+			{
+				let randomfloat = Math.random();
+				let entrancetype = "door_horizontal";
+				if (!secret_doors && randomfloat < 0.42)
+					entrancetype = "grate_horizontal";
+				else if (secret_doors && randomfloat < grate_chance)
+					entrancetype = "grate_horizontal";
+				else if (secret_doors && randomfloat < secret_door_chance)
+					entrancetype = "secret_door_horizontal";
+				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = entrancetype;
+			}
+			else
+				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = "closed";
+		}
+		for (let y = roommap[r].y + 1; y <= roommap[r].h + roommap[r].y - 1; y++)
+		{
+			for (let x = roommap[r].x + 1; x <= roommap[r].w + roommap[r].x - 1; x++)
+			{
+				tilemap[x + (y * w)] = "open";
+			}
+		}
+	}
+	
+	if (furthestroom > -1)
+	{
+		let endx = Math.floor(roommap[furthestroom].x + (roommap[furthestroom].w / 2));
+		let endy = Math.floor(roommap[furthestroom].y + (roommap[furthestroom].h / 2));
+		
+		let endpos = { x: endx, y: endy };
+		let roomDistance = TileMapCanReachPosition(startpos, endpos, tilemap, w, h, secret_next_level);
+
+		if(roomDistance == -1)
+		{
+			console.log("could not reach stairs");
+			return false;
+		}
+	}
+	
+	//HideSecretPathways(tilemap, w, h);
 	
 	if (add_stairs)
 	{
@@ -20914,6 +21180,7 @@ function GenerateDungeonMap(arguments)
 				}
 				else if (sides_attempted == 1)
 				{
+					console.log("no stairs up");
 					return false; //fail if no stairs up
 				}
 			}
@@ -21083,6 +21350,7 @@ function GenerateDungeonMap(arguments)
 	
 	if (reachablerooms < roommap.length*2/3)
 	{
+		console.log("not enough rooms");
 		return false;
 	}
 	else
@@ -21168,6 +21436,8 @@ function OutputTileMap(channel, arguments)
 				mapmap.push({ src: dungeon_gen_assets.secret_door_horizontal[Math.floor(Math.random()*dungeon_gen_assets.secret_door_horizontal.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "secret_door_vertical")
 				mapmap.push({ src: dungeon_gen_assets.secret_door_vertical[Math.floor(Math.random()*dungeon_gen_assets.secret_door_vertical.length)], x: xpos, y: ypos});
+			else if (tilemap[x+(y*w)] == "secret_door_other")
+				mapmap.push({ src: dungeon_gen_assets.secret_door_other[Math.floor(Math.random()*dungeon_gen_assets.secret_door_other.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "stairs_north")
 				mapmap.push({ src: dungeon_gen_assets.stairs_north[Math.floor(Math.random()*dungeon_gen_assets.stairs_north.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "stairs_south")
