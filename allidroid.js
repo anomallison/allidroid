@@ -232,7 +232,7 @@ client.on('messageCreate', (receivedMessage) => {
 //
 //
 
-function processCommand(receivedMessage) 
+async function processCommand(receivedMessage) 
 {
     let fullCommand = receivedMessage.content.substr(1); // Remove the leading exclamation mark
     let splitCommand = fullCommand.split(" "); // Split the message up in to pieces for each space
@@ -903,7 +903,22 @@ function processCommand(receivedMessage)
     }
 	else if (normalizedCommand == "viewbattleships") 
 	{
-		ViewBattleshipsBoard(receivedMessage.channel);
+		try
+		{
+			let boardimage_promise = new Promise(function(resolve, reject) {
+				resolve(GetBattleshipsBoardImage(receivedMessage.channel));
+			});
+			
+			let boardimage = await boardimage_promise;
+			
+			receivedMessage.channel.send({files: [{ attachment: boardimage.path, name: boardimage.file }] });
+			
+			ViewBattleshipsBoard(receivedMessage.channel);
+		}
+		catch (err)
+		{
+			receivedMessage.channel.send(err.message);
+		}
 	}
 	else if (normalizedCommand == "pickupline") 
 	{
@@ -21792,65 +21807,69 @@ function InitializeNewBattleshipsGame(channel, arguments)
 	channel.send("Game set up, use !battleships (letter) (number) to play");
 }
 
-function ViewBattleshipsBoard(channel)
+async function GetBattleshipsBoardImage(channel)
 {
-	let gamestate = GetBattleshipsGameByChannelId(channel.id);
-	if (gamestate == null)
-		return "No game in this channel.";
-	
-	//let board_string = OutputBoardToString(gamestate.board);
-	
-	//return board_string;
-	
-	let mapmap = [];
-	
-	mapmap.push({ src: BATTLESHIPS_BG_PATH, x: 0, y: 0})
-	
-	for (let y = 0; y < 10; y++)
-	{
-		for (let x  = 0; x < 10; x++)
+	let boardimage_promise = new Promise(function(resolve, reject) {
+		let gamestate = GetBattleshipsGameByChannelId(channel.id);
+		if (gamestate == null)
+			reject(new Error('No game in this channel.')).then(resolved, rejected);
+		
+		//let board_string = OutputBoardToString(gamestate.board);
+		
+		//return board_string;
+		
+		let mapmap = [];
+		
+		mapmap.push({ src: BATTLESHIPS_BG_PATH, x: 0, y: 0})
+		
+		for (let y = 0; y < 10; y++)
 		{
-			let xpos = (24*x)+24;
-			let ypos = (24*y)+24;
-			
-			board_index = x + (y*10);
-			
-			if ((gamestate.board[board_index] & 1) == 1)
+			for (let x  = 0; x < 10; x++)
 			{
-				if (gamestate.board[board_index] - 1 == 0)
+				let xpos = (24*x)+24;
+				let ypos = (24*y)+24;
+				
+				board_index = x + (y*10);
+				
+				if ((gamestate.board[board_index] & 1) == 1)
 				{
-					mapmap.push({ src: BATTLESHIPS_MISS_PATH, x: xpos, y: ypos});
-				}
-				else
-				{
-					mapmap.push({ src: BATTLESHIPS_HIT_PATH, x: xpos, y: ypos});
+					if (gamestate.board[board_index] - 1 == 0)
+					{
+						mapmap.push({ src: BATTLESHIPS_MISS_PATH, x: xpos, y: ypos});
+					}
+					else
+					{
+						mapmap.push({ src: BATTLESHIPS_HIT_PATH, x: xpos, y: ypos});
+					}
 				}
 			}
 		}
-	}
+		
+		mapmap.push({ src: BATTLESHIPS_GRID_PATH, x: 0, y: 0})
+		
+		let file = 'battleships_game.png';
+		let path = './' + file;
+		
+		mergeImages(mapmap, 
+		{
+			width: 264,
+			height: 264,
+			Canvas: Canvas,
+			Image: Image
+		})
+		.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			console.log('The battleships_game file has been saved!');
+			resolve({path: path, file: file});
+			//channel.send({ files: [{ attachment: path, name: file }] });
+			}
+			));
+	});
 	
-	mapmap.push({ src: BATTLESHIPS_GRID_PATH, x: 0, y: 0})
-	
-	let file = 'battleships_game.png';
-	let path = './' + file;
-	
-	mergeImages(mapmap, 
-	{
-		width: 264,
-		height: 264,
-		Canvas: Canvas,
-		Image: Image
-	})
-	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-		if (err) throw err;
-		console.log('The battleships_game file has been saved!');
-		channel.send({ files: [{ attachment: path, name: file }] });
-		}
-		))
-	
-	
-	
+	return boardimage_promise;
 }
+
+
 
 function CheckShipSunk(board, ship_id)
 {
@@ -21885,7 +21904,7 @@ function CheckBoardState(board)
 	return true;
 }
 
-function PlayBattleshipsGame(channel, arguments)
+async function PlayBattleshipsGame(channel, arguments)
 {
 	let gamestate = GetBattleshipsGameByChannelId(channel.id)
 	if (gamestate == null)
@@ -21933,6 +21952,7 @@ function PlayBattleshipsGame(channel, arguments)
 	
 	let board_index = coords.x + (coords.y * 10);
 	
+	let message = "";
 	if ((gamestate.board[board_index] & 1) == 1)
 	{
 		channel.send("You have already fired on that position.");
@@ -21942,7 +21962,6 @@ function PlayBattleshipsGame(channel, arguments)
 	{
 		gamestate.turns++;
 		gamestate.board[board_index] += 1;
-		let message = "";
 		if ((gamestate.board[board_index] - 1) == 0)
 		{
 			message = "Miss."
@@ -21969,11 +21988,18 @@ function PlayBattleshipsGame(channel, arguments)
 				message += "\nYou won in " + gamestate.turns + " turns.";
 			}
 		}
-		if (message.length > 0)
-			channel.send(message);
 	}
 	
-	ViewBattleshipsBoard(channel);
+	
+	
+	let boardimage_promise = new Promise(function(resolve, reject) {
+		resolve(GetBattleshipsBoardImage(channel));
+	});
+	
+	let boardimage = await boardimage_promise;
+	
+	channel.send({content: message, files: [{ attachment: boardimage.path, name: boardimage.file }] });
+	
 	SaveBattleshipsGames();
 }
 
