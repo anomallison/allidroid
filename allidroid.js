@@ -20175,12 +20175,12 @@ function RemoveExtraneousTilesFromTilemap(tilemap, tile, width, height)
 		}
 	}
 	
-	//let removed_tile_count = 0;
+	let removed_tile_count = 0;
 	
 	while (tile_to_do.length > 0)
 	{
 		let tilemapIndex = tile_to_do[0].x + (tile_to_do[0].y * width);
-		if (tiles_visited.includes(tilemapIndex) && tilemap[tilemapIndex] == tile)
+		if (!tiles_visited.includes(tilemapIndex) && tilemap[tilemapIndex] == tile)
 		{
 			let connections_number = 0;
 			let connections_code = GetConnectionsAsInt(tile_to_do[0].x, tile_to_do[0].y, tilemap, width, height)
@@ -20197,7 +20197,7 @@ function RemoveExtraneousTilesFromTilemap(tilemap, tile, width, height)
 			{
 				tiles_visited.push(tilemapIndex);
 				tilemap[tilemapIndex] = "unknown";
-				//removed_tile_count++;
+				removed_tile_count++;
 				if (tile_to_do[0].x > 0)
 					tile_to_do.push({ x: tile_to_do[0].x - 1, y: tile_to_do[0].y });
 				if (tile_to_do[0].x < width - 1)
@@ -20218,7 +20218,7 @@ function GetConnectionsAsInt(x, y, tilemap, width, height)
 {
 	let code = 0;
 	let tileIndex = x + 1 + (y * width);
-	if (x < width - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+	if (x < width - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" || tilemap[tileIndex] == "doorway"
 		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
 		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"
 		|| tilemap[tileIndex] == "secret_door_horizontal" || tilemap[tileIndex] == "secret_door_vertical"))
@@ -20227,7 +20227,7 @@ function GetConnectionsAsInt(x, y, tilemap, width, height)
 	}
 	
 	tileIndex = x - 1 + (y * width);
-	if (x > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+	if (x > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" || tilemap[tileIndex] == "doorway"
 		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
 		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"
 		|| tilemap[tileIndex] == "secret_door_horizontal" || tilemap[tileIndex] == "secret_door_vertical"))
@@ -20236,7 +20236,7 @@ function GetConnectionsAsInt(x, y, tilemap, width, height)
 	}
 
 	tileIndex = x + ((y + 1) * width);
-	if (y < height - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+	if (y < height - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" || tilemap[tileIndex] == "doorway"
 		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
 		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"
 		|| tilemap[tileIndex] == "secret_door_horizontal" || tilemap[tileIndex] == "secret_door_vertical"))
@@ -20245,7 +20245,7 @@ function GetConnectionsAsInt(x, y, tilemap, width, height)
 	}
 	
 	tileIndex = x + ((y - 1) * width);
-	if (y > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+	if (y > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" || tilemap[tileIndex] == "doorway"
 		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
 		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"
 		|| tilemap[tileIndex] == "secret_door_horizontal" || tilemap[tileIndex] == "secret_door_vertical"))
@@ -20260,7 +20260,7 @@ function GetNotSecretConnectionsAsInt(x, y, tilemap, width, height)
 {
 	let code = 0;
 	let tileIndex = x + 1 + (y * width);
-	if (x < width - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+	if (x < width - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" || tilemap[tileIndex] == "doorway"
 		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
 		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"))
 	{
@@ -20268,7 +20268,7 @@ function GetNotSecretConnectionsAsInt(x, y, tilemap, width, height)
 	}
 	
 	tileIndex = x - 1 + (y * width);
-	if (x > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+	if (x > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" || tilemap[tileIndex] == "doorway"
 		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
 		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"))
 	{
@@ -20276,7 +20276,7 @@ function GetNotSecretConnectionsAsInt(x, y, tilemap, width, height)
 	}
 
 	tileIndex = x + ((y + 1) * width);
-	if (y < height - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+	if (y < height - 1 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor"|| tilemap[tileIndex] == "doorway" 
 		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
 		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"))
 	{
@@ -20284,7 +20284,7 @@ function GetNotSecretConnectionsAsInt(x, y, tilemap, width, height)
 	}
 	
 	tileIndex = x + ((y - 1) * width);
-	if (y > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" 
+	if (y > 0 && (tilemap[tileIndex] == "open" || tilemap[tileIndex] == "coridoor" || tilemap[tileIndex] == "doorway"
 		|| tilemap[tileIndex] == "door_horizontal" || tilemap[tileIndex] == "door_vertical"
 		|| tilemap[tileIndex] == "grate_horizontal" || tilemap[tileIndex] == "grate_vertical"))
 	{
@@ -20436,10 +20436,11 @@ function GenerateDungeonMap(arguments)
 	let w = 32;
 	let h = 24;
 	let rooms = 8;
-	let add_stairs = true;
 	let add_loops = false;
 	let secret_doors = false;
 	let secret_next_level = false;
+	let stairs_up_side = -1;
+	let stairs_down_side = -1;
 	
 	if (arguments != null && arguments.length > 0)
 	{
@@ -20464,9 +20465,34 @@ function GenerateDungeonMap(arguments)
 			rooms = DUNGEONMAP_MAX_ROOMS;
 		if (rooms < DUNGEONMAP_MIN_ROOMS)
 			rooms = DUNGEONMAP_MIN_ROOMS;
-		argumentpos = arguments.indexOf("-nostairs")
+		argumentpos = arguments.indexOf("-stairsup")
 		if (argumentpos > -1)
-			add_stairs = false;
+		{
+			if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "n" || arguments[argumentpos+1] == "north"))
+				stairs_up_side = 0.625;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "e" || arguments[argumentpos+1] == "east"))
+				stairs_up_side = 0.375;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "s" || arguments[argumentpos+1] == "south"))
+				stairs_up_side = 0.875;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "w" || arguments[argumentpos+1] == "west"))
+				stairs_up_side = 0.125;
+			else
+				stairs_up_side = -2;
+		}
+		argumentpos = arguments.indexOf("-stairsdown")
+		if (argumentpos > -1)
+		{
+			if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "n" || arguments[argumentpos+1] == "north"))
+				stairs_down_side = 0.625;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "e" || arguments[argumentpos+1] == "east"))
+				stairs_down_side = 0.375;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "s" || arguments[argumentpos+1] == "south"))
+				stairs_down_side = 0.875;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "w" || arguments[argumentpos+1] == "west"))
+				stairs_down_side = 0.125;
+			else
+				stairs_down_side = -2;
+		}
 		argumentpos = arguments.indexOf("-loops")
 		if (argumentpos > -1)
 			add_loops = true;
@@ -20501,7 +20527,7 @@ function GenerateDungeonMap(arguments)
 	
 	let roomattempts = 0;
 	
-	for (let r = 0; r < rooms && roomattempts < 5000; r++)
+	for (let r = 0; r < rooms && roomattempts < 4096; r++)
 	{
 		let randomw = Math.floor(Math.random() * 6) + 5;
 		let randomh = Math.floor(Math.random() * 6) + 5;
@@ -20511,7 +20537,7 @@ function GenerateDungeonMap(arguments)
 		let adjacentroom = Math.floor(Math.random() * roommap.length);
 		let roomside = Math.random();
 		
-		let randomgap = Math.floor(Math.random() * 2) + 3;
+		let randomgap = Math.max(Math.floor(Math.random() * 3) - Math.floor(Math.random() * 2), 0) + 2;
 		
 		
 		if (roommap.length > 0)
@@ -20638,7 +20664,8 @@ function GenerateDungeonMap(arguments)
 	}
 	
 	// add doors and paths between rooms
-
+	//let door_count = 0;
+	
 	for(let i = 0; i < roomconnections.length; i++)
 	{
 		let tileIndex = 0;
@@ -20812,14 +20839,16 @@ function GenerateDungeonMap(arguments)
 		if (Adoor == true)
 		{
 			tileIndex = doorApos.x + (doorApos.y * w);
-			tilemap[tileIndex] = "open";
+			tilemap[tileIndex] = "doorway";
 		}
 		
 		if (Bdoor == true)
 		{
 			tileIndex = doorBpos.x + (doorBpos.y * w);
-			tilemap[tileIndex] = "open";
+			tilemap[tileIndex] = "doorway";
 		}
+		
+		//door_count += 2;
 		
 		let startx = Math.floor(roommap[roomconnections[i].start].x + (roommap[roomconnections[i].start].w / 2));
 		let starty = Math.floor(roommap[roomconnections[i].start].y + (roommap[roomconnections[i].start].h / 2));
@@ -20834,11 +20863,12 @@ function GenerateDungeonMap(arguments)
 			for (let j = 0; j < path.length; j++)
 			{
 				tileIndex = path[j].x + (path[j].y * w);
-				tilemap[tileIndex] = "coridoor";
+				if (tilemap[tileIndex] == "unknown")
+					tilemap[tileIndex] = "coridoor";
 			}
 		}
 	}
-	
+	//console.log(door_count);
 	// make loop paths (no doorways, will use existing doorways)
 	
 	for(let i = 0; i < loopconnections.length; i++)
@@ -20858,7 +20888,8 @@ function GenerateDungeonMap(arguments)
 			for (let j = 0; j < path.length; j++)
 			{
 				tileIndex = path[j].x + (path[j].y * w);
-				tilemap[tileIndex] = "coridoor";
+				if (tilemap[tileIndex] == "unknown")
+					tilemap[tileIndex] = "coridoor";
 			}
 		}
 		
@@ -20867,7 +20898,6 @@ function GenerateDungeonMap(arguments)
 	// determine stairs and furthest rooms
 	
 	let start_room = Math.floor(Math.random() * roommap.length);
-	
 	let startx = Math.floor(roommap[start_room].x + (roommap[start_room].w / 2));
 	let starty = Math.floor(roommap[start_room].y + (roommap[start_room].h / 2));
 	
@@ -20935,7 +20965,7 @@ function GenerateDungeonMap(arguments)
 		}
 		for (let y = roommap[r].y; y <= roommap[r].h + roommap[r].y; y++)
 		{
-			if (tilemap[roommap[r].x + (y * w)] == "coridoor")
+			if (tilemap[roommap[r].x + (y * w)] == "doorway")
 			{
 				let randomfloat = Math.random();
 				let entrancetype = "door_vertical";
@@ -20950,7 +20980,7 @@ function GenerateDungeonMap(arguments)
 			else
 				tilemap[roommap[r].x + (y * w)] = "closed";
 			
-			if (tilemap[roommap[r].x + roommap[r].w + (y * w)] == "coridoor"){
+			if (tilemap[roommap[r].x + roommap[r].w + (y * w)] == "doorway"){
 				let randomfloat = Math.random();
 				let entrancetype = "door_vertical";
 				if (!secret_doors && randomfloat < 0.42)
@@ -20966,7 +20996,7 @@ function GenerateDungeonMap(arguments)
 		}
 		for (let x = roommap[r].x; x <= roommap[r].w + roommap[r].x; x++)
 		{
-			if (tilemap[x + (roommap[r].y * w)] == "coridoor")
+			if (tilemap[x + (roommap[r].y * w)] == "doorway")
 			{
 				let randomfloat = Math.random();
 				let entrancetype = "door_horizontal";
@@ -20981,7 +21011,7 @@ function GenerateDungeonMap(arguments)
 			else
 				tilemap[x + (roommap[r].y * w)] = "closed";
 			
-			if (tilemap[x + ((roommap[r].y + roommap[r].h) * w)] == "coridoor")
+			if (tilemap[x + ((roommap[r].y + roommap[r].h) * w)] == "doorway")
 			{
 				let randomfloat = Math.random();
 				let entrancetype = "door_horizontal";
@@ -21022,13 +21052,19 @@ function GenerateDungeonMap(arguments)
 	
 	//HideSecretPathways(tilemap, w, h);
 	
-	if (add_stairs)
+	if (stairs_up_side != -1)
 	{
 		//stairs up
 		
 		let stairs_side = Math.random();
 		let sides_attempted = 0;
 		let stairs_unplaced = true;
+		
+		if (stairs_up_side > -1)
+		{
+			stairs_side = stairs_up_side;
+			sides_attempted = 0.75;
+		}
 		
 		while (stairs_unplaced && sides_attempted < 1)
 		{
@@ -21180,18 +21216,27 @@ function GenerateDungeonMap(arguments)
 				}
 			}
 			
-			if (sides_attempted == 1)
+			if (stairs_up_side != -1 && (sides_attempted == 1 || stairs_unplaced == true))
 			{
 				//console.log("no stairs up");
 				return false; //fail if no stairs up
 			}
 		}
-		
+	}
+	
+	if (stairs_down_side != -1)
+	{
 		//stairs down
 		
 		stairs_side = Math.random();
 		sides_attempted = 0;
 		stairs_unplaced = true;
+		
+		if (stairs_down_side > -1)
+		{
+			stairs_side = stairs_down_side;
+			sides_attempted = 0.75;
+		}
 		
 		if (furthestroom > -1)
 		{
@@ -21345,6 +21390,12 @@ function GenerateDungeonMap(arguments)
 					}
 				}
 			}
+			
+			if (stairs_down_side != -1 && (sides_attempted == 1 || stairs_unplaced == true))
+			{
+				//console.log("no stairs down");
+				return false; //fail if no stairs down when required
+			}
 		}
 	}
 	
@@ -21489,6 +21540,11 @@ function OutputTileMap(channel, arguments)
 				mapmap.push({ src: dungeon_gen_assets.test[Math.floor(Math.random()*dungeon_gen_assets.test.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "unknown")
 				mapmap.push({ src: dungeon_gen_assets.closed[Math.floor(Math.random()*dungeon_gen_assets.closed.length)], x: xpos, y: ypos});
+			else
+			{
+				console.log("unknown tile '" + tilemap[x+(y*w)] + "' at " + x + ", " + y);
+				mapmap.push({ src: dungeon_gen_assets.error[Math.floor(Math.random()*dungeon_gen_assets.error.length)], x: xpos, y: ypos});
+			}
 			
 			/*
 			if (grid_opacity > 0)
@@ -21734,213 +21790,6 @@ function InitializeNewBattleshipsGame(channel, arguments)
 	
 	SaveBattleshipsGames();
 	channel.send("Game set up, use !battleships (letter) (number) to play");
-}
-
-function OutputBoardToString(board)
-{
-	let board_string = TOP_ROW + "\n";
-	board_string += A_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + B_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 10;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + C_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 20;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + D_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 30;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + E_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 40;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + F_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 50;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + G_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 60;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + H_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 70;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + I_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 80;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	board_string += "\n" + J_EMOJI;
-	for (let i = 0; i < 10; i++)
-	{
-		board_index = i + 90;
-		if ((board[board_index] & 1) == 1)
-		{
-			if (board[board_index] - 1 == 0)
-			{
-				board_string += MISS_EMOJI;
-			}
-			else if (board[board_index] - 1 == DESTROYER_ID || board[board_index] - 1 == SUBMARINE_ID || board[board_index] - 1 == CRUISER_ID || board[board_index] - 1 == BATTLESHIP_ID || board[board_index] - 1 == CARRIER_ID)
-			{
-				board_string += HIT_EMOJI;
-			}
-		}
-		else
-		{
-			board_string += UNKOWN_EMOJI;
-		}
-	}
-	
-	return board_string;
 }
 
 function ViewBattleshipsBoard(channel)

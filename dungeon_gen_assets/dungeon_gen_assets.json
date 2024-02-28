@@ -54,5 +54,9 @@
 	"stairs_west":
 	[
 		"./dungeon_gen_assets/stairs_west.png"
+	],
+	"error":
+	[
+		"./dungeon_gen_assets/error.png"
 	]
 }
