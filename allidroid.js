@@ -885,6 +885,10 @@ async function processCommand(receivedMessage)
 			return;
 		}
     }
+	else if (normalizedCommand == "drawdungeonmap")
+	{
+		DrawDrawnDungeonMap(receivedMessage.channel,arguments);
+	}
 	else if (normalizedCommand == "rendertownmap")
 	{
 		DrawTownMap(receivedMessage.channel,arguments);
@@ -21425,45 +21429,6 @@ function GenerateDungeonMap(arguments)
 	}
 }
 
-function TestTileMapGeneration(arguments)
-{
-	if (arguments == null || arguments == undefined)
-		arguments = [];
-	
-	let successful_tests = 0;
-	for (let x = DUNGEONMAP_MIN_WIDTH; x < DUNGEONMAP_MAX_WIDTH + 1; x++)
-	{
-		for (let y = DUNGEONMAP_MIN_HEIGHT; y < DUNGEONMAP_MAX_HEIGHT + 1; y++)
-		{
-			let testarguments = arguments.slice();
-			testarguments.push("-w");
-			testarguments.push(x.toString());
-			testarguments.push("-h")
-			testarguments.push(y.toString())
-			console.log("Testing at " + x + " by " + y);
-			console.log(testarguments);
-			let tilemap = false;
-			let attempts = 0;
-			while (tilemap == false && attempts < 32)
-			{
-				attempts++;
-				tilemap = GenerateDungeonMap(arguments);
-			}
-			
-			if (tilemap != false)
-			{
-				successful_tests++;
-				console.log("map generated");
-			}
-			else
-			{
-				console.log("map not generated");
-			}
-		}
-	}
-	console.log("Dungeon Map Generation test successful: " + successful_tests + " maps generated");
-}
-
 function OutputTileMap(channel, arguments)
 {
 	let w = 32;
@@ -21588,6 +21553,1515 @@ function OutputTileMap(channel, arguments)
 		))
 }
 
+function DrawnMapPathToPosition(start, end, tilemap, map_width, map_height)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let closest = { x: start.x, y: start.y };
+	let closestHexHeuristic = 99999999;
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		if (current.x == end.x && current.y == end.y)
+		{
+			//console.log("path found");
+			//console.log(dictionaryCameFrom);
+			return dictionaryToDirection(dictionaryCameFrom, end, start);
+		}
+		
+		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+			//newcost += 1;
+		}
+		let connection = { x: current.x, y: current.y };
+		for (let i = 0; i < 4; i++)
+		{
+			connection = { x: current.x, y: current.y };
+			MoveTile(connection,i);
+			let tilemapPos = connection.x + (connection.y * map_width);
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && (!isNaN(tilemap[tilemapPos]) || tilemap[tilemapPos].includes("corridor") || tilemap[tilemapPos].includes("unknown")))
+			{
+				let connectioncost = newcost + 1;
+				if (!isNaN(tilemap[tilemapPos]) || tilemap[tilemapPos].includes("corridor"))
+					connectioncost -= 0.99;
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (connectioncost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+						priority = connectioncost + pathHeuristic(connection, end);
+						if (priority - connectioncost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - connectioncost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+					priority = connectioncost + pathHeuristic(connection, end);
+					if (priority - connectioncost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - connectioncost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+		}
+	}
+	//console.log("full path not found");
+	return dictionaryToDirection(dictionaryCameFrom, closest, start);
+}
+
+function TileMapCanReachPosition(start, end, tilemap, map_width, map_height, include_secret_doors)
+{
+	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let closest = { x: start.x, y: start.y };
+	let closestHexHeuristic = 99999999;
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		if (current.x == end.x && current.y == end.y)
+		{
+			//console.log("path found");
+			//console.log(dictionaryCameFrom);
+			let pathLength = dictionaryToDirection(dictionaryCameFrom, end, start).length;
+			return pathLength;
+		}
+		
+		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+			//newcost += 1;
+		}
+		let connection = { x: current.x, y: current.y };
+		for (let i = 0; i < 4; i++)
+		{
+			connection = { x: current.x, y: current.y };
+			MoveTile(connection,i);
+			let tilemapPos = connection.x + (connection.y * map_width);
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height 
+				&& (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" ||  tilemap[tilemapPos] == "doorway"
+				|| tilemap[tilemapPos] == "door_horizontal" || tilemap[tilemapPos] == "door_vertical" 
+				|| tilemap[tilemapPos] == "grate_horizontal" || tilemap[tilemapPos] == "grate_vertical"
+				|| (include_secret_doors && tilemap[tilemapPos] == "secret_door_horizontal") || (include_secret_doors && tilemap[tilemapPos] == "secret_door_vertical")
+				|| (include_secret_doors && tilemap[tilemapPos] == "secret_door_other")))
+			{
+				let connectioncost = newcost + 1;
+				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
+				if (tempcost != null)
+				{
+					oldcost = tempcost;
+					if (connectioncost < oldcost)
+					{
+						addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+						priority = connectioncost + pathHeuristic(connection, end);
+						if (priority - connectioncost < closestHexHeuristic)
+						{
+							closest = connection;
+							closestHexHeuristic = priority - connectioncost;
+						}
+						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+						addToDictionary(dictionaryCameFrom, connection, current);
+					}
+				}
+				else
+				{
+					addToDictionary(dictionaryCostSoFar, connection, connectioncost);
+					priority = connectioncost + pathHeuristic(connection, end);
+					if (priority - connectioncost < closestHexHeuristic)
+					{
+						closest = connection;
+						closestHexHeuristic = priority - connectioncost;
+					}
+					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
+					addToDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+		}
+	}
+	//console.log("full path not found");
+	return -1;
+}
+
+function CheckRoomNoOverlapNoBuffer(roommap, room)
+{
+	for(let i = 0; i < roommap.length; i++)
+	{
+		if (roommap[i].x + roommap[i].w > room.x && roommap[i].x < room.x + room.w )
+		{
+			if (roommap[i].y + roommap[i].h > room.y && roommap[i].y < room.y + room.h)
+				return false;
+		}
+	}
+	
+	return true;
+}
+
+function DetermineRoomDistances(roomconnections, start)
+{
+	let frontierQueue = [{ index: start, priority: 0 }];
+	let dictionaryCameFrom = [];
+	let dictionaryCostSoFar = [];
+	let newcost = 0;
+	let oldcost;
+	let priority;
+	
+	let current;
+	
+	while (frontierQueue.length > 0)
+	{
+		let nextinqueue = getNextInQueue(frontierQueue);
+		current = frontierQueue[nextinqueue];
+		frontierQueue.splice(nextinqueue,1);
+		
+		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current)
+		if (tempcost != null)
+		{
+			newcost = tempcost;
+			//newcost += 1;
+		}
+		let individual_room_connections = [];
+		for (let i = 0; i < roomconnections.length; i++)
+		{
+			if(roomconnections[i].start == current.index)
+			{
+				individual_room_connections.push(roomconnections[i].end);
+			}
+			else if (roomconnections[i].end == current.index)
+			{
+				individual_room_connections.push(roomconnections[i].start);
+			}
+		}
+		let connection = -1;
+		for (let i = 0; i < individual_room_connections.length; i++)
+		{
+			connection = individual_room_connections[i];
+			let connectioncost = newcost + 1;
+			tempcost = getFromBasicDictionary(dictionaryCostSoFar, connection)
+			if (tempcost != null)
+			{
+				oldcost = tempcost;
+				if (connectioncost < oldcost)
+				{
+					reassignToBasicDictionary(dictionaryCostSoFar, connection, connectioncost);
+					frontierQueue.push({ index: connection, priority: connectioncost });
+					reassignToBasicDictionary(dictionaryCameFrom, connection, current);
+				}
+			}
+			else
+			{
+				reassignToBasicDictionary(dictionaryCostSoFar, connection, connectioncost);
+				frontierQueue.push({ index: connection, priority: connectioncost });
+				reassignToBasicDictionary(dictionaryCameFrom, connection, current);
+			}
+		}
+		//console.log(frontierQueue);
+	}
+	//console.log("mandatory room path not found");
+	return dictionaryCostSoFar;
+}
+
+function CheckDoorOverlap(doors, startindex, endindex)
+{
+	for (let i = 0; i < doors.length; i++)
+	{
+		if ((doors[i].roomA == startindex && doors[i].roomB == endindex) || (doors[i].roomA == endindex && doors[i].roomB == startindex))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+function GenerateDrawnDungeonMap(arguments)
+{
+	let w = 32;
+	let h = 24;
+	let rooms = 8;
+	let add_loops = false;
+	let secret_doors = false;
+	let secret_next_level = false;
+	let stairs_up_side = -1;
+	let stairs_down_side = -1;
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			w = parseInt(arguments[argumentpos+1]);
+		if (w > DUNGEONMAP_MAX_WIDTH)
+			w = DUNGEONMAP_MAX_WIDTH;
+		if (w < DUNGEONMAP_MIN_WIDTH)
+			w = DUNGEONMAP_MIN_WIDTH;
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			h = parseInt(arguments[argumentpos+1]);
+		if (h > DUNGEONMAP_MAX_HEIGHT)
+			h = DUNGEONMAP_MAX_HEIGHT;
+		if (h < DUNGEONMAP_MIN_HEIGHT)
+			h = DUNGEONMAP_MIN_HEIGHT;
+		argumentpos = arguments.indexOf("-r")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			rooms = parseInt(arguments[argumentpos+1]);
+		if (rooms > DUNGEONMAP_MAX_ROOMS)
+			rooms = DUNGEONMAP_MAX_ROOMS;
+		if (rooms < DUNGEONMAP_MIN_ROOMS)
+			rooms = DUNGEONMAP_MIN_ROOMS;
+		argumentpos = arguments.indexOf("-stairsup")
+		if (argumentpos > -1)
+		{
+			if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "n" || arguments[argumentpos+1] == "north"))
+				stairs_up_side = 0.625;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "e" || arguments[argumentpos+1] == "east"))
+				stairs_up_side = 0.375;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "s" || arguments[argumentpos+1] == "south"))
+				stairs_up_side = 0.875;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "w" || arguments[argumentpos+1] == "west"))
+				stairs_up_side = 0.125;
+			else
+				stairs_up_side = -2;
+		}
+		argumentpos = arguments.indexOf("-stairsdown")
+		if (argumentpos > -1)
+		{
+			if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "n" || arguments[argumentpos+1] == "north"))
+				stairs_down_side = 0.625;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "e" || arguments[argumentpos+1] == "east"))
+				stairs_down_side = 0.375;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "s" || arguments[argumentpos+1] == "south"))
+				stairs_down_side = 0.875;
+			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "w" || arguments[argumentpos+1] == "west"))
+				stairs_down_side = 0.125;
+			else
+				stairs_down_side = -2;
+		}
+		argumentpos = arguments.indexOf("-loops")
+		if (argumentpos > -1)
+			add_loops = true;
+		argumentpos = arguments.indexOf("-secretdoors")
+		if (argumentpos > -1)
+			secret_doors = true;
+		argumentpos = arguments.indexOf("-secret_next_level")
+		if (argumentpos > -1)
+		{
+			secret_doors = true;
+			secret_next_level = true;
+		}
+	}
+	
+	let tilemap = [];
+	
+	let debug = [];
+	
+	for (let y = 0; y < h; y++)
+	{
+		for (let x = 0; x < w; x++)
+		{
+			let index = x + (y*w);
+			if (x == 0 || y == 0 || x == w - 1 || y == h - 1)
+				tilemap.push("closed");
+			else
+				tilemap.push("unknown");
+		}
+	}
+	
+	
+	let roommap = [];
+	
+	let roomconnections = [];
+	
+	let roomattempts = 0;
+	
+	for (let r = 0; r < rooms && roomattempts < 4096; r++)
+	{
+		let randomw = Math.floor(Math.random() * 6) + 3;
+		let randomh = Math.floor(Math.random() * 6) + 3;
+		let randomx = Math.floor(Math.random() * (w - 4 - randomw)) + 2;
+		let randomy = Math.floor(Math.random() * (h - 4 - randomh)) + 2;
+		
+		let adjacentroom = Math.floor(Math.random() * roommap.length);
+		let roomside = Math.random();
+		
+		let randomgap = Math.max(Math.floor(Math.random() * 4) - Math.floor(Math.random() * 2), 0);
+		
+		
+		if (roommap.length > 0)
+		{	
+			if (roomside < 0.25) // west side
+			{
+				randomx = roommap[adjacentroom].x - randomw - randomgap;
+				randomy = Math.floor(Math.random() * roommap[adjacentroom].h + randomh) + roommap[adjacentroom].y - randomh;
+			}
+			else if (roomside < 0.5) // east side
+			{
+				randomx = roommap[adjacentroom].x + roommap[adjacentroom].w + randomgap;
+				randomy = Math.floor(Math.random() * roommap[adjacentroom].h + randomh) + roommap[adjacentroom].y - randomh;
+			}
+			else if (roomside < 0.75) // south side
+			{
+				randomx = Math.floor(Math.random() * roommap[adjacentroom].w + randomw) + roommap[adjacentroom].x - randomw;
+				randomy = roommap[adjacentroom].y - randomh - randomgap;
+			}
+			else // north side
+			{
+				randomx = Math.floor(Math.random() * roommap[adjacentroom].w + randomw) + roommap[adjacentroom].x - randomw;
+				randomy = roommap[adjacentroom].y + roommap[adjacentroom].h + randomgap;
+			}
+		}
+		
+		let newroom = { x: randomx, y: randomy, w: randomw, h: randomh, secret: Math.random() < 0.36 };
+		
+		if (!CheckRoomInBounds(newroom, w, h))
+		{
+			roomattempts++;
+			r--;
+		}
+		else if (!CheckRoomNoOverlapNoBuffer(roommap, newroom))
+		{
+			roomattempts++;
+			r--;
+		}
+		else if (roomattempts < 4096)
+		{
+			for (let y = newroom.y; y < newroom.h + newroom.y; y++)
+			{
+				for (let x = newroom.x; x < newroom.w + newroom.x; x++)
+				{
+					tilemap[x + (y * w)] = r;
+				}
+			}
+			roommap.push(newroom);
+			if (roommap.length > 1)
+			{
+				let end_room_id = r;
+				let start_room_id = adjacentroom;
+				roomconnections.push({ start: adjacentroom, end: roommap.length-1, side: roomside, startroomid: start_room_id, endroomid: end_room_id});
+			}
+		}
+	}
+	
+	let start_room = Math.floor(Math.random() * roommap.length);
+	
+	let roomdistances = DetermineRoomDistances(roomconnections, start_room)
+	
+	let furthestdistance = -1;
+	let furthestindex = -1;
+	
+	for (let i = 0; i < roommap.length; i++)
+	{
+		let distance = getFromBasicDictionary(roomdistances, i)
+		if (distance > furthestdistance)
+		{
+			furthestdistance = distance;
+			furthestindex = i;
+		}
+	}
+	
+	
+	let mandatory_room_path = DetermineMandatoryRoomPath(roomconnections, start_room, furthestindex);
+	
+	for (let i = 0; i < mandatory_room_path.length; i++)
+	{
+		let nextindex = mandatory_room_path[i];
+		roommap[nextindex].secret = false;
+	}
+	
+	// add doors and paths between rooms
+	//let door_count = 0;
+	let doors = [];
+	for(let i = 0; i < roomconnections.length; i++)
+	{
+		let tileIndex = 0;
+		
+		// make doors
+		
+		let change = 0;
+		let changeattempt = 0;
+		let changesign = -1;
+		let sides_attempted = 0;
+		let doorApos = { x: 0, y: 0 };
+		let doorBpos = { x: 0, y: 0 };
+		let trynextside = false;
+		
+		let roomAindex = tilemap[roommap[roomconnections[i].start].x + (roommap[roomconnections[i].start].y * w)];
+		
+		let door_side = roomconnections[i].side;
+		let singularDoor = false;
+		let randomy = Math.floor(Math.max(Math.random() * (roommap[roomconnections[i].start].h - 2), 0) + roommap[roomconnections[i].start].y + 2);
+		let randomx = Math.floor(Math.max(Math.random() * (roommap[roomconnections[i].start].w - 2), 0) + roommap[roomconnections[i].start].x + 2);
+		
+		while (sides_attempted < 1 && singularDoor == false)
+		{
+			if (door_side > 1)
+				door_side -= 1;
+			
+			change = Math.floor(changeattempt) * changesign;
+			
+			if (door_side <= 0.25)
+			{
+				doorApos = { x: roommap[roomconnections[i].start].x, y: randomy };
+				
+				if (doorApos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1  && doorApos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
+				{
+					door_side += 0.25;
+					sides_attempted += 0.25;
+					trynextside = true;
+				}
+				else
+				{
+					let index = doorApos.x + 1 + ((doorApos.y + change) * w);
+					if (tilemap[index] == roomconnections[i].endroomid)
+					{
+						let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x + 1, y: doorApos.y + change }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+						doors.push(newdoor);
+						singularDoor = true;
+					}
+					else
+					{
+						index = doorApos.x - 1 + ((doorApos.y + change) * w);
+						if (tilemap[index] == roomconnections[i].endroomid)
+						{
+							let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x - 1, y: doorApos.y + change }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+							doors.push(newdoor);
+							singularDoor = true;
+						}
+						else
+						{
+							index = doorApos.x  + ((doorApos.y + change + 1) * w);
+							if (tilemap[index] == roomconnections[i].endroomid)
+							{
+								let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change + 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+								doors.push(newdoor);
+								singularDoor = true;
+							}
+							else
+							{
+								index = doorApos.x + ((doorApos.y + change - 1) * w);
+								if (tilemap[index] == roomconnections[i].endroomid)
+								{
+									let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change - 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+									doors.push(newdoor);
+									singularDoor = true;
+									
+								}
+								else
+								{
+									changeattempt += 0.5;
+									changesign *= -1;
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (door_side <= 0.5)
+			{
+				doorApos = { x: roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w, y: randomy };
+				
+				if (doorApos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1  && doorApos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
+				{
+					door_side += 0.25;
+					sides_attempted += 0.25;
+					trynextside = true;
+				}
+				else
+				{
+					let index = doorApos.x + 1 + ((doorApos.y + change) * w);
+					if (tilemap[index] == roomconnections[i].endroomid)
+					{
+						let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x + 1, y: doorApos.y + change }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+						doors.push(newdoor);
+						singularDoor = true;
+					}
+					else
+					{
+						index = doorApos.x - 1 + ((doorApos.y + change) * w);
+						if (tilemap[index] == roomconnections[i].endroomid)
+						{
+							let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x - 1, y: doorApos.y + change }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+							doors.push(newdoor);
+							singularDoor = true;
+						}
+						else
+						{
+							index = doorApos.x + ((doorApos.y + change + 1) * w);
+							if (tilemap[index] == roomconnections[i].endroomid)
+							{
+								let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change + 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+								doors.push(newdoor);
+								singularDoor = true;
+							}
+							else
+							{
+								index = doorApos.x + ((doorApos.y + change - 1) * w);
+								if (tilemap[index] == roomconnections[i].endroomid)
+								{
+									let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change - 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+									doors.push(newdoor);
+									singularDoor = true;
+									
+								}
+								else
+								{
+									changeattempt += 0.5;
+									changesign *= -1;
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (door_side <= 0.75)
+			{
+				doorApos = { x: randomx, y: roommap[roomconnections[i].start].y };
+				
+				if (doorApos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1  && doorApos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
+				{
+					door_side += 0.25;
+					sides_attempted += 0.25;
+					trynextside = true;
+				}
+				else
+				{
+					let index = doorApos.x + 1 + change + (doorApos.y * w);
+					if (tilemap[index] == roomconnections[i].endroomid)
+					{
+						let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change + 1, y: doorApos.y }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+						doors.push(newdoor);
+						singularDoor = true;
+					}
+					else
+					{
+						index = doorApos.x - 1 + change + (doorApos.y * w);
+						if (tilemap[index] == roomconnections[i].endroomid)
+						{
+							let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change - 1, y: doorApos.y }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+							doors.push(newdoor);
+							singularDoor = true;
+						}
+						else
+						{
+							index = doorApos.x + change + ((doorApos.y + 1) * w);
+							if (tilemap[index] == roomconnections[i].endroomid)
+							{
+								let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y + 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+								doors.push(newdoor);
+								singularDoor = true;
+							}
+							else
+							{
+								index = doorApos.x + change + ((doorApos.y - 1) * w);
+								if (tilemap[index] == roomconnections[i].endroomid)
+								{
+									let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y - 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+									doors.push(newdoor);
+									singularDoor = true;
+									
+								}
+								else
+								{
+									changeattempt += 0.5;
+									changesign *= -1;
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				doorApos = { x: randomx, y: roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h };
+				
+				if (doorApos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1  && doorApos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
+				{
+					door_side += 0.25;
+					sides_attempted += 0.25;
+					trynextside = true;
+				}
+				else
+				{
+					let index = doorApos.x + 1 + change + (doorApos.y * w);
+					if (tilemap[index] == roomconnections[i].endroomid)
+					{
+						let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change + 1, y: doorApos.y }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+						doors.push(newdoor);
+						singularDoor = true;
+					}
+					else
+					{
+						index = doorApos.x - 1 + change + (doorApos.y * w);
+						if (tilemap[index] == roomconnections[i].endroomid)
+						{
+							let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change - 1, y: doorApos.y }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+							doors.push(newdoor);
+							singularDoor = true;
+						}
+						else
+						{
+							index = doorApos.x + change + ((doorApos.y + 1) * w);
+							if (tilemap[index] == roomconnections[i].endroomid)
+							{
+								let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y + 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+								doors.push(newdoor);
+								singularDoor = true;
+							}
+							else
+							{
+								index = doorApos.x + change + ((doorApos.y - 1) * w);
+								if (tilemap[index] == roomconnections[i].endroomid)
+								{
+									let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y - 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
+									doors.push(newdoor);
+									singularDoor = true;
+									
+								}
+								else
+								{
+									changeattempt += 0.5;
+									changesign *= -1;
+								}
+							}
+						}
+					}
+				}
+			}
+		
+			if (trynextside)
+			{
+				trynextside = false;
+				change = 0;
+				changeattempt = 0;
+				changesign = -1;
+			}
+		}
+		
+		if (sides_attempted >= 1)
+		{
+			let path_start = { x: Math.floor(roommap[roomconnections[i].start].x + (roommap[roomconnections[i].start].w / 2)), y: Math.floor(roommap[roomconnections[i].start].y + (roommap[roomconnections[i].start].h / 2)) };
+			let path_end = { x: Math.floor(roommap[roomconnections[i].end].x + (roommap[roomconnections[i].end].w / 2)), y: Math.floor(roommap[roomconnections[i].end].y + (roommap[roomconnections[i].end].h / 2)) };
+			let corridor_path = DrawnMapPathToPosition(path_start, path_end, tilemap, w, h);
+			
+			for (let i = 0; i < corridor_path.length; i++)
+			{
+				let tileIndex = corridor_path[i].x + (corridor_path[i].y * w);
+				if (tilemap[tileIndex] == "unknown")
+				{
+					tilemap[tileIndex] = "corridor";
+				}
+				if (i < corridor_path.length - 2)
+				{
+					let tileIndex2 = corridor_path[i+1].x + (corridor_path[i+1].y * w)
+					if (tilemap[tileIndex] != tilemap[tileIndex2] && ((tilemap[tileIndex] == "corridor" && tilemap[tileIndex2] != "unknown") || (tilemap[tileIndex] != "corridor" && tilemap[tileIndex2] == "unknown")))
+					{
+						let roomB = tilemap[tileIndex] == "unknown" ? "corridor" : tilemap[tileIndex];
+						let secretA = !isNaN(tilemap[corridor_path[i].x + (corridor_path[i].y * w)]) ? roommap[tilemap[corridor_path[i].x + (corridor_path[i].y * w)]].secret : false;
+						let secretB = !isNaN(tilemap[corridor_path[i+1].x + (corridor_path[i+1].y * w)]) ? roommap[tilemap[corridor_path[i+1].x + (corridor_path[i+1].y * w)]].secret : false;
+						let newdoor = { A: { x: corridor_path[i].x, y: corridor_path[i].y }, B: { x: corridor_path[i+1].x, y: corridor_path[i+1].y }, secret: secretA || secretB, roomA: tilemap[corridor_path[i].x + (corridor_path[i].y * w)], roomB: roomB }
+						doors.push(newdoor);
+					}
+				}
+			}
+		}
+	}
+	
+	
+	for(let i = 0; i < roommap.length; i++)
+	{
+		let tileIndex = 0;
+		
+		// make more doors
+		
+		let change = 0;
+		let changeattempt = 0;
+		let changesign = -1;
+		let sides_attempted = 0;
+		let doorApos = { x: 0, y: 0 };
+		let doorBpos = { x: 0, y: 0 };
+		let trynextside = false;
+		
+		let door_side = Math.random();
+		let singularDoor = false;
+		let randomy = Math.floor(Math.max(Math.random() * (roommap[i].h - 2), 0) + roommap[i].y + 2);
+		let randomx = Math.floor(Math.max(Math.random() * (roommap[i].w - 2), 0) + roommap[i].x + 2);
+		
+		index = roommap[i].x + (roommap[i].y * w);
+		let door_id = tilemap[index];
+		
+		while (sides_attempted < 1 && singularDoor == false)
+		{
+			if (door_side > 1)
+				door_side -= 1;
+			
+			change = Math.floor(changeattempt) * changesign;
+			
+			if (door_side <= 0.25)
+			{
+				doorApos = { x: roommap[i].x, y: randomy };
+				
+				if (doorApos.y + Math.abs(change) > roommap[i].y + roommap[i].h - 1  && doorApos.y - Math.abs(change) < roommap[i].y + 1)
+				{
+					door_side += 0.25;
+					sides_attempted += 0.25;
+					trynextside = true;
+				}
+				else
+				{
+					let index = doorApos.x + 1 + ((doorApos.y + change) * w);
+					if (doorApos.x + 1 < w &&  doorApos.y + change > -1 && doorApos.y + change < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+					{
+						let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+						let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x + 1, y: doorApos.y + change }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+						doors.push(newdoor);
+						singularDoor = true;
+					}
+					else
+					{
+						index = doorApos.x - 1 + ((doorApos.y + change) * w);
+						if (doorApos.x - 1 > 0 &&  doorApos.y + change > -1 && doorApos.y + change < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+						{
+							let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+							let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x - 1, y: doorApos.y + change }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+							doors.push(newdoor);
+							singularDoor = true;
+						}
+						else
+						{
+							index = doorApos.x + ((doorApos.y + change + 1) * w);
+							if (doorApos.y + change + 1 > -1 && doorApos.y + change + 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+							{
+								let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+								let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change + 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+								doors.push(newdoor);
+								singularDoor = true;
+							}
+							else
+							{
+								index = doorApos.x + ((doorApos.y + change - 1) * w);
+								if (doorApos.y + change - 1 > -1 && doorApos.y + change - 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+								{
+									let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+									let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change - 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+									doors.push(newdoor);
+									singularDoor = true;
+									
+								}
+								else
+								{
+									changeattempt += 0.5;
+									changesign *= -1;
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (door_side <= 0.5)
+			{
+				doorApos = { x: roommap[i].x + roommap[i].w - 1, y: randomy };
+				
+				if (doorApos.y + Math.abs(change) > roommap[i].y + roommap[i].h - 1  && doorApos.y - Math.abs(change) < roommap[i].y + 1)
+				{
+					door_side += 0.25;
+					sides_attempted += 0.25;
+					trynextside = true;
+				}
+				else
+				{
+					let index = doorApos.x + 1 + ((doorApos.y + change) * w);
+					if (doorApos.x + 1 < w &&  doorApos.y + change > -1 && doorApos.y + change < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+					{
+						let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+						let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x + 1, y: doorApos.y + change }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+						doors.push(newdoor);
+						singularDoor = true;
+					}
+					else
+					{
+						index = doorApos.x + ((doorApos.y + change + 1) * w);
+						if (doorApos.y + change + 1 > 1 && doorApos.y + change + 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+						{
+							let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+							let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x - 1, y: doorApos.y + change }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+							doors.push(newdoor);
+							singularDoor = true;
+						}
+						else
+						{
+							index = doorApos.x + ((doorApos.y + change + 1) * w);
+							if (doorApos.y + change + 1 > -1 && doorApos.y + change + 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+							{
+								let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+								let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change + 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+								doors.push(newdoor);
+								singularDoor = true;
+							}
+							else
+							{
+								index = doorApos.x + ((doorApos.y + change - 1) * w);
+								if (doorApos.y + change - 1 > -1 && doorApos.y + change - 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+								{
+									let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+									let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change - 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+									doors.push(newdoor);
+									singularDoor = true;
+									
+								}
+								else
+								{
+									changeattempt += 0.5;
+									changesign *= -1;
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (door_side <= 0.75)
+			{
+				doorApos = { x: randomx, y: roommap[i].y };
+				
+				if (doorApos.x + Math.abs(change) > roommap[i].x + roommap[i].w - 1  && doorApos.x - Math.abs(change) < roommap[i].x + 1)
+				{
+					door_side += 0.25;
+					sides_attempted += 0.25;
+					trynextside = true;
+				}
+				else
+				{
+					let index = doorApos.x + 1 + change + (doorApos.y * w);
+					if (doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+					{
+						let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+						let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change + 1, y: doorApos.y }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+						doors.push(newdoor);
+						singularDoor = true;
+					}
+					else
+					{
+						index = doorApos.x - 1 + change + (doorApos.y * w);
+						if (doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+						{
+							let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+							let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change - 1, y: doorApos.y }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+							doors.push(newdoor);
+							singularDoor = true;
+						}
+						else
+						{
+							index = doorApos.x + change + ((doorApos.y + 1) * w);
+							if (doorApos.y + 1 < h && doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+							{
+								let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+								let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y + 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+								doors.push(newdoor);
+								singularDoor = true;
+							}
+							else
+							{
+								index = doorApos.x + change + ((doorApos.y - 1) * w);
+								if (doorApos.y - 1 > -1 && doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+								{
+									let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+									let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y - 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+									doors.push(newdoor);
+									singularDoor = true;
+									
+								}
+								else
+								{
+									changeattempt += 0.5;
+									changesign *= -1;
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				doorApos = { x: randomx, y: roommap[i].y + roommap[i].h - 1 };
+				
+				if (doorApos.x + Math.abs(change) > roommap[i].x + roommap[i].w - 1  && doorApos.x - Math.abs(change) < roommap[i].x + 1)
+				{
+					door_side += 0.25;
+					sides_attempted += 0.25;
+					trynextside = true;
+				}
+				else
+				{
+					let index = doorApos.x + 1 + change + (doorApos.y * w);
+					if (doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+					{
+						let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+						let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change + 1, y: doorApos.y }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+						doors.push(newdoor);
+						singularDoor = true;
+					}
+					else
+					{
+						index = doorApos.x - 1 + change + (doorApos.y * w);
+						if (doorApos.x + change - 1 < w && doorApos.x + change - 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+						{
+							let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+							let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change - 1, y: doorApos.y }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+							doors.push(newdoor);
+							singularDoor = true;
+						}
+						else
+						{
+							index = doorApos.x + change + ((doorApos.y + 1) * w);
+							if (doorApos.y + 1 < h && doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+							{
+								let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+								let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y + 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+								doors.push(newdoor);
+								singularDoor = true;
+							}
+							else
+							{
+								index = doorApos.x + change + ((doorApos.y - 1) * w);
+								if (doorApos.y - 1 > -1 && doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
+								{
+									let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
+									let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y - 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
+									doors.push(newdoor);
+									singularDoor = true;
+									
+								}
+								else
+								{
+									changeattempt += 0.5;
+									changesign *= -1;
+								}
+							}
+						}
+					}
+				}
+			}
+		
+			if (trynextside)
+			{
+				trynextside = false;
+				change = 0;
+				changeattempt = 0;
+				changesign = -1;
+			}
+		}
+	}
+	
+	for (let i = 0; i < doors.length; i++)
+	{
+		console.log(doors[i].roomA + " -> " + doors[i].roomB);
+		if (doors[i].roomA == "unknown" || doors[i].roomA == "unknown" || (doors[i].roomA == "corridor" && doors[i].roomB == "corridor"))
+		{
+			debug.push({ x: doors[i].A.x, y: doors[i].A.y, letter: "D" });
+			doors.splice(i, 1);
+			i--;
+		}
+	}
+	
+	return {tilemap: tilemap, doors: doors, debugmarks: debug};
+}
+
+
+function DrawDrawnDungeonMap(channel, arguments)
+{
+	let w = 32;
+	let h = 24;
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			w = parseInt(arguments[argumentpos+1]);
+		if (w > DUNGEONMAP_MAX_WIDTH)
+			w = DUNGEONMAP_MAX_WIDTH;
+		if (w < DUNGEONMAP_MIN_WIDTH)
+			w = DUNGEONMAP_MIN_WIDTH;
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			h = parseInt(arguments[argumentpos+1]);
+		if (h > DUNGEONMAP_MAX_HEIGHT)
+			h = DUNGEONMAP_MAX_HEIGHT;
+		if (h < DUNGEONMAP_MIN_HEIGHT)
+			h = DUNGEONMAP_MIN_HEIGHT;
+	}
+	
+	let fullmap = GenerateDrawnDungeonMap(arguments);
+	//let fullmap = { tilemap: [], doors: [] };
+	//fullmap.tilemap = GenerateDungeonMap(arguments);
+	
+	let leftcut = 0;
+	let bottomcut = 0;
+	
+	let cut = 0;
+	let stopcut = false;
+	
+	for (let y = 0; y < h && !stopcut; y++)
+	{
+		for (let x = 0; x < w && !stopcut; x++)
+		{
+			let index = x + (y * w);
+			cut++;
+			if (fullmap.tilemap[index] != "unknown" && fullmap.tilemap[index] != "closed")
+			{
+				cut--;
+				stopcut = true;
+			}
+		}
+	}
+	
+	bottomcut = Math.floor(cut / w);
+	
+	for (let y = h - 1; y > 0 && !stopcut; y--)
+	{
+		for (let x = 0; x < w && !stopcut; x++)
+		{
+			let index = x + (y * w);
+			cut++;
+			if (fullmap.tilemap[index] != "unknown" && fullmap.tilemap[index] != "closed")
+			{
+				cut--;
+				stopcut = true;
+			}
+		}
+	}
+	
+	let canvash = h - Math.floor(cut / w);
+	
+	for (let x = 0; x < w && !stopcut; x++)
+	{
+		for (let y = 0; y < h && !stopcut; y++)
+		{
+			let index = x + (y * w);
+			cut++;
+			if (fullmap.tilemap[index] != "unknown" && fullmap.tilemap[index] != "closed")
+			{
+				cut--;
+				stopcut = true;
+			}
+		}
+	}
+	
+	leftcut = Math.floor(cut / h);
+	
+	for (let x = w - 1; x > 0 && !stopcut; x--)
+	{
+		for (let y = 0; y < h -0 && !stopcut; y++)
+		{
+			let index = x + (y * w);
+			cut++;
+			if (fullmap.tilemap[index] != "unknown" && fullmap.tilemap[index] != "closed")
+			{
+				cut--;
+				stopcut = true;
+			}
+		}
+	}
+	
+	let canvasw = w - Math.floor(cut / h);
+	
+	let tempcanvas = new Canvas();
+	tempcanvas.width = (canvasw - leftcut) * 100;
+	tempcanvas.height = (canvash - bottomcut) * 100;
+	
+	console.log(leftcut)
+	console.log(bottomcut)
+	console.log(canvash)
+	console.log(canvasw)
+	
+	if (tempcanvas.getContext)
+	{
+		let ctx = tempcanvas.getContext('2d');
+		
+		let closed_color = '#5693BA';
+		let open_color = '#FFFFFF'
+		let grid_color = '#A9CBDD'
+		
+		
+		
+		
+		//ctx.fillStyle = closed_color;
+		//ctx.fillRect(0,0,(canvasw - leftcut) * 100,(canvash - bottomcut) * 100);
+		
+		ctx.fillStyle = open_color;
+		ctx.fillRect(0,0,(canvasw - leftcut) * 100,(canvash - bottomcut) * 100);
+		
+		ctx.strokeStyle = grid_color;
+		ctx.lineWidth = 4;
+		
+		for (let y = 2; y < h-1; y++)
+		{
+			ctx.beginPath();
+			ctx.moveTo(100, y * 100);
+			ctx.lineTo((w-1) * 100, y * 100);
+			ctx.closePath();
+			ctx.stroke();
+		}
+		
+		for (let x = 2; x < w-1; x++)
+		{
+			ctx.beginPath();
+			ctx.moveTo(x * 100, 100);
+			ctx.lineTo(x * 100,(h-1) * 100);
+			ctx.closePath();
+			ctx.stroke();
+		}
+		
+		ctx.fillStyle = open_color;
+		ctx.strokeStyle = closed_color;
+
+		ctx.lineWidth = 8;
+		let tilesdrawn = [];
+		for (let y = 0; y < h; y++)
+		{
+			for (let x = 0; x < w; x++)
+			{
+				
+				
+				let current_tile = { x: x, y: y };
+				let index = current_tile.x + (current_tile.y * w);
+				
+				let current_room_id = fullmap.tilemap[index];
+				
+				if (current_room_id == "unknown")
+					ctx.fillStyle = closed_color;
+				else
+					ctx.fillStyle = open_color;
+				
+				//get topmost cell of shape
+				let check_tile = { x: x, y: y - 1 };
+				let continue_loop = true;
+				while (check_tile.y > -1 && continue_loop)
+				{
+					continue_loop = false;
+					index = check_tile.x + (check_tile.y * w);
+					if (fullmap.tilemap[index] == current_room_id)
+					{
+						current_tile.y--;
+						continue_loop = true;
+					}
+					
+					check_tile.y = current_tile.y - 1;
+				}
+				
+				index = current_tile.x + (current_tile.y * w);
+				if (!tilesdrawn.includes(index))
+				{
+					let startpoint = { x: current_tile.x * 100, y: current_tile.y*100 };
+					let currentpoint = { x: startpoint.x, y: startpoint.y }
+					let point_position = 0;
+					ctx.beginPath();
+					ctx.moveTo(startpoint.x, startpoint.y)
+					//console.log(x + ", " + y);
+					//console.log(startpoint);
+					//console.log(ctx.fillStyle);
+					//console.log(current_room_id);
+					let finished = false;
+					do
+					{
+						while (point_position == 0 && finished == false)
+						{
+							//console.log("loop 0");
+							check_tile.x = current_tile.x + 1;
+							check_tile.y = current_tile.y - 1;
+							index = check_tile.x + (check_tile.y * w);
+							if (check_tile.y > -1 && check_tile.x < w && fullmap.tilemap[index] == current_room_id)
+							{
+								currentpoint = { x: (current_tile.x + 1) * 100, y: current_tile.y * 100};
+								ctx.lineTo(currentpoint.x, currentpoint.y);
+								current_tile.x++;
+								current_tile.y--;
+								index = current_tile.x + (current_tile.y * w);
+								if (!tilesdrawn.includes(index))
+								{
+									tilesdrawn.push(index);
+								}
+								point_position = 3;
+							}
+							else 
+							{
+								check_tile.x = current_tile.x + 1;
+								check_tile.y = current_tile.y;
+								index = check_tile.x + (check_tile.y * w);
+								if (check_tile.x < w && fullmap.tilemap[index] == current_room_id)
+								{
+									current_tile.x++;
+									index = current_tile.x + (current_tile.y * w);
+									if (!tilesdrawn.includes(index))
+									{
+										tilesdrawn.push(index);
+									}
+									currentpoint = { x: current_tile.x * 100, y: current_tile.y * 100};
+									ctx.lineTo(currentpoint.x, currentpoint.y);
+								}
+								else
+								{
+									currentpoint = { x: (current_tile.x + 1) * 100, y: current_tile.y * 100};
+									ctx.lineTo(currentpoint.x, currentpoint.y);
+									point_position = 1;
+								}
+							}
+							if (currentpoint.x == startpoint.x && currentpoint.y == startpoint.y)
+								finished = true;
+						}
+						
+						while (point_position == 1 && finished == false)
+						{
+							//console.log("loop 1");
+							check_tile.x = current_tile.x + 1;
+							check_tile.y = current_tile.y + 1;
+							index = check_tile.x + (check_tile.y * w);
+							if (check_tile.y < h && check_tile.x < w && fullmap.tilemap[index] == current_room_id)
+							{
+								currentpoint = { x: (current_tile.x + 1) * 100, y: (current_tile.y + 1) * 100};
+								ctx.lineTo(currentpoint.x, currentpoint.y);
+								current_tile.x++;
+								current_tile.y++;
+								index = current_tile.x + (current_tile.y * w);
+								if (!tilesdrawn.includes(index))
+								{
+									tilesdrawn.push(index);
+								}
+								point_position = 0;
+							}
+							else 
+							{
+								check_tile.x = current_tile.x;
+								check_tile.y = current_tile.y + 1;
+								index = check_tile.x + (check_tile.y * w);
+								if (check_tile.y < h && fullmap.tilemap[index] == current_room_id)
+								{
+									current_tile.y++;
+									index = current_tile.x + (current_tile.y * w);
+									if (!tilesdrawn.includes(index))
+									{
+										tilesdrawn.push(index);
+									}
+									currentpoint = { x: (current_tile.x + 1) * 100, y: current_tile.y * 100};
+									ctx.lineTo(currentpoint.x, currentpoint.y);
+								}
+								else
+								{
+									currentpoint = { x: (current_tile.x + 1) * 100, y: (current_tile.y + 1) * 100};
+									ctx.lineTo(currentpoint.x, currentpoint.y);
+									point_position = 2;
+								}
+							}
+							if (currentpoint.x == startpoint.x && currentpoint.y == startpoint.y)
+								finished = true;
+						}
+						
+						while (point_position == 2 && finished == false)
+						{
+							//console.log("loop 2");
+							check_tile.x = current_tile.x - 1;
+							check_tile.y = current_tile.y + 1;
+							index = check_tile.x + (check_tile.y * w);
+							if (check_tile.y < h && check_tile.x > - 1 && fullmap.tilemap[index] == current_room_id)
+							{
+								currentpoint = { x: current_tile.x * 100, y: (current_tile.y + 1) * 100};
+								ctx.lineTo(currentpoint.x, currentpoint.y);
+								current_tile.x--;
+								current_tile.y++;
+								index = current_tile.x + (current_tile.y * w);
+								if (!tilesdrawn.includes(index))
+								{
+									tilesdrawn.push(index);
+								}
+								point_position = 1;
+							}
+							else 
+							{
+								check_tile.x = current_tile.x - 1;
+								check_tile.y = current_tile.y;
+								index = check_tile.x + (check_tile.y * w);
+								if (check_tile.x > -1 && fullmap.tilemap[index] == current_room_id)
+								{
+									current_tile.x--;
+									index = current_tile.x + (current_tile.y * w);
+									if (!tilesdrawn.includes(index))
+									{
+										tilesdrawn.push(index);
+									}
+									currentpoint = { x: (current_tile.x + 1) * 100, y: (current_tile.y + 1) * 100};
+									ctx.lineTo(currentpoint.x, currentpoint.y);
+								}
+								else
+								{
+									currentpoint = { x: current_tile.x * 100, y: (current_tile.y + 1) * 100};
+									ctx.lineTo(currentpoint.x, currentpoint.y);
+									point_position = 3;
+								}
+							}
+							if (currentpoint.x == startpoint.x && currentpoint.y == startpoint.y)
+								finished = true;
+						}
+						
+						
+						while (point_position == 3 && finished == false)
+						{
+							//console.log("loop 3");
+							check_tile.x = current_tile.x - 1;
+							check_tile.y = current_tile.y - 1;
+							index = check_tile.x + (check_tile.y * w);
+							if (check_tile.y > -1 && check_tile.x > -1 && fullmap.tilemap[index] == current_room_id)
+							{
+								currentpoint = { x: current_tile.x * 100, y: current_tile.y * 100};
+								ctx.lineTo(currentpoint.x, currentpoint.y);
+								current_tile.x--;
+								current_tile.y--;
+								index = current_tile.x + (current_tile.y * w);
+								if (!tilesdrawn.includes(index))
+								{
+									tilesdrawn.push(index);
+								}
+								point_position = 2;
+							}
+							else 
+							{
+								check_tile.x = current_tile.x;
+								check_tile.y = current_tile.y - 1;
+								index = check_tile.x + (check_tile.y * w);
+								if (check_tile.y > -1 && fullmap.tilemap[index] == current_room_id)
+								{
+									current_tile.y--;
+									index = current_tile.x + (current_tile.y * w);
+									if (!tilesdrawn.includes(index))
+									{
+										tilesdrawn.push(index);
+									}
+									currentpoint = { x: current_tile.x * 100, y: (current_tile.y + 1) * 100};
+									ctx.lineTo(currentpoint.x, currentpoint.y);
+								}
+								else
+								{
+									currentpoint = { x: current_tile.x * 100, y: current_tile.y * 100};
+									ctx.lineTo(currentpoint.x, currentpoint.y);
+									point_position = 0;
+								}
+							}
+							if (currentpoint.x == startpoint.x && currentpoint.y == startpoint.y)
+								finished = true;
+						}
+					} while (finished == false);
+					
+					ctx.closePath();
+					if (current_room_id == "unknown")
+						ctx.fill();
+					ctx.stroke();
+				}
+			}
+		}
+		
+		
+		for (let i = 0; i < fullmap.doors.length; i++)
+		{
+			let doorposition = { x: fullmap.doors[i].A.x * 100, y: fullmap.doors[i].A.y * 100 };
+			let offset = { x: fullmap.doors[i].A.x - fullmap.doors[i].B.x, y: fullmap.doors[i].A.y - fullmap.doors[i].B.y };
+			ctx.strokeStyle = '#000000';
+			ctx.fillStyle = '#FFFFFF';
+			ctx.font = "60px sans-serif";
+			if (offset.x == 0)
+			{
+				if (fullmap.doors[i].secret) // 32x45
+				{
+					ctx.strokeStyle = grid_color;
+					doorposition.x += offset.x * -50 + 20;
+					doorposition.y += offset.y * -50 + 40;
+					ctx.fillRect(doorposition.x, doorposition.y, 60, 20);
+					ctx.strokeRect(doorposition.x, doorposition.y, 60, 20);
+					ctx.fillStyle = '#000000';
+					doorposition.x += 14;
+					doorposition.y += 30;
+					ctx.fillText("S", doorposition.x, doorposition.y);
+					//ctx.strokeText("S", doorposition.x, doorposition.y)
+				}
+				else
+				{
+					doorposition.x += offset.x * -50 + 20;
+					doorposition.y += offset.y * -50 + 40;
+					ctx.fillRect(doorposition.x, doorposition.y, 60, 20);
+					ctx.strokeRect(doorposition.x, doorposition.y, 60, 20);
+				}
+			}
+			else
+			{
+				if (fullmap.doors[i].secret)
+				{
+					ctx.strokeStyle = grid_color;
+					doorposition.x += offset.x * -50 + 40;
+					doorposition.y += offset.y * -50 + 20;
+					ctx.fillRect(doorposition.x, doorposition.y, 20, 60);
+					ctx.strokeRect(doorposition.x, doorposition.y, 20, 60);
+					ctx.fillStyle = '#000000';
+					doorposition.x -= 6;
+					doorposition.y += 50;
+					ctx.fillText("S", doorposition.x, doorposition.y);
+					//ctx.strokeText("S", doorposition.x, doorposition.y)
+				}
+				else
+				{
+					doorposition.x += offset.x * -50 + 40;
+					doorposition.y += offset.y * -50 + 20;
+					ctx.fillRect(doorposition.x, doorposition.y, 20, 60);
+					ctx.strokeRect(doorposition.x, doorposition.y, 20, 60);
+				}
+			}
+		}
+		
+		for (let i = 0; i < fullmap.debugmarks.length; i++)
+		{
+			ctx.fillStyle = '#CC0000';
+			let xpos = (fullmap.debugmarks[i].x * 100) + 35;
+			let ypos = (fullmap.debugmarks[i].y * 100) + 70;
+			ctx.fillText(fullmap.debugmarks[i].letter, xpos, ypos);
+		}
+		
+		
+		//output file
+		let file = 'drawndungeonmap.png';
+		let path = './' + file;
+		
+		let b64 = tempcanvas.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			console.log('The drawndungeonmap has been saved!');
+			channel.send({ files: [{ attachment: path, name: file }] });
+		})
+	}
+}
 
 //
 // save/load currentgay variable
