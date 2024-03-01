@@ -23165,8 +23165,9 @@ function DrawDrawnDungeonMap(channel, arguments)
 			}
 		}
 		
-		
-		ctx.font = "60px sans-serif";
+		let secret_symbol = new Image(20,27);
+		secret_symbol.src = "./secret.svg"
+		//ctx.font = "60px sans-serif";
 		ctx.lineWidth = 8;
 		for (let i = 0; i < fullmap.doors.length; i++)
 		{
@@ -23186,7 +23187,8 @@ function DrawDrawnDungeonMap(channel, arguments)
 					ctx.fillStyle = '#000000';
 					doorposition.x += 14;
 					doorposition.y += 30;
-					ctx.fillText("S", doorposition.x, doorposition.y);
+					ctx.drawImage(secret_symbol, doorposition.x + 6, doorposition.y - 32); // done!
+					//ctx.fillText("S", doorposition.x, doorposition.y);
 					//ctx.strokeText("S", doorposition.x, doorposition.y)
 				}
 				else
@@ -23209,7 +23211,8 @@ function DrawDrawnDungeonMap(channel, arguments)
 					ctx.fillStyle = '#000000';
 					doorposition.x -= 6;
 					doorposition.y += 50;
-					ctx.fillText("S", doorposition.x, doorposition.y);
+					ctx.drawImage(secret_symbol, doorposition.x + 6, doorposition.y - 32)
+					//ctx.fillText("S", doorposition.x, doorposition.y);
 					//ctx.strokeText("S", doorposition.x, doorposition.y)
 				}
 				else
