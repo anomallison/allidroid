@@ -1,0 +1,43 @@
+{
+	"buildings":
+	[
+		{
+			"height": 172,
+			"width": 191,
+			"path": "./citygen_svg/L_building.svg"
+		},
+		{
+			"height": 97,
+			"width": 97,
+			"path": "./citygen_svg/square_building.svg"
+		},
+		{
+			"height": 131,
+			"width": 173,
+			"path": "./citygen_svg/building_0.svg"
+		},
+		{
+			"height": 99,
+			"width": 173,
+			"path": "./citygen_svg/building_1.svg"
+		}
+	],
+	"rarebuildings":
+	[
+		{
+			"height": 153,
+			"width": 153,
+			"path": "./citygen_svg/building_2.svg"
+		},
+		{
+			"height": 246,
+			"width": 189,
+			"path": "./citygen_svg/building_3.svg"
+		},
+		{
+			"height": 184,
+			"width": 312,
+			"path": "./citygen_svg/building_4.svg"
+		}
+	]
+}

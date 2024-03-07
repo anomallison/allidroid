@@ -1,7 +1,7 @@
 ////////
 //
 // written by AnomAllison
-// last updated 27/05/2023
+// last updated 06/03/2024
 //
 // I hope Allidroid can bring people some humour and entertainment
 //
@@ -19,6 +19,7 @@ const mergeImages = require('merge-images');
 const { Canvas, Image } = require('canvas');
 
 const paper = require('paper-jsdom-canvas');
+const { PaperOffset } = require('paperjs-offset');
 
 const Voronoi = require('voronoi');
 
@@ -88,6 +89,10 @@ var blaseballer_gen = JSON.parse(fs.readFileSync('blaseballer_gen.json'));
 //city generator files
 var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
 var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
+
+
+//citygen svg files
+var citygen_svg = JSON.parse(fs.readFileSync('citygen_svg/citygen_svg.json'));
 
 //adventure simulator files
 var adventure_sim = JSON.parse(fs.readFileSync('adventuresim.json'));
@@ -855,10 +860,7 @@ async function processCommand(receivedMessage)
     } else if (normalizedCommand == "outputadventureworldmap") 
 	{
 		outputAdventureWorldMap(receivedMessage.channel,arguments);
-    }else if (normalizedCommand == "generatecity") 
-	{
-		generateCityMap(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "generatevillage") 
+    }else if (normalizedCommand == "generatevillage") 
 	{
 		generateHexCity(receivedMessage.channel,arguments);
     } 
@@ -897,6 +899,10 @@ async function processCommand(receivedMessage)
 	{
 		DrawVoronoiMapMap(receivedMessage.channel,arguments);
 	}
+	/*else if (normalizedCommand == "voronoicity")
+	{
+		DrawVoronoiCity(receivedMessage.channel,arguments);
+	}*/
 	else if (normalizedCommand == "battleships") 
 	{
 		PlayBattleshipsGame(receivedMessage.channel, arguments);
@@ -1068,11 +1074,6 @@ function helpCommand(user, arguments)
 	{
 		help_string = fs.readFileSync('help_generatemap.txt').toString();
 		//user.send({ files: [{ attachment: './help_generatemap.txt', name: 'help_generatemap.txt' }] });
-	}
-	else if (arguments[0] == "!generatecity" || arguments[0] == "generatecity")
-	{
-		help_string = fs.readFileSync('help_generatecity.txt').toString();
-		//user.send({ files: [{ attachment: './help_generatecity.txt', name: 'help_generatecity.txt' }] });
 	}
 	else if (arguments[0] == "!generatevillage" || arguments[0] == "generatevillage")
 	{
@@ -9596,542 +9597,6 @@ function isRoadAdjacent(map, mapwidth, mapheight, xpos, ypos)
 	return false;
 }
 
-let MAX_CITY_HEIGHT = 200;
-let MAX_CITY_WIDTH = 150;
-
-function generateCityMap(channel, arguments)
-{
-	let premapmap = []
-	
-	let map_height = 60;
-	let map_width = 80;
-	
-	let main_road_count = 3;
-	
-	if (arguments != null)
-	{
-		if (!isNaN(arguments[1]))
-			map_height = Math.floor(arguments[1]);
-		if (!isNaN(arguments[0]))
-			map_width = Math.floor(arguments[0]);
-		if (!isNaN(arguments[2]))
-			main_road_count = Math.floor(arguments[2]);
-		else
-			main_road_count = Math.floor(Math.random()*(map_height+map_width)/50)+2;
-	}
-	
-	if (map_width < 1)
-		return null;
-	if (map_height < 1)
-		return null;
-	if (main_road_count < 1)
-		return null;
-	
-	map_height = Math.min(map_height,MAX_CITY_HEIGHT);
-	map_width = Math.min(map_width,MAX_CITY_WIDTH);
-	
-	for (let y = 0; y < map_height; y++)
-	{
-		for (let x = 0; x < map_width; x++)
-		{
-			premapmap.push("");
-		}
-	}
-	
-	let town_centre = { x: Math.floor(map_width/2+Math.random()*6)-3, y: Math.floor(map_height/2+Math.random()*6)-3};
-	
-	//spremapmap[town_centre.x+town_centre.y*map_width] = { path: "./city_gen/centerpoint.png", width: 1, height: 1, x: town_centre.x, y: town_centre.y };
-	
-	let map_hypotenuse = Math.sqrt(map_height*map_height+map_width*map_width);
-	let offshootroadpoints = [];
-	let initialdirections = [0,2,1,3];
-	
-	for (let i = 0; i < main_road_count; i++)
-	{
-		let next_offshootroadpoint = Math.floor(Math.random()*8)+4;
-		let road_length = Math.floor(Math.random()*(map_hypotenuse)/2+Math.random()*(map_hypotenuse)/2)+map_hypotenuse/3;
-		let initial_direction = initialdirections[i%initialdirections.length];
-		initial_direction += (Math.random()*2)-1;
-		
-		if (initial_direction < 0)
-			initial_direction = initial_direction+4;
-		if (initial_direction > 3)
-			initial_direction = initial_direction-4;
-			
-		let current_road_position = { x: town_centre.x, y: town_centre.y };
-		let directionchange = 0;
-		
-		while (road_length > 0)
-		{
-			let direction = Math.floor(initial_direction);
-			directionchange += initial_direction - Math.floor(initial_direction);
-			
-			if (directionchange <= -1)
-			{
-				direction--;
-				directionchange++;
-			}
-			else if (directionchange >= 1)
-			{
-				direction++;
-				directionchange--;
-			}
-			
-			if (direction < 0)
-				direction = direction+4;
-			if (direction > 3)
-				direction = direction-4;
-			
-			if (direction == 3)
-			{
-				current_road_position.y++;
-			}
-			else if (direction == 2)
-			{
-				current_road_position.x++;
-			}
-			else if (direction == 1)
-			{
-				current_road_position.y--;
-			}
-			else if (direction == 0)
-			{
-				current_road_position.x--;
-			}
-			if (current_road_position.y < map_height && current_road_position.y > -1 && current_road_position.x < map_width && current_road_position.x > -1)
-			{
-				premapmap[current_road_position.x + (current_road_position.y*map_width)] = "r";
-			}
-			else
-			{
-				road_length = 0;
-			}
-			next_offshootroadpoint--;
-			if (next_offshootroadpoint == 0)
-			{
-				let offshootdirection = initial_direction;
-				if (Math.random() < 0.5)
-					offshootdirection++;
-				else
-					offshootdirection--;
-				
-				if (offshootdirection < 0)
-					offshootdirection = offshootdirection+4;
-				if (offshootdirection > 3)
-					offshootdirection = offshootdirection-4;
-				
-				offshootroadpoints.push( { x: current_road_position.x, y: current_road_position.y, initialdirection: offshootdirection, nested: 0 } );
-				next_offshootroadpoint = Math.floor(Math.random()*8)+4;
-			}
-			road_length--;
-		}
-	}
-	
-	let max_nesting = 4;
-	
-	for(let i = 0; i < offshootroadpoints.length; i++)
-	{
-		let next_offshootroadpoint = Math.floor(Math.random()*24)+5;
-		let road_length = Math.floor(Math.random()*27)+4;
-		let initial_direction = offshootroadpoints[i].initialdirection;
-		let current_road_position = { x: offshootroadpoints[i].x, y: offshootroadpoints[i].y };
-		let directionchange = 0;
-		let nesting = offshootroadpoints[i].nested;
-		while (road_length > 0)
-		{
-			let direction = Math.floor(initial_direction);
-			directionchange += initial_direction - Math.floor(initial_direction);
-			
-			if (directionchange <= -1)
-			{
-				direction--;
-				directionchange++;
-			}
-			else if (directionchange >= 1)
-			{
-				direction++;
-				directionchange--;
-			}
-			
-			if (direction < 0)
-				direction = direction+4;
-			if (direction > 3)
-				direction = direction-4;
-			
-			if (direction == 0)
-			{
-				current_road_position.y++;
-			}
-			else if (direction == 1)
-			{
-				current_road_position.x++;
-			}
-			else if (direction == 2)
-			{
-				current_road_position.y--;
-			}
-			else if (direction == 3)
-			{
-				current_road_position.x--;
-			}
-			if (current_road_position.y < map_height && current_road_position.y > -1 && current_road_position.x < map_width && current_road_position.x > -1)
-			{
-				premapmap[current_road_position.x + (current_road_position.y*map_width)] = "r";
-			}
-			else
-			{
-				road_length = 0;
-			}
-			next_offshootroadpoint--;
-			if (next_offshootroadpoint == 0 && nesting < max_nesting)
-			{
-				let offshootdirection = initial_direction;
-				if (Math.random() < 0.5)
-					offshootdirection++;
-				else
-					offshootdirection--;
-				
-				if (offshootdirection < 0)
-					offshootdirection = offshootdirection+4;
-				if (offshootdirection > 3)
-					offshootdirection = offshootdirection-4;
-				
-				offshootroadpoints.push( { x: current_road_position.x, y: current_road_position.y, initialdirection: offshootdirection, nested:nesting+1 } );
-				next_offshootroadpoint = Math.floor(Math.random()*12)+7;
-			}
-			road_length--;
-		}
-	}
-	
-	let churchcount = 0;
-	let inncount = 0;
-	let taverncount = 0;
-	let wellcount = 0;
-	let shrinecount = 0;
-	let statuecount = 0;
-	
-	
-	let buildingloops = 1;
-	
-	for (let i = 0; i < buildingloops; i++)
-	{
-		let posxy = { x: town_centre.x, y: town_centre.y };
-		let position = town_centre.x + town_centre.y*map_width;
-		let lastxmovement = 1;
-		let lastymovement = 1;
-		let xmovement = 1;
-		let ymovement = 1;
-		let currentlyXaxis = true;
-		while (lastxmovement < map_width || lastymovement < map_height)
-		{
-			if(currentlyXaxis)
-			{
-				if (lastxmovement%2 == 1)
-				{
-					posxy.x++;
-				}
-				else
-				{
-					posxy.x--;
-				}
-			}
-			else
-			{
-				if (lastymovement%2 == 1)
-				{
-					posxy.y++;
-				}
-				else
-				{
-					posxy.y--;
-				}
-			}
-			
-			position = posxy.x + posxy.y*map_width;
-			
-			if (isRoadAdjacent(premapmap,map_width,map_height,posxy.x,posxy.y))
-			{
-				let buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.house, posxy.x, posxy.y);
-				let baserand = Math.random();
-				
-				if (baserand < 0.16 && churchcount < Math.floor((map_height+map_width)/45)+1)
-				{
-					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.church, posxy.x, posxy.y);
-					churchcount++;
-				}
-				else if (baserand < 0.24 && inncount < Math.floor((map_height+map_width)/40)+1)
-				{
-					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.inn, posxy.x, posxy.y);
-					inncount++;
-				}
-				else if (baserand < 0.29 && taverncount < Math.floor((map_height+map_width)/35)+2)
-				{
-					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.tavern, posxy.x, posxy.y);
-					taverncount++;
-				}
-				else if (baserand < 0.42 && shrinecount < Math.floor((map_height+map_width)/25)+1)
-				{
-					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.shrine, posxy.x, posxy.y);
-					shrinecount++;
-				}
-				else if (baserand < 0.46 && statuecount < Math.floor((map_height+map_width)/25)+1)
-				{
-					buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.statue, posxy.x, posxy.y);
-					statuecount++;
-				}
-				
-				
-				if (buildingplacement != false)
-				{
-					premapmap = fillMapSpace(premapmap, map_width, map_height, buildingplacement.width, buildingplacement.height, buildingplacement.x, buildingplacement.y);
-					premapmap[posxy.x+posxy.y*map_width] = buildingplacement;
-				}
-				else if (wellcount < Math.floor((map_height+map_width)/75))
-				{
-					premapmap[posxy.x+posxy.y*map_width] = { path: city_gen.features.well, width: 1, height: 1, x: posxy.x, y: posxy.y };
-					wellcount++;
-				}
-			}
-			
-			if(currentlyXaxis)
-			{
-				xmovement--;
-				if (xmovement == 0)
-				{
-					lastxmovement++;
-					xmovement = lastxmovement;
-					currentlyXaxis = false;
-				}
-			}
-			else
-			{
-				ymovement--;
-				if (ymovement == 0)
-				{
-					lastymovement++;
-					ymovement = lastymovement;
-					currentlyXaxis = true;
-				}
-			}
-			
-		}
-	}
-	
-	buildingloops = 1;
-	
-	for (let i = 0; i < buildingloops; i++)
-	{
-		let posxy = { x: town_centre.x, y: town_centre.y };
-		let position = town_centre.x + town_centre.y*map_width;
-		let lastxmovement = 1;
-		let lastymovement = 1;
-		let xmovement = 1;
-		let ymovement = 1;
-		let currentlyXaxis = true;
-		while (lastxmovement < map_width || lastymovement < map_height)
-		{
-			if(currentlyXaxis)
-			{
-				if (lastxmovement%2 == 1)
-				{
-					posxy.x++;
-				}
-				else
-				{
-					posxy.x--;
-				}
-			}
-			else
-			{
-				if (lastymovement%2 == 1)
-				{
-					posxy.y++;
-				}
-				else
-				{
-					posxy.y--;
-				}
-			}
-			
-			position = posxy.x + posxy.y*map_width;
-			
-			if (position > -1 && position < map_width*map_height && premapmap[position] == "")
-			{
-				if (Math.random() < 0.003)
-				{
-					let buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.house, posxy.x, posxy.y);
-					let baserand = Math.random();
-					if (baserand < 0.125 && churchcount < Math.floor((map_height+map_width)/45)+1)
-					{
-						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.church, posxy.x, posxy.y);
-						churchcount++;
-					}
-					else if (baserand < 0.275 && inncount < Math.floor((map_height+map_width)/40)+1)
-					{
-						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.inn, posxy.x, posxy.y);
-						inncount++;
-					}
-					else if (baserand < 0.485 && taverncount < Math.floor((map_height+map_width)/35)+2)
-					{
-						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.tavern, posxy.x, posxy.y);
-						taverncount++;
-					}
-					else if (baserand < 0.7 && shrinecount < Math.floor((map_height+map_width)/25)+1)
-					{
-						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.shrine, posxy.x, posxy.y);
-						shrinecount++;
-					}
-					else if (baserand < 0.9 && statuecount < Math.floor((map_height+map_width)/25)+1)
-					{
-						buildingplacement = tryPlaceBuilding(premapmap, map_width, map_height, city_gen.buildings.statue, posxy.x, posxy.y);
-						statuecount++;
-					}
-					
-					
-					if (buildingplacement != false)
-					{
-						premapmap = fillMapSpace(premapmap, map_width, map_height, buildingplacement.width, buildingplacement.height, buildingplacement.x, buildingplacement.y);
-						premapmap[position] = buildingplacement;
-					}
-				}
-				
-				if (Math.random() < 0.11)
-				{
-					premapmap[position] = { path: city_gen.features.tree, width: 1, height: 1, x: posxy.x, y: posxy.y };
-				}
-			}
-			
-			if(currentlyXaxis)
-			{
-				xmovement--;
-				if (xmovement == 0)
-				{
-					lastxmovement++;
-					xmovement = lastxmovement;
-					currentlyXaxis = false;
-				}
-			}
-			else
-			{
-				ymovement--;
-				if (ymovement == 0)
-				{
-					lastymovement++;
-					ymovement = lastymovement;
-					currentlyXaxis = true;
-				}
-			}
-			
-		}
-	}
-	
-	
-	let imagemap = []
-	
-	for (let y = 0; y < map_height; y++)
-	{
-		for (let x = 0; x < map_width; x++)
-		{
-			let xpos = x*10;
-			let ypos = y*10;
-			imagemap.push({ src: "./city_gen/Grass_Texture.png", x: xpos, y: ypos});
-		}
-	}
-	
-	
-	for (let y = 0; y < map_height; y++)
-	{
-		for (let x = 0; x < map_width; x++)
-		{
-			let xpos = x*10;
-			let ypos = y*10;
-			if (premapmap[x+y*map_width] == "r")
-			{
-				let roadgraphic = 0;
-				if (x+1+y*map_width < map_width*map_height && premapmap[x+1+y*map_width] == "r")
-					roadgraphic += 1;
-				if (x+(y+1)*map_width < map_width*map_height && premapmap[x+(y+1)*map_width] == "r")
-					roadgraphic += 2;
-				if (x-1+y*map_width > 0 && premapmap[x-1+y*map_width] == "r")
-					roadgraphic += 4;
-				if (x+(y-1)*map_width > 0 && premapmap[x+(y-1)*map_width] == "r")
-					roadgraphic += 8;
-				
-				switch (roadgraphic)
-				{
-					case 1:
-						imagemap.push({ src: city_gen.roads.end.E, x: xpos, y: ypos})
-						break;
-					case 2:
-						imagemap.push({ src: city_gen.roads.end.S, x: xpos, y: ypos})
-						break;
-					case 3:
-						imagemap.push({ src: city_gen.roads.corner.ES, x: xpos, y: ypos})
-						break;
-					case 4:
-						imagemap.push({ src: city_gen.roads.end.W, x: xpos, y: ypos})
-						break;
-					case 5:
-						imagemap.push({ src: city_gen.roads.straight.EW, x: xpos, y: ypos})
-						break;
-					case 6:
-						imagemap.push({ src: city_gen.roads.corner.SW, x: xpos, y: ypos})
-						break;
-					case 7:
-						imagemap.push({ src: city_gen.roads.threeway.ESW, x: xpos, y: ypos})
-						break;
-					case 8:
-						imagemap.push({ src: city_gen.roads.end.N, x: xpos, y: ypos})
-						break;
-					case 9:
-						imagemap.push({ src: city_gen.roads.corner.NE, x: xpos, y: ypos})
-						break;
-					case 10:
-						imagemap.push({ src: city_gen.roads.straight.NS, x: xpos, y: ypos})
-						break;
-					case 11:
-						imagemap.push({ src: city_gen.roads.threeway.NES, x: xpos, y: ypos})
-						break;
-					case 12:
-						imagemap.push({ src: city_gen.roads.corner.NW, x: xpos, y: ypos})
-						break;
-					case 13:
-						imagemap.push({ src: city_gen.roads.threeway.NEW, x: xpos, y: ypos})
-						break;
-					case 14:
-						imagemap.push({ src: city_gen.roads.threeway.NSW, x: xpos, y: ypos})
-						break;
-					case 15:
-						imagemap.push({ src: city_gen.roads.fourway, x: xpos, y: ypos})
-						break;
-				}
-			}
-			else if (premapmap[x+y*map_width] != "" && premapmap[x+y*map_width] != "b")
-			{
-				imagemap.push({ src: premapmap[x+y*map_width].path, x: premapmap[x+y*map_width].x*10+1, y: premapmap[x+y*map_width].y*10+1});
-			}
-		}
-	}
-	
-	let file = 'generatedhabitat.png';
-	let path = './' + file;
-	
-	mergeImages(imagemap, 
-	{
-		width: (10*map_width),
-		height: (10*map_height),
-		Canvas: Canvas,
-		Image: Image
-	})
-	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-		if (err) throw err;
-		console.log('The file has been saved!');
-		channel.send({ files: [{ attachment: path, name: file }] });
-		}
-		))
-}
-
-
 //
 //
 // generate hex city map
@@ -16959,11 +16424,11 @@ function DrawTownMap(channel, arguments)
 
 function NormalizeVector(vector)
 {
-	length = Math.sqrt((vector.x*vector.x) + (vector.y*vector.y));
-	x = vector.x / length;
-	y = vector.y / length;
+	let length = Math.sqrt((vector.x*vector.x) + (vector.y*vector.y));
+	let x = vector.x / length;
+	let y = vector.y / length;
 	
-	return { x, y };
+	return { x: x, y: y };
 }
 
 function NintyDegreeTurn(vector)
@@ -19589,6 +19054,7 @@ function GenerateDnDDungeonChamber()
 
 function GenerateDnDNPC()
 {
+	let npcname = RandomArrayEntry(dnd_adventure_gen.FirstNames, true, "[FirstNames]") + " " + RandomArrayEntry(dnd_adventure_gen.LastNames, true, "[LastNames]") + ".";
 	let npcappearance = RandomArrayEntry(dnd_adventure_gen.NPCAppearances, true, "[NPCAppearances]") + ".";
 	let npcabilities = RandomNPCAbilities();
 	let npctalent = RandomArrayEntry(dnd_adventure_gen.NPCTalents, true, "[NPCTalents]") + ".";
@@ -19597,7 +19063,8 @@ function GenerateDnDNPC()
 	let npcbond = RandomArrayEntry(dnd_adventure_gen.NPCBonds, true, "[NPCBonds]") + ".";
 	let npcsecret = RandomArrayEntry(dnd_adventure_gen.NPCFlawsAndSecrets, true, "[NPCFlawsAndSecrets]") + ".";
 	
-	let fullnpc = "Notable physical feature: " + npcappearance + "\n"
+	let fullnpc = npcname + "\n"
+				+ "Notable physical feature: " + npcappearance + "\n"
 				+ "Abilities: " + npcabilities + "\n"
 				+ "Talent: " + npctalent + "\n"
 				+ "Mannerism: " + npcmannerism + "\n"
@@ -23294,21 +22761,6 @@ var CRUISER_ID = 6;
 var BATTLESHIP_ID = 8;
 var CARRIER_ID = 10;
 
-var TOP_ROW = ":blue_square::one::two::three::four::five::six::seven::eight::nine::zero:";
-var HIT_EMOJI = ":red_square:";
-var MISS_EMOJI = ":yellow_square:";
-var UNKOWN_EMOJI = ":blue_square:";
-var A_EMOJI = ":regional_indicator_a:";
-var B_EMOJI = ":regional_indicator_b:";
-var C_EMOJI = ":regional_indicator_c:";
-var D_EMOJI = ":regional_indicator_d:";
-var E_EMOJI = ":regional_indicator_e:";
-var F_EMOJI = ":regional_indicator_f:";
-var G_EMOJI = ":regional_indicator_g:";
-var H_EMOJI = ":regional_indicator_h:";
-var I_EMOJI = ":regional_indicator_i:";
-var J_EMOJI = ":regional_indicator_j:";
-
 var ALIGNMENT_VERTICAL = 0;
 var ALIGNMENT_HORIZONTAL = 1;
 
@@ -23710,6 +23162,979 @@ function GenerateBlaseballer()
 	
 	return blaseballer;
 }
+
+//
+//
+// Voronoi/SVG City Generator
+
+function DistanceBetweenPoints(a, b)
+{
+	let dirvector = { x: b.x - a.x, y:  b.y - a.y };
+	return Math.sqrt((dirvector.x*dirvector.x) + (dirvector.y*dirvector.y));
+}
+
+function DoLinesIntersect(line1, line2)
+{
+	let s1 = { x: line1.end.x - line1.start.x, y: line1.end.y - line1.start.y };
+	let s2 = { x: line2.end.x - line2.start.x, y: line2.end.y - line2.start.y };
+	
+	if ((-s2.x * s1.y + s1.x * s2.y) == 0)
+		return false;
+	
+	let s = (-s1.y * (line1.start.x - line2.start.x) + s1.x * (line1.start.y - line2.start.y)) / (-s2.x * s1.y + s1.x * s2.y);
+	let t = (s2.x * (line1.start.y - line2.start.y) - s2.y * (line1.start.x - line2.start.x)) / (-s2.x * s1.y + s1.x * s2.y);
+	
+	if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+	{
+		//collision detected, returning
+		//let collisionpoint = { x: line1.start.x + (t * s1.x), y: line1.start.y + (t * s1.y)};
+		return true;
+	}
+	
+	return false;
+}
+
+function RotatePoint(point, radians)
+{
+	let rotatedpoint = { x: point.x , y: point.y };
+	rotatedpoint.x = Math.cos(radians)*point.x - Math.sin(radians)*point.y;
+	rotatedpoint.y = Math.sin(radians)*point.x + Math.cos(radians)*point.y;
+	
+	return rotatedpoint;
+}
+
+function RotateLine(line, radians)
+{
+	let rotatedline = { start: { x: line.start.x , y: line.start.y}, end: { x: line.end.x , y: line.end.y } };
+	rotatedline.start.x = Math.cos(radians)*line.start.x - Math.sin(radians)*line.start.y;
+	rotatedline.start.y = Math.sin(radians)*line.start.x + Math.cos(radians)*line.start.y;
+	rotatedline.end.x = Math.cos(radians)*line.end.x - Math.sin(radians)*line.end.y;
+	rotatedline.end.y = Math.sin(radians)*line.end.x + Math.cos(radians)*line.end.y;
+	
+	return rotatedline;
+}
+
+function AddVectors(a, b)
+{
+	let c = { x: a.x + b.x, y: a.y + b.y };
+	return c;
+}
+
+function SubtractVectors(a, b)
+{
+	let c = { x: a.x - b.x, y: a.y - b.y };
+	
+	return c;
+}
+
+function MultiplyVector(a, b)
+{
+	let c = { x: a.x * b, y: a.y * b };
+	
+	return c;
+}
+
+function GenerateVoronoiCity(margin, w, h)
+{
+	if (h <= 0 || w <= 0)
+		return false;
+	
+	let city = {
+		voronoi: new Voronoi(),
+		sites: [],
+		diagram: null,
+		margin: margin,
+		bbox: { xl: 0, xr: w, yt: 0, yb: h },
+		
+		init: function()
+		{
+			this.randomSites(128);
+		},
+		
+		addSite: function(site)
+		{
+			this.sites.push(site);
+			
+			this.diagram = this.voronoi.compute(this.sites, this.bbox);
+		},
+		
+		circleOfSites: function(r, n, c)
+		{
+			let sites = [];
+			for (let i = 0; i < Math.PI*2; i += Math.PI*2/n)
+			{
+				let x = Math.sin(i)*r + c.x;
+				let y = Math.cos(i)*r + c.y;
+				
+				this.sites.push({x: x, y: y});
+			}
+			
+			this.compute(this.sites);
+		},
+		
+		circleOfRandomSites: function(r, n, c, v)
+		{
+			let xo = Math.max(this.margin, c.x - v);
+			let xp = Math.min(this.bbox.xr - this.margin, c.x + v)
+			let dx = Math.min(v*2, xp - xo);
+			let yo = Math.max(this.margin, c.y - v);
+			let yp = Math.min(this.bbox.yb - this.margin, c.y + v)
+			let dy = Math.min(v*2, yp - yo);
+			let sites = [];
+			for (let i = 0; i < Math.PI*2; i += Math.PI*2/n)
+			{
+				let random_x = Math.round(xo+Math.random()*dx)
+				let random_y = Math.round(yo+Math.random()*dy)
+				
+				let random_site = { x: 0, y: 0 };
+				random_site.x += Math.sin(i)*r + random_x;
+				random_site.y += Math.cos(i)*r + random_y;
+				
+				this.sites.push({x: random_site.x, y: random_site.y});
+			}
+			
+			this.compute(this.sites);
+		},
+		
+		randomSites: function(n)
+		{
+			let xo = this.margin;
+			let dx = w - this.margin*2;
+			let yo = this.margin;
+			let dy = h - this.margin*2;
+			for (let i = 0; i < n; i++)
+			{
+				this.sites.push({ x: Math.round(xo+Math.random()*dx), y: Math.round(yo+Math.random()*dy) });
+			}
+			this.diagram = this.voronoi.compute(this.sites, this.bbox);
+		},
+		
+		relax: function(n)
+		{
+			for (let i = 0; i < n; i++)
+			{
+				this.relaxSites();
+			}
+		},
+		
+		relaxSites: function()
+		{
+			if (!this.diagram) {return;}
+			var cells = this.diagram.cells,
+				iCell = cells.length,
+				cell,
+				site, sites = [],
+				again = false,
+				rn, dist;
+			var p = 1 / iCell * 0.1;
+			while (iCell--) 
+			{
+				cell = cells[iCell];
+				rn = Math.random();
+				// probability of apoptosis
+				if (rn < p) {
+					continue;
+					}
+				site = this.cellCentroid(cell);
+				dist = this.distance(site, cell.site);
+				if (dist > 2) {
+					site.x = (site.x+cell.site.x)/2;
+					site.y = (site.y+cell.site.y)/2;
+					}
+				// probability of mytosis
+				if (rn > (1-p)) {
+					dist /= 2;
+					sites.push({
+						x: site.x+(site.x-cell.site.x)/dist,
+						y: site.y+(site.y-cell.site.y)/dist,
+						});
+					}
+				sites.push(site);
+			}
+			this.compute(sites);
+		},
+		
+		cellArea: function(cell)
+		{
+			var area = 0,
+				halfedges = cell.halfedges,
+				iHalfedge = halfedges.length,
+				halfedge,
+				p1, p2;
+			while (iHalfedge--) {
+				halfedge = halfedges[iHalfedge];
+				p1 = halfedge.getStartpoint();
+				p2 = halfedge.getEndpoint();
+				area += p1.x * p2.y;
+				area -= p1.y * p2.x;
+				}
+			area /= 2;
+			return area;
+		},
+		
+		cellCentroid: function(cell)
+		{
+			var x = 0, y = 0,
+				halfedges = cell.halfedges,
+				iHalfedge = halfedges.length,
+				halfedge,
+				v, p1, p2;
+			while (iHalfedge--)
+			{
+				halfedge = halfedges[iHalfedge];
+				p1 = halfedge.getStartpoint();
+				p2 = halfedge.getEndpoint();
+				v = p1.x*p2.y - p2.x*p1.y;
+				x += (p1.x+p2.x) * v;
+				y += (p1.y+p2.y) * v;
+			}
+			
+			v = this.cellArea(cell) * 6;
+			return {x:x/v,y:y/v};
+		},
+		
+		distance: function(a, b)
+		{
+			var dx = a.x-b.x,
+				dy = a.y-b.y;
+			return Math.sqrt(dx*dx+dy*dy);
+		},
+		
+		compute: function(sites)
+		{
+			this.sites = sites;
+			this.voronoi.recycle(this.diagram);
+			this.diagram = this.voronoi.compute(sites, this.bbox);
+		},
+		
+		setDistricts: function(n, district0size, roads)
+		{
+			let centrepoint = { x: (this.bbox.xr - this.bbox.xl)/2, y: (this.bbox.yb - this.bbox.yt)/2 };
+			let maxdx = (centrepoint.x * centrepoint.x);
+			let maxdy = (centrepoint.y * centrepoint.y);
+			let maxdistanceSQ = Math.min(maxdx, maxdy);
+			
+			this.diagram.cells.forEach(cell => {
+				let cellBbox = cell.getBbox();
+				let cellCentre = { x: Math.floor((cellBbox.x + (cellBbox.width/2))), y: Math.floor((cellBbox.y + (cellBbox.height/2))) };
+				let distanceX = (cellCentre.x - centrepoint.x)*(cellCentre.x - centrepoint.x);
+				let distanceY = (cellCentre.y - centrepoint.y)*(cellCentre.y - centrepoint.y);
+				let distanceSQ = (distanceX + distanceY);
+				let proportionaldistance = distanceSQ / maxdistanceSQ;
+				
+				let previous_district = -1;
+				
+				if (proportionaldistance < 0.0025*district0size)
+				{
+					cell.district = 0;
+				}
+				else if ((cellCentre.x / (this.bbox.xr - this.bbox.xl)) < 0.5)
+				{
+					if ((cellCentre.y / (this.bbox.yb - this.bbox.yt)) < 0.5)
+					{
+						if (proportionaldistance < 0.425)
+						{
+							if (previous_district = -1)
+							{
+								previous_district = Math.floor(Math.random()*n)+1;
+								cell.district = previous_district;
+							}
+							else
+							{
+								cell.district = previous_district;
+								previous_district = -1
+							}
+						}
+						else
+						{
+							cell.district = (n*4)+Math.ceil(roads/4);
+						}
+					}
+					else
+					{
+						if (proportionaldistance < 0.425)
+						{
+							if (previous_district = -1)
+							{
+								previous_district = Math.floor(Math.random()*n)+(n)+1;
+								cell.district = previous_district;
+							}
+							else
+							{
+								cell.district = previous_district;
+								previous_district = -1
+							}
+						}
+						else
+						{
+							cell.district = (n*4)+Math.ceil(2*roads/4);
+						}
+					}
+				}
+				else
+				{
+					if ((cellCentre.y / (this.bbox.yb - this.bbox.yt)) < 0.5)
+					{
+						if (proportionaldistance < 0.425)
+						{
+							if (previous_district = -1)
+							{
+								previous_district = Math.floor(Math.random()*n)+(n*2)+1;
+								cell.district = previous_district;
+							}
+							else
+							{
+								cell.district = previous_district;
+								previous_district = -1
+							}
+						}
+						else
+						{
+							cell.district = (n*4)+Math.ceil(3*roads/4);
+						}
+					}
+					else
+					{
+						if (proportionaldistance < 0.425)
+						{
+							if (previous_district = -1)
+							{
+								previous_district = Math.floor(Math.random()*n)+(n*3)+1;
+								cell.district = previous_district;
+							}
+							else
+							{
+								cell.district = previous_district;
+								previous_district = -1
+							}
+						}
+						else
+						{
+							cell.district = (n*4)+Math.ceil(4*roads/4);
+						}
+					}
+				}
+			});
+		}
+	}
+	
+	return city;
+}
+
+function areaOfTriangle(p0, p1, p2)
+{
+	let area = Math.abs(p0.x*(p1.y-p2.y)+p1.x*(p2.y-p0.y)+p2.x*(p0.y-p1.y)/2);
+	
+	return area;
+}
+
+async function DrawVoronoiCity(channel, arguments)
+{
+	let p = 256;
+	let m = 100;
+	let w = 800;
+	let h = 800;
+	let r = 9;
+	let d = 2;
+	let building_scale = 1;
+	let output_svg = false;
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		let argumentpos = arguments.indexOf("-p");
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			p = parseInt(arguments[argumentpos+1]);
+		if (p > 8192)
+			p = 8192;
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			w = parseInt(arguments[argumentpos+1]);
+		if (w > 6400)
+			w = 6400;
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			h = parseInt(arguments[argumentpos+1]);
+		argumentpos = arguments.indexOf("-m")
+		if (h > 6400)
+			h = 6400;
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+			m = parseFloat(arguments[argumentpos+1]);
+		if (m < 0)
+			m = 0;
+		if (m > Math.min(w, h)/3)
+			m = Math.min(w, h)/3;
+		argumentpos = arguments.indexOf("-r")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			r = parseInt(arguments[argumentpos+1]);
+		if (r > 10000)
+			r = 10000;
+		argumentpos = arguments.indexOf("-d")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			d = parseInt(arguments[argumentpos+1]);
+		if (d > 16)
+			d = 16;
+		if (d < 1)
+			d = 1;
+		argumentpos = arguments.indexOf("-b")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			building_scale = parseFloat(arguments[argumentpos+1]);
+		if (building_scale > 8)
+			building_scale = 8;
+		if (building_scale < 0.125)
+			building_scale = 0.125;
+		argumentpos = arguments.indexOf("-svg")
+		if (argumentpos != -1)
+			output_svg = true;
+	}
+	
+	let start_time = new Date().getTime();
+	
+	let city = null;
+	let max_distance = DistanceBetweenPoints({ x:0, y:0 }, { x:w/2, y:h/2 });
+	
+	while (city == null || city.sites.length == 0)
+	{
+		try 
+		{
+			let outsite_roads = 2+Math.round(Math.random()*2);
+			city = GenerateVoronoiCity(m, w, h);
+			let district0size = (building_scale*2) - 1;
+			
+			city.circleOfRandomSites(Math.min(w - m*2, h - m*2)/4*(Math.random()+Math.random()+1), Math.round(Math.random()*2)+3, { x: w/2, y: h/2 }, Math.min(w, h)*1/7);
+			
+			let random_center_site = { x: w/2, y: h/2 };
+			random_center_site.x += Math.random()*Math.min(w, h)*2/9 - Math.min(w, h)*1/9;
+			random_center_site.y += Math.random()*Math.min(w, h)*2/9 - Math.min(w, h)*1/9;
+			city.addSite(random_center_site);
+			let corner_site0 = { x: m, y: m };
+			let corner_site1 = { x: w - m, y: m };
+			let corner_site2 = { x: m, y: h - m };
+			let corner_site3 = { x: w - m, y: h - m };
+			corner_site0.x += Math.random()*m/4;
+			corner_site0.y += Math.random()*m/4;
+			corner_site1.x -= Math.random()*m/4;
+			corner_site1.y += Math.random()*m/4;
+			corner_site1.x += Math.random()*m/4;
+			corner_site1.y -= Math.random()*m/4;
+			corner_site1.x -= Math.random()*m/4;
+			corner_site1.y -= Math.random()*m/4;
+			
+			let original_circle = [];
+			
+			city.sites.forEach(site =>
+			{
+				original_circle.push({ x: site.x, y: site.y });
+			});
+			
+			original_circle.forEach(site =>
+			{
+				city.circleOfRandomSites(Math.min(w - m*2, h - m*2)/12*(Math.random()+Math.random()+1), Math.floor(((p-1-original_circle.length)/original_circle.length)/16), site, Math.min(w, h)/18);
+			});
+			
+			city.relax(r-1);
+			
+			city.circleOfSites((w-m*2)+20, 8, { x: w/2, y: h/2 });
+			
+			city.setDistricts(d, district0size, outsite_roads);
+			
+			original_circle = [];
+			for(let i = 0; i < 4; i++)
+			{
+				city.diagram.cells.forEach(cell =>
+				{
+					if (cell.district < (d*4)+1 && city.cellArea(cell) > 400*building_scale)
+						original_circle.push({ x: cell.site.x, y: cell.site.y });
+						city.setDistricts(d, district0size, outsite_roads);
+				});
+			}
+			
+			original_circle.forEach(site =>
+			{
+				city.circleOfRandomSites(Math.min(w - m*2, h - m*2)/15*(Math.random()+Math.random()+1), 4, site, Math.min(w, h)/37);
+			});
+			
+			city.addSite(corner_site0);
+			city.addSite(corner_site1);
+			city.addSite(corner_site2);
+			city.addSite(corner_site3);
+			city.setDistricts(d, district0size, outsite_roads);
+		}
+		catch (err)
+		{
+			console.log("failed to generate city: " + err);
+			city = null;
+		}
+	}
+	
+	
+	let citygen_time = new Date().getTime() - start_time;
+	
+	console.log("City generation took " + (citygen_time) + " milliseconds");
+	
+	let tempcanvas = new Canvas();
+	tempcanvas.width = w;
+	tempcanvas.height = h;
+	
+	if (tempcanvas.getContext)
+	{
+		let centrepoint = {x: w/2, y: h/2};
+		let max_distance = Math.min(Math.sqrt((w/2)*(w/2)*2), Math.sqrt((h/2)*(h/2)*2));
+		let ctx = tempcanvas.getContext('2d');
+		
+		// ctx.fillStyle = '#BFA87F';
+		// ctx.fillRect(0, 0, w, h);
+		
+		let scope = new paper.PaperScope();
+		scope.setup(tempcanvas);
+		
+		let rect = new scope.Path.Rectangle(new scope.Point(0,0), new scope.Size(w, h));
+		rect.fillColor = new scope.Color('#BFA87F');
+		
+		let paperMap =
+		{
+			districtPaths: [],
+			roadPaths: [],
+			roadPathsInner: [],
+			buildingPaths: [],
+			debugPaths: []
+		}
+		
+		city.diagram.cells.forEach(cell =>
+		{
+			if (cell.halfedges.length > 2)
+			{
+				cell.path = new scope.Path();
+				cell.path.moveTo(cell.halfedges[0].getStartpoint());
+				cell.halfedges.forEach(halfedge =>
+				{
+					cell.path.lineTo(halfedge.getEndpoint());
+				});
+				cell.path.closePath();
+				cell.path.visible = false;
+			}
+		});
+		
+		console.log("Cell paths done");
+		
+		city.diagram.cells.forEach(cell =>
+		{
+			cell.halfedges.forEach(halfedge =>
+			{
+				if (halfedge.edge.rSite && city.diagram.cells[halfedge.edge.rSite.voronoiId].district != cell.district)
+				{
+					let path = new scope.Path();
+					path.strokeColor = new scope.Color('#000000');
+					path.strokeWidth = 6;
+					path.strokeJoin = 'round';
+					path.strokeCap = 'round';
+					
+					let start = halfedge.getStartpoint();
+					let end = halfedge.getEndpoint();
+					let startpoint = new scope.Point(start.x, start.y);
+					let endpoint = new scope.Point(end.x, end.y);
+					
+					path.moveTo(startpoint);
+					path.lineTo(endpoint);
+					paperMap.roadPaths.push(path);
+				}
+				else if (cell.district < d*4+1)
+				{
+					
+					let path = new scope.Path();
+					path.strokeColor = new scope.Color('#000000');
+					path.strokeWidth = 4;
+					path.strokeJoin = 'round';
+					path.strokeCap = 'round';
+					
+					let start = halfedge.getStartpoint();
+					let end = halfedge.getEndpoint();
+					let startpoint = new scope.Point(start.x, start.y);
+					let endpoint = new scope.Point(end.x, end.y);
+					
+					path.moveTo(startpoint);
+					path.lineTo(endpoint);
+					paperMap.roadPaths.push(path);
+				}
+			});
+		});
+		
+		city.diagram.cells.forEach(cell =>
+		{
+			cell.halfedges.forEach(halfedge =>
+			{
+				if (halfedge.edge.rSite && city.diagram.cells[halfedge.edge.rSite.voronoiId].district != cell.district)
+				{
+					let path = new scope.Path();
+					path.strokeColor = new scope.Color('#C4B9B7');
+					path.strokeWidth = 5;
+					path.strokeJoin = 'round';
+					path.strokeCap = 'round';
+					
+					let start = halfedge.getStartpoint();
+					let end = halfedge.getEndpoint();
+					let startpoint = new scope.Point(start.x, start.y);
+					let endpoint = new scope.Point(end.x, end.y);
+					
+					path.moveTo(startpoint);
+					path.lineTo(endpoint);
+					paperMap.roadPaths.push(path);
+				}
+				else if (cell.district < d*4+1)
+				{
+					
+					let path = new scope.Path();
+					path.strokeColor = new scope.Color('#C4B9B7');
+					path.strokeWidth = 3;
+					path.strokeJoin = 'round';
+					path.strokeCap = 'round';
+					
+					let start = halfedge.getStartpoint();
+					let end = halfedge.getEndpoint();
+					let startpoint = new scope.Point(start.x, start.y);
+					let endpoint = new scope.Point(end.x, end.y);
+					
+					path.moveTo(startpoint);
+					path.lineTo(endpoint);
+					paperMap.roadPaths.push(path);
+				}
+			});
+		});
+		
+		console.log("Roads done");
+		// buildings
+		
+		city.diagram.cells.forEach(cell =>
+		{
+			if (cell.path)
+			{
+				cell.buildings = new scope.Path();
+				cell.buildings.closePath();
+				let buildings = new scope.Path();
+				buildings.closePath();
+				buildings.visible = false;
+				
+				let cArea = Math.abs(city.cellArea(cell));
+				
+				if (cell.district < d*4+1 && cArea > 600*building_scale)
+				{
+					for (let i = 0; i < cell.path.segments.length; i++)
+					{
+						let building_path = new scope.Path();
+						building_path.visible = false;
+						let startpoint = { x: cell.path.segments[i].point.x, y: cell.path.segments[i].point.y };
+						let endpoint = { x: cell.path.segments[(i+1)%cell.path.segments.length].point.x, y: cell.path.segments[(i+1)%cell.path.segments.length].point.y };
+						let distance = Math.max(DistanceBetweenPoints(endpoint, centrepoint),DistanceBetweenPoints(startpoint, centrepoint));
+						
+						let pushFromRoad = 2;
+						
+						let pathDir = SubtractVectors(endpoint, startpoint);
+						pathDir = NormalizeVector(pathDir);
+						let awayDir = { x: pathDir.y, y: -pathDir.x };
+						let length = DistanceBetweenPoints(startpoint, endpoint);
+						let remaining_length = length;
+						
+						if (remaining_length > (5*building_scale))
+						{
+							let between_distance = (1+Math.random()*4)*building_scale;
+							let point0 = new scope.Point(startpoint.x + awayDir.x*pushFromRoad, startpoint.y + awayDir.y*pushFromRoad);
+							let point1 = point0.clone();
+							let random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+							point1 = point1.add(new scope.Point(awayDir.x*(random_height), awayDir.y*(random_height)));
+							let previous_height = random_height;
+							building_path.moveTo(point0);
+							building_path.lineTo(point1);
+							while (remaining_length > 0)
+							{
+								let random_length = (Math.random()*(5*building_scale))+(5*building_scale);
+								random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+								
+								if (random_length > remaining_length)
+									random_length = remaining_length;
+								
+								remaining_length -= random_length;
+								if (remaining_length <= 0)
+								{
+									point0 = point1.clone();
+									point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
+									point1 = point0.clone();
+									point1 = point1.add(new scope.Point(awayDir.x*(-previous_height), awayDir.y*(-previous_height)));
+									//point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
+									
+									building_path.lineTo(point0);
+									building_path.lineTo(point1);
+								}
+								else
+								{
+									point0 = point1.clone();
+									point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
+									point1 = point0.clone();
+									point1 = point1.add(new scope.Point(awayDir.x*(random_height-previous_height), awayDir.y*(random_height-previous_height)));
+									//point1 = point1.add(new scope.Point(awayDir.x*(previous_height-random_height), awayDir.y*(previous_height-random_height)));
+									
+									building_path.lineTo(point0);
+									building_path.lineTo(point1);
+									
+									previous_height = random_height;
+								}
+							}
+							building_path.closePath();
+							
+							buildings = buildings.unite(building_path);
+						}
+						//other side of road
+						remaining_length = length;
+						
+						if (remaining_length > (5*building_scale))
+						{
+							let between_distance = (1+Math.random()*4)*building_scale;
+							let point0 = new scope.Point(startpoint.x - awayDir.x*pushFromRoad, startpoint.y - awayDir.y*pushFromRoad);
+							let point1 = point0.clone();
+							let random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+							point1 = point1.add(new scope.Point(awayDir.x*(-random_height), awayDir.y*(-random_height)));
+							let previous_height = random_height;
+							building_path.moveTo(point0);
+							building_path.lineTo(point1);
+							while (remaining_length > 0)
+							{
+								let random_length = (Math.random()*(5*building_scale))+(5*building_scale);
+								random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+								
+								if (random_length > remaining_length)
+									random_length = remaining_length;
+								
+								remaining_length -= random_length;
+								if (remaining_length <= 0)
+								{
+									point0 = point1.clone();
+									point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
+									point1 = point0.clone();
+									point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
+									
+									building_path.lineTo(point0);
+									building_path.lineTo(point1);
+								}
+								else
+								{
+									point0 = point1.clone();
+									point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
+									point1 = point0.clone();
+									point1 = point1.add(new scope.Point(awayDir.x*(previous_height-random_height), awayDir.y*(previous_height-random_height)));
+									
+									building_path.lineTo(point0);
+									building_path.lineTo(point1);
+									
+									previous_height = random_height;
+								}
+							}
+							building_path.closePath();
+							
+							buildings = buildings.unite(building_path);
+						}
+					}
+				}
+				
+				// outer districts
+				if (cell.district >= d*4+1)
+				{
+					cell.halfedges.forEach(halfedge =>
+					{
+						if ((halfedge.edge.rSite != null && city.diagram.cells[halfedge.edge.rSite.voronoiId].district != cell.district) || city.diagram.cells[halfedge.edge.lSite.voronoiId].district != cell.district)
+						{
+							let building_path = new scope.Path();
+							building_path.visible = false;
+							let startpoint = halfedge.getStartpoint();
+							let endpoint = halfedge.getEndpoint();
+							let distance = Math.min(DistanceBetweenPoints(endpoint, centrepoint),DistanceBetweenPoints(startpoint, centrepoint));
+							
+							let pushFromRoad = 2;
+							
+							let pathDir = SubtractVectors(endpoint, startpoint);
+							pathDir = NormalizeVector(pathDir);
+							let awayDir = { x: pathDir.y, y: -pathDir.x };
+							let length = DistanceBetweenPoints(startpoint, endpoint);
+							let remaining_length = length;
+							
+							if (remaining_length > (5*building_scale) && distance/max_distance)
+							{
+								let between_distance = (1+Math.random()*6)*building_scale;
+								let point0 = new scope.Point(startpoint.x + awayDir.x*pushFromRoad, startpoint.y + awayDir.y*pushFromRoad);
+								let point1 = point0.clone();
+								let random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+								point1 = point1.add(new scope.Point(awayDir.x*(random_height), awayDir.y*(random_height)));
+								let previous_height = random_height;
+								building_path.moveTo(point0);
+								building_path.lineTo(point1);
+								while (remaining_length > 0)
+								{
+									let random_length = (Math.random()*(5*building_scale))+(5*building_scale);
+									random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+									
+									if (random_length > remaining_length)
+										random_length = remaining_length;
+									
+									remaining_length -= random_length;
+									if (remaining_length <= 0)
+									{
+										point0 = point1.clone();
+										point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
+										point1 = point0.clone();
+										point1 = point1.add(new scope.Point(awayDir.x*(-previous_height), awayDir.y*(-previous_height)));
+										//point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
+										
+										building_path.lineTo(point0);
+										building_path.lineTo(point1);
+									}
+									else
+									{
+										point0 = point1.clone();
+										point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
+										point1 = point0.clone();
+										point1 = point1.add(new scope.Point(awayDir.x*(-previous_height), awayDir.y*(-previous_height)));
+										
+										building_path.lineTo(point0);
+										building_path.lineTo(point1);
+										
+										random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+										previous_height = random_height;
+										
+										remaining_length -= between_distance;
+										if (remaining_length <= 0)
+										{
+											break;
+										}
+										
+										building_path.closePath();
+										between_distance = (1+Math.random()*6)*building_scale;
+										
+										buildings = buildings.unite(building_path);
+										building_path = new scope.Path();
+										point0 = point1.clone();
+										point0 = point0.add(new scope.Point(pathDir.x*between_distance, pathDir.y*between_distance));
+										point1 = point0.clone();
+										point1 = point1.add(new scope.Point(awayDir.x*(random_height), awayDir.y*(random_height)));
+												
+										building_path.moveTo(point0);
+										building_path.lineTo(point1);
+									}
+								}
+								building_path.closePath();
+								
+								buildings = buildings.unite(building_path);
+							}
+							//other side of road
+							remaining_length = length;
+							
+							if (remaining_length > (5*building_scale) && distance/max_distance)
+							{
+								let between_distance = (1+Math.random()*6)*building_scale;
+								let point0 = new scope.Point(startpoint.x - awayDir.x*pushFromRoad, startpoint.y - awayDir.y*pushFromRoad);
+								let point1 = point0.clone();
+								let random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+								point1 = point1.add(new scope.Point(awayDir.x*(-random_height), awayDir.y*(-random_height)));
+								let previous_height = random_height;
+								building_path.moveTo(point0);
+								building_path.lineTo(point1);
+								while (remaining_length > 0)
+								{
+									let random_length = (Math.random()*(5*building_scale))+(5*building_scale);
+									random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+									
+									if (random_length > remaining_length)
+										random_length = remaining_length;
+									
+									remaining_length -= random_length;
+									if (remaining_length <= 0)
+									{
+										point0 = point1.clone();
+										point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
+										point1 = point0.clone();
+										point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
+										
+										building_path.lineTo(point0);
+										building_path.lineTo(point1);
+									}
+									else
+									{
+										point0 = point1.clone();
+										point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
+										point1 = point0.clone();
+										point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
+										
+										building_path.lineTo(point0);
+										building_path.lineTo(point1);
+										
+										random_height = (Math.random()*(4*building_scale))+(4*building_scale);
+										previous_height = random_height;
+										
+										remaining_length -= between_distance;
+										if (remaining_length <= 0)
+										{
+											break;
+										}
+										
+										building_path.closePath();
+										between_distance = (1+Math.random()*6)*building_scale;
+										
+										buildings = buildings.unite(building_path);
+										building_path = new scope.Path();
+										point0 = point1.clone();
+										point0 = point0.add(new scope.Point(pathDir.x*between_distance, pathDir.y*between_distance));
+										point1 = point0.clone();
+										point1 = point1.add(new scope.Point(awayDir.x*(-random_height), awayDir.y*(-random_height)));
+												
+										building_path.moveTo(point0);
+										building_path.lineTo(point1);
+									}
+								}
+								building_path.closePath();
+								
+								buildings = buildings.unite(building_path);
+							}
+						}
+					});
+				}
+				
+				let contractedCell = PaperOffset.offsetStroke(cell.path, 4, { join: 'round' });
+				cell.buildings = buildings.clone();
+				cell.buildings = buildings.intersect(cell.path);
+				cell.buildings = cell.buildings.subtract(contractedCell);
+				cell.buildings.visible = true;
+				cell.buildings.fillColor = new scope.Color('#70584B');
+				cell.buildings.strokeColor = new scope.Color('#000000');
+				cell.buildings.strokeWidth = 1;
+				cell.buildings.bringToFront();
+			}
+		});
+		
+		console.log("Buildings done");
+		//debug paths
+		/*
+		city.diagram.cells.forEach(cell =>
+		{
+			let cellcenter = cell.site;
+			let debugPoint = new scope.Point(cellcenter.x, cellcenter.y);
+			let debugPath = new scope.Path.Circle(debugPoint, 3);
+			debugPath.fillColor = new scope.Color('#FFFFFF');
+		});
+		*/
+		
+		scope.view.draw();
+		
+		//output file
+		let file = 'voronoicity.png';
+		let filepath = './' + file;
+		
+		let b64 = scope.view.element.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(filepath,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			let draw_time = new Date().getTime() - start_time - citygen_time;
+			console.log('The voronoicity has been saved! Took ' + draw_time + ' milliseconds to draw');
+			channel.send({ files: [{ attachment: filepath, name: file }] });
+		});
+	}
+}
+
 
 //
 //
