@@ -676,6 +676,9 @@ async function processCommand(receivedMessage)
     } else if (normalizedCommand == "generatemap") 
 	{
 		generateMap(receivedMessage.channel,arguments);
+	} else if (normalizedCommand == "isometricmap") 
+	{
+		generateIsometricWorldMap(receivedMessage.channel,arguments);
 	} else if (normalizedCommand == "minimap") 
 	{
 		GenerateMiniMap(receivedMessage.channel,arguments);
@@ -24135,6 +24138,443 @@ async function DrawVoronoiCity(channel, arguments)
 	}
 }
 
+
+function spreadBiome(world, pos, w, h, change, distance)
+{
+	let donePos = [];
+	donePos.push(pos);
+	let posToDo = [];
+	let index = pos.x + (pos.y * w);
+	world[index].biome += change;
+	world[index].biome = Math.max(Math.min(world[index].biome, 4), 0);
+	
+	posToDo.push({ x: pos.x + 1, y: pos.y, distance: distance });
+	posToDo.push({ x: pos.x - 1, y: pos.y, distance: distance });
+	posToDo.push({ x: pos.x, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
+	
+	let remainingDistance = distance;
+	while (posToDo.length > 0)
+	{
+		donePos.push(posToDo[0]);
+		if (posToDo[0].x > -1 && posToDo[0].y > -1 && posToDo[0].x < w && posToDo[0].y < h )
+		{
+			index = posToDo[0].x + (posToDo[0].y * w);
+			subDistance = posToDo[0].distance - 1;
+			world[index].biome += change * subDistance / distance;
+			world[index].biome = Math.max(Math.min(world[index].biome, 4), 0);
+			nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+		}
+		posToDo.splice(0, 1);
+	}
+	
+	return world;
+}
+
+function spreadWaterLevel(world, pos, w, h, change, distance)
+{
+	let donePos = [];
+	donePos.push(pos);
+	let posToDo = [];
+	let index = pos.x + (pos.y * w);
+	if (world[index].waterlevel > 0)
+		world[index].waterlevel += change/2;
+	else
+		world[index].waterlevel += change;
+	
+	posToDo.push({ x: pos.x + 1, y: pos.y, distance: distance });
+	posToDo.push({ x: pos.x - 1, y: pos.y, distance: distance });
+	posToDo.push({ x: pos.x, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
+	
+	let remainingDistance = distance;
+	while (posToDo.length > 0)
+	{
+		donePos.push(posToDo[0]);
+		if (posToDo[0].x > -1 && posToDo[0].y > -1 && posToDo[0].x < w && posToDo[0].y < h )
+		{
+			index = posToDo[0].x + (posToDo[0].y * w);
+			subDistance = posToDo[0].distance - 1;
+			if (world[index].waterlevel > 0)
+				world[index].waterlevel += change/2 * subDistance / distance;
+			else
+				world[index].waterlevel += change * subDistance / distance;
+			nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+		}
+		posToDo.splice(0, 1);
+	}
+	
+	return world;
+}
+
+function spreadForest(world, pos, w, h, chance, distance)
+{
+	let donePos = [];
+	donePos.push(pos);
+	let posToDo = [];
+	let index = pos.x + (pos.y * w);
+	if (Math.random() < chance)
+		world[index].forest = true;
+	
+	posToDo.push({ x: pos.x + 1, y: pos.y, distance: distance });
+	posToDo.push({ x: pos.x - 1, y: pos.y, distance: distance });
+	posToDo.push({ x: pos.x, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
+	
+	let remainingDistance = distance;
+	while (posToDo.length > 0)
+	{
+		donePos.push(posToDo[0]);
+		if (posToDo[0].x > -1 && posToDo[0].y > -1 && posToDo[0].x < w && posToDo[0].y < h )
+		{
+			index = posToDo[0].x + (posToDo[0].y * w);
+			subDistance = posToDo[0].distance - 1;
+			if (Math.random() < (chance * subDistance / distance))
+				world[index].forest = true;
+			nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
+			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			{
+				posToDo.push(nextPos);
+			}
+		}
+		posToDo.splice(0, 1);
+	}
+	
+	return world;
+}
+
+function generateIsometricWorldMap(channel, arguments)
+{
+	let width = 101;
+	let height = 141;
+	let margin = Math.floor(Math.min(width, height)/5);
+	let xmargin = Math.floor(margin / 3);
+	let temperature = 0;
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-t")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			temperature = parseInt(arguments[argumentpos+1]);
+			if (temperature > 2)
+				temperature = 2;
+			if (temperature < -2)
+				temperature = -2;
+		}
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			width = parse(arguments[argumentpos+1]);
+			if (width > 401)
+				width = 401;
+			if (width < 61)
+				width = 61;
+		}
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			height = parseInt(arguments[argumentpos+1]);
+			if (height > 651)
+				height = 651;
+			if (height < 111)
+				height = 111;
+		}
+		margin = Math.floor(Math.min(width, height)/5);		argumentpos = arguments.indexOf("-m")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			margin = parseInt(arguments[argumentpos+1]);
+			
+			if (margin > Math.floor(Math.min(width, height)/3));
+				margin = Math.floor(Math.min(width, height)/3);
+			if (margin < 0)
+				margin = 0;
+		}
+		
+		xmargin = Math.floor(margin / 3);
+	}
+	
+	let world = [];
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			world.push({ waterlevel: -1, biome: 2, forest: false});
+		}
+	}
+	
+	let xo = xmargin;
+	let dx = width - (xmargin * 2) - 1;
+	let yo = margin;
+	let dy = height - (margin * 2) - 1;
+	let landmasses = Math.round(Math.min(width, height)*3.45);
+	
+	for (let i = 0; i < landmasses; i++)
+	{
+		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) };
+		let randomDistance = 6 + Math.round(Math.random()*((width+height)/72));
+		
+		let index = randomPos.x + randomPos.y * width;
+		spreadWaterLevel(world, randomPos, width, height, 0.75, randomDistance);
+		spreadBiome(world, randomPos, width, height, -0.04, randomDistance);
+	}
+	
+	let mountainPeaks = 5 + Math.random()*Math.round(Math.min(width, height)*0.57);
+	
+	for (let i = 0; i < mountainPeaks; i++)
+	{
+		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) };
+		let randomDistance = 6 + Math.round(Math.random()*((width+height)/144));
+		
+		let index = randomPos.x + randomPos.y * width;
+		spreadWaterLevel(world, randomPos, width, height, 1.75, 1);
+		spreadWaterLevel(world, randomPos, width, height, 1.25, randomDistance);
+		spreadBiome(world, randomPos, width, height, -0.27, randomDistance);
+	}
+	
+	xo = xmargin;
+	dx = width - (xmargin * 2) - 1;
+	yo = height/3;
+	dy = height/3 - 1;
+	biomeShifts = Math.round(Math.min(width, height)*2.85)
+	for (let i = 0; i < biomeShifts; i++)
+	{
+		//get hotter closer to center
+		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
+		let index = randomPos.x + randomPos.y * width;
+		while (world[index].waterlevel < 0 || world[index].waterlevel >= 2)
+		{
+			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
+			index = randomPos.x + randomPos.y * width;
+		}
+		let randomDistance = 5 + Math.round(Math.random()*((width+height)/36));
+		spreadBiome(world, randomPos, width, height, 0.333 + temperature, randomDistance);
+	}
+	
+	dy = height/5 - 1;
+	for (let i = 0; i < biomeShifts*2/3; i++)
+	{
+		//get colder close to edges
+		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(margin + Math.random() * dy) }
+		let index = randomPos.x + randomPos.y * width;
+		while (world[index].waterlevel < 0 || world[index].waterlevel >= 2)
+		{
+			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(margin + Math.random() * dy) }
+			index = randomPos.x + randomPos.y * width;
+		}
+		let randomDistance = 5 + Math.round(Math.random()*((width+height)/48));
+		spreadBiome(world, randomPos, width, height, -0.28 + temperature, randomDistance);
+		
+		randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(height - margin - Math.random() * dy) }
+		index = randomPos.x + randomPos.y * width;
+		while (world[index].waterlevel < 0 || world[index].waterlevel >= 2)
+		{
+			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(height - margin - Math.random() * dy) }
+			index = randomPos.x + randomPos.y * width;
+		}
+		randomDistance = 5 + Math.round(Math.random()*((width+height)/48));
+		spreadBiome(world, randomPos, width, height, -0.28 + temperature, randomDistance);
+	}
+	
+	let forestAdditions = 7 + Math.random()*Math.round(Math.min(width, height)*0.68);
+	for (let i = 0; i < forestAdditions; i++)
+	{
+		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
+		let index = randomPos.x + randomPos.y * width;
+		while (world[index].waterlevel < 0 || world[index].waterlevel >= 2 || world[index].biome > 3.5)
+		{
+			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
+			index = randomPos.x + randomPos.y * width;
+		}
+		let randomDistance = 4 + Math.round(Math.random()*((width+height)/67));
+		spreadForest(world, randomPos, width, height, 0.995, randomDistance);
+	}
+	
+	
+	let renderMap = [];
+	for (let y = 0; y < height; y++)
+	{
+		for (let x  = 0; x < width; x++)
+		{
+			let xpos = (14*x+(((y+1)%2)*7));
+			let ypos = (4*y);
+			
+			let index = x+(y*width);
+			
+			if (world[index].waterlevel < -0.667)
+			{
+				renderMap.push({ src: './isometric_map_tiles/sea_deep.png', x: xpos, y: ypos});
+			}
+			else if (world[index].waterlevel < 0)
+			{
+				renderMap.push({ src: './isometric_map_tiles/sea_shore.png', x: xpos, y: ypos});
+			}
+			else if (world[index].waterlevel < 1) // flat land
+			{
+				if (Math.round(world[index].biome) == 0)
+				{
+					renderMap.push({ src: './isometric_map_tiles/snow_flat.png', x: xpos, y: ypos});
+					if (world[index].forest)
+						renderMap.push({ src: './isometric_map_tiles/forest_snowed.png', x: xpos, y: ypos});
+				}
+				else if (Math.round(world[index].biome) == 1)
+				{
+					renderMap.push({ src: './isometric_map_tiles/tundra_flat.png', x: xpos, y: ypos});
+					if (world[index].forest)
+						renderMap.push({ src: './isometric_map_tiles/forest_nosnow.png', x: xpos, y: ypos});
+				}
+				else if (Math.round(world[index].biome) == 2)
+				{
+					renderMap.push({ src: './isometric_map_tiles/grass_flat.png', x: xpos, y: ypos});
+					if (world[index].forest)
+						renderMap.push({ src: './isometric_map_tiles/forest_nosnow.png', x: xpos, y: ypos});
+				}
+				else if (Math.round(world[index].biome) == 3)
+				{
+					renderMap.push({ src: './isometric_map_tiles/plains_flat.png', x: xpos, y: ypos});
+					if (world[index].forest)
+						renderMap.push({ src: './isometric_map_tiles/forest_nosnow.png', x: xpos, y: ypos});
+				}
+				else if (Math.round(world[index].biome) == 4)
+				{
+					renderMap.push({ src: './isometric_map_tiles/sand_flat.png', x: xpos, y: ypos});
+				}
+			}
+			else if (world[index].waterlevel < 2) // hills land
+			{
+				if (Math.round(world[index].biome) == 0)
+				{
+					renderMap.push({ src: './isometric_map_tiles/snow_hill.png', x: xpos, y: ypos});
+					if (world[index].forest)
+						renderMap.push({ src: './isometric_map_tiles/forest_snowed.png', x: xpos, y: ypos});
+				}
+				else if (Math.round(world[index].biome) == 1)
+				{
+					renderMap.push({ src: './isometric_map_tiles/tundra_hill.png', x: xpos, y: ypos});
+					if (world[index].forest)
+						renderMap.push({ src: './isometric_map_tiles/forest_nosnow.png', x: xpos, y: ypos});
+				}
+				else if (Math.round(world[index].biome) == 2)
+				{
+					renderMap.push({ src: './isometric_map_tiles/grass_hill.png', x: xpos, y: ypos});
+					if (world[index].forest)
+						renderMap.push({ src: './isometric_map_tiles/forest_nosnow.png', x: xpos, y: ypos});
+				}
+				else if (Math.round(world[index].biome) == 3)
+				{
+					renderMap.push({ src: './isometric_map_tiles/plains_hill.png', x: xpos, y: ypos});
+					if (world[index].forest)
+						renderMap.push({ src: './isometric_map_tiles/forest_nosnow.png', x: xpos, y: ypos});
+				}
+				else if (Math.round(world[index].biome) == 4)
+				{
+					renderMap.push({ src: './isometric_map_tiles/sand_hill.png', x: xpos, y: ypos});
+				}
+			}
+			else // mountains
+			{
+				let random_mountain = Math.random();
+				if (Math.round(world[index].biome) < 2)
+				{
+					if (random_mountain < 0.06)
+					{
+						renderMap.push({ src: './isometric_map_tiles/mountain_volcano.png', x: xpos, y: ypos});
+					}
+					else if (random_mountain < 0.25)
+					{
+						renderMap.push({ src: './isometric_map_tiles/mountain_nosnow.png', x: xpos, y: ypos});
+					}
+					else
+					{
+						renderMap.push({ src: './isometric_map_tiles/mountain_snowcapped.png', x: xpos, y: ypos});
+					}
+				}
+				else
+				{
+					if (random_mountain < 0.06)
+					{
+						renderMap.push({ src: './isometric_map_tiles/mountain_volcano.png', x: xpos, y: ypos});
+					}
+					else
+					{
+						renderMap.push({ src: './isometric_map_tiles/mountain_nosnow.png', x: xpos, y: ypos});
+					}
+				}
+			}
+		}
+	}
+	
+	let file = 'isometricmap.png';
+	let path = './' + file;
+	
+	mergeImages(renderMap, 
+	{
+		width: (14*width+7),
+		height: (4*height + 9),
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The isometric map has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+}
 
 //
 //
