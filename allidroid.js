@@ -24139,19 +24139,19 @@ async function DrawVoronoiCity(channel, arguments)
 }
 
 
-function spreadBiome(world, pos, w, h, change, distance)
+function spreadTemperature(world, pos, w, h, target, distance)
 {
 	let donePos = [];
 	donePos.push(pos);
 	let posToDo = [];
 	let index = pos.x + (pos.y * w);
-	world[index].biome += change;
+	world[index].biome += target;
 	world[index].biome = Math.max(Math.min(world[index].biome, 4), 0);
 	
-	posToDo.push({ x: pos.x + 1, y: pos.y, distance: distance });
-	posToDo.push({ x: pos.x - 1, y: pos.y, distance: distance });
 	posToDo.push({ x: pos.x, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y + 1, distance: distance });
 	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
 	
 	let remainingDistance = distance;
 	while (posToDo.length > 0)
@@ -24160,28 +24160,54 @@ function spreadBiome(world, pos, w, h, change, distance)
 		if (posToDo[0].x > -1 && posToDo[0].y > -1 && posToDo[0].x < w && posToDo[0].y < h )
 		{
 			index = posToDo[0].x + (posToDo[0].y * w);
-			subDistance = posToDo[0].distance - 1;
-			world[index].biome += change * subDistance / distance;
+			subDistance = Math.max(posToDo[0].distance - 1.414);
+			world[index].biome += target * Math.round(subDistance) / distance;
 			world[index].biome = Math.max(Math.min(world[index].biome, 4), 0);
-			nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			if ((posToDo[0].y + 1) % 2 == 1)
 			{
-				posToDo.push(nextPos);
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
 			}
-			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			else
 			{
-				posToDo.push(nextPos);
-			}
-			nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
-			{
-				posToDo.push(nextPos);
-			}
-			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
-			{
-				posToDo.push(nextPos);
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
 			}
 		}
 		posToDo.splice(0, 1);
@@ -24190,21 +24216,20 @@ function spreadBiome(world, pos, w, h, change, distance)
 	return world;
 }
 
-function spreadWaterLevel(world, pos, w, h, change, distance)
+function spreadBiome(world, pos, w, h, target, distance)
 {
 	let donePos = [];
 	donePos.push(pos);
 	let posToDo = [];
 	let index = pos.x + (pos.y * w);
-	if (world[index].waterlevel > 0)
-		world[index].waterlevel += change/2;
-	else
-		world[index].waterlevel += change;
+	let change = target - world[index].biome;
+	world[index].biome += change;
+	world[index].biome = Math.max(Math.min(world[index].biome, 4), 0);
 	
-	posToDo.push({ x: pos.x + 1, y: pos.y, distance: distance });
-	posToDo.push({ x: pos.x - 1, y: pos.y, distance: distance });
 	posToDo.push({ x: pos.x, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y + 1, distance: distance });
 	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
 	
 	let remainingDistance = distance;
 	while (posToDo.length > 0)
@@ -24213,30 +24238,207 @@ function spreadWaterLevel(world, pos, w, h, change, distance)
 		if (posToDo[0].x > -1 && posToDo[0].y > -1 && posToDo[0].x < w && posToDo[0].y < h )
 		{
 			index = posToDo[0].x + (posToDo[0].y * w);
-			subDistance = posToDo[0].distance - 1;
-			if (world[index].waterlevel > 0)
-				world[index].waterlevel += change/2 * subDistance / distance;
+			subDistance = Math.max(posToDo[0].distance - 1.414);
+			change = target - world[index].biome;
+			world[index].biome += change * Math.round(subDistance) / distance;
+			world[index].biome = Math.max(Math.min(world[index].biome, 4), 0);
+			if ((posToDo[0].y + 1) % 2 == 1)
+			{
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+			}
 			else
-				world[index].waterlevel += change * subDistance / distance;
-			nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
 			{
-				posToDo.push(nextPos);
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
 			}
-			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+		}
+		posToDo.splice(0, 1);
+	}
+	
+	return world;
+}
+
+function spreadElevationLevel(world, pos, w, h, change, distance)
+{
+	let donePos = [];
+	donePos.push(pos);
+	let posToDo = [];
+	let index = pos.x + (pos.y * w);
+	world[index].waterlevel += change;
+	
+	posToDo.push({ x: pos.x, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
+	
+	let remainingDistance = distance;
+	while (posToDo.length > 0)
+	{
+		donePos.push(posToDo[0]);
+		if (posToDo[0].x > -1 && posToDo[0].y > -1 && posToDo[0].x < w && posToDo[0].y < h )
+		{
+			index = posToDo[0].x + (posToDo[0].y * w);
+			subDistance = Math.max(posToDo[0].distance - 1.414);
+			world[index].waterlevel += change * Math.round(subDistance) / distance;
+			if ((posToDo[0].y + 1) % 2 == 1)
 			{
-				posToDo.push(nextPos);
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
 			}
-			nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			else
 			{
-				posToDo.push(nextPos);
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
 			}
-			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+		}
+		posToDo.splice(0, 1);
+	}
+	
+	return world;
+}
+
+function spreadWaterLevel(world, pos, w, h, target, distance)
+{
+	let donePos = [];
+	donePos.push(pos);
+	let posToDo = [];
+	let index = pos.x + (pos.y * w);
+	let change = target - world[index].waterlevel;
+	world[index].waterlevel += change;
+	
+	posToDo.push({ x: pos.x, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
+	
+	let remainingDistance = distance;
+	while (posToDo.length > 0)
+	{
+		donePos.push(posToDo[0]);
+		if (posToDo[0].x > -1 && posToDo[0].y > -1 && posToDo[0].x < w && posToDo[0].y < h )
+		{
+			index = posToDo[0].x + (posToDo[0].y * w);
+			subDistance = Math.max(posToDo[0].distance - 1.414);
+			hange = target - world[index].waterlevel;
+			world[index].waterlevel += change * Math.round(subDistance) / distance;
+			if ((posToDo[0].y + 1) % 2 == 1)
 			{
-				posToDo.push(nextPos);
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+			}
+			else
+			{
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
 			}
 		}
 		posToDo.splice(0, 1);
@@ -24254,10 +24456,10 @@ function spreadForest(world, pos, w, h, chance, distance)
 	if (Math.random() < chance)
 		world[index].forest = true;
 	
-	posToDo.push({ x: pos.x + 1, y: pos.y, distance: distance });
-	posToDo.push({ x: pos.x - 1, y: pos.y, distance: distance });
 	posToDo.push({ x: pos.x, y: pos.y + 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y + 1, distance: distance });
 	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
+	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
 	
 	let remainingDistance = distance;
 	while (posToDo.length > 0)
@@ -24266,28 +24468,54 @@ function spreadForest(world, pos, w, h, chance, distance)
 		if (posToDo[0].x > -1 && posToDo[0].y > -1 && posToDo[0].x < w && posToDo[0].y < h )
 		{
 			index = posToDo[0].x + (posToDo[0].y * w);
-			subDistance = posToDo[0].distance - 1;
+			subDistance = Math.max(posToDo[0].distance - 1.414, 0);
 			if (Math.random() < (chance * subDistance / distance))
 				world[index].forest = true;
-			nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			if ((posToDo[0].y + 1) % 2 == 1)
 			{
-				posToDo.push(nextPos);
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
 			}
-			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y + 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+			else
 			{
-				posToDo.push(nextPos);
-			}
-			nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
-			{
-				posToDo.push(nextPos);
-			}
-			nextPos = { x: posToDo[0].x + 1, y: posToDo[0].y - 1, distance: subDistance };
-			if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
-			{
-				posToDo.push(nextPos);
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y + 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x - 1, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
+				nextPos = { x: posToDo[0].x, y: posToDo[0].y - 1, distance: subDistance };
+				if (subDistance > 1 && !ContainsIdenticalXY(donePos, nextPos) && !ContainsIdenticalXY(posToDo, nextPos))
+				{
+					posToDo.push(nextPos);
+				}
 			}
 		}
 		posToDo.splice(0, 1);
@@ -24296,9 +24524,58 @@ function spreadForest(world, pos, w, h, chance, distance)
 	return world;
 }
 
+function getShoreTypeCode(world, pos, w, h)
+{
+	let code = 0;
+	if ((pos.y + 1) % 2 == 1)
+	{
+		let index = pos.x + 1 + ((pos.y + 1) * w)
+		if (pos.x+1 < w && pos.y+1 < h && world[index].waterlevel > 0)
+			code += 1;
+		index = pos.x + 1 + ((pos.y - 1) * w)
+		if (pos.x+1 < w && pos.y-1 > -1 && world[index].waterlevel > 0)
+			code += 2;
+		index = pos.x + ((pos.y - 1) * w)
+		if (pos.y-1 > -1 && world[index].waterlevel > 0)
+			code += 4;
+		index = pos.x + ((pos.y + 1) * w)
+		if (pos.y+1 < h && world[index].waterlevel > 0)
+			code += 8;
+		index = pos.x + ((pos.y + 2) * w)
+		if (pos.y+2 < h && world[index].waterlevel > 0)
+			code += 16;
+		index = pos.x + ((pos.y - 2) * w)
+		if (pos.y-2 > -1 && world[index].waterlevel > 0)
+			code += 32;
+	}
+	else
+	{
+		let index = pos.x+ ((pos.y + 1) * w)
+		if (pos.y+1 < h && world[index].waterlevel > 0)
+			code += 1;
+		index = pos.x+ ((pos.y - 1) * w)
+		if (pos.y-1 > -1 && world[index].waterlevel > 0)
+			code += 2;
+		index = pos.x - 1 + ((pos.y - 1) * w)
+		if (pos.x-1 > -1 && pos.y-1 > -1 && world[index].waterlevel > 0)
+			code += 4;
+		index = pos.x - 1 + ((pos.y + 1) * w)
+		if (pos.x-1 > -1 && pos.y+1 < h && world[index].waterlevel > 0)
+			code += 8;
+		index = pos.x + ((pos.y + 2) * w)
+		if (pos.y+2 < h && world[index].waterlevel > 0)
+			code += 16;
+		index = pos.x + ((pos.y - 2) * w)
+		if (pos.y-2 > -1 && world[index].waterlevel > 0)
+			code += 32;
+	}
+	
+	return code;
+}
+
 function generateIsometricWorldMap(channel, arguments)
 {
-	let width = 101;
+	let width = 71;
 	let height = 141;
 	let margin = Math.floor(Math.min(width, height)/5);
 	let xmargin = Math.floor(margin / 3);
@@ -24318,20 +24595,20 @@ function generateIsometricWorldMap(channel, arguments)
 		argumentpos = arguments.indexOf("-w")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
-			width = parse(arguments[argumentpos+1]);
-			if (width > 401)
-				width = 401;
-			if (width < 61)
-				width = 61;
+			width = parseInt(arguments[argumentpos+1]);
+			if (width > 181)
+				width = 181;
+			if (width < 31)
+				width = 31;
 		}
 		argumentpos = arguments.indexOf("-h")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
 			height = parseInt(arguments[argumentpos+1]);
-			if (height > 651)
-				height = 651;
-			if (height < 111)
-				height = 111;
+			if (height > 421)
+				height = 421;
+			if (height < 81)
+				height = 81;
 		}
 		margin = Math.floor(Math.min(width, height)/5);		argumentpos = arguments.indexOf("-m")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
@@ -24347,13 +24624,24 @@ function generateIsometricWorldMap(channel, arguments)
 		xmargin = Math.floor(margin / 3);
 	}
 	
+	
+	let start = new Date().getTime();
+	
 	let world = [];
+	
+	noisemap = noiseMap2D(height, width, 0.66, edgevalue = 0.5)
 	
 	for (let y = 0; y < height; y++)
 	{
+		let equator = height/2;
+		let distance = Math.abs(equator - y + margin);
+		if (y > equator)
+			distance = Math.abs(equator - y - margin);
+		let tile_temperature = 3.667 - (distance / equator) * 3.667
 		for (let x = 0; x < width; x++)
 		{
-			world.push({ waterlevel: -1, biome: 2, forest: false});
+			let temperature_noise = (noisemap[x + y * width] - 0.5) / 3;
+			world.push({ waterlevel: -1, biome: tile_temperature + temperature_noise, forest: false});
 		}
 	}
 	
@@ -24361,109 +24649,254 @@ function generateIsometricWorldMap(channel, arguments)
 	let dx = width - (xmargin * 2) - 1;
 	let yo = margin;
 	let dy = height - (margin * 2) - 1;
-	let landmasses = Math.round(Math.min(width, height)*3.45);
-	
-	for (let i = 0; i < landmasses; i++)
+	let average_water_level = -1;
+	let avg_water_count = 0;
+	let continent_mass =  Math.round(Math.min(width, height)*5.1 + Math.random()*Math.min(width, height)*1.65);
+	while (average_water_level < -0.275)
 	{
 		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) };
-		let randomDistance = 6 + Math.round(Math.random()*((width+height)/72));
+		let randomDistance = 4 + Math.round(Math.random()*((width+height)/18));
 		
 		let index = randomPos.x + randomPos.y * width;
-		spreadWaterLevel(world, randomPos, width, height, 0.75, randomDistance);
-		spreadBiome(world, randomPos, width, height, -0.04, randomDistance);
+		spreadWaterLevel(world, randomPos, width, height, 1, randomDistance);
+		average_water_level = 0;
+		avg_water_count = 0;
+		for (let y = margin; y < height - margin*2; y++)
+		{
+			for (let x = xmargin; x < width - xmargin*2; x++)
+			{
+				let index = x + y * width;
+				average_water_level += world[index].waterlevel;
+				avg_water_count++;
+			}
+		}
+		
+		average_water_level /= avg_water_count;
 	}
+	console.log("continent masses");
 	
-	let mountainPeaks = 5 + Math.random()*Math.round(Math.min(width, height)*0.57);
-	
+	let mountainPeaks = Math.round(Math.min(width, height)*2.97 + Math.random()*Math.min(width, height)*0.89);
 	for (let i = 0; i < mountainPeaks; i++)
 	{
 		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) };
-		let randomDistance = 6 + Math.round(Math.random()*((width+height)/144));
+		let randomDistance = 2 + Math.round(Math.random()*((width+height)/192));
 		
 		let index = randomPos.x + randomPos.y * width;
-		spreadWaterLevel(world, randomPos, width, height, 1.75, 1);
-		spreadWaterLevel(world, randomPos, width, height, 1.25, randomDistance);
-		spreadBiome(world, randomPos, width, height, -0.27, randomDistance);
+		while (world[index].waterlevel < 0)
+		{
+			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
+			index = randomPos.x + randomPos.y * width;
+		}
+		spreadWaterLevel(world, randomPos, width, height, 1.5, randomDistance);
+		spreadTemperature(world, randomPos, width, height, -0.5, randomDistance-1);
+		spreadWaterLevel(world, randomPos, width, height, 2.5, 1);
 	}
+	console.log("mountain peaks");
+	
+	for (let i = 0; i < continent_mass; i++)
+	{
+		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) };
+		let randomDistance = 4 + Math.round(Math.random()*((width+height)/48));
+		
+		let index = randomPos.x + randomPos.y * width;
+		while (world[index].waterlevel < 0)
+		{
+			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
+			index = randomPos.x + randomPos.y * width;
+		}
+		spreadElevationLevel(world, randomPos, width, height, 0.095, randomDistance);
+	}
+	console.log("elevation raises");
 	
 	xo = xmargin;
 	dx = width - (xmargin * 2) - 1;
-	yo = height/3;
-	dy = height/3 - 1;
+	yo = height*3/8;
+	dy = height/4 - 1;
 	biomeShifts = Math.round(Math.min(width, height)*2.85)
 	for (let i = 0; i < biomeShifts; i++)
 	{
 		//get hotter closer to center
 		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
 		let index = randomPos.x + randomPos.y * width;
-		while (world[index].waterlevel < 0 || world[index].waterlevel >= 2)
+		while (world[index].waterlevel < 0)
 		{
 			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
 			index = randomPos.x + randomPos.y * width;
 		}
-		let randomDistance = 5 + Math.round(Math.random()*((width+height)/36));
-		spreadBiome(world, randomPos, width, height, 0.333 + temperature, randomDistance);
+		let randomDistance = 5 + Math.round(Math.random()*((width+height)/54));
+		spreadTemperature(world, randomPos, width, height, Math.random()*0.35, randomDistance);
 	}
-	
-	dy = height/5 - 1;
+	console.log("hot temps");
+	dy = height/10 - 1;
 	for (let i = 0; i < biomeShifts*2/3; i++)
 	{
 		//get colder close to edges
 		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(margin + Math.random() * dy) }
 		let index = randomPos.x + randomPos.y * width;
-		while (world[index].waterlevel < 0 || world[index].waterlevel >= 2)
+		while (world[index].waterlevel < 0)
 		{
 			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(margin + Math.random() * dy) }
 			index = randomPos.x + randomPos.y * width;
 		}
-		let randomDistance = 5 + Math.round(Math.random()*((width+height)/48));
-		spreadBiome(world, randomPos, width, height, -0.28 + temperature, randomDistance);
+		let randomDistance = 5 + Math.round(Math.random()*((width+height)/63));
+		spreadTemperature(world, randomPos, width, height, Math.random()*-0.35, randomDistance);
 		
 		randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(height - margin - Math.random() * dy) }
 		index = randomPos.x + randomPos.y * width;
-		while (world[index].waterlevel < 0 || world[index].waterlevel >= 2)
+		while (world[index].waterlevel < 0)
 		{
 			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(height - margin - Math.random() * dy) }
 			index = randomPos.x + randomPos.y * width;
 		}
-		randomDistance = 5 + Math.round(Math.random()*((width+height)/48));
-		spreadBiome(world, randomPos, width, height, -0.28 + temperature, randomDistance);
+		randomDistance = 5 + Math.round(Math.random()*((width+height)/63));
+		spreadTemperature(world, randomPos, width, height, Math.random()*-0.35, randomDistance);
 	}
 	
+	console.log("cold temps");
+	
+	xo = xmargin;
+	dx = width - (xmargin * 2) - 1;
+	yo = margin;
+	dy = height - (margin * 2) - 1;
 	let forestAdditions = 7 + Math.random()*Math.round(Math.min(width, height)*0.68);
 	for (let i = 0; i < forestAdditions; i++)
 	{
 		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
 		let index = randomPos.x + randomPos.y * width;
-		while (world[index].waterlevel < 0 || world[index].waterlevel >= 2 || world[index].biome > 3.5)
+		let forest_attempts = 0;
+		while ((world[index].waterlevel < 0 || world[index].waterlevel >= 2 || world[index].biome > 3.5) && forest_attempts < 128)
 		{
 			randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
 			index = randomPos.x + randomPos.y * width;
+			forest_attempts++;
 		}
-		let randomDistance = 4 + Math.round(Math.random()*((width+height)/67));
-		spreadForest(world, randomPos, width, height, 0.995, randomDistance);
+		if (forest_attempts < 128)
+		{
+			let randomDistance = 4 + Math.round(Math.random()*((width+height)/75));
+			spreadForest(world, randomPos, width, height, 0.995, randomDistance);
+		}
 	}
+	console.log("forests");
 	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			let index = x + y * width;
+			if (world[index].waterlevel > -0.5 && world[index].waterlevel < 0)
+			{
+				let randomDistance = 1 + Math.floor(Math.random()*4);
+				spreadBiome(world, { x: x, y: y }, width, height, 2, randomDistance);
+			}
+		}
+	}
+	console.log("shore temperature normalization");
 	
 	let renderMap = [];
 	for (let y = 0; y < height; y++)
 	{
 		for (let x  = 0; x < width; x++)
 		{
-			let xpos = (14*x+(((y+1)%2)*7));
-			let ypos = (4*y);
+			let xpos = (16 * x+(((y + 1) % 2) * 8));
+			let ypos = (4 * y);
 			
 			let index = x+(y*width);
 			
 			if (world[index].waterlevel < -0.667)
 			{
-				renderMap.push({ src: './isometric_map_tiles/sea_deep.png', x: xpos, y: ypos});
+				let shore = getShoreTypeCode(world, {x: x, y: y}, width, height);
+				if (shore == 32)
+					renderMap.push({ src: './isometric_map_tiles/sea_shore_corner_B.png', x: xpos, y: ypos});
+				else if (shore == 16)
+					renderMap.push({ src: './isometric_map_tiles/sea_shore_corner_T.png', x: xpos, y: ypos});
+				else
+				{
+					while (shore > 15)
+					{
+						shore -= 16;
+					}
+					if (shore == 1)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_01.png', x: xpos, y: ypos});
+					else if (shore == 2)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_02.png', x: xpos, y: ypos});
+					else if (shore == 3)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_03.png', x: xpos, y: ypos});
+					else if (shore == 4)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_04.png', x: xpos, y: ypos});
+					else if (shore == 5)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_05.png', x: xpos, y: ypos});
+					else if (shore == 6)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_06.png', x: xpos, y: ypos});
+					else if (shore == 7)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_07.png', x: xpos, y: ypos});
+					else if (shore == 8)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_08.png', x: xpos, y: ypos});
+					else if (shore == 9)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_09.png', x: xpos, y: ypos});
+					else if (shore == 10)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_10.png', x: xpos, y: ypos});
+					else if (shore == 11)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_11.png', x: xpos, y: ypos});
+					else if (shore == 12)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_12.png', x: xpos, y: ypos});
+					else if (shore == 13)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_13.png', x: xpos, y: ypos});
+					else if (shore == 14)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_14.png', x: xpos, y: ypos});
+					else if (shore == 15)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_15.png', x: xpos, y: ypos});
+					else
+						renderMap.push({ src: './isometric_map_tiles/sea_deep.png', x: xpos, y: ypos});
+				}
 			}
-			else if (world[index].waterlevel < 0)
+			else if (world[index].waterlevel <= 0)
 			{
-				renderMap.push({ src: './isometric_map_tiles/sea_shore.png', x: xpos, y: ypos});
+				let shore = getShoreTypeCode(world, {x: x, y: y}, width, height);
+				if (shore == 32)
+					renderMap.push({ src: './isometric_map_tiles/sea_shore_corner_B.png', x: xpos, y: ypos});
+				else if (shore == 16)
+					renderMap.push({ src: './isometric_map_tiles/sea_shore_corner_T.png', x: xpos, y: ypos});
+				else
+				{
+					while (shore > 15)
+					{
+						shore -= 16;
+					}
+					if (shore == 1)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_01.png', x: xpos, y: ypos});
+					else if (shore == 2)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_02.png', x: xpos, y: ypos});
+					else if (shore == 3)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_03.png', x: xpos, y: ypos});
+					else if (shore == 4)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_04.png', x: xpos, y: ypos});
+					else if (shore == 5)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_05.png', x: xpos, y: ypos});
+					else if (shore == 6)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_06.png', x: xpos, y: ypos});
+					else if (shore == 7)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_07.png', x: xpos, y: ypos});
+					else if (shore == 8)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_08.png', x: xpos, y: ypos});
+					else if (shore == 9)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_09.png', x: xpos, y: ypos});
+					else if (shore == 10)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_10.png', x: xpos, y: ypos});
+					else if (shore == 11)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_11.png', x: xpos, y: ypos});
+					else if (shore == 12)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_12.png', x: xpos, y: ypos});
+					else if (shore == 13)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_13.png', x: xpos, y: ypos});
+					else if (shore == 14)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_14.png', x: xpos, y: ypos});
+					else if (shore == 15)
+						renderMap.push({ src: './isometric_map_tiles/sea_shore_15.png', x: xpos, y: ypos});
+					else
+						renderMap.push({ src: './isometric_map_tiles/sea_shore.png', x: xpos, y: ypos});
+				}
 			}
-			else if (world[index].waterlevel < 1) // flat land
+			else if (world[index].waterlevel <= 1) // flat land
 			{
 				if (Math.round(world[index].biome) == 0)
 				{
@@ -24487,14 +24920,14 @@ function generateIsometricWorldMap(channel, arguments)
 				{
 					renderMap.push({ src: './isometric_map_tiles/plains_flat.png', x: xpos, y: ypos});
 					if (world[index].forest)
-						renderMap.push({ src: './isometric_map_tiles/forest_nosnow.png', x: xpos, y: ypos});
+						renderMap.push({ src: './isometric_map_tiles/forest_plains.png', x: xpos, y: ypos});
 				}
 				else if (Math.round(world[index].biome) == 4)
 				{
 					renderMap.push({ src: './isometric_map_tiles/sand_flat.png', x: xpos, y: ypos});
 				}
 			}
-			else if (world[index].waterlevel < 2) // hills land
+			else if (world[index].waterlevel <= 2.2) // hills land
 			{
 				if (Math.round(world[index].biome) == 0)
 				{
@@ -24518,7 +24951,7 @@ function generateIsometricWorldMap(channel, arguments)
 				{
 					renderMap.push({ src: './isometric_map_tiles/plains_hill.png', x: xpos, y: ypos});
 					if (world[index].forest)
-						renderMap.push({ src: './isometric_map_tiles/forest_nosnow.png', x: xpos, y: ypos});
+						renderMap.push({ src: './isometric_map_tiles/forest_plains.png', x: xpos, y: ypos});
 				}
 				else if (Math.round(world[index].biome) == 4)
 				{
@@ -24530,7 +24963,7 @@ function generateIsometricWorldMap(channel, arguments)
 				let random_mountain = Math.random();
 				if (Math.round(world[index].biome) < 2)
 				{
-					if (random_mountain < 0.06)
+					if (random_mountain < 0.01)
 					{
 						renderMap.push({ src: './isometric_map_tiles/mountain_volcano.png', x: xpos, y: ypos});
 					}
@@ -24545,7 +24978,7 @@ function generateIsometricWorldMap(channel, arguments)
 				}
 				else
 				{
-					if (random_mountain < 0.06)
+					if (random_mountain < 0.01)
 					{
 						renderMap.push({ src: './isometric_map_tiles/mountain_volcano.png', x: xpos, y: ypos});
 					}
@@ -24558,19 +24991,22 @@ function generateIsometricWorldMap(channel, arguments)
 		}
 	}
 	
+	let end = new Date().getTime();
+	
 	let file = 'isometricmap.png';
 	let path = './' + file;
 	
 	mergeImages(renderMap, 
 	{
-		width: (14*width+7),
-		height: (4*height + 9),
+		width: (16 * width + 8),
+		height: (4 * height + 9),
 		Canvas: Canvas,
 		Image: Image
 	})
 	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
 		if (err) throw err;
-		console.log('The isometric map has been saved!');
+		let end = new Date().getTime(); 
+		console.log('The isometric map has been saved! Took ' + (end-start) + ' milliseconds');
 		channel.send({ files: [{ attachment: path, name: file }] });
 		}
 		))
