@@ -24596,8 +24596,8 @@ function generateIsometricWorldMap(channel, arguments)
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
 			width = parseInt(arguments[argumentpos+1]);
-			if (width > 181)
-				width = 181;
+			if (width > 161)
+				width = 161;
 			if (width < 31)
 				width = 31;
 		}
@@ -24605,8 +24605,8 @@ function generateIsometricWorldMap(channel, arguments)
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
 			height = parseInt(arguments[argumentpos+1]);
-			if (height > 421)
-				height = 421;
+			if (height > 291)
+				height = 291;
 			if (height < 81)
 				height = 81;
 		}
