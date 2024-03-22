@@ -22802,7 +22802,7 @@ function PlaceShip(board, ship_id, coords, alignment)
 		{
 			let tempy = coords.y + i;
 			
-			if (tempy > 10)
+			if (tempy > 9)
 			{
 				return false;
 			}
@@ -22820,7 +22820,7 @@ function PlaceShip(board, ship_id, coords, alignment)
 		{
 			let tempx = coords.x + i;
 			
-			if (tempx > 10)
+			if (tempx > 9)
 			{
 				return false;
 			}
@@ -24153,7 +24153,6 @@ function spreadTemperature(world, pos, w, h, target, distance)
 	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
 	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
 	
-	let remainingDistance = distance;
 	while (posToDo.length > 0)
 	{
 		donePos.push(posToDo[0]);
@@ -24231,7 +24230,6 @@ function spreadBiome(world, pos, w, h, target, distance)
 	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
 	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
 	
-	let remainingDistance = distance;
 	while (posToDo.length > 0)
 	{
 		donePos.push(posToDo[0]);
@@ -24308,7 +24306,6 @@ function spreadElevationLevel(world, pos, w, h, change, distance)
 	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
 	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
 	
-	let remainingDistance = distance;
 	while (posToDo.length > 0)
 	{
 		donePos.push(posToDo[0]);
@@ -24384,7 +24381,6 @@ function spreadWaterLevel(world, pos, w, h, target, distance)
 	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
 	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
 	
-	let remainingDistance = distance;
 	while (posToDo.length > 0)
 	{
 		donePos.push(posToDo[0]);
@@ -24461,7 +24457,6 @@ function spreadForest(world, pos, w, h, chance, distance)
 	posToDo.push({ x: pos.x, y: pos.y - 1, distance: distance });
 	posToDo.push({ x: pos.x + 1, y: pos.y - 1, distance: distance });
 	
-	let remainingDistance = distance;
 	while (posToDo.length > 0)
 	{
 		donePos.push(posToDo[0]);
