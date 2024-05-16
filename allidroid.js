@@ -155,6 +155,8 @@ var dinermenu_gen = JSON.parse(fs.readFileSync('dinermenu_gen.json'));
 // trinket gen files
 var trinket_gen = JSON.parse(fs.readFileSync('trinket_gen.json'));
 
+// war advice from file
+var war_advice = JSON.parse(fs.readFileSync('waradvice.json'));
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -447,7 +449,7 @@ async function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    } else if (normalizedCommand == "remindme") 
+    /* } else if (normalizedCommand == "remindme") 
 	{
 		if (arguments[0] != null && arguments[0].toLowerCase() == "in")
 		{
@@ -486,7 +488,7 @@ async function processCommand(receivedMessage)
     } else if (normalizedCommand == "remindercount") 
 	{
 		receivedMessage.channel.send("There are " + reminder_array.length + " reminders currently");
-		return;
+		return; */
     } else if (normalizedCommand == "plznoyell") 
 	{
 		receivedMessage.channel.send("but I was no yell at you ;_;");
@@ -978,6 +980,13 @@ async function processCommand(receivedMessage)
 			return;
 		}
     }
+	else if (normalizedCommand == "gotowar")
+	{
+		let answer = RandomArrayEntry(war_advice.advice, false, "[donotnest]");
+		if (answer.length > 0)
+			receivedMessage.channel.send(answer);
+		return;
+	}
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -19913,9 +19922,9 @@ function DetermineMandatoryRoomPath(roomconnections, start, end)
 	return false;
 }
 
-var DUNGEONMAP_MAX_WIDTH = 60;
+var DUNGEONMAP_MAX_WIDTH = 48;
 var DUNGEONMAP_MIN_WIDTH = 20;
-var DUNGEONMAP_MAX_HEIGHT = 45;
+var DUNGEONMAP_MAX_HEIGHT = 36;
 var DUNGEONMAP_MIN_HEIGHT = 15;
 var DUNGEONMAP_MAX_ROOMS = 36;
 var DUNGEONMAP_MIN_ROOMS = 3;
