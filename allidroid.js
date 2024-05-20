@@ -22844,6 +22844,10 @@ function generatePodcaster()
 			{
 				primaryword = RandomArrayEntry(podcaster_gen.place, false, "[donotnest]");
 			}
+			else if (substrcommands[1] == "places")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.places, false, "[donotnest]");
+			}
 			let aan = grammarAorAn(primaryword.substr(0,1));
 			podcastname = podcastname.substr(0,position) + aan + " " + primaryword + podcastname.substr(endposition+1);
 		}
@@ -22885,6 +22889,10 @@ function generatePodcaster()
 			else if (substrcommands[0] == "place")
 			{
 				primaryword = RandomArrayEntry(podcaster_gen.place, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "places")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.places, false, "[donotnest]");
 			}
 			podcastname = podcastname.substr(0,position) + primaryword + podcastname.substr(endposition+1);
 		}
