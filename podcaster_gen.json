@@ -19,7 +19,16 @@
 		"[adjective] [animals]",
 		"[adjective] [objects]",
 		"[objects] in the making",
-		"[adjective] [verbing]"
+		"[adjective] [verbing]",
+		"[an object] in time",
+		"[verb] of the [object]",
+		"[adjective] like the [animal]",
+		"[animals] with [objects]",
+		"under [an adjective] sky",
+		"[verbing] in [an place]",
+		"[places] without [objects]",
+		"[adjective] [places]",
+		"i have no [object] and i must [verb]"
 	],
 	"podcaster_firstnames":
 	[
@@ -233,7 +242,8 @@
 		"naaji",
 		"salim",
 		"umar",
-		"tawfiq"
+		"tawfiq",
+		"scream"
 	],
 	"verb":
 	[
@@ -563,15 +573,16 @@
 		"overpowered",
 		"writhing",
 		"mesmerising",
-		"enthralling"
+		"enthralling",
+		"steel"
 	],
 	"object":
 	[
+		"flower",
 		"lightbulb",
 		"screw",
 		"hammer",
 		"sandwich",
-		"headphones",
 		"phone",
 		"glove",
 		"harness",
@@ -597,10 +608,13 @@
 		"pokeball",
 		"greatball",
 		"ultraball",
-		"potion"
+		"potion",
+		"spray bottle",
+		"hrt"
 	],
 	"objects":
 	[
+		"flowers",
 		"lightbulbs",
 		"screws",
 		"hammers",
@@ -631,7 +645,9 @@
 		"pokeballs",
 		"greatballs",
 		"ultraballs",
-		"potions"
+		"potions",
+		"spray bottles",
+		"hrt"
 	],
 	"animal":
 	[
@@ -681,7 +697,7 @@
 		"kitsunes",
 		"psyducks",
 		"penguins",
-		"sheeps",
+		"sheep",
 		"goats",
 		"pandas",
 		"sloths",
@@ -708,6 +724,18 @@
 		"mountain",
 		"plain",
 		"plateau"
+	],
+	"places":
+	[
+		"oceans",
+		"seas",
+		"forests",
+		"deserts",
+		"beaches",
+		"swamps",
+		"mountains",
+		"plains",
+		"plateaus"
 	],
 	"podcast_subjects":
 	[
@@ -738,7 +766,7 @@
 		"blaseball",
 		"computer hardware",
 		"universal standards",
-		"00s webcomics",
+		"2000s webcomics",
 		"fake true crime",
 		"science fiction babes",
 		"cat breeds",
@@ -748,6 +776,44 @@
 		"unionisation in chemistry",
 		"costuming and cosplay",
 		"queer joy",
-		"music parodies"
+		"music parodies",
+		"comedy",
+		"comics",
+		"bad anime",
+		"good anime",
+		"ttrpg actual plays",
+		"animorphs",
+		"sexy vampires",
+		"unsexy vampires",
+		"diy hrt",
+		"writing prompts",
+		"werewolves",
+		"superhero movies",
+		"disability rights",
+		"cryptids",
+		"video game design",
+		"masc lesbians",
+		"femboys",
+		"biohacking",
+		"sports highlights",
+		"interesting sports facts",
+		"sports statistics",
+		"video game music",
+		"relationship advice",
+		"lore deepdives",
+		"etymology",
+		"entomology",
+		"conlangs",
+		"historical queers",
+		"sex work legislation",
+		"numerology",
+		"himbos",
+		"history of speedrunning",
+		"revolutionary fashion",
+		"procedural generation in video games",
+		"queer history",
+		"fitness",
+		"art theory",
+		"carcinization"
 	]
 }
