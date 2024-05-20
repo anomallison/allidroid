@@ -158,6 +158,10 @@ var trinket_gen = JSON.parse(fs.readFileSync('trinket_gen.json'));
 // war advice from file
 var war_advice = JSON.parse(fs.readFileSync('waradvice.json'));
 
+// war advice from file
+var podcaster_gen = JSON.parse(fs.readFileSync('podcaster_gen.json'));
+
+
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
@@ -986,6 +990,21 @@ async function processCommand(receivedMessage)
 		if (answer.length > 0)
 			receivedMessage.channel.send(answer);
 		return;
+	}
+	else if (normalizedCommand == "podcaster")
+	{
+		let output = generatePodcaster();
+		
+		if (output == null)
+		{
+			console.log("failed command: podcaster");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
 	}
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
@@ -22761,6 +22780,123 @@ function loadCurrentGayValue()
 	
 	currentgay += (Math.floor((Math.random()*6) + 1) * 10) + Math.floor((Math.random()*10) + 1);
 }
+
+//
+// Podcaster Generation
+
+function generatePodcaster()
+{
+	let podcaster = RandomArrayEntry(podcaster_gen.podcaster_firstnames, false, "[donotnest]") + " " + RandomArrayEntry(podcaster_gen.podcaster_lastnames, false, "[donotnest]");
+	let podcastname = RandomArrayEntry(podcaster_gen.podcastnames, false, "[donotnest]");
+	let subject1 = RandomArrayEntry(podcaster_gen.podcast_subjects, false, "[donotnest]");
+	let subject2 = RandomArrayEntry(podcaster_gen.podcast_subjects, false, "[donotnest]");
+	
+	while (subject1 == subject2)
+	{
+		subject2 = RandomArrayEntry(podcaster_gen.podcast_subjects, false, "[donotnest]");
+	}
+	
+	let position = podcastname.indexOf("\[");
+	let endposition = -1;
+	let podcastsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = podcastname.indexOf("\]");
+		podcastsubstr = podcastname.substring(position+1,endposition);
+		substrcommands = podcastsubstr.split(" ");
+		if (substrcommands[0] == "an")
+		{
+			let primaryword = "";
+			if (substrcommands[1] == "verb")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.verb, false, "[donotnest]");
+			}
+			else if (substrcommands[1] == "verbing")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.verbing, false, "[donotnest]");
+			}
+			else if (substrcommands[1] == "adjective")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.adjective, false, "[donotnest]");
+			}
+			else if (substrcommands[1] == "object")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.object, false, "[donotnest]");
+			}
+			else if (substrcommands[1] == "objects")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.objects, false, "[donotnest]");
+			}
+			else if (substrcommands[1] == "objects")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.objects, false, "[donotnest]");
+			}
+			else if (substrcommands[1] == "animal")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.animal, false, "[donotnest]");
+			}
+			else if (substrcommands[1] == "animals")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.animals, false, "[donotnest]");
+			}
+			else if (substrcommands[1] == "place")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.place, false, "[donotnest]");
+			}
+			let aan = grammarAorAn(primaryword.substr(0,1));
+			podcastname = podcastname.substr(0,position) + aan + " " + primaryword + podcastname.substr(endposition+1);
+		}
+		else
+		{
+			let primaryword = "";
+			if (substrcommands[0] == "verb")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.verb, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "verbing")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.verbing, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "adjective")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.adjective, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "object")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.object, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "objects")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.objects, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "objects")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.objects, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "animal")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.animal, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "animals")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.animals, false, "[donotnest]");
+			}
+			else if (substrcommands[0] == "place")
+			{
+				primaryword = RandomArrayEntry(podcaster_gen.place, false, "[donotnest]");
+			}
+			podcastname = podcastname.substr(0,position) + primaryword + podcastname.substr(endposition+1);
+		}
+		position = podcastname.indexOf("\[");
+	}
+	
+	let full_postcastgen = podcaster.toUpperCase() + ", host of " + podcastname.toUpperCase() + " where they discuss " + subject1.toUpperCase() + " and " + subject2.toUpperCase();
+	
+	return full_postcastgen;
+}
+
+
 
 //
 // BATTLESHIPS

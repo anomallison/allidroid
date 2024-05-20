@@ -103,7 +103,7 @@
 		"priority": 3,
 		"lists": ["monster","boss","friend"],
 		"antonyms": [],
-		"synonyms": [],
+		"synonyms": ["inebriated"],
 		"addedparts": [],
 		"removedparts": []
 	},
