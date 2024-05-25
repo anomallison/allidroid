@@ -730,6 +730,34 @@ async function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
+    } else if (normalizedCommand == "dndmonster") 
+	{
+		output = RandomArrayEntry(dnd_adventure_gen.Monsters);
+		
+		if (output == null)
+		{
+			console.log("failed command: dndmonster");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dndrace") 
+	{
+		output = RandomArrayEntry(dnd_adventure_gen.CharacterRace);
+		
+		if (output == null)
+		{
+			console.log("failed command: dndmonster");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
     } else if (normalizedCommand == "dnddungeon") 
 	{
 		output = GenerateDnDDungeon();

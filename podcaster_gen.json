@@ -14,7 +14,7 @@
 		"one too many [animals]",
 		"all the [animals] in the [place]",
 		"[an animal] in [an place]",
-		"help i need [an object]",
+		"help I need [an object]",
 		"[adjective] times",
 		"[adjective] [animals]",
 		"[adjective] [objects]",
@@ -28,7 +28,7 @@
 		"[verbing] in [an place]",
 		"[places] without [objects]",
 		"[adjective] [places]",
-		"i have no [object] and i must [verb]"
+		"I have no [object] and I must [verb]"
 	],
 	"podcaster_firstnames":
 	[
