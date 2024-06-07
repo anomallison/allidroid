@@ -15868,7 +15868,7 @@ function filterQuestsByLevel(quest)
 
 function getRandomQuestOfLevel(level = -1)
 {
-	if (level == -1)
+	if (level < 0)
 		level = Math.floor(Math.random()*MAX_QUEST_LEVEL)+1;
 	if (level > MAX_QUEST_LEVEL)
 		level = MAX_QUEST_LEVEL;

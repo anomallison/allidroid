@@ -132,7 +132,18 @@
 		"wilhem",
 		"simone",
 		"simon",
-		"adjunct"
+		"adjunct",
+		"penguin",
+		"freya",
+		"freja",
+		"lev",
+		"leon",
+		"claire",
+		"rebecca",
+		"jill",
+		"chris",
+		"barry",
+		"albert"
 	],
 	"podcaster_lastnames":
 	[
@@ -243,7 +254,18 @@
 		"salim",
 		"umar",
 		"tawfiq",
-		"scream"
+		"scream",
+		"penguin",
+		"smith",
+		"odinson",
+		"jones",
+		"kennedy",
+		"redfield",
+		"chambers",
+		"valentine",
+		"burns",
+		"wesker",
+		"fredottir"
 	],
 	"verb":
 	[
@@ -675,7 +697,11 @@
 		"tiger",
 		"wolf",
 		"bear",
-		"dinosaur",
+		"tyrannosaurus",
+		"allosaurus",
+		"velociraptor",
+		"compsognathus",
+		"tyrannodon",
 		"koala",
 		"gecko",
 		"dragon",
@@ -788,6 +814,7 @@
 		"diy hrt",
 		"writing prompts",
 		"werewolves",
+		"plushie collections",
 		"superhero movies",
 		"disability rights",
 		"cryptids",
@@ -814,6 +841,9 @@
 		"queer history",
 		"fitness",
 		"art theory",
-		"carcinization"
+		"carcinization",
+		"sexual health",
+		"nutrition",
+		"queer activism"
 	]
 }

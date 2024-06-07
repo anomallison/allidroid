@@ -2451,6 +2451,30 @@
 	"quests":
 	[
 		{
+			"level": 0,
+			"landmark":"quest site",
+			"reward":
+			{
+				"silverpieces": 10,
+				"itemmin": -5,
+				"itemrandom": 2,
+				"items":
+				[
+					"magicitem1"
+				]
+			},
+			"encounters":
+			[
+				"wolf",
+				"bandit",
+				"wolf",
+				"bandit",
+				"bandit wolf",
+				"wolf wolf",
+				"bandit bandit"
+			]
+		},
+		{
 			"level": 1,
 			"landmark":"quest site",
 			"reward":
