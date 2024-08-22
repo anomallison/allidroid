@@ -19969,12 +19969,14 @@ function DetermineMandatoryRoomPath(roomconnections, start, end)
 	return false;
 }
 
-var DUNGEONMAP_MAX_WIDTH = 48;
+var DUNGEONMAP_MAX_WIDTH = 96;
 var DUNGEONMAP_MIN_WIDTH = 20;
-var DUNGEONMAP_MAX_HEIGHT = 36;
+var DUNGEONMAP_MAX_HEIGHT = 72;
 var DUNGEONMAP_MIN_HEIGHT = 15;
-var DUNGEONMAP_MAX_ROOMS = 36;
+var DUNGEONMAP_MAX_ROOMS = 48;
 var DUNGEONMAP_MIN_ROOMS = 3;
+var DUNGEONMAP_ROOM_MIN_HEIGHT = 4;
+var DUNGEONMAP_ROOM_MIN_WIDTH = 4;
 
 function GenerateDungeonMap(arguments)
 {
@@ -20074,15 +20076,15 @@ function GenerateDungeonMap(arguments)
 	
 	for (let r = 0; r < rooms && roomattempts < 4096; r++)
 	{
-		let randomw = Math.floor(Math.random() * 6) + 5;
-		let randomh = Math.floor(Math.random() * 6) + 5;
+		let randomw = Math.floor(Math.random() * 3) + DUNGEONMAP_ROOM_MIN_HEIGHT;
+		let randomh = Math.floor(Math.random() * 3) + DUNGEONMAP_ROOM_MIN_WIDTH;
 		let randomx = Math.floor(Math.random() * (w - 4 - randomw)) + 2;
 		let randomy = Math.floor(Math.random() * (h - 4 - randomh)) + 2;
 		
 		let adjacentroom = Math.floor(Math.random() * roommap.length);
 		let roomside = Math.random();
 		
-		let randomgap = Math.max(Math.floor(Math.random() * 3) - Math.floor(Math.random() * 2), 0) + 2;
+		let randomgap = Math.max(Math.floor(Math.random() * 5) - Math.floor(Math.random() * 3), 0) + 2;
 		
 		
 		if (roommap.length > 0)
@@ -20993,14 +20995,116 @@ function OutputTileMap(channel, arguments)
 		return 0;
 	}
 	
+	//cull empty spacewidth
+	let start_x = 1;
+	let start_y = 1;
+	let end_x = w-1;
+	let end_y = h-1;
+	let real_w = w-2;
+	let real_h = h-2;
+	for (let y = 1; y < h-1; y++)
+	{
+		let row_empty = true;
+		for (let x  = 1; x < w-1; x++)
+		{
+			if (tilemap[x+(y*w)] != "unknown")
+			{
+				row_empty = false;
+				x = w+1;
+			}
+		}
+		if (row_empty)
+		{
+			real_h--;
+			start_y++;
+		}
+		else
+		{
+			console.log("start_y = " + start_y.toString())
+			y = h+1;
+		}
+	}
+	for (let y = h-2; y > 0; y--)
+	{
+		let row_empty = true;
+		for (let x  = 1; x < w-1; x++)
+		{
+			if (tilemap[x+(y*w)] != "unknown")
+			{
+				row_empty = false;
+				x = w+1;
+			}
+		}
+		if (row_empty)
+		{
+			real_h--;
+			end_y--;
+		}
+		else
+		{
+			console.log("end_y = " + end_y.toString())
+			y = -1;
+		}
+	}
+	for (let x = 1; x < w-1; x++)
+	{
+		let column_empty = true;
+		for (let y = 1; y < h-1; y++)
+		{
+			if (tilemap[x+(y*w)] != "unknown")
+			{
+				column_empty = false;
+				y = h+1;
+			}
+		}
+		if (column_empty)
+		{
+			real_w--;
+			start_x++;
+		}
+		else
+		{
+			console.log("start_x = " + start_x.toString())
+			x = w+1;
+		}
+	}
+	for (let x = w-2; x > 0; x--)
+	{
+		let column_empty = true;
+		for (let y = 1; y < h-1; y++)
+		{
+			if (tilemap[x+(y*w)] != "unknown")
+			{
+				column_empty = false;
+				y = h+1;
+			}
+		}
+		if (column_empty)
+		{
+			real_w--;
+			end_x--;
+		}
+		else
+		{
+			console.log("end_x = " + end_x.toString())
+			x = -1;
+		}
+	}
+	real_w += 2;
+	real_h += 2;
+	start_x--;
+	end_x++;
+	start_y--;
+	end_y++;
+	
 	let mapmap = [];
 	
-	for (let y = 0; y < h; y++)
+	for (let y = start_y; y < end_y; y++)
 	{
-		for (let x  = 0; x < w; x++)
+		for (let x = start_x; x < end_x; x++)
 		{
-			let xpos = (100*x);
-			let ypos = (100*y);
+			let xpos = (70*(x - start_x));
+			let ypos = (70*(y - start_y));
 			
 			if (tilemap[x+(y*w)] == "closed")
 				mapmap.push({ src: dungeon_gen_assets.closed[Math.floor(Math.random()*dungeon_gen_assets.closed.length)], x: xpos, y: ypos});
@@ -21022,8 +21126,6 @@ function OutputTileMap(channel, arguments)
 				mapmap.push({ src: dungeon_gen_assets.secret_door_horizontal[Math.floor(Math.random()*dungeon_gen_assets.secret_door_horizontal.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "secret_door_vertical")
 				mapmap.push({ src: dungeon_gen_assets.secret_door_vertical[Math.floor(Math.random()*dungeon_gen_assets.secret_door_vertical.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "secret_door_other")
-				mapmap.push({ src: dungeon_gen_assets.secret_door_other[Math.floor(Math.random()*dungeon_gen_assets.secret_door_other.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "stairs_north")
 				mapmap.push({ src: dungeon_gen_assets.stairs_north[Math.floor(Math.random()*dungeon_gen_assets.stairs_north.length)], x: xpos, y: ypos});
 			else if (tilemap[x+(y*w)] == "stairs_south")
@@ -21056,8 +21158,8 @@ function OutputTileMap(channel, arguments)
 	
 	mergeImages(mapmap, 
 	{
-		width: (100*w),
-		height: (100*h),
+		width: (70*real_w),
+		height: (70*real_h),
 		Canvas: Canvas,
 		Image: Image
 	})
@@ -21329,6 +21431,7 @@ function GenerateDrawnDungeonMap(arguments)
 	let secret_next_level = false;
 	let stairs_up_side = -1;
 	let stairs_down_side = -1;
+	let minimum_room_gap = 2;
 	
 	if (arguments != null && arguments.length > 0)
 	{
@@ -21353,6 +21456,13 @@ function GenerateDrawnDungeonMap(arguments)
 			rooms = DUNGEONMAP_MAX_ROOMS;
 		if (rooms < DUNGEONMAP_MIN_ROOMS)
 			rooms = DUNGEONMAP_MIN_ROOMS;
+		argumentpos = arguments.indexOf("-mrg")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			minimum_room_gap = parseInt(arguments[argumentpos+1]);
+		if (minimum_room_gap > 10)
+			minimum_room_gap = 10;
+		if (minimum_room_gap < 0)
+			minimum_room_gap = 0;
 		argumentpos = arguments.indexOf("-stairsup")
 		if (argumentpos > -1)
 		{
@@ -21420,15 +21530,15 @@ function GenerateDrawnDungeonMap(arguments)
 	
 	for (let r = 0; r < rooms && roomattempts < 4096; r++)
 	{
-		let randomw = Math.floor(Math.random() * 6) + 3;
-		let randomh = Math.floor(Math.random() * 6) + 3;
+		let randomw = Math.floor(Math.random() * 6 / 4) + 3;
+		let randomh = Math.floor(Math.random() * 6 / 4) + 3;
 		let randomx = Math.floor(Math.random() * (w - 4 - randomw)) + 2;
 		let randomy = Math.floor(Math.random() * (h - 4 - randomh)) + 2;
 		
 		let adjacentroom = Math.floor(Math.random() * roommap.length);
 		let roomside = Math.random();
 		
-		let randomgap = Math.max(Math.floor(Math.random() * 4) - Math.floor(Math.random() * 2), 0);
+		let randomgap = Math.max(Math.floor(Math.random() * 5) - Math.floor(Math.random() * 3.5), minimum_room_gap);
 		
 		
 		if (roommap.length > 0)
