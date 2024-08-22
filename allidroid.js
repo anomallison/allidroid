@@ -24756,6 +24756,8 @@ function generateIsometricWorldMap(channel, arguments)
 	let margin = Math.floor(Math.min(width, height)/5);
 	let xmargin = Math.floor(margin / 3);
 	let temperature = 0;
+	let temperature_variation = 0.5
+	let elevation_variation = 1
 	
 	if (arguments != null && arguments.length > 0)
 	{
@@ -24763,10 +24765,28 @@ function generateIsometricWorldMap(channel, arguments)
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
 			temperature = parseInt(arguments[argumentpos+1]);
-			if (temperature > 2)
-				temperature = 2;
-			if (temperature < -2)
-				temperature = -2;
+			if (temperature > 20)
+				temperature = 20;
+			if (temperature < -20)
+				temperature = -20;
+		}
+		argumentpos = arguments.indexOf("-tv")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			temperature_variation = parseInt(arguments[argumentpos+1]);
+			if (temperature_variation > 2)
+				temperature_variation = 2;
+			if (temperature_variation < -2)
+				temperature_variation = -2;
+		}
+		argumentpos = arguments.indexOf("-ev")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			elevation_variation = parseInt(arguments[argumentpos+1]);
+			if (elevation_variation > 2)
+				elevation_variation = 2;
+			if (elevation_variation < -2)
+				elevation_variation = -2;
 		}
 		argumentpos = arguments.indexOf("-w")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
@@ -24786,7 +24806,8 @@ function generateIsometricWorldMap(channel, arguments)
 			if (height < 81)
 				height = 81;
 		}
-		margin = Math.floor(Math.min(width, height)/5);		argumentpos = arguments.indexOf("-m")
+		margin = Math.floor(Math.min(width, height)/5);
+		argumentpos = arguments.indexOf("-m")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
 			margin = parseInt(arguments[argumentpos+1]);
@@ -24813,7 +24834,7 @@ function generateIsometricWorldMap(channel, arguments)
 		let distance = Math.abs(equator - y + margin);
 		if (y > equator)
 			distance = Math.abs(equator - y - margin);
-		let tile_temperature = 3.667 - (distance / equator) * 3.667
+		let tile_temperature = (3.667 + temperature) - (distance / equator) * (3.667 + temperature)
 		for (let x = 0; x < width; x++)
 		{
 			let temperature_noise = (noisemap[x + y * width] - 0.5) / 3;
@@ -24891,7 +24912,7 @@ function generateIsometricWorldMap(channel, arguments)
 	biomeShifts = Math.round(Math.min(width, height)*2.85)
 	for (let i = 0; i < biomeShifts; i++)
 	{
-		//get hotter closer to center
+		//get hotter closer to equator
 		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
 		let index = randomPos.x + randomPos.y * width;
 		while (world[index].waterlevel < 0)
@@ -24900,7 +24921,7 @@ function generateIsometricWorldMap(channel, arguments)
 			index = randomPos.x + randomPos.y * width;
 		}
 		let randomDistance = 5 + Math.round(Math.random()*((width+height)/54));
-		spreadTemperature(world, randomPos, width, height, Math.random()*0.35, randomDistance);
+		spreadTemperature(world, randomPos, width, height, Math.random()*temperature_variation*0.7, randomDistance);
 	}
 	console.log("hot temps");
 	dy = height/10 - 1;
@@ -24915,7 +24936,7 @@ function generateIsometricWorldMap(channel, arguments)
 			index = randomPos.x + randomPos.y * width;
 		}
 		let randomDistance = 5 + Math.round(Math.random()*((width+height)/63));
-		spreadTemperature(world, randomPos, width, height, Math.random()*-0.35, randomDistance);
+		spreadTemperature(world, randomPos, width, height, Math.random()*temperature_variation*-0.7, randomDistance);
 		
 		randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(height - margin - Math.random() * dy) }
 		index = randomPos.x + randomPos.y * width;
@@ -24925,7 +24946,7 @@ function generateIsometricWorldMap(channel, arguments)
 			index = randomPos.x + randomPos.y * width;
 		}
 		randomDistance = 5 + Math.round(Math.random()*((width+height)/63));
-		spreadTemperature(world, randomPos, width, height, Math.random()*-0.35, randomDistance);
+		spreadTemperature(world, randomPos, width, height, Math.random()*temperature_variation*-0.7, randomDistance);
 	}
 	
 	console.log("cold temps");
@@ -24954,6 +24975,7 @@ function generateIsometricWorldMap(channel, arguments)
 	}
 	console.log("forests");
 	
+	/*
 	for (let y = 0; y < height; y++)
 	{
 		for (let x = 0; x < width; x++)
@@ -24967,6 +24989,7 @@ function generateIsometricWorldMap(channel, arguments)
 		}
 	}
 	console.log("shore temperature normalization");
+	*/
 	
 	let renderMap = [];
 	for (let y = 0; y < height; y++)
@@ -25074,7 +25097,7 @@ function generateIsometricWorldMap(channel, arguments)
 			}
 			else if (world[index].waterlevel <= 1) // flat land
 			{
-				if (Math.round(world[index].biome) == 0)
+				if (Math.round(world[index].biome) <= 0)
 				{
 					renderMap.push({ src: './isometric_map_tiles/snow_flat.png', x: xpos, y: ypos});
 					if (world[index].forest)
@@ -25098,14 +25121,14 @@ function generateIsometricWorldMap(channel, arguments)
 					if (world[index].forest)
 						renderMap.push({ src: './isometric_map_tiles/forest_plains.png', x: xpos, y: ypos});
 				}
-				else if (Math.round(world[index].biome) == 4)
+				else if (Math.round(world[index].biome) >= 4)
 				{
 					renderMap.push({ src: './isometric_map_tiles/sand_flat.png', x: xpos, y: ypos});
 				}
 			}
 			else if (world[index].waterlevel <= 2.2) // hills land
 			{
-				if (Math.round(world[index].biome) == 0)
+				if (Math.round(world[index].biome) <= 0)
 				{
 					renderMap.push({ src: './isometric_map_tiles/snow_hill.png', x: xpos, y: ypos});
 					if (world[index].forest)
@@ -25129,7 +25152,7 @@ function generateIsometricWorldMap(channel, arguments)
 					if (world[index].forest)
 						renderMap.push({ src: './isometric_map_tiles/forest_plains.png', x: xpos, y: ypos});
 				}
-				else if (Math.round(world[index].biome) == 4)
+				else if (Math.round(world[index].biome) >= 4)
 				{
 					renderMap.push({ src: './isometric_map_tiles/sand_hill.png', x: xpos, y: ypos});
 				}
