@@ -24874,7 +24874,7 @@ function generateIsometricWorldMap(channel, arguments)
 		argumentpos = arguments.indexOf("-t")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
-			temperature = parseInt(arguments[argumentpos+1]);
+			temperature = parseFloat(arguments[argumentpos+1]);
 			if (temperature > 20)
 				temperature = 20;
 			if (temperature < -20)
@@ -24883,7 +24883,7 @@ function generateIsometricWorldMap(channel, arguments)
 		argumentpos = arguments.indexOf("-tv")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
-			temperature_variation = parseInt(arguments[argumentpos+1]);
+			temperature_variation = parseFloat(arguments[argumentpos+1]);
 			if (temperature_variation > 2)
 				temperature_variation = 2;
 			if (temperature_variation < -2)
@@ -24892,7 +24892,7 @@ function generateIsometricWorldMap(channel, arguments)
 		argumentpos = arguments.indexOf("-ev")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
-			elevation_variation = parseInt(arguments[argumentpos+1]);
+			elevation_variation = parseFloat(arguments[argumentpos+1]);
 			if (elevation_variation > 2)
 				elevation_variation = 2;
 			if (elevation_variation < -2)
