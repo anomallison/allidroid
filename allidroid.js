@@ -158,8 +158,11 @@ var trinket_gen = JSON.parse(fs.readFileSync('trinket_gen.json'));
 // war advice from file
 var war_advice = JSON.parse(fs.readFileSync('waradvice.json'));
 
-// war advice from file
+// podcaster gen from file
 var podcaster_gen = JSON.parse(fs.readFileSync('podcaster_gen.json'));
+
+// tavern gen from file
+var tavern_gen = JSON.parse(fs.readFileSync('tavern_gen.json'));
 
 
 //
@@ -1026,6 +1029,21 @@ async function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: podcaster");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+	}
+	else if (normalizedCommand == "tavern")
+	{
+		let output = GenerateTavern();
+		
+		if (output == null)
+		{
+			console.log("failed command: tavern");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -19005,7 +19023,7 @@ function RandomArrayEntry(array, nesting, nestingcode)
 	{
 		entry = array[Math.floor(Math.random()*array.length)];
 	}
-	return array[Math.floor(Math.random()*array.length)];
+	return entry;
 }
 
 function RandomNPCAbilities()
@@ -25320,6 +25338,143 @@ function generateIsometricWorldMap(channel, arguments)
 		}
 		))
 }
+
+function GenerateTavern()
+{
+	let tavern_name = RandomArrayEntry(tavern_gen.tavernnames, false, "[donotnest]");
+	
+	let position = tavern_name.indexOf("\[");
+	let endposition = -1;
+	let podcastsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = tavern_name.indexOf("\]");
+		podcastsubstr = tavern_name.substring(position+1,endposition);
+		let primaryword = "";
+		if (podcastsubstr == "verb")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.verbs, false, "[donotnest]");
+		}
+		else if (podcastsubstr == "adjective")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.adjectives, false, "[donotnest]");
+		}
+		else if (podcastsubstr == "object")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.objects, false, "[donotnest]");
+		}
+		else if (podcastsubstr == "title")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.titles, false, "[donotnest]");
+		}
+		else if (podcastsubstr == "name")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.names, false, "[donotnest]");
+		}
+		tavern_name = tavern_name.substr(0,position) + grammarCapitalFirstLetter(primaryword) + tavern_name.substr(endposition+1);
+		
+		position = tavern_name.indexOf("\[");
+	}
+	
+	let tavern_type = RandomArrayEntry(tavern_gen.taverntype, false, "[donotnest]");
+	let tavern_drink_prices = RandomArrayEntry(tavern_gen.drinksprice, false, "[donotnest]");
+	let tavern_food_prices = RandomArrayEntry(tavern_gen.foodprice, false, "[donotnest]");
+	let tavern_room_prices = RandomArrayEntry(tavern_gen.roomprice, false, "[donotnest]");
+	let tavern_housewine = RandomArrayEntry(tavern_gen.housewine, false, "[donotnest]");
+	
+	position = tavern_housewine.indexOf("\[");
+	endposition = -1;
+	podcastsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = tavern_housewine.indexOf("\]");
+		podcastsubstr = tavern_housewine.substring(position+1,endposition);
+		substrcommands = podcastsubstr.split(" ");
+		let primaryword = "";
+		if (substrcommands[0] == "adjective")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.wineadjectives, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "race")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.wineraces, false, "[donotnest]");
+		}
+		else if (substrcommands[0].includes("-"))
+		{
+			let delimiter_place = substrcommands[0].indexOf("-");
+			let min = parseInt(substrcommands[0].substr(0,delimiter_place));
+			let roll = parseInt(substrcommands[0].substr(delimiter_place+1));
+			primaryword = (min + Math.floor(Math.random() * (roll + 1))).toString()
+		}
+		tavern_housewine = tavern_housewine.substr(0,position) + primaryword + tavern_housewine.substr(endposition+1);
+		
+		position = tavern_housewine.indexOf("\[");
+	}
+	
+	let tavern_signaturedish = RandomArrayEntry(tavern_gen.signaturedishmain, false, "[donotnest]");
+	
+	position = tavern_signaturedish.indexOf("\[");
+	endposition = -1;
+	podcastsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = tavern_signaturedish.indexOf("\]");
+		podcastsubstr = tavern_signaturedish.substring(position+1,endposition);
+		substrcommands = podcastsubstr.split(" ");
+		let primaryword = "";
+		if (substrcommands[0] == "batter")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishbatter, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "ingredient")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishingredient, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "side")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishside, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "method")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishmethod, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "spice")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishspice, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "sweet")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishsweet, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "wineadjective")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.wineadjectives, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "meat")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishmeat, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "vegetable")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishvegetable, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "pasta")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishpasta, false, "[donotnest]");
+		}
+		tavern_signaturedish = tavern_signaturedish.substr(0,position) + primaryword + tavern_signaturedish.substr(endposition+1);
+		
+		position = tavern_signaturedish.indexOf("\[");
+	}
+	
+	let full_string = grammarCapitalFirstLetter(tavern_name) + ", a " + tavern_type + "\nIt has " + tavern_drink_prices + ", " + tavern_food_prices + " and " + tavern_room_prices + "\nTheir main house drink is " + grammarAorAn(tavern_housewine) + " " + tavern_housewine + " and their specialty is " + tavern_signaturedish;
+	
+	return full_string;
+}
+
 
 //
 //

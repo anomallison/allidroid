@@ -1,0 +1,310 @@
+{
+	"tavernnames":
+	[
+		"the [adjective] [object]",
+		"the [verb] [object]",
+		"the [verb] [adjective] [object]",
+		"the [object] and the [object]",
+		"the [title] [name]",
+		"the [adjective] [title] [name]"
+	],
+	"verbs":
+	[
+		"staggering",
+		"laughing",
+		"prancing",
+		"running",
+		"howling",
+		"leering",
+		"leaping",
+		"roaring",
+		"frowning",
+		"wandering",
+		"barking",
+		"gleaming",
+		"flying",
+		"caring",
+		"smiling",
+		"reading"
+	],
+	"objects":
+	[
+		"eel",
+		"dolphin",
+		"dwarf",
+		"pegasus",
+		"pony",
+		"rose",
+		"stag",
+		"wolf",
+		"lamb",
+		"demon",
+		"goat",
+		"spirit",
+		"horde",
+		"jester",
+		"mountain",
+		"eagle",
+		"satyr",
+		"dog",
+		"spider",
+		"star",
+		"fish",
+		"elf",
+		"cat",
+		"crow",
+		"raven",
+		"goblin",
+		"book"
+	],
+	"adjectives":
+	[
+		"spooked",
+		"silver",
+		"golden",
+		"gilded",
+		"drunken",
+		"lonely",
+		"mysterious",
+		"black",
+		"floral",
+		"angry",
+		"bubbly",
+		"effervescent",
+		"cheerful",
+		"enthusiastic",
+		"fangorious",
+		"giant",
+		"hairy",
+		"phosphorescent",
+		"sassy",
+		"scaly",
+		"sweet",
+		"flatulent"
+	],
+	"names":
+	[
+		"william",
+		"florence",
+		"dietrich",
+		"johanna",
+		"felix",
+		"georg",
+		"heilich",
+		"alice",
+		"allison",
+		"roland"
+	],
+	"titles":
+	[
+		"king",
+		"queen",
+		"prince",
+		"princess",
+		"duke",
+		"duchess",
+		"baron",
+		"baroness",
+		"count",
+		"countess"
+	],
+	"taverntype":
+	[
+		"bustling inn",
+		"quiet, low-key bar",
+		"raucous dive",
+		"thieves' guild hangout",
+		"secret society meeting place",
+		"upper-class dining club",
+		"gambling den",
+		"members-only club",
+		"brothel"
+	],
+	"drinksprice":
+	[
+		"cheap low quality drinks",
+		"cheap decent quality drinks",
+		"good drinks at a bargain",
+		"expensive low quality drinks",
+		"expensive decent quality drinks",
+		"expensive but good drinks"
+	],
+	"foodprice":
+	[
+		"cheap poor quality food",
+		"cheap local  delicacies",
+		"cheap foreign delicacies",
+		"delicious cuisine at a bargain",
+		"expensive poor quality food",
+		"expensive local delicacies",
+		"expensive foreign delicacies",
+		"expensive delicious cuisine"
+	],
+	"roomprice":
+	[
+		"cheap poor quality rooms",
+		"cheap decent quality rooms",
+		"good rooms at a bargain",
+		"expensive poor quality rooms",
+		"expensive decent quality rooms",
+		"expensive but good quality rooms"
+	],
+	"housewine":
+	[
+		"[15-5] year old [adjective] [race] wine",
+		"[3-9] year old [adjective] local wine",
+		"magically aged [adjective] wine",
+		"magically aged [adjective] [race] wine",
+		"[race] ale",
+		"[race] mead",
+		"[race] coffee"
+	],
+	"wineraces":
+	[
+		"goblin",
+		"elven",
+		"dwarven",
+		"halfling",
+		"gnomish",
+		"giant",
+		"ogre",
+		"merfolk",
+		"lizardfolk"
+	],
+	"wineadjectives":
+	[
+		"sharp",
+		"dry",
+		"magical",
+		"smoky",
+		"bright",
+		"toasty",
+		"charcoal",
+		"acidic",
+		"austere",
+		"aromatic",
+		"rich",
+		"creamy",
+		"crisp",
+		"dense",
+		"earthy",
+		"minerally",
+		"silky",
+		"zesty",
+		"velvety",
+		"white",
+		"red"
+	],
+	"signaturedishmain":
+	[
+		"fried [batter] [ingredient] and [side]",
+		"[method] [spice] [ingredient] and [side]",
+		"[sweet] [spice] coffee",
+		"[ingredient] in [wineadjective] wine sauce and [side]",
+		"[method] [ingredient] and [side]"
+	],
+	"signaturedishbatter":
+	[
+		"beer battered",
+		"tempura battered",
+		"cornmeal battered",
+		"flour battered"
+	],
+	"signaturedishingredient":
+	[
+		"[meat]",
+		"[sweet]",
+		"cheese",
+		"[vegetable]",
+		"tofu"
+	],
+	"signaturedishsweet":
+	[
+		"chocolate",
+		"taffy",
+		"ice cream",
+		"candied corn",
+		"chocolate nuts",
+		"candied nuts"
+	],
+	"signaturedishmeat":
+	[
+		"beef",
+		"chicken",
+		"pork",
+		"fish",
+		"cassowary",
+		"turkey",
+		"horse",
+		"goat",
+		"sheep"
+	],
+	"signaturedishspice":
+	[
+		"black pepper",
+		"cinnamon",
+		"spiced",
+		"cocoa",
+		"cloves",
+		"cumin",
+		"vanilla",
+		"chili",
+		"juniper berry",
+		"paprika",
+		"saffron",
+		"star anise",
+		"tamarind",
+		"white pepper",
+		"wasabi"
+	],
+	"signaturedishside":
+	[
+		"[spice] [vegetable] pouree",
+		"[method] [vegetable] chips",
+		"mashed [vegetable] with [meat] gravy",
+		"roast [vegetable] with [meat] gravy",
+		"mashed [vegetable] with [meat] and wine gravy",
+		"roast [vegetable] with [meat] and wine gravy",
+		"[pasta] with [spice] and [vegetable] sauce",
+		"[pasta] with [spice] and [meat] sauce",
+		"[ingredient] soup with [spice] and [vegetable]",
+		"[method] rice with vegetables",
+		"bread and [meat] gravy",
+		"bread and [wineadjective] wine sauce"
+	],
+	"signaturedishvegetable":
+	[
+		"potato",
+		"tomato",
+		"leek",
+		"mushroom",
+		"broccoli",
+		"spinach",
+		"asparagus",
+		"carrot",
+		"onion",
+		"cauliflower",
+		"corn"
+	],
+	"signaturedishpasta":
+	[
+		"penne",
+		"spaghetti",
+		"rigatoni",
+		"fettuccini",
+		"ravioli",
+		"macaroni"
+	],
+	"signaturedishmethod":
+	[
+		"braized",
+		"baked",
+		"fried",
+		"grilled",
+		"poached",
+		"steamed",
+		"sauted",
+		"stewed",
+		"stir fried"
+	]
+}
