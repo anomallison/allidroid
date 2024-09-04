@@ -132,7 +132,7 @@
 	"foodprice":
 	[
 		"cheap poor quality food",
-		"cheap local  delicacies",
+		"cheap local delicacies",
 		"cheap foreign delicacies",
 		"delicious cuisine at a bargain",
 		"expensive poor quality food",
@@ -198,10 +198,13 @@
 	"signaturedishmain":
 	[
 		"fried [batter] [ingredient] and [side]",
-		"[method] [spice] [ingredient] and [side]",
+		"[fruit] [spice] smoothie",
 		"[sweet] [spice] coffee",
 		"[ingredient] in [wineadjective] wine sauce and [side]",
-		"[method] [ingredient] and [side]"
+		"[method] [ingredient] and [side]",
+		"[spice] [ingredient] wrapped in flat bread with [vegetable] sauce",
+		"[spice] [ingredient] with rice wrapped in seaweed",
+		"[method] [spice] [ingredient] on a bed of [side]"
 	],
 	"signaturedishbatter":
 	[
@@ -259,6 +262,8 @@
 	],
 	"signaturedishside":
 	[
+		"[fruit] [spice] smoothie",
+		"[sweet] [spice] coffee",
 		"[spice] [vegetable] pouree",
 		"[method] [vegetable] chips",
 		"mashed [vegetable] with [meat] gravy",
@@ -285,6 +290,26 @@
 		"onion",
 		"cauliflower",
 		"corn"
+	],
+	"signaturedishfruit":
+	[
+		"apple",
+		"orange",
+		"dragonfruit",
+		"mango",
+		"pear",
+		"strawberry",
+		"watermelon",
+		"lemon",
+		"lime",
+		"orange",
+		"banana",
+		"apricot",
+		"acai",
+		"pineapple",
+		"guava",
+		"avacado",
+		"[fruit] and [fruit]"
 	],
 	"signaturedishpasta":
 	[

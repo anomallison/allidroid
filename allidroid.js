@@ -25465,6 +25465,10 @@ function GenerateTavern()
 		{
 			primaryword = RandomArrayEntry(tavern_gen.signaturedishpasta, false, "[donotnest]");
 		}
+		else if (substrcommands[0] == "fruit")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishfruit, true, "[fruit]");
+		}
 		tavern_signaturedish = tavern_signaturedish.substr(0,position) + primaryword + tavern_signaturedish.substr(endposition+1);
 		
 		position = tavern_signaturedish.indexOf("\[");
