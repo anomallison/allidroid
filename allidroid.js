@@ -32,6 +32,9 @@ const monster_types =
 	MOOK: "monster mook"
 }
 
+//numbers as words
+var numbers_as_words = JSON.parse(fs.readFileSync('numbers_as_words.json'));
+
 // pronouns from file
 var pronouns = JSON.parse(fs.readFileSync('pronoun_list.json'));
 
@@ -934,12 +937,12 @@ async function processCommand(receivedMessage)
 	else if (normalizedCommand == "rendertownmap")
 	{
 		DrawTownMap(receivedMessage.channel,arguments);
-	}
+	}/*
 	else if (normalizedCommand == "polygonmap")
 	{
 		DrawVoronoiMapMap(receivedMessage.channel,arguments);
 	}
-	/*else if (normalizedCommand == "voronoicity")
+	else if (normalizedCommand == "voronoicity")
 	{
 		DrawVoronoiCity(receivedMessage.channel,arguments);
 	}*/
@@ -1422,18 +1425,7 @@ function orderFromDiner(coins)
 {
 	if (coins == null || isNaN(coins))
 	{
-		if (currentgay > 5)
-		{
-			coins = 0;
-			while (coins == 0)
-			{
-				coins = Math.floor((Math.random()+Math.random()/2)*MAX_COIN_PERCENTAGE*currentgay);
-			}
-		} 
-		else
-		{
-			coins = 1 + Math.floor(Math.random()*2);
-		}
+		coins = 1 + Math.floor(Math.random()*7);
 		
 		if (coins > currentgay)
 			coins = currentgay;
@@ -1455,42 +1447,72 @@ let MAX_MEAL_VALUE = 21;
 
 function generateDinerOrder(coins)
 {
-	let mealvalue = Math.floor(coins / ((Math.random() * 5) + 2));
+	let mealvalue = coins * ((Math.random() * 0.4) + 0.25);
 	
 	if (mealvalue < 1)
 		mealvalue = 1;
 	if (mealvalue > MAX_MEAL_VALUE)
 		mealvalue = MAX_MEAL_VALUE;
 	
+	let order_items = [];
+	
 	let orderup = "";
 	
 	for(let i = 0; i < mealvalue; i++)
 	{
-		if (i > 0)
-		{
-			orderup += ", ";
-			if (i == (mealvalue - 1))
-				orderup += "and ";
-		}
-		
 		let meal = dinermenu_gen.meals[Math.floor(Math.random()*dinermenu_gen.meals.length)];
 		let drink = dinermenu_gen.drinks[Math.floor(Math.random()*dinermenu_gen.drinks.length)];
 		let mealedit = dinermenu_gen.mealedits[Math.floor(Math.random()*dinermenu_gen.mealedits.length)];
 		let baserand = Math.random();
 		
+		let item = { text: "", number: 1};
+		
 		if (baserand < 0.33)
 		{
-			orderup += grammarAorAn(meal.substr(0,1)) + " " + meal;
+			item.text = meal;
 		}
 		else if (baserand < 0.87)
 		{
-			orderup += grammarAorAn(meal.substr(0,1)) + " " + meal + ", " + mealedit;
+			item.text = meal + ", " + mealedit;
 		}
 		else
 		{
-			orderup += grammarAorAn(drink.substr(0,1)) + " " + drink;
+			item.text = drink;
 		}
+		
+		let item_not_found = true
+		
+		for (let j = 0; j < order_items.length; j++)
+		{
+			if (order_items[j].text == item.text)
+			{
+				order_items[j].number += 1;
+				item_not_found = false;
+				break;
+			}
+		}
+		if (item_not_found)
+		{
+			order_items.push(item)
+		}
+		
 	}
+	
+	for (let k = 0; k < order_items.length; k++)
+	{
+		orderup += numbers_as_words[order_items[k].number] + " " + order_items[k].text;
+		if (k < order_items.length - 2)
+		{
+			orderup += ", ";
+		}
+		else if (k < order_items.length - 1)
+		{
+			orderup += " and ";
+		}
+		
+	}
+	
+	console.log("coins: " + coins)
 	
 	if (coins == 1)
 		orderup += "\nThat'll be 1 coin";
@@ -18385,7 +18407,7 @@ function findOceanCells(cells)
 			
 			if (!doneCells.includes(neighbours[i]))
 			{
-				if (neighbourCell.height < 0)
+				if (neighbourCell.height < -6)
 				{
 					neighbourCell.oceanCell = true;
 					frontierQueue.push({ cell: neighbourCell, priority: priority + 1});
@@ -18398,6 +18420,15 @@ function findOceanCells(cells)
 	return true
 }
 
+function findLakeCells(cells)
+{
+	cells.forEach(cell => {
+		if (cell.height < 0)
+		{
+			cell.lakeCell = true;
+		}
+	});
+}
 
 function nearestOceanCell(startcell, cells)
 {
@@ -18572,6 +18603,7 @@ function generateVoronoiMap(numberOfPoints, margin, w, h, waterpasses, relaxatio
 	
 	diagram.cells.forEach(cell => {
 		cell.height = -10;
+		cell.drawn = false;
 	});
 	
 	// random landmasses
@@ -18788,6 +18820,16 @@ function generateVoronoiMap(numberOfPoints, margin, w, h, waterpasses, relaxatio
 	return diagram;
 }
 
+function ComplexShapeContainsPoint(shape, p)
+{
+	for (let i = 0; i < shape.length; i++)
+	{
+		if (shape[i].x == p.x && shape[i].y == p.y)
+			return i;
+	}
+	return -1;
+}
+
 function DrawVoronoiMapMap(channel, arguments)
 {
 	let p = 4000;
@@ -18795,7 +18837,7 @@ function DrawVoronoiMapMap(channel, arguments)
 	let w = 1920;
 	let h = 1080;
 	let wp = 4;
-	let r = 4;
+	let r = 1;
 	let s = 64;
 	let lm = 16;
 	
@@ -18855,6 +18897,7 @@ function DrawVoronoiMapMap(channel, arguments)
 	let diagram = generateVoronoiMap(p, margin, w, h, wp, r, s, lm, mountains, mountainsL);
 	
 	findOceanCells(diagram.cells);
+	findLakeCells(diagram.cells);
 	
 	let tempcanvas = new Canvas();
 	tempcanvas.width = w;
@@ -18872,90 +18915,212 @@ function DrawVoronoiMapMap(channel, arguments)
 		ctx.strokeStyle = "#000000"
 		
 		diagram.cells.forEach(cell => {
-			//let randomColor = "#" + dieRoll(randomColorString);
-			//ctx.fillStyle = randomColor;
-			if (cell && cell.halfedges.length > 2) {
-				ctx.beginPath();
-				let colorval = "#";
-				let rval;
-				let gval;
-				let bval;
-				let rstr;
-				let gstr;
-				let bstr;
-				if (cell.height < 0)
+			if (!cell.drawn && cell.height > 0 && !cell.oceanCell && !cell.lakeCell)
+			{
+				cell.drawn = true;
+				
+				if (cell && cell.halfedges.length > 2) 
 				{
-					rval = 0;
-					gval = 48;
-					bval = 192;
+					ctx.fillStyle = '#08FE00'
+					ctx.strokeStyle = '#08FE00'
+					let origin_height = cell.height;
+					let current_cell = cell;
+					let current_halfedge = cell.halfedges[0];
+					let half_edge_i = 0;
+					let complex_shape = [];
+					let shape_closed = false;
+					let shape_start = 0;
+					complex_shape.push(current_halfedge.getStartpoint());
+					while (!shape_closed)
+					{
+						if (current_halfedge.edge.rSite != null && current_halfedge.edge.lSite != null)
+						{
+							let neighbour = diagram.cells[current_halfedge.edge.rSite.voronoiId];
+							if (current_halfedge.edge.rSite == current_halfedge.site)
+							{
+								neighbour = diagram.cells[current_halfedge.edge.lSite.voronoiId];
+							}
+							if (neighbour.height > 0)
+							{
+								current_cell = neighbour;
+								current_cell.drawn = true;
+								for (let i = 0; i < current_cell.halfedges.length; i++)
+								{
+									let newedge_startpoint = current_cell.halfedges[i].getStartpoint();
+									let curedge_startpoint =  current_halfedge.getStartpoint();
+									if (newedge_startpoint.x == curedge_startpoint.x && newedge_startpoint.y == curedge_startpoint.y)
+									{
+										half_edge_i = i+1;
+										if (half_edge_i == current_cell.halfedges.length)
+										{
+											half_edge_i = 0;
+										}
+										current_halfedge = current_cell.halfedges[half_edge_i];
+										i += current_cell.halfedges.length;
+									}
+								}
+							}
+							else
+							{
+								half_edge_i++;
+								if (half_edge_i == current_cell.halfedges.length)
+								{
+									half_edge_i = 0;
+								}
+								current_halfedge = current_cell.halfedges[half_edge_i];
+							}
+						}
+						else
+						{
+							half_edge_i++;
+							if (half_edge_i == current_cell.halfedges.length)
+							{
+								half_edge_i = 0;
+							}
+							current_halfedge = current_cell.halfedges[half_edge_i];
+						}
+						
+						let next_point = current_halfedge.getStartpoint();
+						let find_point_in_shape = ComplexShapeContainsPoint(complex_shape, next_point);
+						if (find_point_in_shape < 0)
+						{
+							complex_shape.push(next_point);
+						}
+						else
+						{
+							shape_start = find_point_in_shape;
+							shape_closed = true;
+						}
+					}
+						
+					if (shape_closed && (shape_start + 1) < complex_shape.length);
+					{
+						ctx.beginPath();
+						console.log(shape_start);
+						console.log(complex_shape);
+						let midpoint = MidpointBetweenPoints(complex_shape[shape_start], complex_shape[shape_start+1]);
+						ctx.moveTo(midpoint.x, midpoint.y);
+						for (let shape_point = shape_start+1; shape_point < complex_shape.length; shape_point++)
+						{
+							let further_point = shape_point+1;
+							if (further_point >= complex_shape.length)
+								further_point -= complex_shape.length;
+							let next_midpoint = MidpointBetweenPoints(complex_shape[shape_point], complex_shape[further_point]);
+							ctx.bezierCurveTo(complex_shape[shape_point-1].x, complex_shape[shape_point-1].y, complex_shape[shape_point].x, complex_shape[shape_point].y, next_midpoint.x, next_midpoint.y);
+						}
+						ctx.closePath();
+						ctx.fill();
+						//ctx.stroke();
+					}
 				}
-				else if (cell.height <= 2)
-				{
-					rval = Math.floor(16 - (cell.height / 2) * 16);
-					gval = 192;
-					bval = 0;
-				}
-				else if (cell.height <= 9)
-				{
-					rval = 0;
-					gval = 192 // Math.floor(192 - ((cell.height - 2) / 9) * 80);
-					bval = 0;
-				}
-				else if (cell.height <= 20)
-				{
-					rval = Math.min(Math.ceil(64 + ((cell.height - 9) / 20) * 128), 192);
-					gval = 192; //Math.min(Math.ceil(160 + (((cell.height - 9) / 20) * 32)), 192);
-					bval = Math.min(Math.ceil(((cell.height - 9) / 20) * 192), 192);
-				}
-				else
-				{
-					rval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
-					gval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
-					bval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
-				}
-				if (rval < 16)
-				{
-					rstr = "0" + rval.toString(16);
-				}
-				else
-				{
-					rstr = rval.toString(16);
-				}
-				if (gval < 16)
-				{
-					gstr = "0" + gval.toString(16);
-				}
-				else
-				{
-					gstr = gval.toString(16)
-				}
-				if (bval < 16)
-				{
-					bstr = "0" + bval.toString(16);
-				}
-				else
-				{
-					bstr = bval.toString(16);
-				}
-				colorval += rstr + gstr + bstr;
-				ctx.fillStyle = colorval.toUpperCase();
-				ctx.strokeStyle = colorval.toUpperCase();
-				ctx.moveTo(cell.halfedges[0].getStartpoint().x, cell.halfedges[0].getStartpoint().y);
-				cell.halfedges.forEach(halfedge => {
-					ctx.lineTo(halfedge.getEndpoint().x, halfedge.getEndpoint().y);
-				});
-				ctx.closePath();
-				ctx.stroke();
-				ctx.fill()
 			}
-			
-			//ctx.fillStyle = '#FFFFFF';
-			//ctx.fillRect(cell.site.x,cell.site.y,2,2);
+		});
+		
+		// lakes
+		diagram.cells.forEach(cell => {
+			if (!cell.drawn && cell.height > 0 && cell.lakeCell)
+			{
+				cell.drawn = true;
+				
+				if (cell && cell.halfedges.length > 2) 
+				{
+					ctx.fillStyle = '#0030C0'
+					ctx.strokeStyle = '#0030C0'
+					let origin_height = cell.height;
+					let current_cell = cell;
+					let current_halfedge = cell.halfedges[0];
+					let half_edge_i = 0;
+					let complex_shape = [];
+					let shape_closed = false;
+					let shape_start = 0;
+					complex_shape.push(current_halfedge.getStartpoint());
+					while (!shape_closed)
+					{
+						if (current_halfedge.edge.rSite != null && current_halfedge.edge.lSite != null)
+						{
+							let neighbour = diagram.cells[current_halfedge.edge.rSite.voronoiId];
+							if (current_halfedge.edge.rSite == current_halfedge.site)
+							{
+								neighbour = diagram.cells[current_halfedge.edge.lSite.voronoiId];
+							}
+							if (neighbour.lakeCell)
+							{
+								current_cell = neighbour;
+								current_cell.drawn = true;
+								for (let i = 0; i < current_cell.halfedges.length; i++)
+								{
+									let newedge_startpoint = current_cell.halfedges[i].getStartpoint();
+									let curedge_startpoint =  current_halfedge.getStartpoint();
+									if (newedge_startpoint.x == curedge_startpoint.x && newedge_startpoint.y == curedge_startpoint.y)
+									{
+										console.log("new halfedge found");
+										half_edge_i = i+1;
+										if (half_edge_i == current_cell.halfedges.length)
+										{
+											half_edge_i = 0;
+										}
+										current_halfedge = current_cell.halfedges[half_edge_i];
+										i += current_cell.halfedges.length;
+									}
+								}
+							}
+							else
+							{
+								half_edge_i++;
+								if (half_edge_i == current_cell.halfedges.length)
+								{
+									half_edge_i = 0;
+								}
+								current_halfedge = current_cell.halfedges[half_edge_i];
+							}
+						}
+						else
+						{
+							half_edge_i++;
+							if (half_edge_i == current_cell.halfedges.length)
+							{
+								half_edge_i = 0;
+							}
+							current_halfedge = current_cell.halfedges[half_edge_i];
+						}
+						
+						let next_point = current_halfedge.getStartpoint();
+						let find_point_in_shape = ComplexShapeContainsPoint(complex_shape, next_point);
+						if (find_point_in_shape < 0)
+						{
+							complex_shape.push(next_point);
+						}
+						else
+						{
+							shape_start = find_point_in_shape;
+							shape_closed = true;
+						}
+					}
+						
+					if (shape_closed);
+					{
+						ctx.beginPath();
+						let midpoint = MidpointBetweenPoints(complex_shape[shape_start], complex_shape[shape_start+1]);
+						ctx.moveTo(midpoint.x, midpoint.y);
+						for (let shape_point = shape_start+1; shape_point < complex_shape.length; shape_point++)
+						{
+							let further_point = shape_point+1;
+							if (further_point >= complex_shape.length)
+								further_point -= complex_shape.length;
+							let next_midpoint = MidpointBetweenPoints(complex_shape[shape_point], complex_shape[further_point]);
+							ctx.bezierCurveTo(complex_shape[shape_point-1].x, complex_shape[shape_point-1].y, complex_shape[shape_point].x, complex_shape[shape_point].y, next_midpoint.x, next_midpoint.y);
+						}
+						ctx.closePath();
+						ctx.fill();
+						//ctx.stroke();
+					}
+				}
+			}
 		});
 		
 		ctx.strokeStyle =  '#0030C0' //"#0055FF";
-		ctx.lineWidth = Math.ceil(w / 1200);
 		
+		// rivers
 		for (let i = 0; i < rivers; i++)
 		{
 			let randomCell = Math.floor(Math.random()*diagram.cells.length);
@@ -18969,7 +19134,7 @@ function DrawVoronoiMapMap(channel, arguments)
 			let closestWater;
 			if (currentCell.height > 0)
 			{
-				closestWater = nearestCellBelowXHeight(currentCell, 0, diagram.cells);
+				closestWater = nearestCellBelowXHeight(currentCell, -4, diagram.cells);
 			}
 			else
 			{
@@ -18980,17 +19145,23 @@ function DrawVoronoiMapMap(channel, arguments)
 			{
 				let pathToClosestWater = pathToCell(currentCell, closestWater, diagram.cells);
 				
-				if (pathToClosestWater.length > 7)
-				{				
-					ctx.beginPath();
-					ctx.moveTo(currentCell.site.x, currentCell.site.y);
+				if (pathToClosestWater.length > 5)
+				{
+					let river_width = 1;
 					
-					for(let j = 0; j < pathToClosestWater.length; j++)
+					for(let j = 0; j < pathToClosestWater.length-2; j++)
 					{
-						ctx.lineTo(pathToClosestWater[j].site.x, pathToClosestWater[j].site.y);
+						river_width += 1;
+						ctx.lineWidth = river_width;
+						ctx.beginPath();
+						let start = MidpointBetweenPoints(pathToClosestWater[j].site, pathToClosestWater[j+1].site);
+						ctx.moveTo(start.x, start.y);
+						let end = MidpointBetweenPoints(pathToClosestWater[j+1].site, pathToClosestWater[j+2].site);
+						ctx.bezierCurveTo(pathToClosestWater[j+1].site.x, pathToClosestWater[j+1].site.y, pathToClosestWater[j+1].site.x, pathToClosestWater[j+1].site.y, end.x, end.y);
+						//ctx.lineTo(pathToClosestWater[j].site.x, pathToClosestWater[j].site.y);
+						ctx.stroke();
 					}
 					
-					ctx.stroke();
 				}
 				else
 				{
@@ -23485,6 +23656,16 @@ function DistanceBetweenPoints(a, b)
 	return Math.sqrt((dirvector.x*dirvector.x) + (dirvector.y*dirvector.y));
 }
 
+function MidpointBetweenPoints(a, b)
+{
+	console.log(a);
+	console.log(b);
+	let xdiff = b.x - a.x;
+	let ydiff = b.y - a.y;
+	let midpoint = { x: a.x + xdiff/2, y: a.y + ydiff/2 };
+	return midpoint;
+}
+
 function DoLinesIntersect(line1, line2)
 {
 	let s1 = { x: line1.end.x - line1.start.x, y: line1.end.y - line1.start.y };
@@ -23719,12 +23900,13 @@ function GenerateVoronoiCity(margin, w, h)
 			this.diagram = this.voronoi.compute(sites, this.bbox);
 		},
 		
-		setDistricts: function(n, district0size, roads)
+		setDistricts: function(chanceToConnect, min_district_area)
 		{
 			let centrepoint = { x: (this.bbox.xr - this.bbox.xl)/2, y: (this.bbox.yb - this.bbox.yt)/2 };
 			let maxdx = (centrepoint.x * centrepoint.x);
 			let maxdy = (centrepoint.y * centrepoint.y);
 			let maxdistanceSQ = Math.min(maxdx, maxdy);
+			let current_district = 1;
 			
 			this.diagram.cells.forEach(cell => {
 				let cellBbox = cell.getBbox();
@@ -23733,98 +23915,28 @@ function GenerateVoronoiCity(margin, w, h)
 				let distanceY = (cellCentre.y - centrepoint.y)*(cellCentre.y - centrepoint.y);
 				let distanceSQ = (distanceX + distanceY);
 				let proportionaldistance = distanceSQ / maxdistanceSQ;
+				let district_area = this.cellArea(cell);
 				
-				let previous_district = -1;
-				
-				if (proportionaldistance < 0.0025*district0size)
+				if (proportionaldistance < 0.6667)
 				{
 					cell.district = 0;
 				}
-				else if ((cellCentre.x / (this.bbox.xr - this.bbox.xl)) < 0.5)
+				else if (cell.district < 0)
 				{
-					if ((cellCentre.y / (this.bbox.yb - this.bbox.yt)) < 0.5)
+					cell.district = current_district;
+					let frontier = cell.getNeighborIds();
+					while (frontier.length > 0)
 					{
-						if (proportionaldistance < 0.425)
+						let current_neighbour = this.diagram.cells[frontier[0]];
+						let roll = Math.random();
+						if (current_neighbour.district < 0 && roll < chanceToConnect || district_area < min_district_area)
 						{
-							if (previous_district = -1)
-							{
-								previous_district = Math.floor(Math.random()*n)+1;
-								cell.district = previous_district;
-							}
-							else
-							{
-								cell.district = previous_district;
-								previous_district = -1
-							}
-						}
-						else
-						{
-							cell.district = (n*4)+Math.ceil(roads/4);
+							district_area += this.cellArea(current_neighbour);
+							current_neighbour.district = current_district;
+							frontier.concat(current_neighbour.getNeighborIds());
 						}
 					}
-					else
-					{
-						if (proportionaldistance < 0.425)
-						{
-							if (previous_district = -1)
-							{
-								previous_district = Math.floor(Math.random()*n)+(n)+1;
-								cell.district = previous_district;
-							}
-							else
-							{
-								cell.district = previous_district;
-								previous_district = -1
-							}
-						}
-						else
-						{
-							cell.district = (n*4)+Math.ceil(2*roads/4);
-						}
-					}
-				}
-				else
-				{
-					if ((cellCentre.y / (this.bbox.yb - this.bbox.yt)) < 0.5)
-					{
-						if (proportionaldistance < 0.425)
-						{
-							if (previous_district = -1)
-							{
-								previous_district = Math.floor(Math.random()*n)+(n*2)+1;
-								cell.district = previous_district;
-							}
-							else
-							{
-								cell.district = previous_district;
-								previous_district = -1
-							}
-						}
-						else
-						{
-							cell.district = (n*4)+Math.ceil(3*roads/4);
-						}
-					}
-					else
-					{
-						if (proportionaldistance < 0.425)
-						{
-							if (previous_district = -1)
-							{
-								previous_district = Math.floor(Math.random()*n)+(n*3)+1;
-								cell.district = previous_district;
-							}
-							else
-							{
-								cell.district = previous_district;
-								previous_district = -1
-							}
-						}
-						else
-						{
-							cell.district = (n*4)+Math.ceil(4*roads/4);
-						}
-					}
+					current_district++;
 				}
 			});
 		}
@@ -23846,7 +23958,7 @@ async function DrawVoronoiCity(channel, arguments)
 	let m = 100;
 	let w = 800;
 	let h = 800;
-	let r = 9;
+	let r = 3;
 	let d = 2;
 	let building_scale = 1;
 	let output_svg = false;
@@ -23947,8 +24059,6 @@ async function DrawVoronoiCity(channel, arguments)
 			
 			city.circleOfSites((w-m*2)+20, 8, { x: w/2, y: h/2 });
 			
-			city.setDistricts(d, district0size, outsite_roads);
-			
 			original_circle = [];
 			for(let i = 0; i < 4; i++)
 			{
@@ -23956,7 +24066,6 @@ async function DrawVoronoiCity(channel, arguments)
 				{
 					if (cell.district < (d*4)+1 && city.cellArea(cell) > 400*building_scale)
 						original_circle.push({ x: cell.site.x, y: cell.site.y });
-						city.setDistricts(d, district0size, outsite_roads);
 				});
 			}
 			
@@ -23969,7 +24078,7 @@ async function DrawVoronoiCity(channel, arguments)
 			city.addSite(corner_site1);
 			city.addSite(corner_site2);
 			city.addSite(corner_site3);
-			city.setDistricts(d, district0size, outsite_roads);
+			city.setDistricts(0.5, 1024);
 		}
 		catch (err)
 		{
@@ -25474,7 +25583,7 @@ function GenerateTavern()
 		position = tavern_signaturedish.indexOf("\[");
 	}
 	
-	let full_string = grammarCapitalFirstLetter(tavern_name) + ", a " + tavern_type + "\nIt has " + tavern_drink_prices + ", " + tavern_food_prices + " and " + tavern_room_prices + "\nTheir main house drink is " + grammarAorAn(tavern_housewine) + " " + tavern_housewine + " and their specialty is " + tavern_signaturedish;
+	let full_string = grammarCapitalFirstLetter(tavern_name) + ", a " + tavern_type + "\nIt has " + tavern_drink_prices + ", " + tavern_food_prices + " and " + tavern_room_prices + "\nTheir main house drink is " + grammarAorAn(tavern_housewine.substring(0,1)) + " " + tavern_housewine + " and their specialty is " + tavern_signaturedish;
 	
 	return full_string;
 }
