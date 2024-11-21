@@ -1294,17 +1294,18 @@ function howgay(value)
 
 function gaygacha(coins)
 {
-	let baserand = Math.random() - coins*0.003;
+	let baserand = Math.random() - coins*0.008;
 
 	let rarity = getGachaRarity(baserand);
 	let hero_base = generateMonster("gaycha",0,0,1);
-	let hero_class = boss_generator.classes[Math.floor(Math.random()*boss_generator.classes.length)].class;
+	let hero_class = boss_generator.classes[Math.floor(Math.random()*boss_generator.classes.length)];
 	
 	let hero_name = generateBossName(false);
 	
-	let fullreturnstring = "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
+	let gaycha_result = { rarity: rarity, base: hero_base, hero_class: hero_class, name: hero_name };
+	//let fullreturnstring = "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
 	
-	return fullreturnstring;
+	return gaycha_result;
 }
 
 
@@ -1314,7 +1315,7 @@ function gaygacha(coins)
 //
 
 var MAX_COIN_PERCENTAGE = 0.1666;
-var MAX_COINS = 255;
+var MAX_COINS = 40;
 
 function shakethejar()
 {
@@ -1328,7 +1329,7 @@ function shakethejar()
 	
 	if (currentgay > 5)
 	{
-		while (randomcoins == 0)
+		while (randomcoins == 0 || randomcoins > MAX_COINS)
 		{
 			randomcoins = Math.floor((Math.random()+Math.random()/2)*MAX_COIN_PERCENTAGE*currentgay);
 			if (Math.random() < 0.08)
@@ -1350,59 +1351,34 @@ function shakethejar()
 	currentgay -= randomcoins;
 	
 	let hero = gaygacha(randomcoins);
-	let artifact = "";
+	//let artifact = "";
+	//let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"];
 	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"];
-	let baseitem = generateItemFromTypes(baseitemtypes);
+	let basegaychakeywords = ["arcane","alchemy","holy","karate","martial","rogueish","cyberpunk","necromantic", "psionic","himbo","twink","firearm"];
 	
-	
-	let markovname = MarkovPhonemeGenerateName();
-	while (markovname.length < 4)
+	let gaychakeywords = [];
+	for (let x = 0; x < hero.hero_class.keywords.length; x++)
 	{
-		markovname = MarkovPhonemeGenerateName();
-	}
-	let spelledname = "";
-	for (let i = 0; i < markovname.length; i++)
-	{
-		let phonemechar = GetPhonemeByCharacter(markovname[i]);
-		spelledname += getPhonemeSpelling(phonemechar);
-	}
-	artifact = "the " +  grammarCapitalFirstLetter(spelledname);
-	
-	/*
-	baserand  = Math.random();
-	if (baserand < 0.19) // single first word name
-	{
-		let markovname = MarkovPhonemeGenerateName();
-		while (markovname.length < 4)
+		if (basegaychakeywords.includes(hero.hero_class.keywords[x]))
 		{
-			markovname = MarkovPhonemeGenerateName();
-		}
-		let spelledname = "";
-		for (let i = 0; i < markovname.length; i++)
-		{
-			let phonemechar = GetPhonemeByCharacter(markovname[i]);
-			spelledname += getPhonemeSpelling(phonemechar);
-		}
-		artifact = "the " +  grammarCapitalFirstLetter(spelledname);
+			gaychakeywords.push(hero.hero_class.keywords[x]);
+		}			
 	}
-	else if (baserand < 0.31) // single first word name
-	{
-		artifact = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))];
-	}
-	else if (baserand < 0.43) // single last word name
-	{
-		artifact = "the " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
-	}
-	else
-	{
-		artifact = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))] + " " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
-	}
-	*/
 	
-	let fullstring = hero + " and their artifact " + artifact + ", the " + item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + baseitem.item;
+	gaychakeywords.push(RandomArrayEntry(basegaychakeywords, false, "[doesnotnest]"));
+
+	let baseitem = generateGaychaItem(baseitemtypes, gaychakeywords);
+	
+	let hero_item = item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + baseitem.item;
+	
+	let fullstring = "[" + hero.rarity + "] " + hero.name + " the " + hero.base + " " + hero.hero_class.class + " with " + grammarAorAn(hero_item) + " " + hero_item;
 	
 	let shakestring = ""
-	if (shaketime > 1)
+	if (shaketime > 3)
+	{
+		shakestring = "You give the jar a really really good shake, getting ";
+	}
+	else if (shaketime > 1)
 	{
 		shakestring = "You give the jar a good shake, getting ";
 	}
@@ -2052,6 +2028,23 @@ function filterByListArray(array)
 		for (let i in array)
 		{
 			if (this[j] == array[i])
+				return true;
+		}
+	}
+	return false;
+}
+
+//
+// filter the objects by whether 'this' is one of the keywords it has
+//
+
+function filterGaychaByAtleastOneKeyword(object)
+{
+	for (let j in this)
+	{
+		for (let i in object.gaychaKeywords)
+		{
+			if (this[j] == object.gaychaKeywords[i])
 				return true;
 		}
 	}
@@ -3903,6 +3896,40 @@ function generateItemOfType(type, musthavelists = null, disallowedlists = null)
 		{
 			itempool = itempool.filter(removeByList,disallowedlists[i]);
 		}
+	}
+	
+	for (let i = 0; i < itempool.length; i++)
+	{
+		fullpool = fullpool.concat(getItemList(itempool[i]));
+	}
+	
+	return fullpool[Math.floor((Math.random()*fullpool.length))];
+}
+
+//
+// generate an item from a variety of types from the boss generator item list
+
+function generateGaychaItem(types = null, keywords = null)
+{
+	let itempool;
+	let fullpool = [];
+	
+	if (types != null)
+	{
+		itempool = [];
+		for (i in types)
+		{
+			itempool = itempool.concat(boss_generator.items.filter(filterByType,types[i]));
+		}
+	}
+	else
+	{
+		itempool = boss_generator.items.slice();
+	}
+	
+	if (keywords != null && keywords.length > 0)
+	{
+		itempool = itempool.filter(filterGaychaByAtleastOneKeyword,keywords);
 	}
 	
 	for (let i = 0; i < itempool.length; i++)
@@ -23113,7 +23140,7 @@ function loadCurrentGayValue()
 
 function generatePodcaster()
 {
-	let podcaster = RandomArrayEntry(podcaster_gen.podcaster_firstnames, false, "[donotnest]") + " " + RandomArrayEntry(podcaster_gen.podcaster_lastnames, false, "[donotnest]");
+	let podcaster = RandomArrayEntry(monster_names, false, "[donotnest]") + " " + RandomArrayEntry(monster_surnames, false, "[donotnest]");
 	let podcastname = RandomArrayEntry(podcaster_gen.podcastnames, false, "[donotnest]");
 	let subject1 = RandomArrayEntry(podcaster_gen.podcast_subjects, false, "[donotnest]");
 	let subject2 = RandomArrayEntry(podcaster_gen.podcast_subjects, false, "[donotnest]");

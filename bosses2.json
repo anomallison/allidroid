@@ -21,7 +21,8 @@
 		"himbo",
 		"twink",
 		"ally",
-		"firearm"
+		"firearm",
+		"pokemon"
 	],
 	"randomkeywords":
 	[
@@ -256,7 +257,7 @@
 		},
 		{
 			"class": "alchemist",
-			"keywords": ["alchemist","arcane","loadout","item"]
+			"keywords": ["alchemy","arcane","loadout","item"]
 		},
 		{
 			"class": "warlock",
@@ -979,385 +980,449 @@
 			"name": "long curved dagger",
 			"type": "dagger",
 			"lists": [],
-			"synonyms": ["short dagger","tiny knife","oversized knife","punching dagger"]
+			"synonyms": ["short dagger","tiny knife","oversized knife","punching dagger"],
+			"gaychaKeywords": ["rogueish","twink","martial"]
 		},
 		{
 			"name": "kukri",
 			"type": "shortblade",
 			"lists": [],
-			"synonyms": ["short sword","scimitar","light axe","katar"]
+			"synonyms": ["short sword","scimitar","light axe","katar"],
+			"gaychaKeywords": ["rogueish","twink","martial"]
 		},
 		{
 			"name": "two handed curved blade",
 			"type": "largeblade",
 			"lists": [],
-			"synonyms": ["katana","giant axe","scythe","steel long sword","wakizashi","bronze gladius","obsidian toothed sword"]
+			"synonyms": ["katana","giant axe","scythe","steel long sword","wakizashi","bronze gladius","obsidian toothed sword"],
+			"gaychaKeywords": ["himbo","martial"]
 		},
 		{
 			"name": "set of throwing knives",
 			"type": "throwingknives",
 			"lists": [],
-			"synonyms": ["set of shuriken","pair of throwing axes","set of kunai","thong of javelins"]
+			"synonyms": ["set of shuriken","pair of throwing axes","set of kunai","thong of javelins"],
+			"gaychaKeywords": ["rogueish","martial","karate"]
 		},
 		{
 			"name": "spike chain whip",
 			"type": "ropeweapon",
 			"lists": [],
-			"synonyms": ["cat o' nine tails","kusarigama","meteor hammer","flail"]
+			"synonyms": ["cat o' nine tails","kusarigama","meteor hammer","flail"],
+			"gaychaKeywords": ["rogueish","martial","karate"]
 		},
 		{
 			"name": "bronze headed spear",
 			"type": "polearm",
 			"lists": [],
-			"synonyms": ["glaive","halberd","pike"]
+			"synonyms": ["glaive","halberd","pike"],
+			"gaychaKeywords": ["martial","karate"]
 		},
 		{
 			"name": "bo staff",
 			"type": "staff",
 			"lists": [],
-			"synonyms": ["quarterstaff"]
+			"synonyms": ["quarterstaff"],
+			"gaychaKeywords": ["martial","karate"]
 		},
 		{
 			"name": "wooden staff",
 			"type": "magestaff",
 			"lists": ["magical"],
-			"synonyms": ["metal staff","crystal topped staff"]
+			"synonyms": ["metal staff","crystal topped staff"],
+			"gaychaKeywords": ["arcane","holy","necromantic","psionic"]
 		},
 		{
 			"name": "bone staff",
 			"type": "magestaff",
 			"lists": ["dark"],
-			"synonyms": ["skull topped staff"]
+			"synonyms": ["skull topped staff"],
+			"gaychaKeywords": ["necromantic","psionic"]
 		},
 		{
 			"name": "light hammer",
 			"type": "smallhammer",
 			"lists": [],
-			"synonyms": ["warhammer","cudgel"]
+			"synonyms": ["warhammer","cudgel"],
+			"gaychaKeywords": ["martial"]
 		},
 		{
 			"name": "really really big hammer",
 			"type": "largehammer",
 			"lists": [],
-			"synonyms": ["maul","tetsubo"]
+			"synonyms": ["maul","tetsubo"],
+			"gaychaKeywords": ["martial","himbo"]
 		},
 		{
 			"name": "dual short sword and scimitar",
 			"type": "dualblades",
 			"lists": [],
-			"synonyms": ["dual daggers","dual axes","dual punching daggers","dual ninja claws"]
+			"synonyms": ["dual daggers","dual axes","dual punching daggers","dual ninja claws"],
+			"gaychaKeywords": ["martial","karate","rogueish"]
 		},
 		{
 			"name": "dual warhammers",
 			"type": "dualhammers",
 			"lists": [],
-			"synonyms": ["dual hammers","dual warhammer and mace"]
+			"synonyms": ["dual hammers","dual warhammer and mace"],
+			"gaychaKeywords": ["martial","himbo"]
 		},
 		{
 			"name": "dual axe and warhammer",
 			"type": "dualmixed",
 			"lists": [],
-			"synonyms": ["dual sword and mace","dual axe and sword"]
+			"synonyms": ["dual sword and mace","dual axe and sword"],
+			"gaychaKeywords": ["martial","himbo"]
 		},
 		{
 			"name": "dual revolvers",
 			"type": "dualranged",
-			"lists": [],
-			"synonyms": ["dual pistols","dual uzis"]
+			"lists": ["modern"],
+			"synonyms": ["dual pistols","dual uzis"],
+			"gaychaKeywords": ["firearm"]
 		},
 		{
 			"name": "scepter of finely carved wood",
 			"type": "wand",
 			"lists": ["magical"],
-			"synonyms": ["mithril wand","scepter of fine ivory","jewel encrusted wand"]
+			"synonyms": ["mithril wand","scepter of fine ivory","jewel encrusted wand"],
+			"gaychaKeywords": ["arcane","holy","necromantic","psionic"]
 		},
 		{
 			"name": "adorable plushie voodoo doll",
 			"type": "magicoffhand",
 			"lists": ["dark"],
-			"synonyms": ["twisted doll","orb of blood","orb of darkness"]
+			"synonyms": ["twisted doll","orb of blood","orb of darkness"],
+			"gaychaKeywords": ["necromantic"]
 		},
 		{
 			"name": "orb of storms",
 			"type": "magicoffhand",
 			"lists": ["magical"],
-			"synonyms": ["orb of fire","orb of ice","orb of wind","orb of earth","orb of water"]
+			"synonyms": ["orb of fire","orb of ice","orb of wind","orb of earth","orb of water"],
+			"gaychaKeywords": ["arcane","psionic"]
 		},
 		{
 			"name": "orb of light",
 			"type": "magicoffhand",
 			"lists": ["magical","holy"],
-			"synonyms": ["orb of blessings"]
+			"synonyms": ["orb of blessings"],
+			"gaychaKeywords": ["holy"]
 		},
 		{
 			"name": "twisted bone wand",
 			"type": "wand",
 			"lists": ["dark"],
-			"synonyms": ["obsidian tipped wand"]
+			"synonyms": ["obsidian tipped wand"],
+			"gaychaKeywords": ["necromantic"]
 		},
 		{
 			"name": "twisted ritual dagger",
 			"type": "dagger",
 			"lists": ["dark"],
-			"synonyms": ["sickle"]
+			"synonyms": ["sickle"],
+			"gaychaKeywords": ["necromantic"]
 		},
 		{
 			"name": "flintlock pistol",
 			"type": "smallarms",
 			"lists": [],
-			"synonyms": []
+			"synonyms": [],
+			"gaychaKeywords": ["firearm"]
 		},
 		{
 			"name": "revolver",
 			"type": "smallarms",
 			"lists": ["modern"],
-			"synonyms": ["machine pistol","pistol"]
+			"synonyms": ["machine pistol","pistol"],
+			"gaychaKeywords": ["firearm"]
 		},
 		{
 			"name": "machine pistol",
 			"type": "smallarms",
 			"lists": ["cyberpunk"],
-			"synonyms": ["laser pistol"]
+			"synonyms": ["laser pistol"],
+			"gaychaKeywords": ["firearm"]
 		},
 		{
 			"name": "flintlock rifle",
 			"type": "longarms",
 			"lists": [],
-			"synonyms": []
+			"synonyms": [],
+			"gaychaKeywords": ["firearm"]
 		},
 		{
 			"name": "shotgun",
 			"type": "longarms",
 			"lists": ["modern"],
-			"synonyms": ["sniper rifle","minigun","machine gun"]
+			"synonyms": ["sniper rifle","minigun","machine gun"],
+			"gaychaKeywords": ["firearm"]
 		},
 		{
 			"name": "laser rifle",
 			"type": "longarms",
 			"lists": ["cyberpunk"],
-			"synonyms": ["gauss cannon","flechette rifle"]
+			"synonyms": ["gauss cannon","flechette rifle"],
+			"gaychaKeywords": ["cyberpunk"]
 		},
 		{
 			"name": "laser sword",
 			"type": "largeblade",
 			"lists": ["cyberpunk"],
-			"synonyms": ["light saber","monofilament sword"]
+			"synonyms": ["light saber","monofilament sword"],
+			"gaychaKeywords": ["cyberpunk"]
 		},
 		{
 			"name": "laser knife",
 			"type": "shortblade",
 			"lists": ["cyberpunk"],
-			"synonyms": ["vibro knife","monofilament knife"]
+			"synonyms": ["vibro knife","monofilament knife"],
+			"gaychaKeywords": ["cyberpunk"]
 		},
 		{
 			"name": "impact hammer",
 			"type": "largehammer",
 			"lists": ["cyberpunk"],
-			"synonyms": ["power hammer","power fist","gravity fist"]
+			"synonyms": ["power hammer","power fist","gravity fist"],
+			"gaychaKeywords": ["cyberpunk","himbo"]
 		},
 		{
 			"name": "engraved human skull",
 			"type": "friend",
 			"lists": ["dark"],
-			"synonyms": ["engraved dragon skull","engraved cat skull","talking bird skull","talking lizard skull","talking crystal skull","talking dinosaur skull"]
+			"synonyms": ["engraved dragon skull","engraved cat skull","talking bird skull","talking lizard skull","talking crystal skull","talking dinosaur skull"],
+			"gaychaKeywords": ["necromantic"]
 		},
 		{
 			"name": "slime friend",
 			"type": "friend",
 			"lists": ["magical"],
-			"synonyms": ["tiny dragon friend","pixie friend","talking cat friend","miniature dinosaur friend","aggressive rock friend"]
+			"synonyms": ["tiny dragon friend","pixie friend","talking cat friend","miniature dinosaur friend","aggressive rock friend"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "hovering drone friend",
 			"type": "friend",
 			"lists": ["cyberpunk"],
-			"synonyms": ["holographic ai friend"]
+			"synonyms": ["holographic ai friend"],
+			"gaychaKeywords": ["cyberpunk"]
 		},
 		{
 			"name": "bird friend",
 			"type": "friend",
 			"lists": [],
-			"synonyms": ["cat friend","dog friend","smol lizard friend","otter friend","snake friend"]
+			"synonyms": ["cat friend","dog friend","smol lizard friend","otter friend","snake friend"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "mithril plate armour",
 			"type": "armour",
 			"lists": ["heavyarmour"],
-			"synonyms": ["steel plate armour","iron plate armour","adamantine plate armour"]
+			"synonyms": ["steel plate armour","iron plate armour","adamantine plate armour"],
+			"gaychaKeywords": ["martial"]
 		},
 		{
 			"name": "scale mail",
 			"type": "armour",
 			"lists": ["mediumarmour"],
-			"synonyms": ["chain shirt","breast plate","hide armour"]
+			"synonyms": ["chain shirt","breast plate","hide armour"],
+			"gaychaKeywords": ["martial"]
 		},
 		{
 			"name": "spidersilk robe",
 			"type": "armour",
 			"lists": ["dark","druid"],
-			"synonyms": []
+			"synonyms": [],
+			"gaychaKeywords": ["druid"]
 		},
 		{
 			"name": "silkweave leather armour",
 			"type": "armour",
 			"lists": ["druid"],
-			"synonyms": ["duskleaf weave armour","underbrush cloak"]
+			"synonyms": ["duskleaf weave armour","underbrush cloak"],
+			"gaychaKeywords": ["druid"]
 		},
 		{
 			"name": "black silk cloak",
 			"type": "armour",
 			"lists": ["dark"],
-			"synonyms": ["ragged black silk robe"]
+			"synonyms": ["ragged black silk robe"],
+			"gaychaKeywords": ["necromantic"]
 		},
 		{
 			"name": "singed labcoat",
 			"type": "armour",
 			"lists": ["alchemy"],
-			"synonyms": ["stained robe","white labcoat","singed cloak"]
+			"synonyms": ["stained robe","white labcoat","singed cloak"],
+			"gaychaKeywords": ["alchemy"]
 		},
 		{
 			"name": "monster hide leather armour",
 			"type": "armour",
 			"lists": ["lightarmour"],
-			"synonyms": ["brigadine","silk robe","spidersilk bandage outfit"]
+			"synonyms": ["brigadine","silk robe","spidersilk bandage outfit"],
+			"gaychaKeywords": ["rogueish","martial"]
 		},
 		{
 			"name": "leather jerkin",
 			"type": "clothes",
 			"lists": [],
-			"synonyms": ["cloth tunic","silk dress","robe"]
+			"synonyms": ["cloth tunic","silk dress","robe"],
+			"gaychaKeywords": ["himbo","twink","arcane","holy","necromantic"]
 		},
 		{
 			"name": "heavy crossbow",
 			"type": "bow",
 			"lists": ["crossbow"],
-			"synonyms": ["light crossbow", "handcrossbow"]
+			"synonyms": ["light crossbow", "handcrossbow"],
+			"gaychaKeywords": ["martial","rogueish"]
 		},
 		{
 			"name": "longbow",
 			"type": "bow",
 			"lists": ["handbow"],
-			"synonyms": ["shortbow"]
+			"synonyms": ["shortbow"],
+			"gaychaKeywords": ["martial","rogueish"]
 		},
 		{
 			"name": "slingshot",
 			"type": "sling",
 			"lists": [],
-			"synonyms": ["sling","hand-held catapult"]
+			"synonyms": ["sling","hand-held catapult"],
+			"gaychaKeywords": ["martial","rogueish"]
 		},
 		{
 			"name": "journal",
 			"type": "tool",
 			"lists": [],
-			"synonyms": ["healing kit","treasure map"]
+			"synonyms": ["healing kit","treasure map"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "set of lockpicks",
 			"type": "tool",
 			"lists": ["rogueish"],
-			"synonyms": ["disguise kit"]
+			"synonyms": ["disguise kit"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "alchemy lab",
 			"type": "tool",
 			"lists": ["alchemy"],
-			"synonyms": []
+			"synonyms": [],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "mobile phone",
 			"type": "tool",
 			"lists": ["modern"],
-			"synonyms": ["tablet computer"]
+			"synonyms": ["tablet computer"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "cyberdeck",
 			"type": "tool",
 			"lists": ["cyberpunk"],
-			"synonyms": []
+			"synonyms": [],
+			"gaychaKeywords": ["cyberpunk"]
 		},
 		{
 			"name": "pokéball",
 			"type": "tool",
 			"lists": ["pokemon"],
-			"synonyms": ["great ball","ultra ball","masterball","park ball","beast ball","love ball"]
+			"synonyms": ["great ball","ultra ball","masterball","park ball","beast ball","love ball"],
+			"gaychaKeywords": ["pokemon"]
 		},
 		{
 			"name": "spatula",
 			"type": "cookingutensil",
 			"lists": [],
-			"synonyms": ["cheese grater","ladle","whisk"]
+			"synonyms": ["cheese grater","ladle","whisk"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "level [2-28] Magikarp",
 			"type": "pokemon",
 			"lists": ["pokemon"],
-			"synonyms": ["level [5-18] Zigzagoon","level [5-36] Pikachu","level [5-31] Psyduck","level [6-35] Slowpoke","level [5-24] Eevee","level [4-18] Rattata","level [4-18] Yungoos"]
+			"synonyms": ["level [5-18] Zigzagoon","level [5-36] Pikachu","level [5-31] Psyduck","level [6-35] Slowpoke","level [5-24] Eevee","level [4-18] Rattata","level [4-18] Yungoos"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "level [4-14] Sobble",
 			"type": "pokemon",
 			"lists": ["pokemon","starters"],
-			"synonyms": ["level [4-14] Piplup","level [4-14] Rowlet","level [4-14] Popplio","level [4-14] Litten","level [4-14] Charizard","level [4-14] Bulbasaur","level [4-14] Squirtle","level [4-14] Grookey","level [4-14] Scorbunny"]
+			"synonyms": ["level [4-14] Piplup","level [4-14] Rowlet","level [4-14] Popplio","level [4-14] Litten","level [4-14] Charizard","level [4-14] Bulbasaur","level [4-14] Squirtle","level [4-14] Grookey","level [4-14] Scorbunny"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "healing potion",
 			"type": "consumable",
 			"lists": ["alchemy"],
-			"synonyms": ["mana potion","elixir of life","bottle of magic honey","stamina potion"]
+			"synonyms": ["mana potion","elixir of life","bottle of magic honey","stamina potion"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "round shield",
 			"type": "shield",
 			"lists": [],
-			"synonyms": ["kite shield","tower shield","buckler","heater shield"]
+			"synonyms": ["kite shield","tower shield","buckler","heater shield"],
+			"gaychaKeywords": ["martial"]
 		},
 		{
 			"name": "necklace of beads",
 			"type": "jewelery",
 			"lists": [],
-			"synonyms": ["medallion of copper","bracelet of cord and twine","amulet of silver","copper ring","bronze ring","gold ring"]
+			"synonyms": ["medallion of copper","bracelet of cord and twine","amulet of silver","copper ring","bronze ring","gold ring"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "black cord bracelet of teeth",
 			"type": "jewelery",
 			"lists": ["dark"],
-			"synonyms": ["bone fetish","mummified hand amulet","bone bracelet","obsidian stone ring"]
+			"synonyms": ["bone fetish","mummified hand amulet","bone bracelet","obsidian stone ring"],
+			"gaychaKeywords": ["necromantic"]
 		},
 		{
 			"name": "white gold statuette",
 			"type": "holysymbol",
 			"lists": [],
-			"synonyms": ["silver amulet","wooden carving","bronze symbol"]
+			"synonyms": ["silver amulet","wooden carving","bronze symbol"],
+			"gaychaKeywords": ["holy"]
 		},
 		{
 			"name": "holy",
 			"type": "sanctified",
 			"lists": [],
-			"synonyms": ["sanctified","blessed"]
+			"synonyms": ["sanctified","blessed"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "unholy",
 			"type": "unsanctified",
 			"lists": [],
-			"synonyms": ["desecrated","unsanctified"]
+			"synonyms": ["desecrated","unsanctified"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "simple peg",
 			"type": "legreplacement",
 			"lists": [],
-			"synonyms": ["squishy tentacle","bionic leg","monster leg","basic prosthetic"]
+			"synonyms": ["squishy tentacle","bionic leg","monster leg","basic prosthetic"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "rotting rags",
 			"type": "bonewraps",
 			"lists": [],
-			"synonyms": ["fine silken bandages","dusty, musty bandages","soiled rags"]
+			"synonyms": ["fine silken bandages","dusty, musty bandages","soiled rags"],
+			"gaychaKeywords": []
 		},
 		{
 			"name": "silk",
 			"type": "wingrepairmaterial",
 			"lists": [],
-			"synonyms": ["leather","cloth","paper","steel"]
+			"synonyms": ["leather","cloth","paper","steel"],
+			"gaychaKeywords": []
 		}
 	],
 	"titles":
