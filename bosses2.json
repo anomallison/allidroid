@@ -1345,14 +1345,14 @@
 			"type": "pokemon",
 			"lists": ["pokemon"],
 			"synonyms": ["level [5-18] Zigzagoon","level [5-36] Pikachu","level [5-31] Psyduck","level [6-35] Slowpoke","level [5-24] Eevee","level [4-18] Rattata","level [4-18] Yungoos"],
-			"gaychaKeywords": []
+			"gaychaKeywords": ["pokemon"]
 		},
 		{
 			"name": "level [4-14] Sobble",
 			"type": "pokemon",
 			"lists": ["pokemon","starters"],
-			"synonyms": ["level [4-14] Piplup","level [4-14] Rowlet","level [4-14] Popplio","level [4-14] Litten","level [4-14] Charizard","level [4-14] Bulbasaur","level [4-14] Squirtle","level [4-14] Grookey","level [4-14] Scorbunny"],
-			"gaychaKeywords": []
+			"synonyms": ["level [4-14] Piplup","level [4-14] Rowlet","level [4-14] Popplio","level [4-14] Litten","level [4-14] Charmander","level [4-14] Bulbasaur","level [4-14] Squirtle","level [4-14] Grookey","level [4-14] Scorbunny"],
+			"gaychaKeywords": ["pokemon"]
 		},
 		{
 			"name": "healing potion",

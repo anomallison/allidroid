@@ -1351,10 +1351,8 @@ function shakethejar()
 	currentgay -= randomcoins;
 	
 	let hero = gaygacha(randomcoins);
-	//let artifact = "";
-	//let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"];
-	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"];
-	let basegaychakeywords = ["arcane","alchemy","holy","karate","martial","rogueish","cyberpunk","necromantic", "psionic","himbo","twink","firearm"];
+	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol","pokemon"];
+	let basegaychakeywords = ["arcane","alchemy","holy","karate","martial","rogueish","cyberpunk","necromantic", "psionic","himbo","twink","firearm","pokemon"];
 	
 	let gaychakeywords = [];
 	for (let x = 0; x < hero.hero_class.keywords.length; x++)
@@ -1371,7 +1369,23 @@ function shakethejar()
 	
 	let hero_item = item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + baseitem.item;
 	
-	let fullstring = "[" + hero.rarity + "] " + hero.name + " the " + hero.base + " " + hero.hero_class.class + " with " + grammarAorAn(hero_item) + " " + hero_item;
+	let position = hero_item.indexOf("\[");
+	let endposition = -1;
+	let hero_item_substr = "";
+	
+	while (position != -1)
+	{
+		endposition = hero_item.indexOf("\]");
+		hero_item_substr = hero_item.substring(position+1,endposition);
+		//substrcommands = hero_item.split(" ");
+		substr_number = randomNumberForText(hero_item_substr);
+		
+		hero_item = hero_item.substr(0,position) + substr_number + hero_item.substr(endposition+1);
+		
+		position = hero_item.indexOf("\[");
+	}
+	
+	let fullstring = "[" + hero.rarity + "] " + hero.name + " the " + hero.base + " " + hero.hero_class.class + " with " + grammarAorAn(hero_item.charAt(0)) + " " + hero_item;
 	
 	let shakestring = ""
 	if (shaketime > 3)
