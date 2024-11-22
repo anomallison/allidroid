@@ -127,6 +127,8 @@ var phonemes_english = JSON.parse(fs.readFileSync('phonemes_english.json'));
 var gacha_reveals = JSON.parse(fs.readFileSync('gacha_reveals.json'));
 var gacha_comments = JSON.parse(fs.readFileSync('gacha_comments.json'));
 
+var gacha_card_gen = JSON.parse(fs.readFileSync('gacha_card_gen.json'));
+
 //how files
 var how_levels = JSON.parse(fs.readFileSync('how_levels.json'));
 var how_prefixes = JSON.parse(fs.readFileSync('how_prefixes.json'));
@@ -350,6 +352,10 @@ async function processCommand(receivedMessage)
 			return;
 		}
 		receivedMessage.channel.send(output);
+		return;
+    } else if (normalizedCommand == "gachacard") 
+	{
+		OpenBoosterPack(receivedMessage.channel);
 		return;
     } else if (normalizedCommand == "lesbian") 
 	{
@@ -1297,12 +1303,57 @@ function gaygacha(coins)
 	let baserand = Math.random() - coins*0.008;
 
 	let rarity = getGachaRarity(baserand);
+	let stars = 0;
+	if (rarity == "Super Hyper Ultra Legendary")
+	{
+		stars = 10;
+	}
+	else if (rarity == "Hyper Legendary")
+	{
+		stars = 9;
+	}
+	else if (rarity == "Legendary")
+	{
+		stars = 8;
+	}
+	else if (rarity == "Super Rare")
+	{
+		stars = 7;
+	}
+	else if (rarity == "Rare")
+	{
+		stars = 6;
+	}
+	else if (rarity == "Less Common")
+	{
+		stars = 5;
+	}
+	else if (rarity == "Crappy Common")
+	{
+		stars = 4;
+	}
+	else if (rarity == "Uncommon")
+	{
+		stars = 3;
+	}
+	else if (rarity == "Worse Than Trash")
+	{
+		stars = 2;
+	}
+	else if (rarity == "Less Common")
+	{
+		stars = 1;
+	}
+	else if (rarity == "Trash")
+	{
+		stars = 0;
+	}
 	let hero_base = generateMonster("gaycha",0,0,1);
 	let hero_class = boss_generator.classes[Math.floor(Math.random()*boss_generator.classes.length)];
 	
 	let hero_name = generateBossName(false);
 	
-	let gaycha_result = { rarity: rarity, base: hero_base, hero_class: hero_class, name: hero_name };
+	let gaycha_result = { rarity: rarity, base: hero_base, hero_class: hero_class, name: hero_name, stars: stars };
 	//let fullreturnstring = "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
 	
 	return gaycha_result;
@@ -1409,6 +1460,101 @@ function shakethejar()
 	saveCurrentGayValue();
 	
 	return fullstring;
+}
+
+function OpenBoosterPack(channel)
+{
+	if (currentgay == 0)
+	{
+		return "the gay jar is empty";
+	}
+	
+	let randomcoins = 0
+	let shaketime = 0
+	
+	if (currentgay > 5)
+	{
+		while (randomcoins == 0 || randomcoins > MAX_COINS)
+		{
+			randomcoins = Math.floor((Math.random()+Math.random()/2)*MAX_COIN_PERCENTAGE*currentgay);
+			if (Math.random() < 0.08)
+				shaketime++;
+			shaketime++;
+		}
+	} 
+	else
+	{
+		randomcoins = 1 + Math.floor(Math.random()*2);
+	}
+	
+	if (randomcoins > currentgay)
+		randomcoins = currentgay;
+	
+	if (randomcoins > MAX_COINS)
+		randomcoins = MAX_COINS;
+	
+	currentgay -= randomcoins;
+	
+	let hero = gaygacha(randomcoins);
+	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol","pokemon"];
+	let basegaychakeywords = ["arcane","alchemy","holy","karate","martial","rogueish","cyberpunk","necromantic", "psionic","himbo","twink","firearm","pokemon"];
+	
+	let gaychakeywords = [];
+	for (let x = 0; x < hero.hero_class.keywords.length; x++)
+	{
+		if (basegaychakeywords.includes(hero.hero_class.keywords[x]))
+		{
+			gaychakeywords.push(hero.hero_class.keywords[x]);
+		}			
+	}
+	
+	gaychakeywords.push(RandomArrayEntry(basegaychakeywords, false, "[doesnotnest]"));
+
+	let baseitem = generateGaychaItem(baseitemtypes, gaychakeywords);
+	
+	let hero_item = item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + baseitem.item;
+	
+	let position = hero_item.indexOf("\[");
+	let endposition = -1;
+	let hero_item_substr = "";
+	
+	while (position != -1)
+	{
+		endposition = hero_item.indexOf("\]");
+		hero_item_substr = hero_item.substring(position+1,endposition);
+		//substrcommands = hero_item.split(" ");
+		substr_number = randomNumberForText(hero_item_substr);
+		
+		hero_item = hero_item.substr(0,position) + substr_number + hero_item.substr(endposition+1);
+		
+		position = hero_item.indexOf("\[");
+	}
+	
+	let special_text = "Equipped with " + grammarAorAn(hero_item.charAt(0)) + " " + hero_item;
+	
+	let shakestring = ""
+	if (shaketime > 3)
+	{
+		shakestring = "You give the jar a really really good shake, getting ";
+	}
+	else if (shaketime > 1)
+	{
+		shakestring = "You give the jar a good shake, getting ";
+	}
+	else
+	{
+		shakestring = "You shake ";
+	}
+	let fullstring = "";
+	
+	if (randomcoins > 1)
+		fullstring = shakestring + randomcoins + " coins from the jar and spend them on a gaycha booster! You get:";
+	else
+		fullstring = shakestring + " 1 coin from the jar and spend it on a gaycha booster! You get:";
+	
+	DrawGachaCard(channel, hero, special_text, fullstring);
+	
+	saveCurrentGayValue();
 }
 
 function orderFromDiner(coins)
@@ -16349,6 +16495,122 @@ function DrawSquares(channel ,arguments)
 			if (err) throw err;
 			console.log('The file has been saved!');
 			channel.send({ files: [{ attachment: path, name: file }] });
+		})
+	}
+	else
+	{
+		console.log("getContext failed");
+	}
+	
+}
+
+// gacha card drawing
+
+function DrawGachaCard(channel, gacha_result, special_text, message)
+{
+	var tempcanvas = new Canvas();
+	tempcanvas.width = 500;
+	tempcanvas.height = 700;
+	if (tempcanvas.getContext)
+	{
+		let temp_stats = gacha_card_gen.slice();
+		var ctx = tempcanvas.getContext('2d');
+		
+		ctx.fillStyle = 'rgb(0, 0, 0)';
+		
+		ctx.beginPath();
+		ctx.moveTo(0,10);
+		ctx.arcTo(0, 0, 10, 0, 10);
+		ctx.lineTo(490,0);
+		ctx.arcTo(500, 0, 500, 10, 10);
+		ctx.lineTo(500,690);
+		ctx.arcTo(500, 700, 490, 700, 10);
+		ctx.lineTo(10,700);
+		ctx.arcTo(0, 700, 0, 690, 10);
+		ctx.fill();
+
+		ctx.fillStyle = 'rgb(255, 255, 255)';
+		ctx.fillRect(10, 10, 480, 680);
+
+		ctx.fillStyle = 'rgb(0, 0, 0)';
+		ctx.fillRect(386, 650, 110, 40);
+
+		ctx.fillStyle = 'rgb(255, 255, 255)';
+		ctx.fillRect(392, 656, 98, 34);
+
+		ctx.fillStyle = 'rgb(0, 0, 0)';
+		ctx.font = "36px sans-serif"
+		ctx.fillText(gacha_result.name,12,40, 476);
+		let stars_string = "";
+		for (let i = 0; i < gacha_result.stars; i++)
+		{
+			stars_string += "★";
+		}
+		for (let i = 0; i < (10 - gacha_result.stars); i++)
+		{
+			stars_string += "☆";
+		}
+		ctx.fillText(stars_string,12,80,476);
+		
+		ctx.font = "24px sans-serif"
+		ctx.fillText(grammarCapitalFirstLetter(gacha_result.base + " " + gacha_result.hero_class.class),12,110, 476);
+		
+		ctx.textAlign = "center";
+		for (let j = 0; j < 5; j++)
+		{
+			let random_stat_entry = Math.floor(Math.random() * temp_stats.length);
+			let stat = temp_stats[random_stat_entry];
+			temp_stats.splice(random_stat_entry,1);
+			
+			let stat_value = stat.result[Math.floor(Math.random() * stat.result.length)];
+			
+			let position = stat_value.indexOf("\[");
+			let endposition = -1;
+			let stat_value_substr = "";
+			
+			while (position != -1)
+			{
+				endposition = stat_value.indexOf("\]");
+				stat_value_substr = stat_value.substring(position+1,endposition);
+				//substrcommands = stat_value.split(" ");
+				substr_number = randomNumberForText(stat_value_substr);
+				
+				stat_value = stat_value.substr(0,position) + substr_number + stat_value.substr(endposition+1);
+				
+				position = stat_value.indexOf("\[");
+			}
+			
+			ctx.fillText(stat.name,(j*100)+50,410, 80);
+			ctx.fillText(stat_value,(j*100)+50,440, 80);
+		}
+
+		ctx.textAlign = "left";
+		ctx.fillText(special_text,12,500, 476);
+
+		ctx.font = "36px sans-serif"
+		ctx.textAlign = "right";
+		
+		let power = randomNumberForText("1-99");
+		let toughness = randomNumberForText("1-99");
+		
+		ctx.fillText(power + "/" + toughness,486,686, 120);
+		
+		ctx.font = "11px sans-serif"
+		ctx.textAlign = "left";
+		ctx.fillText(randomNumberForText("1-20000")+"/20000 // Allidroid Productions",12,686, 360);
+		
+		
+		let file = 'newestcard.png';
+		let path = './' + file;
+		
+		let b64 = tempcanvas.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			console.log('The file has been saved!');
+			
+			channel.send({content: message, files: [{ attachment: 'newestcard.png', name: 'newestcard.png' }] });
+			//channel.send({ files: [{ attachment: path, name: file }] });
 		})
 	}
 	else
