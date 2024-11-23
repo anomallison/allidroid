@@ -16532,10 +16532,10 @@ function DrawGachaCard(channel, gacha_result, special_text, message)
 		ctx.fillRect(10, 10, 480, 680);
 
 		ctx.fillStyle = 'rgb(0, 0, 0)';
-		ctx.fillRect(386, 650, 110, 40);
+		ctx.fillRect(376, 650, 120, 40);
 
 		ctx.fillStyle = 'rgb(255, 255, 255)';
-		ctx.fillRect(392, 656, 98, 34);
+		ctx.fillRect(382, 656, 108, 34);
 
 		ctx.fillStyle = 'rgb(0, 0, 0)';
 		ctx.font = "36px sans-serif"
@@ -16587,12 +16587,12 @@ function DrawGachaCard(channel, gacha_result, special_text, message)
 		ctx.fillText(special_text,12,500, 476);
 
 		ctx.font = "36px sans-serif"
-		ctx.textAlign = "right";
+		ctx.textAlign = "center";
 		
 		let power = randomNumberForText("1-99");
 		let toughness = randomNumberForText("1-99");
 		
-		ctx.fillText(power + "/" + toughness,486,686, 120);
+		ctx.fillText(power + "/" + toughness,436,686, 120);
 		
 		ctx.font = "11px sans-serif"
 		ctx.textAlign = "left";
