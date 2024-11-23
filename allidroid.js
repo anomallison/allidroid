@@ -1,7 +1,7 @@
 ////////
 //
 // written by AnomAllison
-// last updated 06/03/2024
+// last updated 23/11/2024
 //
 // I hope Allidroid can bring people some humour and entertainment
 //
@@ -12,7 +12,7 @@
 
 const { Client, Intents } = require('discord.js');
 
-const client = new Client({ intents: ["GUILD_MESSAGES", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES" ] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojiAndStickers, GatewayIntentBits.DirectMessages ] });
 
 
 const mergeImages = require('merge-images');
