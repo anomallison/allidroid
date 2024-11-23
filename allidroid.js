@@ -12,7 +12,7 @@
 
 const { Client, Intents } = require('discord.js');
 
-const client = new Client({ intents: [ "GUILDS", "GUILD_MESSAGES", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES" ] });
+const client = new Client({ intents: ["GUILD_MESSAGES", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES" ] });
 
 
 const mergeImages = require('merge-images');
