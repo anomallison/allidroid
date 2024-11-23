@@ -10,9 +10,9 @@
 //const Discord = require('discord.js')
 //const client = new Discord.Client()
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, Events, GatewayIntentBits } = require('discord.js');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.DirectMessages ] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent ] });
 
 
 const mergeImages = require('merge-images');
@@ -23,7 +23,8 @@ const { PaperOffset } = require('paperjs-offset');
 
 const Voronoi = require('voronoi');
 
-var fs = require("fs");
+const fs = require("fs");
+const path = require("path");
 
 const monster_types = 
 {
@@ -173,12 +174,10 @@ var tavern_gen = JSON.parse(fs.readFileSync('tavern_gen.json'));
 //
 var logintoken = fs.readFileSync('token.txt').toString();
 
-
 //
 // the array of reminders, to allow reminders to be removed/destroyed (just in case)
 var reminder_array = [];
 var reminder_idcounter = 0;
-
 
 //
 //
@@ -199,7 +198,7 @@ const KEYSMASH_DEFAULT_MIN = 18;
 //
 //
 
-client.on('messageCreate', (receivedMessage) => {
+client.on("messageCreate", (receivedMessage) => {
 	try
 	{
 		if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
@@ -25897,6 +25896,7 @@ function GenerateTavern()
 //
 // handle errors??? no
 
+process.on('uncaughtException', console.log);
 client.on('error', console.error);
 
 
