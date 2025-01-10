@@ -25295,6 +25295,7 @@ function generateIsometricWorldMap(channel, arguments)
 	let margin = Math.floor(Math.min(width, height)/5);
 	let xmargin = Math.floor(margin / 3);
 	let temperature = 0;
+	let temperature_noise_factor = 3
 	let temperature_variation = 0.5
 	let elevation_variation = 1
 	
@@ -25308,6 +25309,15 @@ function generateIsometricWorldMap(channel, arguments)
 				temperature = 20;
 			if (temperature < -20)
 				temperature = -20;
+		}
+		argumentpos = arguments.indexOf("-tn")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			temperature_noise_factor = parseFloat(arguments[argumentpos+1]);
+			if (temperature_noise_factor > 10)
+				temperature_noise_factor = 10;
+			if (temperature_noise_factor <= 0)
+				temperature_noise_factor = 0.01;
 		}
 		argumentpos = arguments.indexOf("-tv")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
@@ -25376,8 +25386,17 @@ function generateIsometricWorldMap(channel, arguments)
 		let tile_temperature = (3.667 + temperature) - (distance / equator) * (3.667 + temperature)
 		for (let x = 0; x < width; x++)
 		{
-			let temperature_noise = (noisemap[x + y * width] - 0.5) / 3;
-			world.push({ waterlevel: -1, biome: tile_temperature + temperature_noise, forest: false});
+			world.push({ waterlevel: -1, biome: tile_temperature, forest: false});
+		}
+	}
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			let temperature_noise = (noisemap[x + y * width] - 0.5) / temperature_noise_factor;
+			let noisePos = { x: x, y: y };
+			spreadTemperature(world, noisePos, width, height, temperature_noise, 4);
 		}
 	}
 	
