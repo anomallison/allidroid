@@ -12,7 +12,7 @@
 
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent ] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers ] });
 
 
 const mergeImages = require('merge-images');
@@ -1060,6 +1060,10 @@ async function processCommand(receivedMessage)
 			return;
 		}
 	}
+	else if (normalizedCommand == "slut")
+	{
+		pronounceslut(receivedMessage);
+	}
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -1242,6 +1246,28 @@ function helpCommand(user, arguments)
 	}
 	return help_string;
 }
+
+//
+//
+// !slut
+//
+//
+
+async function pronounceslut(received_message)
+{
+	let members_promise = new Promise(function(resolve, reject) {
+		resolve(received_message.channel.members)
+	});
+	
+	let members = await members_promise;
+	let member_names = []
+	members.forEach(member => {
+		member_names.push(member.displayName);
+	});
+	
+	received_message.channel.send(member_names[Math.floor(Math.random()*member_names.length)]);
+}
+
 
 //
 //
