@@ -10,7 +10,7 @@
 //const Discord = require('discord.js')
 //const client = new Discord.Client()
 
-const { Client, Events, GatewayIntentBits } = require('discord.js');
+const { Client, Events, GatewayIntentBits, PermissionsBitField } = require('discord.js');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers ] });
 
@@ -1255,6 +1255,15 @@ function helpCommand(user, arguments)
 
 async function pronounceslut(received_message)
 {
+	let channel_promise = new Promise(function(resolve, reject) {
+		resolve(received_message.guild.channels.fetch(received_message.channelId))
+	});
+	
+	let channel = await channel_promise;
+	
+	//console.log(channel);
+	
+	
 	let members_promise = new Promise(function(resolve, reject) {
 		resolve(received_message.guild.members.fetch())
 	});
@@ -1262,11 +1271,16 @@ async function pronounceslut(received_message)
 	let members = await members_promise;
 	let member_names = []
 	members.forEach(member => {
-		console.log(member.displayName);
-		member_names.push(member.displayName);
+		let permission_bits = received_message.channel.permissionsFor(member);
+		if (permission_bits.has(PermissionsBitField.Flags.ViewChannel))
+		{
+			//console.log(member.displayName)
+			member_names.push(member.displayName);
+		}
 	});
 	
 	received_message.channel.send(member_names[Math.floor(Math.random()*member_names.length)]);
+	
 }
 
 
