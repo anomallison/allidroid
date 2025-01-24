@@ -1256,12 +1256,13 @@ function helpCommand(user, arguments)
 async function pronounceslut(received_message)
 {
 	let members_promise = new Promise(function(resolve, reject) {
-		resolve(received_message.channel.members)
+		resolve(received_message.guild.members.fetch())
 	});
 	
 	let members = await members_promise;
 	let member_names = []
 	members.forEach(member => {
+		console.log(member.displayName);
 		member_names.push(member.displayName);
 	});
 	
