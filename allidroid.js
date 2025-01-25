@@ -12,7 +12,7 @@
 
 const { Client, Events, GatewayIntentBits, PermissionsBitField } = require('discord.js');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers ] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences ] });
 
 
 const mergeImages = require('merge-images');
@@ -1265,22 +1265,23 @@ async function pronounceslut(received_message)
 	
 	
 	let members_promise = new Promise(function(resolve, reject) {
-		resolve(received_message.guild.members.fetch())
+		resolve(received_message.guild.members.fetch({withPresences: true}))
 	});
 	
 	let members = await members_promise;
+	//console.log(members)
 	let member_names = []
 	members.forEach(member => {
 		let permission_bits = received_message.channel.permissionsFor(member);
 		if (permission_bits.has(PermissionsBitField.Flags.ViewChannel))
 		{
-			//console.log(member.displayName)
-			member_names.push(member.displayName);
+			let member_presence = member.guild.presences.resolve(member)
+			if (member_presence != null && member_presence.status != 'offline')
+				member_names.push(member.displayName);
 		}
 	});
 	
 	received_message.channel.send(member_names[Math.floor(Math.random()*member_names.length)]);
-	
 }
 
 
