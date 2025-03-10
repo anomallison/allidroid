@@ -170,6 +170,8 @@ var podcaster_gen = JSON.parse(fs.readFileSync('podcaster_gen.json'));
 // tavern gen from file
 var tavern_gen = JSON.parse(fs.readFileSync('tavern_gen.json'));
 
+// fractal map gen
+var fractal_map_symbols = JSON.parse(fs.readFileSync('fractal_map_gen/fractal_map_symbols.json'));
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
@@ -695,7 +697,7 @@ async function processCommand(receivedMessage)
 		generateMap(receivedMessage.channel,arguments);
 	} else if (normalizedCommand == "isometricmap") 
 	{
-		generateIsometricWorldMap(receivedMessage.channel,arguments);
+		generateIsometricWorldMap(receivedMessage.channel,arguments); 
 	} else if (normalizedCommand == "minimap") 
 	{
 		GenerateMiniMap(receivedMessage.channel,arguments);
@@ -939,10 +941,14 @@ async function processCommand(receivedMessage)
 	{
 		DrawDrawnDungeonMap(receivedMessage.channel,arguments);
 	}
+	else if (normalizedCommand == "fractalmap")
+	{
+		DrawFractalMap(receivedMessage.channel,arguments);
+	}/*
 	else if (normalizedCommand == "rendertownmap")
 	{
 		DrawTownMap(receivedMessage.channel,arguments);
-	}/*
+	}
 	else if (normalizedCommand == "polygonmap")
 	{
 		DrawVoronoiMapMap(receivedMessage.channel,arguments);
@@ -8693,9 +8699,9 @@ function GenerateMiniMap(channel, arguments)
 {
 	let LAND_LEVEL = 0.37;
 	let HILL_LEVEL = 0.721;
-	let MOUNTAIN_LEVEL = 0.908;
+	let MOUNTAIN_LEVEL = 0.838;
 
-	let FOREST_LEVEL = 0.0052;
+	let FOREST_LEVEL = 0.00252;
 	
 	let MAP_HEIGHT = 50;
 	let MAP_WIDTH = 80;
@@ -8924,7 +8930,7 @@ function GenerateMiniMap(channel, arguments)
 	
 	//do mountains
 	
-	let mountain_count = Math.floor(LANDMASSES*9/13);
+	let mountain_count = Math.floor(LANDMASSES*25/19);
 	
 	for (let i = 0; i < mountain_count; i++)
 	{
@@ -19100,6 +19106,7 @@ function generateVoronoiMap(numberOfPoints, margin, w, h, waterpasses, relaxatio
 				if (diagram.cells[neighbours[i]].height < 0)
 				{
 					surroundingWater++;
+					surroundingWater++;
 				}
 			}
 			if (surroundingWater/neighbours.length > 0.667 && cell.height > 0)
@@ -19176,7 +19183,7 @@ function ComplexShapeContainsPoint(shape, p)
 
 function DrawVoronoiMapMap(channel, arguments)
 {
-	let p = 4000;
+	let p = 16000;
 	let m = 0.75;
 	let w = 1920;
 	let h = 1080;
@@ -19230,6 +19237,8 @@ function DrawVoronoiMapMap(channel, arguments)
 		if (s > 100)
 			s = 100;
 	}
+	
+	let start_time = new Date().getTime();
 	
 	let plog = Math.log2(p);
 	let mountains = (Math.random()*0.333 + 0.667) * plog * plog * m; // p / 61;
@@ -19340,8 +19349,8 @@ function DrawVoronoiMapMap(channel, arguments)
 					if (shape_closed && (shape_start + 1) < complex_shape.length);
 					{
 						ctx.beginPath();
-						console.log(shape_start);
-						console.log(complex_shape);
+						//console.log(shape_start);
+						//console.log(complex_shape);
 						let midpoint = MidpointBetweenPoints(complex_shape[shape_start], complex_shape[shape_start+1]);
 						ctx.moveTo(midpoint.x, midpoint.y);
 						for (let shape_point = shape_start+1; shape_point < complex_shape.length; shape_point++)
@@ -19350,7 +19359,8 @@ function DrawVoronoiMapMap(channel, arguments)
 							if (further_point >= complex_shape.length)
 								further_point -= complex_shape.length;
 							let next_midpoint = MidpointBetweenPoints(complex_shape[shape_point], complex_shape[further_point]);
-							ctx.bezierCurveTo(complex_shape[shape_point-1].x, complex_shape[shape_point-1].y, complex_shape[shape_point].x, complex_shape[shape_point].y, next_midpoint.x, next_midpoint.y);
+							//ctx.bezierCurveTo(complex_shape[shape_point-1].x, complex_shape[shape_point-1].y, complex_shape[shape_point].x, complex_shape[shape_point].y, next_midpoint.x, next_midpoint.y);
+							ctx.lineTo(complex_shape[shape_point].x, complex_shape[shape_point].y)
 						}
 						ctx.closePath();
 						ctx.fill();
@@ -19360,7 +19370,7 @@ function DrawVoronoiMapMap(channel, arguments)
 			}
 		});
 		
-		// lakes
+		/* // lakes
 		diagram.cells.forEach(cell => {
 			if (!cell.drawn && cell.height > 0 && cell.lakeCell)
 			{
@@ -19397,7 +19407,7 @@ function DrawVoronoiMapMap(channel, arguments)
 									let curedge_startpoint =  current_halfedge.getStartpoint();
 									if (newedge_startpoint.x == curedge_startpoint.x && newedge_startpoint.y == curedge_startpoint.y)
 									{
-										console.log("new halfedge found");
+										//console.log("new halfedge found");
 										half_edge_i = i+1;
 										if (half_edge_i == current_cell.halfedges.length)
 										{
@@ -19512,8 +19522,11 @@ function DrawVoronoiMapMap(channel, arguments)
 					i--;
 				}
 			}
-		}
+		} */
 		
+		let citygen_time = new Date().getTime() - start_time;
+	
+		console.log("Voronoi Map generation took " + (citygen_time) + " milliseconds");
 		//output file
 		let file = 'voronoimap.png';
 		let path = './' + file;
@@ -24002,8 +24015,8 @@ function DistanceBetweenPoints(a, b)
 
 function MidpointBetweenPoints(a, b)
 {
-	console.log(a);
-	console.log(b);
+	//console.log(a);
+	//console.log(b);
 	let xdiff = b.x - a.x;
 	let ydiff = b.y - a.y;
 	let midpoint = { x: a.x + xdiff/2, y: a.y + ydiff/2 };
@@ -25949,6 +25962,1103 @@ function GenerateTavern()
 	let full_string = grammarCapitalFirstLetter(tavern_name) + ", a " + tavern_type + "\nIt has " + tavern_drink_prices + ", " + tavern_food_prices + " and " + tavern_room_prices + "\nTheir main house drink is " + grammarAorAn(tavern_housewine.substring(0,1)) + " " + tavern_housewine + " and their specialty is " + tavern_signaturedish;
 	
 	return full_string;
+}
+
+//
+//
+// fractal world map
+//
+
+const MOUNTAIN_POINT = 37
+const HILLS_POINT = 22
+
+function DrawFractalMap(channel, arguments)
+{
+	let cell_count_x = 120
+	let cell_count_y = 50
+	let fractal_world_width = Math.floor(45*(cell_count_x/2));
+	let fractal_world_height = 27*(cell_count_y);
+	let subdivisions = 2
+	
+	let start_time = new Date().getTime()
+	
+	let world_data = generateWorldData(cell_count_x, cell_count_y, 3)
+	
+	let centre_point = { x: fractal_world_width/2, y: fractal_world_height/2 }
+	
+	var tempcanvas = new Canvas();
+	tempcanvas.width = fractal_world_width;
+	tempcanvas.height = fractal_world_height;
+	if (tempcanvas.getContext)
+	{
+		var ctx = tempcanvas.getContext('2d');
+		
+		let water_color = '#0066EE';
+		let deep_water_color_faded = '#0028AA22';
+		let land_color_a = '#48BB00'
+		let temp_color_hot = '#FFCAA033'
+		let temp_color_cold = '#F5F6FF22'
+		
+		ctx.fillStyle = water_color;
+		ctx.fillRect(0,0,fractal_world_width,fractal_world_height);
+		
+		// deep sea
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height < -9.9)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = deep_water_color_faded
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height < -7.16)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = deep_water_color_faded
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height < -6.66)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = deep_water_color_faded
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height < -3.33)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = deep_water_color_faded
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height < -1.67)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = deep_water_color_faded
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		// land
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = land_color_a
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature > 71)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_hot
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature > 82)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_hot
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature > 93)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_hot
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature > 104)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_hot
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature < 45)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_cold
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature < 30)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_cold
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature < 15)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_cold
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature < 0)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_cold
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				if (world_data.map[index].height > 0 && world_data.map[index].temperature < -15)
+				{
+					let points_count = Math.floor(Math.random()*2 + 5)
+					let random_size_w = 48
+					let random_size_h = 42
+					let pos_x = x * 22.5 + 22.5
+					let pos_y = y * 27 + 13 + (x%2)*13
+					let random_point = { x: pos_x, y: pos_y };
+					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
+					
+					for (let j = 0; j < subdivisions; j++)
+					{
+						hex_mass = GenerateFractalWorldPoints(hex_mass, fractal_world_width, fractal_world_height)
+					}
+					
+					ctx.beginPath();
+					ctx.moveTo(hex_mass.points[0].x, hex_mass.points[0].y);
+					
+					for (let j = 1; j < hex_mass.points.length; j++)
+					{
+						
+						ctx.lineTo(hex_mass.points[j].x, hex_mass.points[j].y);
+					}
+					ctx.fillStyle = temp_color_cold
+					ctx.closePath()
+					ctx.fill();
+				}
+			}
+		}
+		
+		// symbols
+		let hills_symbol = new Image(32, 28);
+		hills_symbol.src = fractal_map_symbols.hills
+		let mountain_symbol = new Image(32, 28);
+		mountain_symbol.src = fractal_map_symbols.mountain
+		let alpine_tree_symbol = new Image(32, 28);
+		alpine_tree_symbol.src = fractal_map_symbols.tree_alpine
+		let temperate_tree_symbol = new Image(32, 28);
+		temperate_tree_symbol.src = fractal_map_symbols.tree_temperate
+		let tropical_tree_symbol = new Image(32, 28);
+		tropical_tree_symbol.src = fractal_map_symbols.tree_tropical
+		let swamp_symbol = new Image(32, 28);
+		swamp_symbol.src = fractal_map_symbols.swamp
+		let grassland_symbol = new Image(32, 28);
+		grassland_symbol.src = fractal_map_symbols.grassland
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				let pos_x = x * 22.5 + 7
+				let pos_y = y * 27 + (x%2)*13
+				// hills
+				if (world_data.map[index].height >= HILLS_POINT && world_data.map[index].height < MOUNTAIN_POINT)
+				{
+					ctx.drawImage(hills_symbol, pos_x, pos_y);
+				} // mountains
+				else if (world_data.map[index].height >= MOUNTAIN_POINT)
+				{
+					ctx.drawImage(mountain_symbol, pos_x, pos_y);
+				} // trees
+				else if (world_data.map[index].height > 0 && world_data.map[index].vegetation > 0.44)
+				{
+					if (world_data.map[index].temperature < 36)
+					{
+						ctx.drawImage(alpine_tree_symbol, pos_x, pos_y);
+					}
+					else if (world_data.map[index].temperature < 77)
+					{
+						ctx.drawImage(temperate_tree_symbol, pos_x, pos_y);
+					}
+					else
+					{
+						ctx.drawImage(tropical_tree_symbol, pos_x, pos_y);
+					}
+				} // swamps
+				else if (world_data.map[index].height > 0 && world_data.map[index].humidity > 0.45)
+				{
+					ctx.drawImage(swamp_symbol, pos_x, pos_y);
+				}
+				else if (world_data.map[index].height > 0 && world_data.map[index].vegetation > 0.11)
+				{
+					ctx.drawImage(grassland_symbol, pos_x, pos_y);
+				}
+			}
+		}
+		
+		/*//debug stuff
+		for (let y = 0; y < cell_count_y; y++)
+		{	
+			for (let x = 0; x < cell_count_x; x++)
+			{
+				let index = x + y * cell_count_x
+				
+				ctx.fillStyle = '#FFFFFFFF'
+				//ctx.fillRect(x * 22.5 + 21.5, y * 27 + 12 + ((x)%2)*13, 2, 2)
+				//ctx.fillText(world_data.map[index].vegetation.toString(), x * 22.5 + 21.5, y * 27 + 12 + ((x)%2)*13)
+				//console.log(world_data.map[index])
+				if (world_data.map[index].height > 0 && world_data.map[index].humidity > 0.45)
+				{
+					ctx.fillRect(x * 22.5 + 20.5, y * 27 + 11 + ((x)%2)*13, 4, 4)
+				}
+			}
+		}*/
+		
+		let grid = new Image(45, 27);
+		grid.src = fractal_map_symbols.grid
+		let pattern = ctx.createPattern(grid, "repeat");
+		ctx.fillStyle = pattern;
+		ctx.fillRect(0,0,fractal_world_width,fractal_world_height)
+		
+		let end_time = new Date().getTime() - start_time
+	
+		//output file
+		let file = 'fractal_map.png';
+		let path = './' + file;
+		
+		let b64 = tempcanvas.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			console.log('The fractal map has been saved in ' + end_time.toString() + ' milliseconds!');
+			channel.send({ files: [{ attachment: path, name: file }] });
+		})
+	}
+}
+
+function generateFractalStartPoints(points_count, landmass_width, landmass_height, centre, variance)
+{
+	let fractal_world = { centre: centre, furthest_length: 0, points: [] }
+	//let fractal_world_points = []
+	let progress = 0
+	for (let i = 0; i < points_count; i++)
+	{
+		progress += Math.PI * 2 / points_count
+		let rand_x = Math.sin(progress)*landmass_width/2 + Math.random()*variance - variance/2 + centre.x
+		let rand_y = Math.cos(progress)*landmass_height/2 + Math.random()*variance - variance/2 + centre.y
+		let random_point = { x: rand_x, y: rand_y };
+		length_from_centre = LengthBetweenPoints(random_point, fractal_world.centre)
+		if (length_from_centre > fractal_world.furthest_length)
+		{
+			fractal_world.furthest_length = length_from_centre
+		}
+		fractal_world.points.push(random_point);
+	}
+	return fractal_world
+}
+
+function GenerateFractalWorldPoints(fractal_landmass, world_width, world_height)
+{
+	let new_points = []
+	
+	let mid_point
+	let length
+	let length_from_centre
+	let random_x_shift
+	let random_y_shift
+	
+	for(let i = 0; i < fractal_landmass.points.length-1; i++)
+	{
+		new_points.push(fractal_landmass.points[i])
+		
+		mid_point = MidpointBetweenPoints(fractal_landmass.points[i], fractal_landmass.points[i+1])
+		length = LengthBetweenPoints(mid_point, fractal_landmass.points[i])
+		length_from_centre = LengthBetweenPoints(mid_point, fractal_landmass.centre)
+		if (length_from_centre > fractal_landmass.furthest_length)
+		{
+			fractal_landmass.furthest_length = length_from_centre
+		}
+		random_x_shift = (Math.random() * length) - (length / 2)
+		random_y_shift = (Math.random() * length) - (length / 2)
+		mid_point.x += random_x_shift
+		mid_point.y += random_y_shift
+		new_points.push(mid_point)
+	}
+	
+	new_points.push(fractal_landmass.points[fractal_landmass.points.length-1])
+	mid_point = MidpointBetweenPoints(fractal_landmass.points[fractal_landmass.points.length-1], fractal_landmass.points[0])
+	length = LengthBetweenPoints(mid_point, fractal_landmass.points[fractal_landmass.points.length-1])
+	length_from_centre = LengthBetweenPoints(mid_point, fractal_landmass.centre)
+	if (length_from_centre > fractal_landmass.furthest_length)
+	{
+		fractal_landmass.furthest_length = length_from_centre
+	}
+	random_x_shift = (Math.random() * length) - (length / 2)
+	random_y_shift = (Math.random() * length) - (length / 2)
+	mid_point.x += random_x_shift
+	mid_point.y += random_y_shift
+	new_points.push(mid_point)
+	
+	fractal_landmass.points = new_points
+	return fractal_landmass
+}
+
+function getNeighbourXY(x, y, a)
+{
+	let indices_neighbour = []
+	if (x % 2 == 0)
+	{
+		indices_neighbour.push( {x: x, y: y+1, a: a} )
+		indices_neighbour.push( {x: x, y: y-1, a: a} )
+		indices_neighbour.push( {x: x+1, y: y, a: a} )
+		indices_neighbour.push( {x: x-1, y: y, a: a} )
+		indices_neighbour.push( {x: x+1, y: y-1, a: a} )
+		indices_neighbour.push( {x: x-1, y: y-1, a: a} )
+	}
+	else
+	{
+		indices_neighbour.push( {x: x, y: y+1, a: a} )
+		indices_neighbour.push( {x: x, y: y-1, a: a} )
+		indices_neighbour.push( {x: x+1, y: y, a: a} )
+		indices_neighbour.push( {x: x-1, y: y, a: a} )
+		indices_neighbour.push( {x: x+1, y: y+1, a: a} )
+		indices_neighbour.push( {x: x-1, y: y+1, a: a} )
+	}
+	
+	return indices_neighbour
+}
+
+function increaseHeightInRadius(data, indices_done, x, y, amount, falloff)
+{
+	let point = x + y * data.w
+	if (point > -1 && point < data.w * data.h)
+	{
+		data.map[point].height += amount
+		if (data.map[point].height > 0)
+		{
+			data.map[point].humidity = data.map[point].humidity * 0.996
+		}
+		if (data.map[point].height > MOUNTAIN_POINT)
+		{
+			data.map[point].temperature -= 1
+		}
+		else if (data.map[point].height > HILLS_POINT)
+		{
+			data.map[point].temperature -= 0.5
+		}
+		let next_points = []
+		next_points = next_points.concat(getNeighbourXY(x, y, amount - falloff))
+		indices_done.push(point)
+		while (next_points.length > 0)
+		{
+			let next_xy = next_points[0]
+			next_points.splice(0,1)
+			
+			if (next_xy.x > -1 && next_xy.x < data.w && next_xy.y > -1 && next_xy.y < data.h)
+			{
+				let next_p = next_xy.x + next_xy.y * data.w
+				if (!indices_done.includes(next_p))
+				{
+					data.map[next_p].height += next_xy.a
+					if (data.map[point].height > 0)
+					{
+						data.map[point].humidity = data.map[point].humidity * 0.996
+					}
+					if (data.map[next_p].height > MOUNTAIN_POINT)
+					{
+						data.map[next_p].temperature -= 1
+					}
+					else if (data.map[point].height > HILLS_POINT)
+					{
+						data.map[point].temperature -= 0.5
+					}
+					indices_done.push(next_p)
+					let next_a = next_xy.a - falloff
+					if (next_a > 0)
+					{
+						next_points = next_points.concat(getNeighbourXY(next_xy.x, next_xy.y, next_a))
+					}
+				}
+			}
+		}
+	}
+}
+
+function generateWorldData(width, height, margin)
+{
+	let continents = Math.random() * 160 + 192
+	let islands = Math.random() * 320 + 256
+	let inner_bounds_x = width - margin*2
+	let inner_bounds_y = height - margin*2
+	let centre_point = { x: Math.floor(width/2), y: Math.floor(height/2) };
+	let world_data = { map: [], w: width, h: height }
+	
+	let noisemap_height = noiseMap2D(height, width, 0.23, 045);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
+	noisemap_height = smoothenMap(noisemap_height, height, width, 0.175);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
+	
+	let noisemap_humidity = noiseMap2D(height, width, 0.23, 045);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
+	noisemap_humidity = smoothenMap(noisemap_humidity, height, width, 0.175);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
+	
+	let noisemap_temperature = noiseMap2D(height, width, 0.23, 045);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
+	noisemap_temperature = smoothenMap(noisemap_temperature, height, width, 0.175);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
+	
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let base_equator_temp = 40 + noisemap_temperature[x+y*width]*20
+			if (y < height/4)
+			{
+				base_equator_temp -= ((height/4 - y) / (height/4)) * 60
+			}
+			else if (y < height/2)
+			{
+				base_equator_temp += (1 - (height/4 - (y - height/4)) / (height/4)) * 40
+			}
+			else if (y < height*3/4)
+			{
+				base_equator_temp += ((height/4 - (y - height/2)) / (height/4)) * 40
+			}
+			else
+			{
+				base_equator_temp -= (1 - (height/4 - (y - height*3/4)) / (height/4)) * 60
+			}
+			let humidity_temp_modifier = 0
+			if (base_equator_temp >= 75)
+			{
+				humidity_temp_modifier = 1 - ((base_equator_temp - 75) / 25)
+			}
+			else if (base_equator_temp <= 40)
+			{
+				humidity_temp_modifier = ((40 - base_equator_temp) / 40)
+			}
+			let base_humidity = 1 - (humidity_temp_modifier + noisemap_humidity[x+y*width] + 0.333)
+			world_data.map.push( {height: -10, temperature: base_equator_temp, humidity: base_humidity, vegetation: 0} )
+		}
+	}
+	
+	
+	let progress = 0
+	for (let i = 0; i < continents; i++)
+	{
+		progress += Math.PI*2* (Math.random()+0.666)
+		let size_constraint = Math.min(inner_bounds_x, inner_bounds_y)
+		let distance_x = (Math.random()*2/3 + 0.333) * inner_bounds_x/2
+		let distance_y = (Math.random()*2/3 + 0.333) * inner_bounds_y/2
+		let rand_x = Math.floor(Math.sin(progress)*distance_x + Math.random()*margin - margin/2 + centre_point.x)
+		let rand_y = Math.floor(Math.cos(progress)*distance_y + Math.random()*margin - margin/2 + centre_point.y)
+		
+		let amount = Math.random()*9 + 3
+		let falloff = (Math.random()*4.66+1)
+		
+		let indices_done = []
+		increaseHeightInRadius(world_data, indices_done, rand_x, rand_y, amount, falloff)
+		
+		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
+		
+		while (amount > 0)
+		{
+			falloff = Math.max(falloff * 0.975, 0.01)
+			amount = amount * 0.999 - falloff
+			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
+			let next_indices_done = []
+			increaseHeightInRadius(world_data, next_indices_done, next_cell.x, next_cell.y, amount, falloff)
+			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
+		}
+	}
+	
+	for (let i = 0; i < islands; i++)
+	{
+		let rand_x = Math.floor(Math.random()*inner_bounds_x + margin)
+		let rand_y = Math.floor(Math.random()*inner_bounds_y + margin)
+		
+		let amount = Math.random()*3.5 + 0.75
+		let falloff = (Math.random()*2.66+1)/2
+		
+		let indices_done = []
+		increaseHeightInRadius(world_data, indices_done, rand_x, rand_y, amount, falloff)
+		
+		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
+		
+		while (amount > 0)
+		{
+			falloff =  Math.max(falloff * 0.96, 0.0075)
+			amount = amount * 0.98 - falloff
+			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
+			let next_indices_done = []
+			increaseHeightInRadius(world_data, next_indices_done, next_cell.x, next_cell.y, amount, falloff)
+			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
+		}
+	}
+	
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let cur_p = x + y * world_data.w
+			if (x < margin || y < margin || x > width-margin || y > height - margin)
+			{
+				world_data.map[cur_p].height -= 32
+			}
+		}
+	}
+	
+	let smoothed_height_data = []
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let neighbour_cells = getNeighbourXY(x, y, 0)
+			let cur_p = x + y * world_data.w
+			let avg_height = world_data.map[cur_p].height
+			let neighbours = 1
+			for (let i = 0; i < neighbour_cells.length; i++)
+			{
+				let neig_p = neighbour_cells[i].x + neighbour_cells[i].y * world_data.w
+				if (neig_p > -1 && neig_p < world_data.w * world_data.h)
+				{
+					avg_height += world_data.map[neig_p].height
+					neighbours += 1
+				}
+			}
+			smoothed_height_data.push((avg_height / neighbours / 2) + (world_data.map[cur_p].height/2))
+		}
+	}
+	
+	let smoothed_temperature_data = []
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let neighbour_cells = getNeighbourXY(x, y, 0)
+			let cur_p = x + y * world_data.w
+			let avg_temp = world_data.map[cur_p].temperature
+			let neighbours = 1
+			for (let i = 0; i < neighbour_cells.length; i++)
+			{
+				let neig_p = neighbour_cells[i].x + neighbour_cells[i].y * world_data.w
+				if (neig_p > -1 && neig_p < world_data.w * world_data.h)
+				{
+					avg_temp += world_data.map[neig_p].temperature
+					neighbours += 1
+				}
+			}
+			smoothed_temperature_data.push((avg_temp / neighbours / 2) + (world_data.map[cur_p].temperature/2))
+		}
+	}
+	
+	let random_humidity = Math.random()*108 + 48
+	
+	for (let i = 0; i < random_humidity; i++)
+	{
+		let rand_x = Math.floor(Math.random()*inner_bounds_x + margin)
+		let rand_y = Math.floor(Math.random()*inner_bounds_y + margin)
+		
+		let rand_index = rand_x + rand_y * world_data.w
+		world_data.map[rand_index].humidity += Math.random()*0.16 + 0.01
+		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
+		
+		let rand_length = Math.random()*64 + 18
+		
+		for (let j = 0; j < rand_length; j++)
+		{
+			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
+			let next_index = next_cell.x + next_cell.y * world_data.w
+			if (next_index > -1 && next_index < world_data.w * world_data.h)
+			{
+				world_data.map[next_index].humidity += Math.random()*0.16 + 0.01
+			}
+			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
+		}
+	}
+	
+	let smoothed_humidity_data = []
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let neighbour_cells = getNeighbourXY(x, y, 0)
+			let cur_p = x + y * world_data.w
+			let avg_humidity = world_data.map[cur_p].humidity
+			let neighbours = 1
+			for (let i = 0; i < neighbour_cells.length; i++)
+			{
+				let neig_p = neighbour_cells[i].x + neighbour_cells[i].y * world_data.w
+				if (neig_p > -1 && neig_p < world_data.w * world_data.h)
+				{
+					avg_humidity += world_data.map[neig_p].humidity
+					neighbours += 1
+				}
+			}
+			smoothed_humidity_data.push((avg_humidity / neighbours / 2) + (world_data.map[cur_p].humidity/2))
+		}
+	}
+	
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let cur_p = x + y * world_data.w
+			world_data.map[cur_p].height = smoothed_height_data[cur_p] * noisemap_height[cur_p] * 2.5
+			world_data.map[cur_p].humidity = smoothed_humidity_data[cur_p]
+			world_data.map[cur_p].temperature = smoothed_temperature_data[cur_p]
+		}
+	}
+	
+	let random_vegetation = Math.random()*96  + 32
+	
+	for (let i = 0; i < random_vegetation; i++)
+	{
+		let rand_x = Math.floor(Math.random()*inner_bounds_x + margin)
+		let rand_y = Math.floor(Math.random()*inner_bounds_y + margin)
+		
+		let rand_index = rand_x + rand_y * world_data.w
+		world_data.map[rand_index].vegetation += Math.random()*0.25 + 0.05
+		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
+		
+		let rand_length = Math.random()*128 + 32
+		
+		for (let j = 0; j < rand_length; j++)
+		{
+			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
+			let next_index = next_cell.x + next_cell.y * world_data.w
+			if (next_index > -1 && next_index < world_data.w * world_data.h)
+			{
+				world_data.map[next_index].vegetation += Math.random()*0.25 + 0.05
+			}
+			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
+		}
+	}
+	
+	let smoothed_vegetation_data = []
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let neighbour_cells = getNeighbourXY(x, y, 0)
+			let cur_p = x + y * world_data.w
+			let avg_vegetation = world_data.map[cur_p].vegetation
+			let neighbours = 1
+			for (let i = 0; i < neighbour_cells.length; i++)
+			{
+				let neig_p = neighbour_cells[i].x + neighbour_cells[i].y * world_data.w
+				if (neig_p > -1 && neig_p < world_data.w * world_data.h)
+				{
+					avg_vegetation += world_data.map[neig_p].vegetation
+					neighbours += 1
+				}
+			}
+			smoothed_vegetation_data.push((avg_vegetation / neighbours / 2) + (world_data.map[cur_p].vegetation/2))
+		}
+	}
+	
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let cur_p = x + y * world_data.w
+			world_data.map[cur_p].vegetation = smoothed_vegetation_data[cur_p]
+		}
+	}
+	
+	return world_data
 }
 
 

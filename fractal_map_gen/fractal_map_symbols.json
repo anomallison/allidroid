@@ -1,0 +1,14 @@
+{
+	"grid": "./fractal_map_gen/hex_grid.png",
+	"castle": "./fractal_map_gen/castle.svg",
+	"city": "./fractal_map_gen/city.svg",
+	"grassland": "./fractal_map_gen/grassland.svg",
+	"hills": "./fractal_map_gen/hills.svg",
+	"mountain": "./fractal_map_gen/mountain.svg",
+	"ruins": "./fractal_map_gen/ruins.svg",
+	"swamp": "./fractal_map_gen/swampy.svg",
+	"tower": "./fractal_map_gen/tower.svg",
+	"tree_alpine": "./fractal_map_gen/tree_alpine.svg",
+	"tree_temperate": "./fractal_map_gen/tree_temperate.svg",
+	"tree_tropical": "./fractal_map_gen/tree_tropical.svg"
+}
