@@ -939,11 +939,11 @@ async function processCommand(receivedMessage)
     }
 	else if (normalizedCommand == "drawdungeonmap")
 	{
-		DrawDrawnDungeonMap(receivedMessage.channel,arguments);
+		DrawDrawnDungeonMap(receivedMessage.channel, arguments);
 	}
 	else if (normalizedCommand == "fractalmap")
 	{
-		DrawFractalMap(receivedMessage.channel,arguments);
+		DrawFractalMap(receivedMessage.channel, arguments);
 	}/*
 	else if (normalizedCommand == "rendertownmap")
 	{
@@ -25979,11 +25979,29 @@ function DrawFractalMap(channel, arguments)
 	let fractal_world_width = Math.floor(45*(cell_count_x/2));
 	let fractal_world_height = 27*(cell_count_y);
 	let subdivisions = 2
+	let margin = 3
+	let tectonic_gen = false
 	
 	let start_time = new Date().getTime()
 	
-	let world_data = generateWorldData(cell_count_x, cell_count_y, 3)
+	let world_data = generateWorldData(cell_count_x, cell_count_y, margin)
+	let tectonic_data
 	
+	/*
+	if (arguments.includes("-tectonic"))
+	{
+		tectonic_gen = true
+		console.log("making tectonic data")
+		cell_count_x = 120 + margin*2
+		cell_count_y = 50 + margin*2
+		fractal_world_width = Math.floor(45*((cell_count_x-margin*2)/2));
+		fractal_world_height = 27*(cell_count_y-margin*2);
+		tectonic_data = tectonicMapStart(cell_count_x - margin*2, cell_count_y - margin*2, 16)
+		tectonic_data = doTectonicActivityForXYears(10, tectonic_data)
+		//console.log(tectonic_data) 
+		world_data = tectonicDataToWorldData(tectonic_data, margin)
+	}
+	*/
 	let centre_point = { x: fractal_world_width/2, y: fractal_world_height/2 }
 	
 	var tempcanvas = new Canvas();
@@ -25992,6 +26010,16 @@ function DrawFractalMap(channel, arguments)
 	if (tempcanvas.getContext)
 	{
 		var ctx = tempcanvas.getContext('2d');
+		
+		let x_offset = 0
+		let y_offset = 0
+		
+		if (tectonic_gen)
+		{
+			x_offset = margin
+			y_offset = margin
+			
+		}
 		
 		let water_color = '#0066EE';
 		let deep_water_color_faded = '#0028AA22';
@@ -26013,8 +26041,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26049,8 +26077,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26084,8 +26112,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26119,8 +26147,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26154,8 +26182,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26190,8 +26218,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26225,8 +26253,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26260,8 +26288,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26295,8 +26323,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26330,8 +26358,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26365,8 +26393,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26400,8 +26428,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26435,8 +26463,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26470,8 +26498,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26505,8 +26533,8 @@ function DrawFractalMap(channel, arguments)
 					let points_count = Math.floor(Math.random()*2 + 5)
 					let random_size_w = 48
 					let random_size_h = 42
-					let pos_x = x * 22.5 + 22.5
-					let pos_y = y * 27 + 13 + (x%2)*13
+					let pos_x = (x - x_offset) * 22.5 + 22.5
+					let pos_y = (y - y_offset) * 27 + 13 + ((x- x_offset)%2)*13
 					let random_point = { x: pos_x, y: pos_y };
 					let hex_mass = GenerateFractalWorldPoints(generateFractalStartPoints(points_count, random_size_w, random_size_h, random_point, 12), fractal_world_width, fractal_world_height)
 					
@@ -26550,8 +26578,8 @@ function DrawFractalMap(channel, arguments)
 			for (let x = 0; x < cell_count_x; x++)
 			{
 				let index = x + y * cell_count_x
-				let pos_x = x * 22.5 + 7
-				let pos_y = y * 27 + (x%2)*13
+				let pos_x = (x - x_offset) * 22.5 + 7
+				let pos_y = (y - y_offset) * 27 + ((x - x_offset)%2)*13
 				// hills
 				if (world_data.map[index].height >= HILLS_POINT && world_data.map[index].height < MOUNTAIN_POINT)
 				{
@@ -26587,29 +26615,75 @@ function DrawFractalMap(channel, arguments)
 			}
 		}
 		
-		/*//debug stuff
-		for (let y = 0; y < cell_count_y; y++)
+		
+		let grid_rect_x = Math.floor(45*((cell_count_x)/2));
+		let grid_rect_y = 27*(cell_count_y);
+		let grid_offset_x = 0
+		let grid_offset_y = 0
+		
+		if (tectonic_gen == true)
+		{
+			grid_rect_x = Math.floor(45*((cell_count_x+margin*2)/2));
+			grid_rect_y = 27*(cell_count_y+margin*2);
+			grid_offset_x = Math.floor(45*((margin)/2));
+			grid_offset_y = 27*(margin);
+			
+			// debug
+			/*
+			for (let y = 0; y < tectonic_data.h; y++)
+			{	
+				for (let x = 0; x <  tectonic_data.w; x++)
+				{
+					let index = x + y * tectonic_data.w
+					
+					ctx.fillStyle = '#FFFFFFFF'
+					//ctx.fillRect(x * 22.5 + 21.5, y * 27 + 12 + ((x)%2)*13, 2, 2)
+					if (tectonic_data.map[index].plateid > -1)
+					{
+						//ctx.fillText(tectonic_data.map[index].height.toString() + ', ' + world_data.map[index].height.toString(), x * 22.5 + 16.5, y * 27 + 18 + ((x)%2)*13)
+						
+						ctx.fillText(tectonic_data.map[index].plateid.toString(), (x) * 22.5 + 16.5, (y) * 27 + 18 + ((x)%2)*13)
+					}
+					//console.log(world_data.map[index])
+					//if (world_data.map[index].height > 0 && world_data.map[index].humidity > 0.45)
+					//{
+					//	ctx.fillRect(x * 22.5 + 20.5, y * 27 + 11 + ((x)%2)*13, 4, 4)
+					//}
+				}
+			}
+			*/
+		}
+		
+		//debug
+		/*
+		for (let y = 0; y < world_data.h; y++)
 		{	
-			for (let x = 0; x < cell_count_x; x++)
+			for (let x = 0; x <  world_data.w; x++)
 			{
-				let index = x + y * cell_count_x
+				let index = x + y * world_data.w
 				
 				ctx.fillStyle = '#FFFFFFFF'
 				//ctx.fillRect(x * 22.5 + 21.5, y * 27 + 12 + ((x)%2)*13, 2, 2)
-				//ctx.fillText(world_data.map[index].vegetation.toString(), x * 22.5 + 21.5, y * 27 + 12 + ((x)%2)*13)
-				//console.log(world_data.map[index])
-				if (world_data.map[index].height > 0 && world_data.map[index].humidity > 0.45)
+				if (world_data.map[index].height > -1)
 				{
-					ctx.fillRect(x * 22.5 + 20.5, y * 27 + 11 + ((x)%2)*13, 4, 4)
+					//ctx.fillText(tectonic_data.map[index].height.toString() + ', ' + world_data.map[index].height.toString(), x * 22.5 + 16.5, y * 27 + 18 + ((x)%2)*13)
+					
+					ctx.fillText(world_data.map[index].height.toString().substr(0,3), (x) * 22.5 + 16.5, (y) * 27 + 18 + ((x)%2)*13)
 				}
+				//console.log(world_data.map[index])
+				//if (world_data.map[index].height > 0 && world_data.map[index].humidity > 0.45)
+				//{
+				//	ctx.fillRect(x * 22.5 + 20.5, y * 27 + 11 + ((x)%2)*13, 4, 4)
+				//}
 			}
-		}*/
+		}
+		*/
 		
 		let grid = new Image(45, 27);
 		grid.src = fractal_map_symbols.grid
 		let pattern = ctx.createPattern(grid, "repeat");
 		ctx.fillStyle = pattern;
-		ctx.fillRect(0,0,fractal_world_width,fractal_world_height)
+		ctx.fillRect(-grid_offset_x, -grid_offset_y, grid_rect_x, grid_rect_y)
 		
 		let end_time = new Date().getTime() - start_time
 	
@@ -26719,6 +26793,38 @@ function getNeighbourXY(x, y, a)
 	return indices_neighbour
 }
 
+function setHeightInRadius(data, indices_done, x, y, amount, falloff)
+{
+	let point = x + y * data.w
+	if (point > -1 && point < data.w * data.h)
+	{
+		data.map[point].height = amount
+		let next_points = []
+		next_points = next_points.concat(getNeighbourXY(x, y, amount - falloff))
+		indices_done.push(point)
+		while (next_points.length > 0)
+		{
+			let next_xy = next_points[0]
+			next_points.splice(0,1)
+			
+			if (next_xy.x > -1 && next_xy.x < data.w && next_xy.y > -1 && next_xy.y < data.h)
+			{
+				let next_p = next_xy.x + next_xy.y * data.w
+				if (!indices_done.includes(next_p))
+				{
+					data.map[next_p].height = next_xy.a
+					indices_done.push(next_p)
+					let next_a = next_xy.a - falloff
+					if (next_a > 0)
+					{
+						next_points = next_points.concat(getNeighbourXY(next_xy.x, next_xy.y, next_a))
+					}
+				}
+			}
+		}
+	}
+}
+
 function increaseHeightInRadius(data, indices_done, x, y, amount, falloff)
 {
 	let point = x + y * data.w
@@ -26762,6 +26868,62 @@ function increaseHeightInRadius(data, indices_done, x, y, amount, falloff)
 					else if (data.map[point].height > HILLS_POINT)
 					{
 						data.map[point].temperature -= 0.5
+					}
+					indices_done.push(next_p)
+					let next_a = next_xy.a - falloff
+					if (next_a > 0)
+					{
+						next_points = next_points.concat(getNeighbourXY(next_xy.x, next_xy.y, next_a))
+					}
+				}
+			}
+		}
+	}
+}
+
+function increaseHeightCappedInRadius(data, indices_done, x, y, amount, cap, falloff)
+{
+	let point = x + y * data.w
+	if (point > -1 && point < data.w * data.h)
+	{
+		data.map[point].height = Math.min(data.map[point].height + amount, cap)
+		if (data.map[point].height > 0)
+		{
+			data.map[point].humidity = data.map[point].humidity * 0.996
+		}
+		if (data.map[point].height > MOUNTAIN_POINT)
+		{
+			data.map[point].temperature -= 1
+		}
+		else if (data.map[point].height > HILLS_POINT)
+		{
+			data.map[point].temperature -= 0.5
+		}
+		let next_points = []
+		next_points = next_points.concat(getNeighbourXY(x, y, amount - falloff))
+		indices_done.push(point)
+		while (next_points.length > 0)
+		{
+			let next_xy = next_points[0]
+			next_points.splice(0,1)
+			
+			if (next_xy.x > -1 && next_xy.x < data.w && next_xy.y > -1 && next_xy.y < data.h)
+			{
+				let next_p = next_xy.x + next_xy.y * data.w
+				if (!indices_done.includes(next_p))
+				{
+					data.map[next_p].height = Math.min(data.map[next_p].height + next_xy.a, cap)
+					if (data.map[next_p].height > 0)
+					{
+						data.map[next_p].humidity = data.map[next_p].humidity * 0.996
+					}
+					if (data.map[next_p].height > MOUNTAIN_POINT)
+					{
+						data.map[next_p].temperature -= 1
+					}
+					else if (data.map[next_p].height > HILLS_POINT)
+					{
+						data.map[next_p].temperature -= 0.5
 					}
 					indices_done.push(next_p)
 					let next_a = next_xy.a - falloff
@@ -26847,9 +27009,11 @@ function generateWorldData(width, height, margin)
 		
 		let amount = Math.random()*9 + 3
 		let falloff = (Math.random()*4.66+1)
+		let cap = HILLS_POINT / 2
 		
 		let indices_done = []
-		increaseHeightInRadius(world_data, indices_done, rand_x, rand_y, amount, falloff)
+		increaseHeightCappedInRadius(world_data, indices_done, rand_x, rand_y, amount, cap, falloff)
+		//increaseHeightInRadius(world_data, indices_done, rand_x, rand_y, amount, falloff)
 		
 		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
 		
@@ -26859,7 +27023,8 @@ function generateWorldData(width, height, margin)
 			amount = amount * 0.999 - falloff
 			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
 			let next_indices_done = []
-			increaseHeightInRadius(world_data, next_indices_done, next_cell.x, next_cell.y, amount, falloff)
+			increaseHeightCappedInRadius(world_data, next_indices_done, next_cell.x, next_cell.y, amount, cap, falloff)
+			//increaseHeightInRadius(world_data, next_indices_done, next_cell.x, next_cell.y, amount, falloff)
 			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
 		}
 	}
@@ -26871,9 +27036,11 @@ function generateWorldData(width, height, margin)
 		
 		let amount = Math.random()*3.5 + 0.75
 		let falloff = (Math.random()*2.66+1)/2
+		let cap = HILLS_POINT / 4
 		
 		let indices_done = []
-		increaseHeightInRadius(world_data, indices_done, rand_x, rand_y, amount, falloff)
+		increaseHeightCappedInRadius(world_data, indices_done, rand_x, rand_y, amount, cap, falloff)
+		//increaseHeightInRadius(world_data, indices_done, rand_x, rand_y, amount, falloff)
 		
 		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
 		
@@ -26883,10 +27050,123 @@ function generateWorldData(width, height, margin)
 			amount = amount * 0.98 - falloff
 			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
 			let next_indices_done = []
-			increaseHeightInRadius(world_data, next_indices_done, next_cell.x, next_cell.y, amount, falloff)
+			increaseHeightCappedInRadius(world_data, next_indices_done, next_cell.x, next_cell.y, amount, cap, falloff)
+			//increaseHeightInRadius(world_data, next_indices_done, next_cell.x, next_cell.y, amount, falloff)
 			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
 		}
 	}
+	
+	let random_hills = Math.random()*40 + 32
+	
+	for (let i = 0; i < random_hills; i++)
+	{
+		let rand_x = Math.floor(Math.random()*inner_bounds_x + margin)
+		let rand_y = Math.floor(Math.random()*inner_bounds_y + margin)
+		
+		let rand_index = rand_x + rand_y * world_data.w
+		if (world_data.map[rand_index].height > 1)
+		{
+			world_data.map[rand_index].height = Math.min(world_data.map[rand_index].height + Math.random()*HILLS_POINT + HILLS_POINT/2, HILLS_POINT*1.25)
+			
+			if (world_data.map[rand_index].height > 0)
+			{
+				world_data.map[rand_index].humidity = world_data.map[rand_index].humidity * 0.996
+			}
+			if (world_data.map[rand_index].height > MOUNTAIN_POINT)
+			{
+				world_data.map[rand_index].temperature -= 1
+			}
+			else if (world_data.map[rand_index].height > HILLS_POINT)
+			{
+				world_data.map[rand_index].temperature -= 0.5
+			}
+		}
+		
+		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
+		
+		let rand_length = Math.random()*64 + 18
+		
+		for (let j = 0; j < rand_length; j++)
+		{
+			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
+			let next_index = next_cell.x + next_cell.y * world_data.w
+			if (next_index > -1 && next_index < world_data.w * world_data.h && world_data.map[next_index].height > 1)
+			{
+				world_data.map[next_index].height = Math.min(world_data.map[next_index].height + Math.random()*HILLS_POINT + HILLS_POINT/2, HILLS_POINT*1.25)
+				
+				if (world_data.map[next_index].height > 0)
+				{
+					world_data.map[next_index].humidity = world_data.map[next_index].humidity * 0.996
+				}
+				if (world_data.map[next_index].height > MOUNTAIN_POINT)
+				{
+					world_data.map[next_index].temperature -= 1
+				}
+				else if (world_data.map[next_index].height > HILLS_POINT)
+				{
+					world_data.map[next_index].temperature -= 0.5
+				}
+			}
+			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
+		}
+	}
+	
+	let random_mountains = Math.random()*32 + 18
+	
+	for (let i = 0; i < random_mountains; i++)
+	{
+		let rand_x = Math.floor(Math.random()*inner_bounds_x + margin)
+		let rand_y = Math.floor(Math.random()*inner_bounds_y + margin)
+		
+		let rand_index = rand_x + rand_y * world_data.w
+		if (world_data.map[rand_index].height > 0)
+		{
+			world_data.map[rand_index].height = Math.min(world_data.map[rand_index].height + Math.random()*MOUNTAIN_POINT + MOUNTAIN_POINT/2, MOUNTAIN_POINT*1.25)
+			
+			if (world_data.map[rand_index].height > 0)
+			{
+				world_data.map[rand_index].humidity = world_data.map[rand_index].humidity * 0.996
+			}
+			if (world_data.map[rand_index].height > MOUNTAIN_POINT)
+			{
+				world_data.map[rand_index].temperature -= 1
+			}
+			else if (world_data.map[rand_index].height > HILLS_POINT)
+			{
+				world_data.map[rand_index].temperature -= 0.5
+			}
+		}
+		
+		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
+		
+		let rand_length = Math.random()*64 + 18
+		
+		for (let j = 0; j < rand_length; j++)
+		{
+			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
+			let next_index = next_cell.x + next_cell.y * world_data.w
+			if (next_index > -1 && next_index < world_data.w * world_data.h && world_data.map[next_index].height > 0)
+			{
+				world_data.map[next_index].height = Math.min(world_data.map[next_index].height + Math.random()*MOUNTAIN_POINT + MOUNTAIN_POINT/2, MOUNTAIN_POINT*1.25)
+				
+				if (world_data.map[next_index].height > 0)
+				{
+					world_data.map[next_index].humidity = world_data.map[next_index].humidity * 0.996
+				}
+				if (world_data.map[next_index].height > MOUNTAIN_POINT)
+				{
+					world_data.map[next_index].temperature -= 1
+				}
+				else if (world_data.map[next_index].height > HILLS_POINT)
+				{
+					world_data.map[next_index].temperature -= 0.5
+				}
+			}
+			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
+		}
+	}
+	
+	
 	
 	for (let y = 0; y < height; y++)
 	{	
@@ -26900,6 +27180,7 @@ function generateWorldData(width, height, margin)
 		}
 	}
 	
+	/*
 	let smoothed_height_data = []
 	for (let y = 0; y < height; y++)
 	{	
@@ -26921,6 +27202,7 @@ function generateWorldData(width, height, margin)
 			smoothed_height_data.push((avg_height / neighbours / 2) + (world_data.map[cur_p].height/2))
 		}
 	}
+	*/
 	
 	let smoothed_temperature_data = []
 	for (let y = 0; y < height; y++)
@@ -26996,7 +27278,7 @@ function generateWorldData(width, height, margin)
 		for (let x = 0; x < width; x++)
 		{
 			let cur_p = x + y * world_data.w
-			world_data.map[cur_p].height = smoothed_height_data[cur_p] * noisemap_height[cur_p] * 2.5
+			//world_data.map[cur_p].height = smoothed_height_data[cur_p] * noisemap_height[cur_p] * 2.5
 			world_data.map[cur_p].humidity = smoothed_humidity_data[cur_p]
 			world_data.map[cur_p].temperature = smoothed_temperature_data[cur_p]
 		}
@@ -27061,6 +27343,661 @@ function generateWorldData(width, height, margin)
 	return world_data
 }
 
+//
+// tectonic_data
+// map entries: 
+// plateid - the plate which that hex is currently part of
+// direction - direction the plate is moving
+
+var random_plate_accumulate_directions = [ 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
+
+function tectonicMapStart(width, height, plate_count)
+{
+	let map_size = width * height
+	let plate_coverage = map_size / (5.5 + Math.random())
+	let indivudal_plate_size = Math.floor(plate_coverage / (plate_count/2))
+	let tectonic_data = { w: width, h: height, plates: plate_count, map: [] }
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			tectonic_data.map.push({ plateid: -1, direction: 0, height: -4 })
+		}
+	}
+	
+	let min_w_h = Math.min(width, height)
+	
+	let progress = 0
+	for (let i = 0; i < plate_count/2; i++)
+	{
+		progress += Math.PI*2/(plate_count/2) * (Math.random() + 0.5)
+		let current_plate_size = indivudal_plate_size
+		let cur_pos = { x: Math.floor(Math.sin(progress)*min_w_h/2) + Math.floor(width/2), y: Math.floor(Math.cos(progress)*min_w_h/2) + Math.floor(height/2) }
+		wrapCoords(cur_pos, tectonic_data)
+		let index = cur_pos.x + cur_pos.y * tectonic_data.w
+		let start_plate_height = 0
+		let start_dir = Math.floor(Math.random()*6)
+		//if (i % 2 == 1)
+		//{
+		//	start_plate_height = 0
+		//}
+		let start_not_found = true
+		while (current_plate_size > 0)
+		{
+			index = cur_pos.x + cur_pos.y * tectonic_data.w
+			if (tectonic_data.map[index].plateid == -1)
+			{
+				index = cur_pos.x + cur_pos.y * tectonic_data.w
+				tectonic_data.map[index].plateid = i
+				tectonic_data.map[index].direction = start_dir
+				tectonic_data.map[index].height = start_plate_height
+				current_plate_size -= 1
+				start_not_found = false
+			}
+			
+			let neighbour = directionPlusCoord(RandomArrayEntry(random_plate_accumulate_directions, true, "no nesting"), cur_pos) //getNeighbourXY(cur_pos.x, cur_pos.y, 0)
+			cur_pos = neighbour //RandomArrayEntry(neighbours, true, "no nesting")
+			wrapCoords(cur_pos, tectonic_data)
+		}
+		//console.log("plate " + i + " done")
+	}
+	progress = 0
+	for (let i = plate_count/2; i < plate_count; i++)
+	{
+		progress += Math.PI*2/(plate_count/2) * (Math.random() + 0.5)
+		let current_plate_size = indivudal_plate_size
+		let cur_pos = { x: Math.floor(Math.sin(progress)*min_w_h/2) + Math.floor(width/2), y: Math.floor(Math.cos(progress)*min_w_h/2) + Math.floor(height/2) }
+		wrapCoords(cur_pos, tectonic_data)
+		let index = cur_pos.x + cur_pos.y * tectonic_data.w
+		let start_plate_height = 1
+		let start_dir = Math.floor(Math.random()*6)
+		//if (i % 2 == 1)
+		//{
+		//	start_plate_height = 0
+		//}
+		let start_not_found = true
+		while (current_plate_size > 0)
+		{
+			index = cur_pos.x + cur_pos.y * tectonic_data.w
+			if (tectonic_data.map[index].plateid == -1)
+			{
+				index = cur_pos.x + cur_pos.y * tectonic_data.w
+				tectonic_data.map[index].plateid = i
+				tectonic_data.map[index].direction = start_dir
+				tectonic_data.map[index].height = start_plate_height
+				current_plate_size -= 1
+				start_not_found = false
+			}
+			
+			let neighbour = directionPlusCoord(RandomArrayEntry(random_plate_accumulate_directions, true, "no nesting"), cur_pos) //getNeighbourXY(cur_pos.x, cur_pos.y, 0)
+			cur_pos = neighbour //RandomArrayEntry(neighbours, true, "no nesting")
+			wrapCoords(cur_pos, tectonic_data)
+		}
+		//console.log("plate " + i + " done")
+	}
+	
+	return tectonic_data
+}
+
+function wrapTectonicDirection(dir)
+{
+	while (dir < 0)
+		dir += 6
+	while (dir > 5)
+		dir -= 6
+	return dir
+}
+
+function wrapCoords(coords, tectonic_data)
+{
+	while (coords.x < 0)
+	{
+		coords.x += tectonic_data.w
+	}
+	while (coords.x >= tectonic_data.w)
+	{
+		coords.x -= tectonic_data.w
+	}
+	while (coords.y < 0)
+	{
+		coords.y += tectonic_data.h
+	}
+	while (coords.y >= tectonic_data.h)
+	{
+		coords.y -= tectonic_data.h
+	}
+}
+
+function getSmallerPlateId(plateid_a, plateid_b, tectonic_data)
+{
+	let size_a = 0
+	let size_b = 0
+	for (let y = 0; y < tectonic_data.h; y++)
+	{	
+		for (let x = 0; x < tectonic_data.w; x++)
+		{
+			let index = x + y * tectonic_data.w
+			if (tectonic_data.map[index].plateid == plateid_a)
+				size_a += 1
+			else if (tectonic_data.map[index].plateid == plateid_b)
+				size_b += 1
+		}
+	}
+	
+	if (size_b < size_a)
+		return plateid_b
+	
+	return plateid_a
+}
+
+function getLargerPlateId(plateid_a, plateid_b, tectonic_data)
+{
+	let size_a = 0
+	let size_b = 0
+	for (let y = 0; y < tectonic_data.h; y++)
+	{	
+		for (let x = 0; x < tectonic_data.w; x++)
+		{
+			let index = x + y * tectonic_data.w
+			if (tectonic_data.map[index].plateid == plateid_a)
+				size_a += 1
+			else if (tectonic_data.map[index].plateid == plateid_b)
+				size_b += 1
+		}
+	}
+	
+	if (size_b > size_a)
+		return plateid_b
+	
+	return plateid_a
+}
+
+function directionPlusCoord(dir, coord)
+{
+	if (coord.x % 2 == 0)
+	{
+		if (dir == 0)
+		{
+			return { x: coord.x, y: coord.y-1 }
+		}
+		else if (dir == 1)
+		{
+			return { x: coord.x+1, y: coord.y-1 }
+		}
+		else if (dir == 2)
+		{
+			return { x: coord.x+1, y: coord.y }
+		}
+		else if (dir == 3)
+		{
+			return { x: coord.x, y: coord.y+1 }
+		}
+		else if (dir == 4)
+		{
+			return { x: coord.x-1, y: coord.y }
+		}
+		else if (dir == 5)
+		{
+			return { x: coord.x-1, y: coord.y-1 }
+		}
+	}
+	else
+	{
+		if (dir == 0)
+		{
+			return { x: coord.x, y: coord.y-1 }
+		}
+		else if (dir == 1)
+		{
+			return { x: coord.x+1, y: coord.y }
+		}
+		else if (dir == 2)
+		{
+			return { x: coord.x+1, y: coord.y+1 }
+		}
+		else if (dir == 3)
+		{
+			return { x: coord.x, y: coord.y+1 }
+		}
+		else if (dir == 4)
+		{
+			return { x: coord.x-1, y: coord.y+1 }
+		}
+		else if (dir == 5)
+		{
+			return { x: coord.x-1, y: coord.y }
+		}
+	}
+}
+
+function arrayIncludesCoords(array, coords)
+{
+	for (let i = 0; i < array.length; i++)
+	{
+		if (array[i].x == coords.x && array[i].y == coords.y)
+			return true
+	}
+	return false
+}
+
+function arrayRemoveAllCoords(array, coords)
+{
+	for (let i = 0; i < array.length; i++)
+	{
+		if (array[i].x == coords.x && array[i].y == coords.y)
+		{
+			array.splice(i,1)
+			i--
+			console.log("removed entry")
+		}
+	}
+}
+
+function tectonicActivity(tectonic_data)
+{
+	let debug_count_collisions = 0
+	let debug_count_moves = 0
+	let debug_count_crinkles = 0
+	let plate_motion_changes = []
+	let to_move_coords = []
+	let tectonic_data_post_move = { w: tectonic_data.w, h: tectonic_data.h, map: [] }
+	for (let y = 0; y < tectonic_data.h; y++)
+	{	
+		for (let x = 0; x < tectonic_data.w; x++)
+		{
+			let index = x + y * tectonic_data.w
+			if (tectonic_data.map[index].plateid > -1)
+				to_move_coords.push({ x: x, y: y, force_move: 0 })
+			//tectonic_data_post_move.map.push({ plateid: tectonic_data.map[index].plateid, direction: tectonic_data.map[index].direction, height: tectonic_data.map[index].height })
+		}
+	}
+	while (to_move_coords.length > 0)
+	{
+		let current_hex = to_move_coords[0]
+		to_move_coords.splice(0, 1)
+		let current_hex_index = current_hex.x + current_hex.y * tectonic_data.w
+		let move_to_hex = directionPlusCoord(tectonic_data.map[current_hex_index].direction, current_hex)
+		wrapCoords(move_to_hex, tectonic_data)
+		let move_to_hex_index = move_to_hex.x + move_to_hex.y * tectonic_data.w
+		/* 
+		let hit_border = false
+		if (move_to_hex_index < 0 ||move_to_hex_index >= tectonic_data.w * tectonic_data.h)
+		{
+			// border collision
+			plate_motion_changes.push({ plateid: tectonic_data.map[current_hex_index].plateid, dir: wrapTectonicDirection(tectonic_data.map[current_hex_index].direction + 3) })
+		}
+		 */
+		if (current_hex.force_move < tectonic_data.w * tectonic_data.h && arrayIncludesCoords(to_move_coords, move_to_hex))
+		{
+			to_move_coords.push({ x: current_hex.x, y: current_hex.y, force_move: current_hex.force_move+1 })
+		}
+		else
+		{
+			wrapCoords(move_to_hex, tectonic_data)
+			move_to_hex_index = move_to_hex.x + move_to_hex.y * tectonic_data.w
+			if (tectonic_data.map[move_to_hex_index].plateid > -1 && tectonic_data.map[move_to_hex_index].plateid != tectonic_data.map[current_hex_index].plateid)
+			{
+				// collision!
+				let smaller_plate = getSmallerPlateId(tectonic_data.map[current_hex_index].plateid, tectonic_data.map[move_to_hex_index].plateid, tectonic_data)
+				let larger_plate = -1
+				if (smaller_plate == tectonic_data.map[current_hex_index].plateid)
+				{
+					plate_motion_changes.push({ plateid: tectonic_data.map[move_to_hex_index].plateid, dir: wrapTectonicDirection(tectonic_data.map[move_to_hex_index].direction + 3) })
+					plate_motion_changes.push({ plateid: tectonic_data.map[current_hex_index].plateid, dir: tectonic_data.map[move_to_hex_index].direction + 3 })
+				}
+				else
+				{
+					plate_motion_changes.push({ plateid: tectonic_data.map[move_to_hex_index].plateid, dir: tectonic_data.map[current_hex_index].direction })
+					plate_motion_changes.push({ plateid: tectonic_data.map[current_hex_index].plateid, dir: wrapTectonicDirection(tectonic_data.map[current_hex_index].direction + 3) })
+				}
+				let new_height = Math.max(tectonic_data.map[move_to_hex_index].height, tectonic_data.map[current_hex_index].height)
+				let avg_height = (tectonic_data.map[move_to_hex_index].height + tectonic_data.map[current_hex_index].height) / 2
+				new_height += avg_height / 5
+				if (tectonic_data.map[move_to_hex_index].height < tectonic_data.map[current_hex_index].height)
+					tectonic_data.map[move_to_hex_index] = { plateid: smaller_plate, direction: tectonic_data.map[move_to_hex_index].direction, height: new_height }
+				else
+					tectonic_data.map[current_hex_index] = { plateid: smaller_plate, direction: tectonic_data.map[current_hex_index].direction, height: new_height }
+					
+				debug_count_collisions += 1
+			}
+			else if (tectonic_data.map[move_to_hex_index].plateid == tectonic_data.map[current_hex_index].plateid)
+			{
+				// crinkle
+				let new_height = Math.max(tectonic_data.map[move_to_hex_index].height, tectonic_data.map[current_hex_index].height)
+				let avg_height = (tectonic_data.map[move_to_hex_index].height + tectonic_data.map[current_hex_index].height) / 2
+				new_height += avg_height / 20
+				if (tectonic_data.map[move_to_hex_index].height < tectonic_data.map[current_hex_index].height)
+					tectonic_data.map[move_to_hex_index] = { plateid: tectonic_data.map[move_to_hex_index].plateid, direction: tectonic_data.map[move_to_hex_index].direction, height: new_height }
+				else
+					tectonic_data.map[current_hex_index] = { plateid: tectonic_data.map[current_hex_index].plateid, direction: tectonic_data.map[current_hex_index].direction, height: new_height }
+					
+				debug_count_crinkles += 1
+			}
+			else
+			{
+				// no collision
+				tectonic_data.map[move_to_hex_index] = { plateid: tectonic_data.map[current_hex_index].plateid, direction: tectonic_data.map[current_hex_index].direction, type: tectonic_data.map[current_hex_index].type, height: tectonic_data.map[current_hex_index].height }
+				//console.log(tectonic_data.map[move_to_hex])
+				tectonic_data.map[current_hex_index] = { plateid: -1, direction: 0, height: -3.2 }
+				//console.log(tectonic_data.map[move_to_hex])
+				debug_count_moves += 1
+			}
+		}
+	}
+	
+	console.log("debug_count_collisions " + debug_count_collisions)
+	console.log("debug_count_moves " + debug_count_moves)
+	console.log("debug_count_crinkles " + debug_count_crinkles)
+	
+	for (let i = 0; i < tectonic_data.plates; i++)
+	{
+		let strongest_dir = determineTectonicPullDir(plate_motion_changes, i, tectonic_data)
+		
+		for (let y = 0; y < tectonic_data.h; y++)
+		{	
+			for (let x = 0; x < tectonic_data.w; x++)
+			{
+				let index = x + y * tectonic_data.w
+				if (tectonic_data.map[index].plateid == i)
+					tectonic_data.map[index].dir = strongest_dir
+			}
+		}
+	}
+	
+	return tectonic_data
+}
+
+function determineTectonicPullDir(plate_motion_changes, plate_id, tectonic_data)
+{
+	let direction = []
+	direction.push(0)
+	direction.push(0)
+	direction.push(0)
+	direction.push(0)
+	direction.push(0)
+	direction.push(0)
+	
+	for (i = 0; i < tectonic_data.map.length; i++)
+	{
+		if (tectonic_data.map[i].plateid == plate_id)
+		{
+			direction[tectonic_data.map[i].dir] += 1
+			break
+		}
+	}
+	
+	for (let j = 0; j < plate_motion_changes.length; j++)
+	{
+		if (plate_motion_changes[j].plateid == plate_id)
+		{
+			let opposite_dir = wrapTectonicDirection(plate_motion_changes[j].dir)
+			
+			if (direction[opposite_dir] > 0)
+				direction[opposite_dir] -= 1
+			else
+				direction[plate_motion_changes[j].dir] += 1
+		}
+	}
+	let strongest_pull = Math.max(direction[0],  Math.max(direction[1],  Math.max(direction[2],  Math.max(direction[3],  Math.max(direction[4], direction[5])))))
+	let strongest_dir = -1
+	if (direction[0] == strongest_pull)
+		strongest_dir = 0
+	else if (direction[1] == strongest_pull)
+		strongest_dir = 1
+	else if (direction[2] == strongest_pull)
+		strongest_dir = 2
+	else if (direction[3] == strongest_pull)
+		strongest_dir = 3
+	else if (direction[4] == strongest_pull)
+		strongest_dir = 4
+	else if (direction[5] == strongest_pull)
+		strongest_dir = 5
+	
+	return strongest_dir
+}
+
+function doTectonicActivityForXYears(years, tectonic_data)
+{
+	for (let i = 0; i < years; i++)
+	{
+		tectonic_data = tectonicActivity(tectonic_data)
+		console.log("iteration " + i + " done")
+	}
+	console.log("tectonic activity done")
+	
+	return tectonic_data
+}
+
+function tectonicDataToWorldData(tectonic_data, margin)
+{
+	let width = tectonic_data.w + margin*2
+	let height = tectonic_data.h + margin*2
+	let world_data = { map: [], w: width, h: height }
+	
+	let noisemap_humidity = noiseMap2D(height, width, 0.23, 045);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
+	noisemap_humidity = smoothenMap(noisemap_humidity, height, width, 0.175);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
+	
+	let noisemap_temperature = noiseMap2D(height, width, 0.23, 045);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
+	noisemap_temperature = smoothenMap(noisemap_temperature, height, width, 0.175);
+	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
+	
+	for (let y = 0; y < world_data.h; y++)
+	{	
+		for (let x = 0; x < world_data.w; x++)
+		{
+			let base_equator_temp = 40 + noisemap_temperature[x+y*width]*40
+			if (y < height/4)
+			{
+				base_equator_temp -= ((height/4 - y) / (height/4)) * 60
+			}
+			else if (y < height/2)
+			{
+				base_equator_temp += (1 - (height/4 - (y - height/4)) / (height/4)) * 60
+			}
+			else if (y < height*3/4)
+			{
+				base_equator_temp += ((height/4 - (y - height/2)) / (height/4)) * 60
+			}
+			else
+			{
+				base_equator_temp -= (1 - (height/4 - (y - height*3/4)) / (height/4)) * 60
+			}
+			let humidity_temp_modifier = 0
+			if (base_equator_temp >= 75)
+			{
+				humidity_temp_modifier = 1 - ((base_equator_temp - 75) / 25)
+			}
+			else if (base_equator_temp <= 40)
+			{
+				humidity_temp_modifier = ((40 - base_equator_temp) / 40)
+			}
+			let base_humidity = 1 - (humidity_temp_modifier + noisemap_humidity[x+y*width] + 0.333)
+			world_data.map.push( {height: -4, temperature: base_equator_temp, humidity: base_humidity, vegetation: 0} )
+		}
+	}
+	
+	for (let y = 0; y < world_data.h; y++)
+	{	
+		for (let x = 0; x < world_data.w; x++)
+		{
+			let world_data_index = x + y * world_data.w
+			if (x < margin || x >= width-margin || y < margin || y >= height-margin)
+			{
+				world_data.map[world_data_index].height = -3.2
+			}
+			else
+			{
+				let tectonic_index = (x-margin) + (y-margin) * tectonic_data.w
+				world_data.map[world_data_index].height = tectonic_data.map[tectonic_index].height
+			}
+		}
+	}
+	
+	let smoothed_height_data = []
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let neighbour_cells = getNeighbourXY(x, y, 0)
+			let cur_p = x + y * world_data.w
+			let avg_height = world_data.map[cur_p].height
+			let neighbours = 1
+			for (let i = 0; i < neighbour_cells.length; i++)
+			{
+				let neig_p = neighbour_cells[i].x + neighbour_cells[i].y * world_data.w
+				if (neig_p > -1 && neig_p < world_data.w * world_data.h)
+				{
+					avg_height += world_data.map[neig_p].height
+					neighbours += 1
+				}
+			}
+			smoothed_height_data.push((avg_height / neighbours / 2) + (world_data.map[cur_p].height/2))
+		}
+	}
+	
+	let smoothed_temperature_data = []
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let neighbour_cells = getNeighbourXY(x, y, 0)
+			let cur_p = x + y * world_data.w
+			let avg_temp = world_data.map[cur_p].temperature
+			let neighbours = 1
+			for (let i = 0; i < neighbour_cells.length; i++)
+			{
+				let neig_p = neighbour_cells[i].x + neighbour_cells[i].y * world_data.w
+				if (neig_p > -1 && neig_p < world_data.w * world_data.h)
+				{
+					avg_temp += world_data.map[neig_p].temperature
+					neighbours += 1
+				}
+			}
+			smoothed_temperature_data.push((avg_temp / neighbours / 2) + (world_data.map[cur_p].temperature/2))
+		}
+	}
+	
+	let random_humidity = Math.random()*108 + 48
+	
+	for (let i = 0; i < random_humidity; i++)
+	{
+		let rand_x = Math.floor(Math.random()*width)
+		let rand_y = Math.floor(Math.random()*height)
+		
+		let rand_index = rand_x + rand_y * world_data.w
+		world_data.map[rand_index].humidity += Math.random()*0.16 + 0.01
+		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
+		
+		let rand_length = Math.random()*64 + 18
+		
+		for (let j = 0; j < rand_length; j++)
+		{
+			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
+			wrapCoords(next_cell, tectonic_data)
+			let next_index = next_cell.x + next_cell.y * world_data.w
+			if (next_index > -1 && next_index < world_data.w * world_data.h)
+			{
+				world_data.map[next_index].humidity += Math.random()*0.16 + 0.01
+			}
+			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
+		}
+	}
+	
+	let smoothed_humidity_data = []
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let neighbour_cells = getNeighbourXY(x, y, 0)
+			let cur_p = x + y * world_data.w
+			let avg_humidity = world_data.map[cur_p].humidity
+			let neighbours = 1
+			for (let i = 0; i < neighbour_cells.length; i++)
+			{
+				let neig_p = neighbour_cells[i].x + neighbour_cells[i].y * world_data.w
+				if (neig_p > -1 && neig_p < world_data.w * world_data.h)
+				{
+					avg_humidity += world_data.map[neig_p].humidity
+					neighbours += 1
+				}
+			}
+			smoothed_humidity_data.push((avg_humidity / neighbours / 2) + (world_data.map[cur_p].humidity/2))
+		}
+	}
+	
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let cur_p = x + y * world_data.w
+			world_data.map[cur_p].height = smoothed_height_data[cur_p]
+			world_data.map[cur_p].humidity = smoothed_humidity_data[cur_p]
+			world_data.map[cur_p].temperature = smoothed_temperature_data[cur_p]
+		}
+	}
+	
+	let random_vegetation = Math.random()*96  + 32
+	
+	for (let i = 0; i < random_vegetation; i++)
+	{
+		let rand_x = Math.floor(Math.random()*width)
+		let rand_y = Math.floor(Math.random()*height)
+		
+		let rand_index = rand_x + rand_y * world_data.w
+		world_data.map[rand_index].vegetation += Math.random()*0.25 + 0.05
+		let neighbours = getNeighbourXY(rand_x, rand_y, 0)
+		
+		let rand_length = Math.random()*128 + 32
+		
+		for (let j = 0; j < rand_length; j++)
+		{
+			let next_cell = RandomArrayEntry(neighbours, true, "oh god no")
+			wrapCoords(next_cell, tectonic_data)
+			let next_index = next_cell.x + next_cell.y * world_data.w
+			if (next_index > -1 && next_index < world_data.w * world_data.h)
+			{
+				world_data.map[next_index].vegetation += Math.random()*0.25 + 0.05
+			}
+			neighbours = getNeighbourXY(next_cell.x, next_cell.y, 0)
+		}
+	}
+	
+	let smoothed_vegetation_data = []
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let neighbour_cells = getNeighbourXY(x, y, 0)
+			let cur_p = x + y * world_data.w
+			let avg_vegetation = world_data.map[cur_p].vegetation
+			let neighbours = 1
+			for (let i = 0; i < neighbour_cells.length; i++)
+			{
+				let neig_p = neighbour_cells[i].x + neighbour_cells[i].y * world_data.w
+				if (neig_p > -1 && neig_p < world_data.w * world_data.h)
+				{
+					avg_vegetation += world_data.map[neig_p].vegetation
+					neighbours += 1
+				}
+			}
+			smoothed_vegetation_data.push((avg_vegetation / neighbours / 2) + (world_data.map[cur_p].vegetation/2))
+		}
+	}
+	
+	for (let y = 0; y < height; y++)
+	{	
+		for (let x = 0; x < width; x++)
+		{
+			let cur_p = x + y * world_data.w
+			world_data.map[cur_p].vegetation = smoothed_vegetation_data[cur_p]
+		}
+	}
+	
+	return world_data
+}
 
 //
 //
