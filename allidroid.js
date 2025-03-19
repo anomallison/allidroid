@@ -354,11 +354,11 @@ async function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    } else if (normalizedCommand == "gachacard") 
+    }/* else if (normalizedCommand == "gachacard") 
 	{
 		OpenBoosterPack(receivedMessage.channel);
 		return;
-    } else if (normalizedCommand == "lesbian") 
+    }*/ else if (normalizedCommand == "lesbian") 
 	{
 		output = nounlesbian();
 		if (output == null)
@@ -27009,7 +27009,7 @@ function generateWorldData(width, height, margin)
 		
 		let amount = Math.random()*9 + 3
 		let falloff = (Math.random()*4.66+1)
-		let cap = HILLS_POINT / 2
+		let cap = HILLS_POINT / 5
 		
 		let indices_done = []
 		increaseHeightCappedInRadius(world_data, indices_done, rand_x, rand_y, amount, cap, falloff)
@@ -27036,7 +27036,7 @@ function generateWorldData(width, height, margin)
 		
 		let amount = Math.random()*3.5 + 0.75
 		let falloff = (Math.random()*2.66+1)/2
-		let cap = HILLS_POINT / 4
+		let cap = HILLS_POINT / 9
 		
 		let indices_done = []
 		increaseHeightCappedInRadius(world_data, indices_done, rand_x, rand_y, amount, cap, falloff)

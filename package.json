@@ -5,7 +5,7 @@
   "main": "allidroid.js",
   "dependencies": {
     "canvas": "^2.11.2",
-    "discord.js": "^13.16.0",
+    "discord.js": "^14.16.3",
     "merge-images": "^2.0.0",
     "paper": "^0.12.15",
     "paper-jsdom-canvas": "^0.12.17",
