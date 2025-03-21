@@ -58,7 +58,7 @@ var item_artifactnames = JSON.parse(fs.readFileSync('item_artifactnames.json'));
 var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 
 //bird generator files
-var bird_gen = JSON.parse(fs.readFileSync('bird_gen/bird_generator.json'));
+//var bird_gen = JSON.parse(fs.readFileSync('bird_gen/bird_generator.json'));
 
 //goblin generator files
 var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'));
@@ -73,7 +73,10 @@ var turtle_gen = JSON.parse(fs.readFileSync('turtle_gen/turtle_gen.json'));
 var slime_gen = JSON.parse(fs.readFileSync('slime_gen/slime_gen.json'));
 
 //familiar generator files
-var familiar_gen = JSON.parse(fs.readFileSync('familiar_gen/familiar_gen.json'));
+//var familiar_gen = JSON.parse(fs.readFileSync('familiar_gen/familiar_gen.json'));
+
+//lil beatemup guy generator files
+var lil_beatemup_guy_gen = JSON.parse(fs.readFileSync('lil_beatemup_guy/lil_beatemup_guy_gen.json'));
 
 //psyduck generator files
 var psyduck_gen = JSON.parse(fs.readFileSync('psyduck_gen/psyduck_gen.json'));
@@ -901,13 +904,16 @@ async function processCommand(receivedMessage)
     } else if (normalizedCommand == "slime") 
 	{
 		generateSlime(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "familiar") 
+    } else if (normalizedCommand == "beatemup") 
+	{
+		generateLilBeatemupGuy(receivedMessage.channel,arguments);
+    }/* else if (normalizedCommand == "familiar") 
 	{
 		generateFamiliar(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "bird") 
 	{
 		generateBird(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "outputadventureworldmap") 
+    }*/  else if (normalizedCommand == "outputadventureworldmap") 
 	{
 		outputAdventureWorldMap(receivedMessage.channel,arguments);
     }else if (normalizedCommand == "generatevillage") 
@@ -9833,6 +9839,63 @@ function generateSlime(channel, arguments)
 	
 	
 	mergeImages(fullslime, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+}
+
+function generateLilBeatemupGuy(channel, arguments)
+{
+	let fullguy = [];
+	
+	fullguy.push(lil_beatemup_guy_gen.shadow)
+	
+	let body = RandomArrayEntry(lil_beatemup_guy_gen.body, true, "[does not nesting]")
+	fullguy.push(body)
+	
+	let feet = RandomArrayEntry(lil_beatemup_guy_gen.feet, true, "[does not nesting]")
+	fullguy.push(feet)
+	
+	let pants = RandomArrayEntry(lil_beatemup_guy_gen.pants, true, "[does not nesting]")
+	fullguy.push(pants)
+	
+	let shirt = RandomArrayEntry(lil_beatemup_guy_gen.shirt, true, "[does not nesting]")
+	fullguy.push(shirt)
+	
+	let mouth = RandomArrayEntry(lil_beatemup_guy_gen.mouth, true, "[does not nesting]")
+	fullguy.push(mouth)
+	
+	let eyes = RandomArrayEntry(lil_beatemup_guy_gen.eyes, true, "[does not nesting]")
+	fullguy.push(eyes)
+	
+	let hair = RandomArrayEntry(lil_beatemup_guy_gen.hair, true, "[does not nesting]")
+	fullguy.push(hair)
+	
+	let gloves = RandomArrayEntry(lil_beatemup_guy_gen.accessories.gloves, true, "[does not nesting]")
+	fullguy.push(gloves)
+	
+	let right_hand = RandomArrayEntry(lil_beatemup_guy_gen.accessories.right_hand, true, "[does not nesting]")
+	fullguy.push(right_hand)
+	
+	let left_hand = RandomArrayEntry(lil_beatemup_guy_gen.accessories.left_hand, true, "[does not nesting]")
+	fullguy.push(left_hand)
+	
+	let pants_side = RandomArrayEntry(lil_beatemup_guy_gen.accessories.side, true, "[does not nesting]")
+	fullguy.push(pants_side)
+	
+	
+	let file = 'lil_beatemup_guy.png';
+	let path = './' + file;
+	
+	
+	mergeImages(fullguy, 
 	{
 		Canvas: Canvas,
 		Image: Image
