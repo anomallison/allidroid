@@ -96,15 +96,22 @@
 		"right_hand":
 		[
 			"./lil_beatemup_guy/empty.png",
-			"./lil_beatemup_guy/knife.png"
+			"./lil_beatemup_guy/empty.png",
+			"./lil_beatemup_guy/knife.png",
+			"./lil_beatemup_guy/katana.png",
+			"./lil_beatemup_guy/chain.png"
 		],
 		"left_hand":
 		[
 			"./lil_beatemup_guy/empty.png",
-			"./lil_beatemup_guy/baseballbat.png"
+			"./lil_beatemup_guy/empty.png",
+			"./lil_beatemup_guy/baseballbat.png",
+			"./lil_beatemup_guy/fireaxe.png",
+			"./lil_beatemup_guy/dynamite.png"
 		],
 		"side":
 		[
+			"./lil_beatemup_guy/empty.png",
 			"./lil_beatemup_guy/empty.png",
 			"./lil_beatemup_guy/handcuffs.png"
 		]
