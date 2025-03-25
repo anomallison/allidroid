@@ -31,10 +31,13 @@
 		"./lil_beatemup_guy/pants01.png",
 		"./lil_beatemup_guy/pants02.png",
 		"./lil_beatemup_guy/pants03.png",
-		"./lil_beatemup_guy/pants04.png"
+		"./lil_beatemup_guy/pants04.png",
+		"./lil_beatemup_guy/pants05.png",
+		"./lil_beatemup_guy/pants06.png"
 	],
 	"shirt":
 	[
+		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/shirt00.png",
 		"./lil_beatemup_guy/shirt01.png",
@@ -44,18 +47,31 @@
 		"./lil_beatemup_guy/shirt05.png",
 		"./lil_beatemup_guy/shirt06.png",
 		"./lil_beatemup_guy/shirt07.png",
-		"./lil_beatemup_guy/shirt08.png"
+		"./lil_beatemup_guy/shirt08.png",
+		"./lil_beatemup_guy/shirt09.png",
+		"./lil_beatemup_guy/shirt10.png",
+		"./lil_beatemup_guy/shirt11.png",
+		"./lil_beatemup_guy/shirt12.png"
 	],
 	"mouth":
 	[
 		"./lil_beatemup_guy/mouth00.png",
 		"./lil_beatemup_guy/mouth01.png",
 		"./lil_beatemup_guy/mouth02.png",
-		"./lil_beatemup_guy/mouth03.png"
+		"./lil_beatemup_guy/mouth03.png",
+		"./lil_beatemup_guy/mouth00.png",
+		"./lil_beatemup_guy/mouth01.png",
+		"./lil_beatemup_guy/mouth02.png",
+		"./lil_beatemup_guy/mouth03.png",
+		"./lil_beatemup_guy/mouth04.png"
 	],
 	"eyes":
 	[
-		"./lil_beatemup_guy/eyes00.png"
+		"./lil_beatemup_guy/eyes00.png",
+		"./lil_beatemup_guy/eyes00.png",
+		"./lil_beatemup_guy/eyes01.png",
+		"./lil_beatemup_guy/eyes02.png",
+		"./lil_beatemup_guy/eyes03.png"
 	],
 	"hair":
 	[
@@ -83,7 +99,17 @@
 		"./lil_beatemup_guy/hair20.png",
 		"./lil_beatemup_guy/hair21.png",
 		"./lil_beatemup_guy/hair22.png",
-		"./lil_beatemup_guy/hair23.png"
+		"./lil_beatemup_guy/hair23.png",
+		"./lil_beatemup_guy/hair24.png",
+		"./lil_beatemup_guy/hair25.png",
+		"./lil_beatemup_guy/hair26.png",
+		"./lil_beatemup_guy/hair27.png",
+		"./lil_beatemup_guy/hair28.png",
+		"./lil_beatemup_guy/hair29.png",
+		"./lil_beatemup_guy/hair30.png",
+		"./lil_beatemup_guy/hair31.png",
+		"./lil_beatemup_guy/hair32.png",
+		"./lil_beatemup_guy/hair33.png"
 	],
 	"accessories":
 	{
@@ -96,22 +122,41 @@
 		"right_hand":
 		[
 			"./lil_beatemup_guy/empty.png",
+			"./lil_beatemup_guy/empty.png",
 			"./lil_beatemup_guy/knife.png",
-			"./lil_beatemup_guy/katana.png",
-			"./lil_beatemup_guy/chain.png"
+			"./lil_beatemup_guy/baseballbat_right.png",
+			"./lil_beatemup_guy/chain.png",
+			"./lil_beatemup_guy/baseballglove_right.png"
 		],
 		"left_hand":
 		[
 			"./lil_beatemup_guy/empty.png",
+			"./lil_beatemup_guy/empty.png",
 			"./lil_beatemup_guy/baseballbat.png",
 			"./lil_beatemup_guy/fireaxe.png",
-			"./lil_beatemup_guy/dynamite.png"
+			"./lil_beatemup_guy/dynamite.png",
+			"./lil_beatemup_guy/baseball_left.png",
+			"./lil_beatemup_guy/baseballglove_left.png"
 		],
 		"side":
 		[
 			"./lil_beatemup_guy/empty.png",
 			"./lil_beatemup_guy/empty.png",
-			"./lil_beatemup_guy/handcuffs.png"
+			"./lil_beatemup_guy/handcuffs.png",
+			"./lil_beatemup_guy/walletchain.png"
+		],
+		"back":
+		[
+			"./lil_beatemup_guy/empty.png",
+			"./lil_beatemup_guy/empty.png",
+			"./lil_beatemup_guy/empty.png",
+			"./lil_beatemup_guy/bigsword.png",
+			"./lil_beatemup_guy/angelwings.png",
+			"./lil_beatemup_guy/devilwings.png",
+			"./lil_beatemup_guy/wakizashi_behind.png",
+			"./lil_beatemup_guy/katana.png",
+			"./lil_beatemup_guy/katana_wakizashi_combo.png",
+			"./lil_beatemup_guy/baseballbat_behind.png"
 		]
 	}
 }
