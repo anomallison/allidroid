@@ -9857,6 +9857,9 @@ function generateLilBeatemupGuy(channel, arguments)
 	
 	fullguy.push(lil_beatemup_guy_gen.shadow)
 	
+	let behind_body = RandomArrayEntry(lil_beatemup_guy_gen.accessories.back, true, "[does not nesting]")
+	fullguy.push(behind_body)
+	
 	let body = RandomArrayEntry(lil_beatemup_guy_gen.body, true, "[does not nesting]")
 	fullguy.push(body)
 	
