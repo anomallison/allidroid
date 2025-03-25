@@ -40,6 +40,7 @@
 		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/empty.png",
+		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/shirt00.png",
 		"./lil_beatemup_guy/shirt01.png",
 		"./lil_beatemup_guy/shirt02.png",
@@ -78,6 +79,8 @@
 	],
 	"hair":
 	[
+		"./lil_beatemup_guy/empty.png",
+		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/hair00.png",
