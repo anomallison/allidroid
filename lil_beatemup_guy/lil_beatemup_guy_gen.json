@@ -39,6 +39,7 @@
 	[
 		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/empty.png",
+		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/shirt00.png",
 		"./lil_beatemup_guy/shirt01.png",
 		"./lil_beatemup_guy/shirt02.png",
@@ -51,7 +52,8 @@
 		"./lil_beatemup_guy/shirt09.png",
 		"./lil_beatemup_guy/shirt10.png",
 		"./lil_beatemup_guy/shirt11.png",
-		"./lil_beatemup_guy/shirt12.png"
+		"./lil_beatemup_guy/shirt12.png",
+		"./lil_beatemup_guy/shirt13.png"
 	],
 	"mouth":
 	[
@@ -69,12 +71,14 @@
 	[
 		"./lil_beatemup_guy/eyes00.png",
 		"./lil_beatemup_guy/eyes00.png",
+		"./lil_beatemup_guy/eyes00.png",
 		"./lil_beatemup_guy/eyes01.png",
 		"./lil_beatemup_guy/eyes02.png",
 		"./lil_beatemup_guy/eyes03.png"
 	],
 	"hair":
 	[
+		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/hair00.png",
 		"./lil_beatemup_guy/hair01.png",
@@ -109,7 +113,11 @@
 		"./lil_beatemup_guy/hair30.png",
 		"./lil_beatemup_guy/hair31.png",
 		"./lil_beatemup_guy/hair32.png",
-		"./lil_beatemup_guy/hair33.png"
+		"./lil_beatemup_guy/hair33.png",
+		"./lil_beatemup_guy/hair34.png",
+		"./lil_beatemup_guy/hair35.png",
+		"./lil_beatemup_guy/hair36.png",
+		"./lil_beatemup_guy/hair37.png"
 	],
 	"accessories":
 	{
@@ -126,7 +134,8 @@
 			"./lil_beatemup_guy/knife.png",
 			"./lil_beatemup_guy/baseballbat_right.png",
 			"./lil_beatemup_guy/chain.png",
-			"./lil_beatemup_guy/baseballglove_right.png"
+			"./lil_beatemup_guy/baseballglove_right.png",
+			"./lil_beatemup_guy/grenade.png"
 		],
 		"left_hand":
 		[
@@ -136,7 +145,8 @@
 			"./lil_beatemup_guy/fireaxe.png",
 			"./lil_beatemup_guy/dynamite.png",
 			"./lil_beatemup_guy/baseball_left.png",
-			"./lil_beatemup_guy/baseballglove_left.png"
+			"./lil_beatemup_guy/baseballglove_left.png",
+			"./lil_beatemup_guy/stunrod.png"
 		],
 		"side":
 		[
