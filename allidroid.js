@@ -9866,12 +9866,6 @@ function generateLilBeatemupGuy(channel, arguments)
 	let feet = RandomArrayEntry(lil_beatemup_guy_gen.feet, true, "[does not nesting]")
 	fullguy.push(feet)
 	
-	let pants = RandomArrayEntry(lil_beatemup_guy_gen.pants, true, "[does not nesting]")
-	fullguy.push(pants)
-	
-	let shirt = RandomArrayEntry(lil_beatemup_guy_gen.shirt, true, "[does not nesting]")
-	fullguy.push(shirt)
-	
 	let mouth = RandomArrayEntry(lil_beatemup_guy_gen.mouth, true, "[does not nesting]")
 	fullguy.push(mouth)
 	
@@ -9880,6 +9874,12 @@ function generateLilBeatemupGuy(channel, arguments)
 	
 	let hair = RandomArrayEntry(lil_beatemup_guy_gen.hair, true, "[does not nesting]")
 	fullguy.push(hair)
+	
+	let pants = RandomArrayEntry(lil_beatemup_guy_gen.pants, true, "[does not nesting]")
+	fullguy.push(pants)
+	
+	let shirt = RandomArrayEntry(lil_beatemup_guy_gen.shirt, true, "[does not nesting]")
+	fullguy.push(shirt)
 	
 	let gloves = RandomArrayEntry(lil_beatemup_guy_gen.accessories.gloves, true, "[does not nesting]")
 	fullguy.push(gloves)
