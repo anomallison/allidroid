@@ -74,7 +74,8 @@
 		"./lil_beatemup_guy/shirt10.png",
 		"./lil_beatemup_guy/shirt11.png",
 		"./lil_beatemup_guy/shirt12.png",
-		"./lil_beatemup_guy/shirt13.png"
+		"./lil_beatemup_guy/shirt13.png",
+		"./lil_beatemup_guy/shirt14.png"
 	],
 	"mouth":
 	[
@@ -99,7 +100,12 @@
 		"./lil_beatemup_guy/eyes02.png",
 		"./lil_beatemup_guy/eyes03.png",
 		"./lil_beatemup_guy/eyes04.png",
-		"./lil_beatemup_guy/eyes05.png"
+		"./lil_beatemup_guy/eyes05.png",
+		"./lil_beatemup_guy/eyes06.png",
+		"./lil_beatemup_guy/eyes07.png",
+		"./lil_beatemup_guy/eyes07.png",
+		"./lil_beatemup_guy/eyes08.png",
+		"./lil_beatemup_guy/eyes09.png"
 	],
 	"hair":
 	[
