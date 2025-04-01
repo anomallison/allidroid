@@ -9863,9 +9863,6 @@ function generateLilBeatemupGuy(channel, arguments)
 	let body = RandomArrayEntry(lil_beatemup_guy_gen.body, true, "[does not nesting]")
 	fullguy.push(body)
 	
-	let feet = RandomArrayEntry(lil_beatemup_guy_gen.feet, true, "[does not nesting]")
-	fullguy.push(feet)
-	
 	let mouth = RandomArrayEntry(lil_beatemup_guy_gen.mouth, true, "[does not nesting]")
 	fullguy.push(mouth)
 	
@@ -9877,6 +9874,9 @@ function generateLilBeatemupGuy(channel, arguments)
 	
 	let pants = RandomArrayEntry(lil_beatemup_guy_gen.pants, true, "[does not nesting]")
 	fullguy.push(pants)
+	
+	let feet = RandomArrayEntry(lil_beatemup_guy_gen.feet, true, "[does not nesting]")
+	fullguy.push(feet)
 	
 	let shirt = RandomArrayEntry(lil_beatemup_guy_gen.shirt, true, "[does not nesting]")
 	fullguy.push(shirt)

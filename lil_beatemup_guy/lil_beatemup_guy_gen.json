@@ -18,20 +18,32 @@
 		"./lil_beatemup_guy/body13.png",
 		"./lil_beatemup_guy/body14.png",
 		"./lil_beatemup_guy/body15.png",
+		"./lil_beatemup_guy/body15.png",
 		"./lil_beatemup_guy/body16.png",
 		"./lil_beatemup_guy/body17.png",
 		"./lil_beatemup_guy/body18.png",
 		"./lil_beatemup_guy/body19.png",
 		"./lil_beatemup_guy/body20.png",
 		"./lil_beatemup_guy/body21.png",
-		"./lil_beatemup_guy/body22.png"
+		"./lil_beatemup_guy/body22.png",
+		"./lil_beatemup_guy/body21.png",
+		"./lil_beatemup_guy/body22.png",
+		"./lil_beatemup_guy/body23.png",
+		"./lil_beatemup_guy/body24.png",
+		"./lil_beatemup_guy/body25.png",
+		"./lil_beatemup_guy/body26.png",
+		"./lil_beatemup_guy/body27.png"
 	],
 	"feet":
 	[
 		"./lil_beatemup_guy/empty.png",
+		"./lil_beatemup_guy/empty.png",
 		"./lil_beatemup_guy/shoes00.png",
 		"./lil_beatemup_guy/shoes01.png",
-		"./lil_beatemup_guy/shoes02.png"
+		"./lil_beatemup_guy/shoes02.png",
+		"./lil_beatemup_guy/shoes03.png",
+		"./lil_beatemup_guy/shoes04.png",
+		"./lil_beatemup_guy/shoes05.png"
 	],
 	"pants":
 	[
@@ -159,6 +171,8 @@
 			"./lil_beatemup_guy/chain.png",
 			"./lil_beatemup_guy/baseballglove_right.png",
 			"./lil_beatemup_guy/grenade.png",
+			"./lil_beatemup_guy/cutlass_right.png",
+			"./lil_beatemup_guy/cutlass_right.png",
 			"./lil_beatemup_guy/flame_right_black.png",
 			"./lil_beatemup_guy/flame_right_yellow.png",
 			"./lil_beatemup_guy/flame_right_green.png"
@@ -179,6 +193,8 @@
 			"./lil_beatemup_guy/dynamite.png",
 			"./lil_beatemup_guy/baseball_left.png",
 			"./lil_beatemup_guy/baseballglove_left.png",
+			"./lil_beatemup_guy/hookhand_left.png",
+			"./lil_beatemup_guy/hookhand_left.png",
 			"./lil_beatemup_guy/flame_left_black.png",
 			"./lil_beatemup_guy/flame_left_yellow.png",
 			"./lil_beatemup_guy/flame_left_green.png"
@@ -201,7 +217,8 @@
 			"./lil_beatemup_guy/wakizashi_behind.png",
 			"./lil_beatemup_guy/katana.png",
 			"./lil_beatemup_guy/katana_wakizashi_combo.png",
-			"./lil_beatemup_guy/baseballbat_behind.png"
+			"./lil_beatemup_guy/baseballbat_behind.png",
+			"./lil_beatemup_guy/cape.png"
 		]
 	}
 }
