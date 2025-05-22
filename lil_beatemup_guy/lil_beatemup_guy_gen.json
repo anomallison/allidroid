@@ -203,7 +203,10 @@
 			"./lil_beatemup_guy/hookhand_left.png",
 			"./lil_beatemup_guy/flame_left_black.png",
 			"./lil_beatemup_guy/flame_left_yellow.png",
-			"./lil_beatemup_guy/flame_left_green.png"
+			"./lil_beatemup_guy/flame_left_green.png",
+			"./lil_beatemup_guy/pokeball.png",
+			"./lil_beatemup_guy/greatball.png",
+			"./lil_beatemup_guy/hyperball.png"
 		],
 		"side":
 		[
