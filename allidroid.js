@@ -3239,11 +3239,11 @@ function GetIndexOfHighest(array)
 {
 	let highestDie = 0;
 	let highestDieIndex = -1;
-	for (j in dice_pool)
+	for (j in array)
 	{
-		if (dice_pool[j] > highestDie)
+		if (array[j] > highestDie)
 		{
-			highestDie = dice_pool[j];
+			highestDie = array[j];
 			highestDieIndex = j;
 		}
 	}
