@@ -1,7 +1,6 @@
 ////////
 //
 // written by AnomAllison
-// last updated 23/11/2024
 //
 // I hope Allidroid can bring people some humour and entertainment
 //
@@ -963,14 +962,14 @@ async function processCommand(receivedMessage)
 	{
 		DrawDrawnDungeonMap(receivedMessage.channel, arguments);
 	}
-	else if (normalizedCommand == "fractalmap")
+	/*else if (normalizedCommand == "fractalmap")
 	{
 		DrawFractalMap(receivedMessage.channel, arguments);
 	}
 	else if (normalizedCommand == "bwmap")
 	{
 		DrawBlackWhiteMap(receivedMessage.channel, arguments);
-	}/*
+	}
 	else if (normalizedCommand == "rendertownmap")
 	{
 		DrawTownMap(receivedMessage.channel,arguments);
@@ -1096,6 +1095,21 @@ async function processCommand(receivedMessage)
 	{
 		pronounceslut(receivedMessage);
 	}
+	else if (normalizedCommand == "chardmethod") 
+	{
+		let output = ChardAbilityScores(2, 4);
+		
+		if (output == null)
+		{
+			console.log("failed command: chardmethod");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    }
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -3136,6 +3150,105 @@ function dieRoll(r, advantage = false, disadvantage = false)
 	}
 	
 	return { result: totalroll, details: resultString };
+}
+
+function ChardAbilityScores(high_drop, low_drop)
+{
+	let pool_size = 18 + high_drop + low_drop
+	let dice_pool = []
+	let dropped_low = []
+	let dropped_high = []
+	
+	for (let i = 0; i < pool_size; i++)
+	{
+		dice_pool.push(Math.floor(Math.random() * 6) + 1)
+	}
+	
+	for (let i = 0; i < low_drop; i++)
+	{
+		let lowestDie = diceSides+1;
+		let lowestDieIndex = -1;
+		for (j in dice_pool)
+		{
+			if (dice_pool[j] < lowestDie)
+			{
+				lowestDie = dice_pool[j];
+				lowestDieIndex = j;
+			}
+		}
+		dice_pool.splice(lowestDieIndex,1);
+		dropped_low.push(lowestDie);
+	}
+	
+	for (let i = 0; i < high_drop; i++)
+	{
+		let highestDie = 0;
+		let highestDieIndex = -1;
+		for (j in dice_pool)
+		{
+			if (dice_pool[j] > highestDie)
+			{
+				highestDie = dice_pool[j];
+				highestDieIndex = j;
+			}
+		}
+		dice_pool.splice(highestDieIndex,1);
+		dropped_high.push(highestDie);
+	}
+	
+	let duplicate_pool = dice_pool.slice()
+	let ability_scores = []
+	
+	for (let i = 0; i < 6; i++)
+	{
+		let score = 0
+		for (let j = 0; j < 3; j++)
+		{
+			let dice_index = GetIndexOfHighest(duplicate_pool)
+			score += duplicate_pool[dice_index]
+			duplicate_pool.splice(dice_index,1);
+		}
+		ability_scores.push(score)
+	}
+	
+	let output_string = ""
+	for (i in dropped_high)
+	{
+		output_string += "~~" + dropped_high[i] + "~~ "
+	}
+	for (i in dice_pool)
+	{
+		output_string += dice_pool[i] + " "
+	}
+	for (let i = low_drop - 1; i > -1; i--)
+	{
+		output_string += "~~" + dropped_low[i] + "~~ "
+	}
+	
+	output_string += "\n"
+	
+	for (i in ability_scores)
+	{
+		output_string += ability_scores[i] + " "
+	}
+	
+	return output_string
+}
+
+function GetIndexOfHighest(array)
+{
+	let highestDie = 0;
+	let highestDieIndex = -1;
+	for (j in dice_pool)
+	{
+		if (dice_pool[j] > highestDie)
+		{
+			highestDie = dice_pool[j];
+			highestDieIndex = j;
+		}
+	}
+	
+	return highestDieIndex
 }
 
 //
@@ -27974,6 +28087,7 @@ function DrawFractalLandmass(channel, arguments)
 		})
 	}
 }
+
 
 //
 //
