@@ -3197,7 +3197,9 @@ function ChardAbilityScores(high_drop, low_drop)
 	}
 	
 	let duplicate_pool = dice_pool.slice()
+	let ordered_pool = []
 	let ability_scores = []
+	let ability_mods = []
 	
 	for (let i = 0; i < 6; i++)
 	{
@@ -3206,9 +3208,11 @@ function ChardAbilityScores(high_drop, low_drop)
 		{
 			let dice_index = GetIndexOfHighest(duplicate_pool)
 			score += duplicate_pool[dice_index]
+			ordered_pool.push(duplicate_pool[dice_index])
 			duplicate_pool.splice(dice_index,1);
 		}
 		ability_scores.push(score)
+		ability_mods.push(Math.floor(score / 2) - 5)
 	}
 	
 	let output_string = ""
@@ -3216,9 +3220,9 @@ function ChardAbilityScores(high_drop, low_drop)
 	{
 		output_string += "~~" + dropped_high[i] + "~~ "
 	}
-	for (i in dice_pool)
+	for (i in ordered_pool)
 	{
-		output_string += dice_pool[i] + " "
+		output_string += ordered_pool[i] + " "
 	}
 	for (let i = low_drop - 1; i > -1; i--)
 	{
@@ -3229,7 +3233,7 @@ function ChardAbilityScores(high_drop, low_drop)
 	
 	for (i in ability_scores)
 	{
-		output_string += ability_scores[i] + " "
+		output_string += ability_scores[i] + " (" + ability_mods[i] + ") "
 	}
 	
 	return output_string
