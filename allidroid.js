@@ -1097,7 +1097,7 @@ async function processCommand(receivedMessage)
 	}
 	else if (normalizedCommand == "chardmethod") 
 	{
-		let output = ChardAbilityScores(2, 4);
+		let output = ChardAbilityScoresCustom(arguments);
 		
 		if (output == null)
 		{
