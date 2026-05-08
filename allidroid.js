@@ -3166,7 +3166,7 @@ function ChardAbilityScores(high_drop, low_drop)
 	
 	for (let i = 0; i < low_drop; i++)
 	{
-		let lowestDie = diceSides+1;
+		let lowestDie = 7;
 		let lowestDieIndex = -1;
 		for (j in dice_pool)
 		{
