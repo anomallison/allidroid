@@ -3152,8 +3152,52 @@ function dieRoll(r, advantage = false, disadvantage = false)
 	return { result: totalroll, details: resultString };
 }
 
-function ChardAbilityScores(high_drop, low_drop)
+function ChardAbilityScoresCustom(arguments)
 {
+	var high_drop = 2
+	var low_drop = 4
+	var min_avg_mod = 0
+	var max_avg_mod = 4
+	if (arguments != null)
+	{
+		let argumentpos = arguments.indexOf("-h");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			high_drop = parseInt(arguments[argumentpos+1])
+		}
+		
+		argumentpos = arguments.indexOf("-l");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			low_drop = parseInt(arguments[argumentpos+1])
+		}
+		
+		argumentpos = arguments.indexOf("-min");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			min_avg_mod = parseInt(arguments[argumentpos+1])
+		}
+		
+		argumentpos = arguments.indexOf("-max");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			max_avg_mod = parseInt(arguments[argumentpos+1])
+		}
+	}
+	
+	return ChardAbilityScores(high_drop, low_drop, min_avg_mod, max_avg_mod)
+}
+
+function ChardAbilityScores(high_drop, low_drop, min_avg_mod, max_avg_mod)
+{
+	if (min_avg_mod > max_avg_mod)
+		return "Bzz! Canont have minimum average higher than maximum average."
+	
+	if (high_drop < 0)
+		high_drop = 0
+	if (low_drop < 0)
+		low_drop = 0
+	
 	let pool_size = 18 + high_drop + low_drop
 	let dice_pool = []
 	let dropped_low = []
@@ -3200,6 +3244,7 @@ function ChardAbilityScores(high_drop, low_drop)
 	let ordered_pool = []
 	let ability_scores = []
 	let ability_mods = []
+	let ability_mod_avg = 0
 	
 	for (let i = 0; i < 6; i++)
 	{
@@ -3213,29 +3258,36 @@ function ChardAbilityScores(high_drop, low_drop)
 		}
 		ability_scores.push(score)
 		ability_mods.push(Math.floor(score / 2) - 5)
+		ability_mod_avg += Math.floor(score / 2) - 5
 	}
+	
+	ability_mod_avg = ability_mod_avg / 6
 	
 	let output_string = ""
-	for (i in dropped_high)
+	if (ability_mod_avg < min_avg_mod || ability_mod_avg > max_avg_mod)
+		output_string = ChardAbilityScores(high_drop, low_drop, min_avg_mod, max_avg_mod)
+	else
 	{
-		output_string += "~~" + dropped_high[i] + "~~ "
+		for (i in dropped_high)
+		{
+			output_string += "~~" + dropped_high[i] + "~~ "
+		}
+		for (i in ordered_pool)
+		{
+			output_string += ordered_pool[i] + " "
+		}
+		for (let i = low_drop - 1; i > -1; i--)
+		{
+			output_string += "~~" + dropped_low[i] + "~~ "
+		}
+		
+		output_string += "\n"
+		
+		for (i in ability_scores)
+		{
+			output_string += ability_scores[i] + " (" + ability_mods[i] + ") "
+		}
 	}
-	for (i in ordered_pool)
-	{
-		output_string += ordered_pool[i] + " "
-	}
-	for (let i = low_drop - 1; i > -1; i--)
-	{
-		output_string += "~~" + dropped_low[i] + "~~ "
-	}
-	
-	output_string += "\n"
-	
-	for (i in ability_scores)
-	{
-		output_string += ability_scores[i] + " (" + ability_mods[i] + ") "
-	}
-	
 	return output_string
 }
 
