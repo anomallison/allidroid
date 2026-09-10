@@ -1,11 +1,8 @@
 {
+	"open": "./dungeon_gen_assets/open_",
 	"closed":
 	[
 		"./dungeon_gen_assets/closed_tile.png"
-	],
-	"open":
-	[
-		"./dungeon_gen_assets/open_tile.png"
 	],
 	"test":
 	[
@@ -13,46 +10,169 @@
 	],
 	"door_horizontal":
 	[
-		"./dungeon_gen_assets/door_horizontal.png"
+		"./dungeon_gen_assets/door_horizontal.png",
+		"./dungeon_gen_assets/door_horizontal_grate.png"
 	],
 	"door_vertical":
 	[
-		"./dungeon_gen_assets/door_vertical.png"
+		"./dungeon_gen_assets/door_vertical.png",
+		"./dungeon_gen_assets/door_vertical_grate.png"
 	],
-	"secret_door_horizontal":
+	"double_door_horizontal":
 	[
-		"./dungeon_gen_assets/secret_door_horizontal.png"
+		"./dungeon_gen_assets/double_door_horizontal.png",
+		"./dungeon_gen_assets/double_door_horizontal_grate.png"
 	],
-	"secret_door_vertical":
+	"double_door_vertical":
 	[
-		"./dungeon_gen_assets/secret_door_vertical.png"
-	],
-	"grate_horizontal":
-	[
-		"./dungeon_gen_assets/grate_horizontal.png"
-	],
-	"grate_vertical":
-	[
-		"./dungeon_gen_assets/grate_vertical.png"
-	],
-	"stairs_north":
-	[
-		"./dungeon_gen_assets/stairs_north.png"
-	],
-	"stairs_east":
-	[
-		"./dungeon_gen_assets/stairs_east.png"
-	],
-	"stairs_south":
-	[
-		"./dungeon_gen_assets/stairs_south.png"
-	],
-	"stairs_west":
-	[
-		"./dungeon_gen_assets/stairs_west.png"
+		"./dungeon_gen_assets/double_door_vertical.png",
+		"./dungeon_gen_assets/double_door_vertical_grate.png"
 	],
 	"error":
 	[
 		"./dungeon_gen_assets/error_tile.png"
+	],
+	"rooms":
+	[
+		{
+			"img":"./dungeon_gen_assets/room_6x6_circle.png",
+			"height": 6,
+			"width": 6,
+			"layout":
+			[
+				1,2,2,2,2,1,
+				2,1,1,1,1,2,
+				2,1,1,1,1,2,
+				2,1,1,1,1,2,
+				2,1,1,1,1,2,
+				1,2,2,2,2,1
+			]	
+		},
+		{
+			"img":"./dungeon_gen_assets/room_8x8_octogon.png",
+			"height": 8,
+			"width": 8,
+			"layout":
+			[
+				0,1,2,2,2,2,1,0,
+				1,1,1,1,1,1,1,1,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				1,1,1,1,1,1,1,1,
+				0,1,2,2,2,2,1,0
+			]	
+		},
+		{
+			"img":"./dungeon_gen_assets/room_8x12_trapezoid_a.png",
+			"height": 12,
+			"width": 8,
+			"layout":
+			[
+				0,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				1,1,1,1,1,1,1,2,
+				0,1,1,1,1,1,1,1
+			]	
+		},
+		{
+			"img":"./dungeon_gen_assets/room_8x12_trapezoid_b.png",
+			"height": 12,
+			"width": 8,
+			"layout":
+			[
+				1,1,1,1,1,1,1,0,
+				2,1,1,1,1,1,1,1,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,0
+			]	
+		},
+		{
+			"img":"./dungeon_gen_assets/room_10x10_circle.png",
+			"height": 10,
+			"width": 10,
+			"layout":
+			[
+				0,0,1,2,2,2,2,1,0,0,
+				0,1,1,1,1,1,1,1,1,0,
+				1,1,1,1,1,1,1,1,1,1,
+				2,1,1,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,1,1,2,
+				1,1,1,1,1,1,1,1,1,1,
+				0,1,1,1,1,1,1,1,1,0,
+				0,0,1,2,2,2,2,1,0,0
+			]	
+		},
+		{
+			"img":"./dungeon_gen_assets/room_12x8_trapezoid_a.png",
+			"height": 8,
+			"width": 12,
+			"layout":
+			[
+				0,1,2,2,2,2,2,2,2,2,1,0,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,2,2,2,2,2,2,2,2,2,2,1
+			]	
+		},
+		{
+			"img":"./dungeon_gen_assets/room_12x8_trapezoid_b.png",
+			"height": 8,
+			"width": 12,
+			"layout":
+			[
+				1,2,2,2,2,2,2,2,2,2,2,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				0,1,2,2,2,2,2,2,2,2,1,0
+			]	
+		},
+		{
+			"img":"./dungeon_gen_assets/room_12x12_octogon.png",
+			"height": 12,
+			"width": 12,
+			"layout":
+			[
+				0,0,1,1,2,2,2,2,1,1,0,0,
+				0,1,1,1,1,1,1,1,1,1,1,0,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				2,1,1,1,1,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,1,1,1,1,2,
+				2,1,1,1,1,1,1,1,1,1,1,2,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				1,1,1,1,1,1,1,1,1,1,1,1,
+				0,1,1,1,1,1,1,1,1,1,1,0,
+				0,0,1,1,2,2,2,2,1,1,0,0
+			]	
+		}
 	]
 }
