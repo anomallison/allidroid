@@ -700,10 +700,12 @@ async function processCommand(receivedMessage)
     } else if (normalizedCommand == "generategoblin") 
 	{
 		generateGoblin(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "generatedungeonmap") 
-	{
-		OutputTileMap(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "psyduck") 
+    } 
+	// else if (normalizedCommand == "generatedungeonmap") 
+	// {
+		// OutputTileMap(receivedMessage.channel,arguments);
+    // } 
+	else if (normalizedCommand == "psyduck") 
 	{
 		generatePsyduck(receivedMessage.channel,arguments);
     } else if (normalizedCommand == "frog") 
@@ -870,7 +872,7 @@ async function processCommand(receivedMessage)
 			return;
 		}
     }
-	else if (normalizedCommand == "testlandmass") 
+	else if (normalizedCommand == "generatelandmass") 
 	{
 		DrawLandmass(receivedMessage.channel,arguments);
     }
