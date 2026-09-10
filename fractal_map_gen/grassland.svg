@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="31.999998"
+   height="28"
+   viewBox="0 0 8.466666 7.4083333"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="grassland.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="29.035714"
+     inkscape:cx="16.03198"
+     inkscape:cy="13.96556"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs1" />
+  <g
+     id="layer1"
+     style="display:inline"
+     transform="matrix(0.75,0,0,0.75,1.0583333,0.82682291)">
+    <path
+       id="path72"
+       style="color:#000000;display:inline;fill:#000000;-inkscape-stroke:none"
+       d="m 4.0664184,2.5158671 v 1.1193115 c 0.055378,-0.00702 0.1111007,-0.010989 0.1669149,-0.011886 0.055767,3.9e-5 0.1114891,0.00314 0.1669149,0.0093 V 2.5158671 Z M 3.5760091,2.8672668 3.2618164,2.9804382 3.5548217,3.7860738 c 0.1000098,-0.049815 0.2052029,-0.088461 0.313676,-0.1152385 z m 1.3146484,0 -0.2914551,0.8004679 c 0.1083379,0.027145 0.2133572,0.066137 0.3131592,0.116272 L 5.2048502,2.9804382 Z M 2.878894,3.296698 2.6329142,3.5018534 3.1331421,4.0987162 C 3.2066929,4.0207453 3.288278,3.9507657 3.376538,3.8899434 Z m 2.7088786,0 -0.4960938,0.5916951 c 0.088209,0.060498 0.1697923,0.1301292 0.243396,0.2077393 l 0.4986776,-0.594279 z" />
+  </g>
+</svg>

@@ -1,7 +1,6 @@
 ////////
 //
 // written by AnomAllison
-// last updated 06/03/2024
 //
 // I hope Allidroid can bring people some humour and entertainment
 //
@@ -10,20 +9,18 @@
 //const Discord = require('discord.js')
 //const client = new Discord.Client()
 
-const { Client, Intents } = require('discord.js');
+const { Client, Events, GatewayIntentBits, PermissionsBitField } = require('discord.js');
 
-const client = new Client({ intents: [ "GUILDS", "GUILD_MESSAGES", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES" ] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildEmojisAndStickers, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences ] });
 
 
 const mergeImages = require('merge-images');
 const { Canvas, Image } = require('canvas');
 
-const paper = require('paper-jsdom-canvas');
-const { PaperOffset } = require('paperjs-offset');
-
 const Voronoi = require('voronoi');
 
-var fs = require("fs");
+const fs = require("fs");
+const path = require("path");
 
 const monster_types = 
 {
@@ -32,6 +29,9 @@ const monster_types =
 	MOOK: "monster mook"
 }
 
+//numbers as words
+var numbers_as_words = JSON.parse(fs.readFileSync('numbers_as_words.json'));
+
 // pronouns from file
 var pronouns = JSON.parse(fs.readFileSync('pronoun_list.json'));
 
@@ -39,7 +39,6 @@ var pronouns = JSON.parse(fs.readFileSync('pronoun_list.json'));
 var monster_adjectives = JSON.parse(fs.readFileSync('adjective_list.json'));
 var monster_actions = JSON.parse(fs.readFileSync('action_list.json'));
 var monster_nouns = JSON.parse(fs.readFileSync('monster_list.json'));
-//var group_types = JSON.parse(fs.readFileSync('group_type_list.json'));
 
 //var costume_material = JSON.parse(fs.readFileSync('costume_material_list.json'));
 
@@ -53,9 +52,6 @@ var boss_generator = JSON.parse(fs.readFileSync('bosses2.json'));
 var item_artifactnames = JSON.parse(fs.readFileSync('item_artifactnames.json'));
 var artifact_gen = JSON.parse(fs.readFileSync('artifactgenerator.json'));
 
-//bird generator files
-var bird_gen = JSON.parse(fs.readFileSync('bird_gen/bird_generator.json'));
-
 //goblin generator files
 var goblin_gen = JSON.parse(fs.readFileSync('goblin_gen/goblin_generator.json'));
 
@@ -68,8 +64,8 @@ var turtle_gen = JSON.parse(fs.readFileSync('turtle_gen/turtle_gen.json'));
 //slime generator files
 var slime_gen = JSON.parse(fs.readFileSync('slime_gen/slime_gen.json'));
 
-//familiar generator files
-var familiar_gen = JSON.parse(fs.readFileSync('familiar_gen/familiar_gen.json'));
+//lil beatemup guy generator files
+var lil_beatemup_guy_gen = JSON.parse(fs.readFileSync('lil_beatemup_guy/lil_beatemup_guy_gen.json'));
 
 //psyduck generator files
 var psyduck_gen = JSON.parse(fs.readFileSync('psyduck_gen/psyduck_gen.json'));
@@ -85,17 +81,6 @@ var dnd_adventure_gen = JSON.parse(fs.readFileSync('dd5e_adventure_gen.json'));
 
 // blaseballer generator files
 var blaseballer_gen = JSON.parse(fs.readFileSync('blaseballer_gen.json'));
-
-//city generator files
-var city_gen = JSON.parse(fs.readFileSync('city_gen/city_generator.json'));
-var hexcity_gen = JSON.parse(fs.readFileSync('hexcity_gen/hexcitygenerator.json'));
-
-
-//citygen svg files
-var citygen_svg = JSON.parse(fs.readFileSync('citygen_svg/citygen_svg.json'));
-
-//adventure simulator files
-var adventure_sim = JSON.parse(fs.readFileSync('adventuresim.json'));
 
 //alien language files
 var alien_alphabet = JSON.parse(fs.readFileSync('alienlanguage/alienalphabet.json'));
@@ -120,10 +105,6 @@ var weirdprincess_retinuetraits = JSON.parse(fs.readFileSync('weirdprincess_reti
 //phoneme files
 var phonemes_english = JSON.parse(fs.readFileSync('phonemes_english.json'));
 
-//gacha file
-var gacha_reveals = JSON.parse(fs.readFileSync('gacha_reveals.json'));
-var gacha_comments = JSON.parse(fs.readFileSync('gacha_comments.json'));
-
 //how files
 var how_levels = JSON.parse(fs.readFileSync('how_levels.json'));
 var how_prefixes = JSON.parse(fs.readFileSync('how_prefixes.json'));
@@ -132,10 +113,6 @@ var how_suffixes = JSON.parse(fs.readFileSync('how_suffixes.json'));
 //tarot files
 var tarot_deck = JSON.parse(fs.readFileSync('tarot_deck.json'));
 var tarot_readings = JSON.parse(fs.readFileSync('tarot_readings.json'));
-
-//questgen file
-//var quest_gen = JSON.parse(fs.readFileSync('questgen.json'));
-var quest_gen = JSON.parse(fs.readFileSync('questgenerator.json'));
 
 //roomgen file
 var room_gen = JSON.parse(fs.readFileSync('room_generator.json'));
@@ -158,18 +135,20 @@ var trinket_gen = JSON.parse(fs.readFileSync('trinket_gen.json'));
 // war advice from file
 var war_advice = JSON.parse(fs.readFileSync('waradvice.json'));
 
-// war advice from file
+// podcaster gen from file
 var podcaster_gen = JSON.parse(fs.readFileSync('podcaster_gen.json'));
 
+// tavern gen from file
+var tavern_gen = JSON.parse(fs.readFileSync('tavern_gen.json'));
+
+// fractal map gen
+var fractal_map_symbols = JSON.parse(fs.readFileSync('fractal_map_gen/fractal_map_symbols.json'));
+
+// continent shapes gen
+var continent_shapes = JSON.parse(fs.readFileSync('continent_map/continent_shapes.json'));
 
 //
 var logintoken = fs.readFileSync('token.txt').toString();
-
-
-//
-// the array of reminders, to allow reminders to be removed/destroyed (just in case)
-var reminder_array = [];
-var reminder_idcounter = 0;
 
 
 //
@@ -191,7 +170,7 @@ const KEYSMASH_DEFAULT_MIN = 18;
 //
 //
 
-client.on('messageCreate', (receivedMessage) => {
+client.on("messageCreate", (receivedMessage) => {
 	try
 	{
 		if (receivedMessage.author == client.user) { // Prevent bot from responding to its own messages
@@ -453,46 +432,6 @@ async function processCommand(receivedMessage)
 		}
 		receivedMessage.channel.send(output);
 		return;
-    /* } else if (normalizedCommand == "remindme") 
-	{
-		if (arguments[0] != null && arguments[0].toLowerCase() == "in")
-		{
-			output = setReminder(arguments[1], argumentsbacktostring(arguments,2), receivedMessage.channel.id, receivedMessage.author);
-		} else
-		{
-			output = setReminder(arguments[0], argumentsbacktostring(arguments,1), receivedMessage.channel.id, receivedMessage.author);
-		}
-		
-		if (output == null)
-		{
-			console.log("failed command: remindme");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		}
-		receivedMessage.channel.send(output);
-		return;
-    } else if (normalizedCommand == "removereminder") 
-	{
-		output = removeReminder(arguments[0]);
-		
-		if (output == null)
-		{
-			console.log("failed command: removereminder");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else if (output == true)
-		{
-			receivedMessage.channel.send("The reminder has been removed!");
-			return;
-		} else if (output == false)
-		{
-			receivedMessage.channel.send("No reminder with that id was found");
-			return;
-		}
-    } else if (normalizedCommand == "remindercount") 
-	{
-		receivedMessage.channel.send("There are " + reminder_array.length + " reminders currently");
-		return; */
     } else if (normalizedCommand == "plznoyell") 
 	{
 		receivedMessage.channel.send("but I was no yell at you ;_;");
@@ -539,20 +478,6 @@ async function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
-    } else if (normalizedCommand == "quest") 
-	{
-		output = generateQuest(arguments[0]);
-		
-		if (output == null)
-		{
-			console.log("failed command: quest");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
     } else if (normalizedCommand == "oneshotrpg") 
 	{
 		output = generateOneShotRPG(arguments[0]);
@@ -581,110 +506,12 @@ async function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
-    } else if (normalizedCommand == "makeparty") 
-	{
-		output = makeParty(arguments);
-		
-		if (output == null)
-		{
-			console.log("failed command: makeparty");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
-    } else if (normalizedCommand == "adventure") 
-	{
-		output = startAdventure(arguments[0],parseInt(arguments[1]));
-		
-		if (output == null)
-		{
-			console.log("failed command: adventure");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
-    } else if (normalizedCommand == "partysummary") 
-	{
-		output = outputPartySummary(arguments);
-		
-		if (output == null)
-		{
-			console.log("failed command: partysummary");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
-    } else if (normalizedCommand == "partymember") 
-	{
-		output = outputPartyMemberSummary(arguments);
-		
-		if (output == null)
-		{
-			console.log("failed command: partymember");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
-    } else if (normalizedCommand == "disbandparty") 
-	{
-		output = disbandParty(arguments);
-		
-		if (output == null)
-		{
-			console.log("failed command: disbandparty");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
-    } else if (normalizedCommand == "retirepartymember") 
-	{
-		output = retirePartyMember(arguments);
-		
-		if (output == null)
-		{
-			console.log("failed command: retirepartymember");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
-    } else if (normalizedCommand == "recruitpartymember") 
-	{
-		output = recruitPartyMembers(arguments);
-		
-		if (output == null)
-		{
-			console.log("failed command: recruitpartymember");
-			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
-			return;
-		} else
-		{
-			receivedMessage.channel.send(output);
-			return;
-		}
     } else if (normalizedCommand == "generatemap") 
 	{
 		generateMap(receivedMessage.channel,arguments);
 	} else if (normalizedCommand == "isometricmap") 
 	{
-		generateIsometricWorldMap(receivedMessage.channel,arguments);
+		generateIsometricWorldMap(receivedMessage.channel,arguments); 
 	} else if (normalizedCommand == "minimap") 
 	{
 		GenerateMiniMap(receivedMessage.channel,arguments);
@@ -888,23 +715,14 @@ async function processCommand(receivedMessage)
     } else if (normalizedCommand == "slime") 
 	{
 		generateSlime(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "familiar") 
+    } else if (normalizedCommand == "beatemup") 
 	{
-		generateFamiliar(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "bird") 
-	{
-		generateBird(receivedMessage.channel,arguments);
-    } else if (normalizedCommand == "outputadventureworldmap") 
-	{
-		outputAdventureWorldMap(receivedMessage.channel,arguments);
-    }else if (normalizedCommand == "generatevillage") 
-	{
-		generateHexCity(receivedMessage.channel,arguments);
-    } 
+		generateLilBeatemupGuy(receivedMessage.channel,arguments);
+    }
 	else if (normalizedCommand == "noisemap") 
 	{
 		noisemaptopng(receivedMessage.channel,arguments);
-    }  
+    }
 	else if (normalizedCommand == "alienlanguage") 
 	{
 		encodeToAlienLanguage(receivedMessage.channel,arguments);
@@ -924,22 +742,6 @@ async function processCommand(receivedMessage)
 			return;
 		}
     }
-	else if (normalizedCommand == "drawdungeonmap")
-	{
-		DrawDrawnDungeonMap(receivedMessage.channel,arguments);
-	}
-	else if (normalizedCommand == "rendertownmap")
-	{
-		DrawTownMap(receivedMessage.channel,arguments);
-	}
-	else if (normalizedCommand == "polygonmap")
-	{
-		DrawVoronoiMapMap(receivedMessage.channel,arguments);
-	}
-	/*else if (normalizedCommand == "voronoicity")
-	{
-		DrawVoronoiCity(receivedMessage.channel,arguments);
-	}*/
 	else if (normalizedCommand == "battleships") 
 	{
 		PlayBattleshipsGame(receivedMessage.channel, arguments);
@@ -1034,6 +836,44 @@ async function processCommand(receivedMessage)
 			return;
 		}
 	}
+	else if (normalizedCommand == "tavern")
+	{
+		let output = GenerateTavern();
+		
+		if (output == null)
+		{
+			console.log("failed command: tavern");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+	}
+	else if (normalizedCommand == "slut")
+	{
+		pronounceslut(receivedMessage);
+	}
+	else if (normalizedCommand == "chardmethod") 
+	{
+		let output = ChardAbilityScoresCustom(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: chardmethod");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    }
+	else if (normalizedCommand == "testlandmass") 
+	{
+		DrawLandmass(receivedMessage.channel,arguments);
+    }
 	else if (normalizedCommand.substr(0,2) == "!!")
 	{
 		let possibleString = excited();
@@ -1159,16 +999,6 @@ function helpCommand(user, arguments)
 		help_string = fs.readFileSync('help_gacha.txt').toString();
 		//user.send({ files: [{ attachment: './help_gacha.txt', name: 'help_gacha.txt' }] });
 	}
-	else if (arguments[0] == "!remindme" || arguments[0] == "remindme")
-	{
-		help_string = fs.readFileSync('help_remindme.txt').toString();
-		//user.send({ files: [{ attachment: './help_remindme.txt', name: 'help_remindme.txt' }] });
-	}
-	else if (arguments[0] == "!removereminder" || arguments[0] == "removereminder")
-	{
-		help_string = fs.readFileSync('help_remindme.txt').toString();
-		//user.send({ files: [{ attachment: './help_remindme.txt', name: 'help_remindme.txt' }] });
-	}
 	else if (arguments[0] == "!feedback" || arguments[0] == "feedback")
 	{
 		help_string = fs.readFileSync('help_feedback.txt').toString();
@@ -1194,11 +1024,6 @@ function helpCommand(user, arguments)
 		help_string = fs.readFileSync('help_keysmash.txt').toString();
 		//user.send({ files: [{ attachment: './help_keysmash.txt', name: 'help_keysmash.txt' }] });
 	}
-	else if (arguments[0] == "!quest" || arguments[0] == "quest")
-	{
-		help_string = fs.readFileSync('help_quest.txt').toString();
-		//user.send({ files: [{ attachment: './help_quest.txt', name: 'help_quest.txt' }] });
-	}
 	else if (arguments[0] == "!howtoinitiate" || arguments[0] == "howtoinitiate")
 	{
 		help_string = fs.readFileSync('help_howtoinitiate.txt').toString();
@@ -1209,13 +1034,131 @@ function helpCommand(user, arguments)
 		help_string = fs.readFileSync('help_room.txt').toString();
 		//user.send({ files: [{ attachment: './help_room.txt', name: 'help_room.txt' }] });
 	}
-	else if (arguments[0] == "!adventure" || arguments[0] == "adventure")
-	{
-		help_string = fs.readFileSync('help_adventure.txt').toString();
-		//user.send({ files: [{ attachment: './help_room.txt', name: 'help_room.txt' }] });
-	}
 	return help_string;
 }
+
+//
+//
+// !slut
+//
+//
+
+async function pronounceslut(received_message)
+{
+	let channel_promise = new Promise(function(resolve, reject) {
+		resolve(received_message.guild.channels.fetch(received_message.channelId))
+	});
+	
+	let channel = await channel_promise;
+	
+	//console.log(channel);
+	
+	
+	let members_promise = new Promise(function(resolve, reject) {
+		resolve(received_message.guild.members.fetch({withPresences: true}))
+	});
+	
+	let members = await members_promise;
+	//console.log(members)
+	let member_names = []
+	members.forEach(member => {
+		let permission_bits = received_message.channel.permissionsFor(member);
+		if (permission_bits.has(PermissionsBitField.Flags.ViewChannel))
+		{
+			let member_presence = member.guild.presences.resolve(member)
+			if (member_presence != null && member_presence.status != 'offline')
+				member_names.push(member.displayName);
+		}
+	});
+	
+	received_message.channel.send(member_names[Math.floor(Math.random()*member_names.length)]);
+}
+
+//
+// some base functions
+//
+
+function getNextInQueue(queue)
+{
+	let lowest = 9999999;
+	let found = -1;
+	for(let i = 0; i < queue.length; i++)
+	{
+		if (queue[i].priority < lowest)
+		{
+			lowest = queue[i].priority;
+			found = i;
+		}
+	}
+	
+	return found;
+}
+
+function arrayContainsPosition(array, position)
+{
+	for(let i = 0; i < array.length; i++)
+	{
+		if (array[i].x == position.x && array[i].y == position.y)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+function addToDictionary(dictionary, key, value)
+{
+	for(let i = 0; i < dictionary.length; i++)
+	{
+		if (dictionary[i].key.x == key.x && dictionary[i].key.y == key.y)
+		{
+			dictionary[i].value = value;
+			dictionary[i].value = value;
+			return;
+		}
+	}
+	
+	dictionary.push({ key: key, value: value });
+}
+
+function getFromDictionary(dictionary, key)
+{
+	for(let i = 0; i < dictionary.length; i++)
+	{
+		if (dictionary[i].key.x == key.x && dictionary[i].key.y == key.y)
+		{
+			return dictionary[i].value;
+		}
+	}
+	
+	return null;
+}
+
+function dictionaryToDirection(dictionary, end, start)
+{
+	let backwards = [];
+	let forwards = [];
+	let current = end;
+	backwards.push(end)
+	while (current.x != start.x || current.y != start.y)
+	{
+		current = getFromDictionary(dictionary, current);
+		backwards.push(current);
+	}
+	
+	for (let i = backwards.length-1; i >= 0; i--)
+	{
+		forwards.push(backwards[i]);
+	}
+	
+	return forwards;
+}
+
+function pathHeuristic(a, b)
+{
+	return Math.ceil(Math.abs(a.x - b.x) + Math.abs(a.y - b.y));
+}
+
 
 //
 //
@@ -1273,17 +1216,63 @@ function howgay(value)
 
 function gaygacha(coins)
 {
-	let baserand = Math.random() - coins*0.003;
+	let baserand = Math.random() - coins*0.002;
 
 	let rarity = getGachaRarity(baserand);
+	let stars = 0;
+	if (rarity == "Super Hyper Ultra Legendary")
+	{
+		stars = 10;
+	}
+	else if (rarity == "Hyper Legendary")
+	{
+		stars = 9;
+	}
+	else if (rarity == "Legendary")
+	{
+		stars = 8;
+	}
+	else if (rarity == "Super Rare")
+	{
+		stars = 7;
+	}
+	else if (rarity == "Rare")
+	{
+		stars = 6;
+	}
+	else if (rarity == "Less Common")
+	{
+		stars = 5;
+	}
+	else if (rarity == "Crappy Common")
+	{
+		stars = 4;
+	}
+	else if (rarity == "Uncommon")
+	{
+		stars = 3;
+	}
+	else if (rarity == "Worse Than Trash")
+	{
+		stars = 2;
+	}
+	else if (rarity == "Less Common")
+	{
+		stars = 1;
+	}
+	else if (rarity == "Trash")
+	{
+		stars = 0;
+	}
 	let hero_base = generateMonster("gaycha",0,0,1);
-	let hero_class = boss_generator.classes[Math.floor(Math.random()*boss_generator.classes.length)].class;
+	let hero_class = boss_generator.classes[Math.floor(Math.random()*boss_generator.classes.length)];
 	
 	let hero_name = generateBossName(false);
 	
-	let fullreturnstring = "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
+	let gaycha_result = { rarity: rarity, base: hero_base, hero_class: hero_class, name: hero_name, stars: stars };
+	//let fullreturnstring = "[" + rarity + "] " + hero_name + ", the " + hero_base + " " + hero_class;
 	
-	return fullreturnstring;
+	return gaycha_result;
 }
 
 
@@ -1293,7 +1282,7 @@ function gaygacha(coins)
 //
 
 var MAX_COIN_PERCENTAGE = 0.1666;
-var MAX_COINS = 255;
+var MAX_COINS = 40;
 
 function shakethejar()
 {
@@ -1307,7 +1296,7 @@ function shakethejar()
 	
 	if (currentgay > 5)
 	{
-		while (randomcoins == 0)
+		while (randomcoins == 0 || randomcoins > MAX_COINS)
 		{
 			randomcoins = Math.floor((Math.random()+Math.random()/2)*MAX_COIN_PERCENTAGE*currentgay);
 			if (Math.random() < 0.08)
@@ -1329,59 +1318,48 @@ function shakethejar()
 	currentgay -= randomcoins;
 	
 	let hero = gaygacha(randomcoins);
-	let artifact = "";
-	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol"];
-	let baseitem = generateItemFromTypes(baseitemtypes);
+	let baseitemtypes = ["shortblade","largeblade","dagger","throwingknives","ropeweapon","polearm","staff","magestaff","smallhammer","largehammer","wand","magicoffhand","smallarms","longarms","armour","clothes","bow","sling","tool","shield","jewelery","holysymbol","pokemon"];
+	let basegaychakeywords = ["arcane","alchemy","holy","karate","martial","rogueish","cyberpunk","necromantic", "psionic","himbo","twink","firearm","pokemon"];
 	
-	
-	let markovname = MarkovPhonemeGenerateName();
-	while (markovname.length < 4)
+	let gaychakeywords = [];
+	for (let x = 0; x < hero.hero_class.keywords.length; x++)
 	{
-		markovname = MarkovPhonemeGenerateName();
-	}
-	let spelledname = "";
-	for (let i = 0; i < markovname.length; i++)
-	{
-		let phonemechar = GetPhonemeByCharacter(markovname[i]);
-		spelledname += getPhonemeSpelling(phonemechar);
-	}
-	artifact = "the " +  grammarCapitalFirstLetter(spelledname);
-	
-	/*
-	baserand  = Math.random();
-	if (baserand < 0.19) // single first word name
-	{
-		let markovname = MarkovPhonemeGenerateName();
-		while (markovname.length < 4)
+		if (basegaychakeywords.includes(hero.hero_class.keywords[x]))
 		{
-			markovname = MarkovPhonemeGenerateName();
-		}
-		let spelledname = "";
-		for (let i = 0; i < markovname.length; i++)
-		{
-			let phonemechar = GetPhonemeByCharacter(markovname[i]);
-			spelledname += getPhonemeSpelling(phonemechar);
-		}
-		artifact = "the " +  grammarCapitalFirstLetter(spelledname);
+			gaychakeywords.push(hero.hero_class.keywords[x]);
+		}			
 	}
-	else if (baserand < 0.31) // single first word name
-	{
-		artifact = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))];
-	}
-	else if (baserand < 0.43) // single last word name
-	{
-		artifact = "the " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
-	}
-	else
-	{
-		artifact = "the " + item_artifactnames.gaychafirst[Math.floor((Math.random()*item_artifactnames.gaychafirst.length))] + " " + item_artifactnames.gaychalast[Math.floor((Math.random()*item_artifactnames.gaychalast.length))];
-	}
-	*/
 	
-	let fullstring = hero + " and their artifact " + artifact + ", the " + item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + baseitem.item;
+	gaychakeywords.push(RandomArrayEntry(basegaychakeywords, false, "[doesnotnest]"));
+
+	let baseitem = generateGaychaItem(baseitemtypes, gaychakeywords);
+	
+	let hero_item = item_artifactnames.magic[Math.floor((Math.random()*item_artifactnames.magic.length))] + " " + baseitem.item;
+	
+	let position = hero_item.indexOf("\[");
+	let endposition = -1;
+	let hero_item_substr = "";
+	
+	while (position != -1)
+	{
+		endposition = hero_item.indexOf("\]");
+		hero_item_substr = hero_item.substring(position+1,endposition);
+		//substrcommands = hero_item.split(" ");
+		substr_number = randomNumberForText(hero_item_substr);
+		
+		hero_item = hero_item.substr(0,position) + substr_number + hero_item.substr(endposition+1);
+		
+		position = hero_item.indexOf("\[");
+	}
+	
+	let fullstring = "[" + hero.rarity + "] " + hero.name + " the " + hero.base + " " + hero.hero_class.class + " with " + grammarAorAn(hero_item.charAt(0)) + " " + hero_item;
 	
 	let shakestring = ""
-	if (shaketime > 1)
+	if (shaketime > 3)
+	{
+		shakestring = "You give the jar a really really good shake, getting ";
+	}
+	else if (shaketime > 1)
 	{
 		shakestring = "You give the jar a good shake, getting ";
 	}
@@ -1404,18 +1382,7 @@ function orderFromDiner(coins)
 {
 	if (coins == null || isNaN(coins))
 	{
-		if (currentgay > 5)
-		{
-			coins = 0;
-			while (coins == 0)
-			{
-				coins = Math.floor((Math.random()+Math.random()/2)*MAX_COIN_PERCENTAGE*currentgay);
-			}
-		} 
-		else
-		{
-			coins = 1 + Math.floor(Math.random()*2);
-		}
+		coins = 1 + Math.floor(Math.random()*7);
 		
 		if (coins > currentgay)
 			coins = currentgay;
@@ -1437,42 +1404,72 @@ let MAX_MEAL_VALUE = 21;
 
 function generateDinerOrder(coins)
 {
-	let mealvalue = Math.floor(coins / ((Math.random() * 5) + 2));
+	let mealvalue = coins * ((Math.random() * 0.4) + 0.25);
 	
 	if (mealvalue < 1)
 		mealvalue = 1;
 	if (mealvalue > MAX_MEAL_VALUE)
 		mealvalue = MAX_MEAL_VALUE;
 	
+	let order_items = [];
+	
 	let orderup = "";
 	
 	for(let i = 0; i < mealvalue; i++)
 	{
-		if (i > 0)
-		{
-			orderup += ", ";
-			if (i == (mealvalue - 1))
-				orderup += "and ";
-		}
-		
 		let meal = dinermenu_gen.meals[Math.floor(Math.random()*dinermenu_gen.meals.length)];
 		let drink = dinermenu_gen.drinks[Math.floor(Math.random()*dinermenu_gen.drinks.length)];
 		let mealedit = dinermenu_gen.mealedits[Math.floor(Math.random()*dinermenu_gen.mealedits.length)];
 		let baserand = Math.random();
 		
+		let item = { text: "", number: 1};
+		
 		if (baserand < 0.33)
 		{
-			orderup += grammarAorAn(meal.substr(0,1)) + " " + meal;
+			item.text = meal;
 		}
 		else if (baserand < 0.87)
 		{
-			orderup += grammarAorAn(meal.substr(0,1)) + " " + meal + ", " + mealedit;
+			item.text = meal + ", " + mealedit;
 		}
 		else
 		{
-			orderup += grammarAorAn(drink.substr(0,1)) + " " + drink;
+			item.text = drink;
 		}
+		
+		let item_not_found = true
+		
+		for (let j = 0; j < order_items.length; j++)
+		{
+			if (order_items[j].text == item.text)
+			{
+				order_items[j].number += 1;
+				item_not_found = false;
+				break;
+			}
+		}
+		if (item_not_found)
+		{
+			order_items.push(item)
+		}
+		
 	}
+	
+	for (let k = 0; k < order_items.length; k++)
+	{
+		orderup += numbers_as_words[order_items[k].number] + " " + order_items[k].text;
+		if (k < order_items.length - 2)
+		{
+			orderup += ", ";
+		}
+		else if (k < order_items.length - 1)
+		{
+			orderup += " and ";
+		}
+		
+	}
+	
+	console.log("coins: " + coins)
 	
 	if (coins == 1)
 		orderup += "\nThat'll be 1 coin";
@@ -1673,117 +1670,6 @@ function stringToTime(inputstring)
 	}
 	
 	return totalTime;
-}
-
-//
-// Reminder
-//
-
-function setReminder(delay, message, target_channel, sender)
-{
-	if (delay == null)
-	{
-		return "I require a delay to do that";
-	}
-	if (message == null)
-	{
-		message = "<@" + sender.id + ">";
-	}
-	
-	if (reminder_array.length > 50000)
-	{
-		return "Sorry, I am at capacity for reminders";
-	}
-	
-	if (delay == null || message == null)
-	{
-		//console.log("Set Reminder error, delay or message are null");
-		return "Invalid arguments, I need a delay (in minutes) and a message";
-	}
-	
-	let parsedDelay = stringToTime(delay)
-	
-	if (parsedDelay == null)
-	{
-		//console.log("Invalid delay input given");
-		return "Invalid delay input given, you must only give units in the form of d for days, h for hours, m for minutes, and s for seconds, in a format such as 1d3h15m";
-	}
-	
-	if (parsedDelay < 1 || parsedDelay > 2,520,000)
-	{
-		//console.log("Set Reminder error, delay too short or too long");
-		return "Invalid delay, it must be more than 0, and 7 days";
-	}
-	
-	if (message.length < 1)
-	{
-		//console.log("Set Reminder error, message empty");
-		return "Invalid message, a reminder needs a message of at least 1 character";
-	}
-	if (target_channel == null)
-	{
-		console.log("Set Reminder error, target_channel is null");
-		return null;
-	}
-	if (sender == null)
-	{
-		console.log("Set Reminder error, sender is null");
-		return null;
-	}
-	
-	let timeridstuff = Date.now().toString();
-	if (reminder_idcounter < 10)
-	{
-		newid = "" + sender.username + timeridstuff.substr(-4) + "0" + reminder_idcounter.toString();
-	}
-	else
-	{
-		newid = "" + sender.username + timeridstuff.substr(-4) + reminder_idcounter.toString();
-	}
-	reminder_idcounter++;
-	if (reminder_idcounter > 99)
-	{
-		reminder_idcounter = 0;
-	}
-	
-	reminder_array.push({
-		id: newid,
-		when: Date.now()+parsedDelay,
-		timer: setTimeout(sendReminder.bind(this,message,target_channel,newid),parsedDelay)
-	});
-	return "Reminder set! The reminderid for this reminder is " + newid;
-}
-
-function sendReminder(message, target_channel, reminderid)
-{
-	//client.channels.get(target_channel).send(message);
-	if (target_channel == null)
-	{
-		console.log("sendReminder failure: target_channel is null")
-		return;
-	}
-	client.channels.cache.get(target_channel).send(message);
-	//target_channel.send(message);
-	if (reminderid != null) //remove reminder only if its an actual reminder
-	{
-		console.log("Reminder \"" + reminderid + "\" sent");
-		removeReminder(reminderid);
-	}
-}
-
-function removeReminder(reminderid)
-{
-	for (let i = 0; i < reminder_array.length; i++)
-	{
-		if (reminder_array[i].id == reminderid)
-		{
-			clearTimeout(reminder_array[i].timer);
-			reminder_array.splice(i,1);
-			console.log("Reminder \"" + reminderid + "\" removed");
-			return true; //reminder removed
-		}
-	}
-	return false; //nothing removed
 }
 
 //
@@ -2012,6 +1898,23 @@ function filterByListArray(array)
 		for (let i in array)
 		{
 			if (this[j] == array[i])
+				return true;
+		}
+	}
+	return false;
+}
+
+//
+// filter the objects by whether 'this' is one of the keywords it has
+//
+
+function filterGaychaByAtleastOneKeyword(object)
+{
+	for (let j in this)
+	{
+		for (let i in object.gaychaKeywords)
+		{
+			if (this[j] == object.gaychaKeywords[i])
 				return true;
 		}
 	}
@@ -2870,6 +2773,161 @@ function dieRoll(r, advantage = false, disadvantage = false)
 	}
 	
 	return { result: totalroll, details: resultString };
+}
+
+function ChardAbilityScoresCustom(arguments)
+{
+	var high_drop = 2
+	var low_drop = 4
+	var min_avg_mod = 0
+	var max_avg_mod = 4
+	if (arguments != null)
+	{
+		let argumentpos = arguments.indexOf("-h");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			high_drop = parseInt(arguments[argumentpos+1])
+		}
+		
+		argumentpos = arguments.indexOf("-l");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			low_drop = parseInt(arguments[argumentpos+1])
+		}
+		
+		argumentpos = arguments.indexOf("-min");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			min_avg_mod = parseInt(arguments[argumentpos+1])
+		}
+		
+		argumentpos = arguments.indexOf("-max");
+		if (argumentpos > -1 && argumentpos+1 <= arguments.length-1 && !isNaN(arguments[argumentpos+1]))
+		{
+			max_avg_mod = parseInt(arguments[argumentpos+1])
+		}
+	}
+	
+	return ChardAbilityScores(high_drop, low_drop, min_avg_mod, max_avg_mod)
+}
+
+function ChardAbilityScores(high_drop, low_drop, min_avg_mod, max_avg_mod)
+{
+	if (min_avg_mod > max_avg_mod)
+		return "Bzz! Canont have minimum average higher than maximum average."
+	
+	if (high_drop < 0)
+		high_drop = 0
+	if (low_drop < 0)
+		low_drop = 0
+	
+	let pool_size = 18 + high_drop + low_drop
+	let dice_pool = []
+	let dropped_low = []
+	let dropped_high = []
+	
+	for (let i = 0; i < pool_size; i++)
+	{
+		dice_pool.push(Math.floor(Math.random() * 6) + 1)
+	}
+	
+	for (let i = 0; i < low_drop; i++)
+	{
+		let lowestDie = 7;
+		let lowestDieIndex = -1;
+		for (j in dice_pool)
+		{
+			if (dice_pool[j] < lowestDie)
+			{
+				lowestDie = dice_pool[j];
+				lowestDieIndex = j;
+			}
+		}
+		dice_pool.splice(lowestDieIndex,1);
+		dropped_low.push(lowestDie);
+	}
+	
+	for (let i = 0; i < high_drop; i++)
+	{
+		let highestDie = 0;
+		let highestDieIndex = -1;
+		for (j in dice_pool)
+		{
+			if (dice_pool[j] > highestDie)
+			{
+				highestDie = dice_pool[j];
+				highestDieIndex = j;
+			}
+		}
+		dice_pool.splice(highestDieIndex,1);
+		dropped_high.push(highestDie);
+	}
+	
+	let duplicate_pool = dice_pool.slice()
+	let ordered_pool = []
+	let ability_scores = []
+	let ability_mods = []
+	let ability_mod_avg = 0
+	
+	for (let i = 0; i < 6; i++)
+	{
+		let score = 0
+		for (let j = 0; j < 3; j++)
+		{
+			let dice_index = GetIndexOfHighest(duplicate_pool)
+			score += duplicate_pool[dice_index]
+			ordered_pool.push(duplicate_pool[dice_index])
+			duplicate_pool.splice(dice_index,1);
+		}
+		ability_scores.push(score)
+		ability_mods.push(Math.floor(score / 2) - 5)
+		ability_mod_avg += Math.floor(score / 2) - 5
+	}
+	
+	ability_mod_avg = ability_mod_avg / 6
+	
+	let output_string = ""
+	if (ability_mod_avg < min_avg_mod || ability_mod_avg > max_avg_mod)
+		output_string = ChardAbilityScores(high_drop, low_drop, min_avg_mod, max_avg_mod)
+	else
+	{
+		for (i in dropped_high)
+		{
+			output_string += "~~" + dropped_high[i] + "~~ "
+		}
+		for (i in ordered_pool)
+		{
+			output_string += ordered_pool[i] + " "
+		}
+		for (let i = low_drop - 1; i > -1; i--)
+		{
+			output_string += "~~" + dropped_low[i] + "~~ "
+		}
+		
+		output_string += "\n"
+		
+		for (i in ability_scores)
+		{
+			output_string += ability_scores[i] + " (" + ability_mods[i] + ") "
+		}
+	}
+	return output_string
+}
+
+function GetIndexOfHighest(array)
+{
+	let highestDie = 0;
+	let highestDieIndex = -1;
+	for (j in array)
+	{
+		if (array[j] > highestDie)
+		{
+			highestDie = array[j];
+			highestDieIndex = j;
+		}
+	}
+	
+	return highestDieIndex
 }
 
 //
@@ -3876,6 +3934,40 @@ function generateItemOfType(type, musthavelists = null, disallowedlists = null)
 //
 // generate an item from a variety of types from the boss generator item list
 
+function generateGaychaItem(types = null, keywords = null)
+{
+	let itempool;
+	let fullpool = [];
+	
+	if (types != null)
+	{
+		itempool = [];
+		for (i in types)
+		{
+			itempool = itempool.concat(boss_generator.items.filter(filterByType,types[i]));
+		}
+	}
+	else
+	{
+		itempool = boss_generator.items.slice();
+	}
+	
+	if (keywords != null && keywords.length > 0)
+	{
+		itempool = itempool.filter(filterGaychaByAtleastOneKeyword,keywords);
+	}
+	
+	for (let i = 0; i < itempool.length; i++)
+	{
+		fullpool = fullpool.concat(getItemList(itempool[i]));
+	}
+	
+	return fullpool[Math.floor((Math.random()*fullpool.length))];
+}
+
+//
+// generate an item from a variety of types from the boss generator item list
+
 function generateItemFromTypes(types = null, musthavelists = null, disallowedlists = null)
 {
 	let itempool;
@@ -4399,160 +4491,6 @@ function getNameSynonym(reward)
 	return reward.name;
 }
 
-function getClosestRewardToLevel(rewards, level)
-{
-	let difference = 999999;
-	let index = -1;
-	for(i in rewards)
-	{
-		if (rewards[i].level == level)
-		{
-			return i;
-		}
-		else if (rewards[i].level < level && (level - rewards[i].level) < difference)
-		{
-			difference = level - rewards[i].level;
-			index = i;
-		}
-		else if (rewards[i].level > level && (rewards[i].level - level) < difference)
-		{
-			difference = rewards[i].level - level;
-			index = i;
-		}
-	}
-	
-	return index;
-}
-
-function filterByMinLevel(questobjective)
-{
-	return this >= questobjective.minlevel;
-}
-
-function generateQuest(minlevel = -1)
-{
-	if (minlevel > 18)
-	{
-		return "minimum level too high";
-	}
-		
-	let questgod = quest_gen.questgods[Math.floor(Math.random()*quest_gen.questgods.length)]
-	let questlocation = quest_gen.questlocations[Math.floor(Math.random()*quest_gen.questlocations.length)];
-	let tempquestlocmods = quest_gen.questlocationmodifiers.filter(filterByAtleastOneList,questlocation.keywords);
-	let random_int = Math.floor(Math.random()*tempquestlocmods.length)
-	let questlocationmodifier = tempquestlocmods[random_int];
-	
-	if (Math.random() < 0.667)
-	{
-		questlocationmodifier = 
-		{
-			"name":"",
-			"lists":[],
-			"keywords":[],
-			"level": 0
-		};
-	}
-	
-	let questlocationkeywoodsfull = questlocation.keywords.concat(questlocationmodifier.keywords);
-	let tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocationkeywoodsfull);
-	random_int = Math.floor(Math.random()*tempantagonists.length)
-	let questantagonist = tempantagonists[random_int];
-	let questkeyword = questantagonist.keywords[Math.floor(Math.random()*questantagonist.keywords.length)];
-	let tempquestgivers = quest_gen.questgivers.filter(filterByList,questkeyword);
-	random_int = Math.floor(Math.random()*tempquestgivers.length);
-	let questgiver = tempquestgivers[random_int];
-	let tempquestobjectives = quest_gen.questobjectives.filter(filterByMinLevel,questantagonist.level);
-	tempquestobjectives = tempquestobjectives.filter(filterByList,questkeyword);
-	random_int = Math.floor(Math.random()*tempquestobjectives.length);
-	let questobjective = tempquestobjectives[random_int];
-	let tempquestitems = quest_gen.questitems.filter(filterByList,questkeyword);
-	random_int = Math.floor(Math.random()*tempquestitems.length)
-	let questitem = getNameSynonym(tempquestitems[random_int]);
-	
-	let questlevel = questlocation.level + questlocationmodifier.level + questantagonist.level + questgiver.level + questobjective.level + Math.floor(Math.random()*5) - 3;
-	while (questlevel < minlevel)
-	{
-		questlocation = quest_gen.questlocations[Math.floor(Math.random()*quest_gen.questlocations.length)];
-		tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocation);
-		tempquestlocmods = quest_gen.questlocationmodifiers.filter(filterByAtleastOneList,questlocation.keywords);
-		random_int = Math.floor(Math.random()*tempquestlocmods.length)
-		questlocationmodifier = tempquestlocmods[random_int];
-		
-		if (Math.random() < 0.667)
-		{
-			questlocationmodifier = 
-			{
-				"name":"",
-				"lists":[],
-				"keywords":[],
-				"level": 0
-			};
-		}
-		
-		questlocationkeywoodsfull = questlocation.keywords.concat(questlocationmodifier.keywords);
-		tempantagonists = quest_gen.questantagonists.filter(filterByAtleastOneList,questlocationkeywoodsfull);
-		random_int = Math.floor(Math.random()*tempantagonists.length)
-		questantagonist = tempantagonists[random_int];
-		questkeyword = questantagonist.keywords[Math.floor(Math.random()*questantagonist.keywords.length)];
-		tempquestgivers = quest_gen.questgivers.filter(filterByList,questkeyword);
-		random_int = Math.floor(Math.random()*tempquestgivers.length);
-		questgiver = tempquestgivers[random_int];
-		tempquestobjectives = quest_gen.questobjectives.filter(filterByMinLevel,questantagonist.level);
-		tempquestobjectives = tempquestobjectives.filter(filterByList,questkeyword);
-		random_int = Math.floor(Math.random()*tempquestobjectives.length);
-		questobjective = tempquestobjectives[random_int];
-		tempquestitems = quest_gen.questitems.filter(filterByList,questkeyword);
-		random_int = Math.floor(Math.random()*tempquestitems.length)
-		questitem = getNameSynonym(tempquestitems[random_int]);
-		
-		questlevel = questlocation.level + questlocationmodifier.level + questantagonist.level + questgiver.level + questobjective.level + Math.floor(Math.random()*5) - 3;
-	}
-	
-	let tempquestrewards = quest_gen.questrewards.filter(filterByList,questkeyword);
-	
-	let questreward = getClosestRewardToLevel(tempquestrewards,questlevel);
-	
-	let modifiedquestlocationname = (questlocationmodifier.name + " " + questlocation.name).trim();
-	
-	let quest_string = "**Quest from " + grammarAorAn(questgiver.name.charAt(0)) + " " + questgiver.name + "**\n" +
-		"**Location:** the " + modifiedquestlocationname + "\n**Objective:** " + questobjective.objective + "\n" +
-		"**Reward:** " + getNameSynonym(tempquestrewards[questreward]);
-	
-	let position = quest_string.indexOf("\[");
-	let endposition = -1;
-	let bosssubstr = "";
-	
-	while (position != -1)
-	{
-		endposition = quest_string.indexOf("\]");
-		bosssubstr = quest_string.substring(position+1,endposition);
-		substr_number = randomNumberForText(bosssubstr);
-		if (bosssubstr == "antagonist")
-		{
-			quest_string = quest_string.substr(0,position) + questantagonist.name + quest_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "item")
-		{
-			quest_string = quest_string.substr(0,position) + questitem + quest_string.substr(endposition+1);
-		}
-		else if (bosssubstr == "god")
-		{
-			quest_string = quest_string.substr(0,position) + questgod + quest_string.substr(endposition+1);
-		}
-		else if (substr_number != false)
-		{
-			quest_string = quest_string.substr(0,position) + substr_number.toString() + quest_string.substr(endposition+1);
-		}
-		else
-		{
-			quest_string = quest_string.substr(0,position) + quest_string.substr(endposition+1);
-		}
-		position = quest_string.indexOf("\[");
-	}
-	
-	return quest_string;
-}
-
 
 //
 // new 
@@ -4771,6 +4709,41 @@ function base64data(uri)
 //
 //
 
+function smootherstep(x)
+{
+	return 6*x**5 - 15*x**4 + 10*x**3;
+}
+
+function clamp(x, lower, upper)
+{
+	if (x < lower)
+		x = lower
+	if (x > upper)
+		x = upper
+	return x
+}
+
+function pascalTriangle(a, b)
+{
+	let result = 1
+	for (let i = 0; i < b; ++i)
+	{
+		result *- (a - i) / (i + 1)
+	}
+	return result
+}
+
+function smoothStep(n, x)
+{
+	x = clamp(x, 0, 1)
+	let result = 0
+	for (let i = 0; i < n; ++i)
+	{
+		result += pascalTriangle(-n - 1, i) * pascalTriangle(2 * n + 1, n - i) * Math.pow(x, i + n + 1)
+	}
+	return result
+}
+
 function interpolateBetween(a0, a1, w)
 {
 	if (w <= 0)
@@ -4778,13 +4751,13 @@ function interpolateBetween(a0, a1, w)
 	if (w >= 1)
 		return a1;
 	
-	return (a1 - a0) * w + a0;
+	return (a1 - a0) * smootherstep(w) + a0;
 }
 
 function randomGradient()
 {
-	let randomv = Math.random() * 2 * 3.14;
-	return { x: Math.sin(randomv), y: Math.sin(randomv) };
+	let randomv = Math.random() * 2 * Math.PI;
+	return { x: Math.cos(randomv), y: Math.sin(randomv) };
 }
 
 function gradientOfTwo(x, y)
@@ -4793,6 +4766,313 @@ function gradientOfTwo(x, y)
 	
 	let v = x*gradient.x + y*gradient.y;
 	return (v);
+}
+
+function objectNoiseMap2D(height, width, edgevalue)
+{
+	let noise_map = 
+	{
+		height: height,
+		width: width,
+		edge_value: edgevalue,
+		map: [],
+		
+		init: function()
+		{
+			for (let y = 0; y < height; y++)
+			{
+				for (let x = 0; x < width; x++)
+				{
+					let v = randomGradient()
+					this.map.push(v);
+				}
+			}
+		},
+		
+		dotProduct: function(p, ip)
+		{
+			let g_index = ip.x + (ip.y * this.width)
+			let g_vect = this.edge_value
+			if (g_index < this.map.length)
+			{
+				g_vect = this.map[ip.x + (ip.y * this.width)]
+			}
+			
+			let d_vect = { x: p.x - ip.x, y: p.y - ip.y }
+			return (d_vect.x * g_vect.x) + (d_vect.y * g_vect.y)
+		},
+		
+		sample: function(p)
+		{
+			let tl_p = { x: Math.floor(p.x), y: Math.floor(p.y) }
+			let tr_p = { x: tl_p.x+1, y: tl_p.y }
+			let bl_p = { x: tl_p.x, y: tl_p.y+1 }
+			let br_p = { x: tl_p.x+1, y: tl_p.y+1 }
+			let tl = this.dotProduct(p, tl_p)
+			let tr = this.dotProduct(p, tr_p)
+			let bl = this.dotProduct(p, bl_p)
+			let br = this.dotProduct(p, br_p)
+			let xt = interpolateBetween(tl, tr, p.x - tl_p.x)
+			let xb = interpolateBetween(bl, br, p.x - tl_p.x)
+			let xx = interpolateBetween(xt, xb, p.y - tl_p.y)
+			// let xb = interpolateBetween(bl, br, tr_p.x - p.x)
+			// let xx = interpolateBetween(xt, xb, bl_p.y - p.y)
+
+			return xx
+		},
+		
+		sharpen: function(amount)
+		{
+			this.map = sharpenMap(this.map, this.height, this.width, amount)
+		},
+		
+		blur: function(amount)
+		{
+			this.map = blurMap(this.map, this.height, this.width, amount)
+		},
+		
+		contrast: function(amount)
+		{
+			if (amount > 0)
+				this.map = increaseContrast(this.map, this.height, this.width, amount)
+			else if (amount < 0)
+				this.map = decreaseContrast(this.map, this.height, this.width, -amount)
+		},
+		
+		smoothen: function(amount)
+		{
+			this.map = smoothenMap(this.map, this.height, this.width, amount)
+		},
+		
+		normalize:  function(min, max)
+		{
+			this.map = NormalizeMap(this.map, max, min)
+		}
+	}
+	
+	return noise_map
+}
+
+function objectShapeMap(min, max)
+{
+	let shape_map = 
+	{
+		height: 128,
+		width: 128,
+		edge_value: 0.0,
+		minimum: min,
+		maximum: max,
+		map: [],
+		
+		init: function()
+		{
+			for (let y = 0; y < this.height; y++)
+			{
+				for (let x = 0; x < this.width; x++)
+				{
+					this.map.push(this.minimum)
+				}
+			}
+			
+			let x_dir = 1
+			let y_dir = 1
+			
+			if (Math.random() <= 0.5)
+				x_dir = -1
+			
+			if (Math.random() <= 0.5)
+				y_dir = -1
+			
+			const img = new Image();
+			img.src = continent_shapes.shapes[Math.floor(Math.random()*continent_shapes.shapes.length)]
+			var tempcanvas = new Canvas();
+			tempcanvas.width = this.width;
+			tempcanvas.height = this.height;
+			if (tempcanvas.getContext)
+			{
+				var ctx = tempcanvas.getContext('2d');
+				
+				ctx.drawImage(img, 0, 0)
+				var imgdata = ctx.getImageData(0,0, 128, 128);
+				var imgdatalen = imgdata.data.length;
+				// console.log(imgdatalen/4)
+				for(let i=0;i<imgdatalen/4;i++)
+				{  //iterate over every pixel in the canvas
+					let raw_val = imgdata.data[4*i] / 255 // red channel
+					
+					let x = i % this.width
+					let y = Math.floor(i / this.width)
+					
+					let index = x + (y * this.width)
+					if (x_dir < 0 && y_dir > 0)
+					{
+						index = (this.width - x) + (y * this.width)
+					}
+					else if (x_dir > 0 && y_dir < 0)
+					{
+						index = x + ((this.width - y) * this.width)
+					}
+					else if (x_dir < 0 && y_dir < 0)
+					{
+						index = (this.width - x) + ((this.width - y) * this.width)
+					}
+					
+					this.map[index] = (raw_val * (this.maximum - this.minimum)) + this.minimum
+				}
+			}
+		},
+		
+		sample: function(p)
+		{
+			let tl_p = { x: Math.floor(p.x), y: Math.floor(p.y) }
+			let tr_p = { x: tl_p.x+1, y: tl_p.y }
+			let bl_p = { x: tl_p.x, y: tl_p.y+1 }
+			let br_p = { x: tl_p.x+1, y: tl_p.y+1 }
+			
+			let tl_a = (p.x - tl_p.x) * (p.y - tl_p.y)
+			let tr_a = (tr_p.x - p.x) * (p.y - tl_p.y)
+			let bl_a = (p.x - tl_p.x) * (bl_p.y - p.y)
+			let br_a = (br_p.x - p.x) * (br_p.y - p.y)
+			
+			let tl = this.map[tl_p.x + (tl_p.y * this.width)]
+			let tr = this.edge_value
+			let bl = this.edge_value
+			let br = this.edge_value
+			if ((tr_p.x + (tr_p.y * this.width)) < this.map.length)
+				tr = this.map[tr_p.x + (tr_p.y * this.width)]
+			if ((bl_p.x + (bl_p.y * this.width)) < this.map.length)
+				bl = this.map[bl_p.x + (bl_p.y * this.width)]
+			if ((br_p.x + (br_p.y * this.width)) < this.map.length)
+				br = this.map[br_p.x + (br_p.y * this.width)]
+			
+			// let raw0 = interpolateBetween(tl, tr, p.x - tl_p.x)
+			// let raw1 = interpolateBetween(bl, br, p.x - tl_p.x)
+			// let raw2 = interpolateBetween(raw0, raw1, p.y - bl_p.y)
+			
+			return tl * br_a + tr * bl_a + bl * tr_a + br * tl_a
+		},
+		
+		sharpen: function(amount)
+		{
+			this.map = sharpenMap(this.map, this.height, this.width, amount)
+		},
+		
+		blur: function(amount)
+		{
+			this.map = blurMap(this.map, this.height, this.width, amount)
+		},
+		
+		contrast: function(amount)
+		{
+			if (amount > 0)
+				this.map = increaseContrast(this.map, this.height, this.width, amount)
+			else if (amount < 0)
+				this.map = decreaseContrast(this.map, this.height, this.width, -amount)
+		},
+		
+		smoothen: function(amount)
+		{
+			this.map = smoothenMap(this.map, this.height, this.width, amount)
+		},
+		
+		normalize:  function(min, max)
+		{
+			this.map = NormalizeMap(this.map, max, min)
+		}
+	}
+	
+	shape_map.init()
+	
+	return shape_map
+}
+
+function objectBaseMap(h, w, min, max)
+{
+	let shape_map = 
+	{
+		height: h,
+		width: h,
+		edge_value: min,
+		minimum: min,
+		maximum: max,
+		map: [],
+		
+		init: function(inital_val)
+		{
+			for (let i = 0; i < this.height * this.width; i++)
+			{
+				this.map.push(inital_val)
+			}
+		},
+		
+		sample: function(p)
+		{
+			let tl_p = { x: Math.floor(p.x), y: Math.floor(p.y) }
+			let tr_p = { x: tl_p.x+1, y: tl_p.y }
+			let bl_p = { x: tl_p.x, y: tl_p.y+1 }
+			let br_p = { x: tl_p.x+1, y: tl_p.y+1 }
+			
+			let tl_a = (p.x - tl_p.x) * (p.y - tl_p.y)
+			let tr_a = (tr_p.x - p.x) * (p.y - tl_p.y)
+			let bl_a = (p.x - tl_p.x) * (bl_p.y - p.y)
+			let br_a = (br_p.x - p.x) * (br_p.y - p.y)
+			
+			let tl = this.map[tl_p.x + (tl_p.y * this.width)]
+			let tr = this.edge_value
+			let bl = this.edge_value
+			let br = this.edge_value
+			if ((tr_p.x + (tr_p.y * this.width)) < this.map.length)
+				tr = this.map[tr_p.x + (tr_p.y * this.width)]
+			if ((bl_p.x + (bl_p.y * this.width)) < this.map.length)
+				bl = this.map[bl_p.x + (bl_p.y * this.width)]
+			if ((br_p.x + (br_p.y * this.width)) < this.map.length)
+				br = this.map[br_p.x + (br_p.y * this.width)]
+			
+			// let raw0 = interpolateBetween(tl, tr, p.x - tl_p.x)
+			// let raw1 = interpolateBetween(bl, br, p.x - tl_p.x)
+			// let raw2 = interpolateBetween(raw0, raw1, p.y - bl_p.y)
+			
+			return tl * br_a + tr * bl_a + bl * tr_a + br * tl_a
+		},
+		
+		changeValue(p, value)
+		{
+			let index = p.x + (p.y * this.width)
+			this.map[index] = clamp(value, this.minimum, this.maximum)
+		},
+		
+		sharpen: function(amount)
+		{
+			this.map = sharpenMap(this.map, this.height, this.width, amount)
+		},
+		
+		blur: function(amount)
+		{
+			this.map = blurMap(this.map, this.height, this.width, amount)
+		},
+		
+		contrast: function(amount)
+		{
+			if (amount > 0)
+				this.map = increaseContrast(this.map, this.height, this.width, amount)
+			else if (amount < 0)
+				this.map = decreaseContrast(this.map, this.height, this.width, -amount)
+		},
+		
+		smoothen: function(amount)
+		{
+			this.map = smoothenMap(this.map, this.height, this.width, amount)
+		},
+		
+		normalize:  function(min, max)
+		{
+			this.map = NormalizeMap(this.map, max, min)
+		}
+	}
+	
+	shape_map.init()
+	
+	return shape_map
 }
 
 function noiseMap2D(height, width, noisevariance, edgevalue = 0.33)
@@ -4841,40 +5121,8 @@ function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 	{
 		for (let x  = 0; x < width; x++)
 		{
-			map.push(0);
+			map.push(Math.random());
 		}
-	}
-	for (let y = 0; y < height; y++)
-	{
-		for (let x  = 0; x < width; x++)
-		{
-			
-			if (Math.random() < 0.5)
-				dx = Math.random()*noisevariance;
-			else
-				dx = Math.random()*noisevariance*-1;
-			if (Math.random() < 0.5)
-				dy = Math.random()*noisevariance;
-			else
-				dy = Math.random()*noisevariance*-1;
-			val = (previousx + dx)/2 + (previousy + dy )/2;
-			if (val < 0)
-				val = 0;
-			else if (val > 1)
-				val = 1;
-			
-			map[x+(y*width)] = val;
-			previousx = val;
-			if ((y-1) > -1)
-			{
-				previousy = map[x+((y-1)*width)];
-			}
-			else
-			{
-				previousy = edgevalue;
-			}
-		}
-		previousx = edgevalue;
 	}
 	
 	return map;
@@ -4882,9 +5130,10 @@ function noiseMap(height, width, noisevariance, edgevalue = 0.33)
 
 function NormalizeMap(map, max, min)
 {
-	let highest = -1;
+	let actual_max = max - min
+	let highest = -999999999;
 	let lowest = 999999999;
-	for (i in map)
+	for (i in map.length)
 	{
 		if (map[i] > highest)
 			highest = map[i];
@@ -4892,9 +5141,9 @@ function NormalizeMap(map, max, min)
 			lowest = map[i];
 	}
 	
-	for (i in map)
+	for (i in map.length)
 	{
-		map[i] = (map[i]+Math.abs(lowest))/((Math.abs(lowest)+highest))*max + min;
+		map[i] = (map[i] - lowest)/(highest - lowest)*actual_max + min;
 	}
 	
 	return map;
@@ -6874,9 +7123,9 @@ let MOUNTAIN_EROSION = 0.0033;
 function generateMap(channel, arguments)
 {
 	let LAND_LEVEL = 0.37;
-	let HILL_LEVEL = 0.721;
-	let MOUNTAIN_LEVEL = 0.908;
-	let SNOW_MOUNTAIN_LEVEL = 0.931; 
+	let HILL_LEVEL = 0.631;
+	let MOUNTAIN_LEVEL = 0.838;
+	let SNOW_MOUNTAIN_LEVEL = 0.871; 
 
 	let PLAINS_LEVEL = 0.16;
 	let GRASS_LEVEL = 0.32;
@@ -8136,7 +8385,7 @@ function generateMap(channel, arguments)
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "tundra")
 				{
-					mapmap.push({ src: './terrain_tiles_tundra_flat.png', x: xpos, y: ypos});
+					mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass")
 				{
@@ -8169,7 +8418,7 @@ function generateMap(channel, arguments)
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "tundra")
 				{
-					mapmap.push({ src: './terrain_tiles_tundra_hills.png', x: xpos, y: ypos});
+					mapmap.push({ src: './terrain_tiles_grass_hills.png', x: xpos, y: ypos});
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass")
 				{
@@ -8193,7 +8442,7 @@ function generateMap(channel, arguments)
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "tundra")
 				{
-					mapmap.push({ src: './terrain_tiles_tundra_flat.png', x: xpos, y: ypos});
+					mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].terrain == "grass")
 				{
@@ -8235,7 +8484,7 @@ function generateMap(channel, arguments)
 				}
 				else if (premapmap[x+(y*MAP_WIDTH)].trees == "jungle")
 				{
-					mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
+					mapmap.push({ src: './terrain_tiles_forest.png', x: xpos, y: ypos});
 				}
 			}
 		}
@@ -8425,9 +8674,9 @@ function GenerateMiniMap(channel, arguments)
 {
 	let LAND_LEVEL = 0.37;
 	let HILL_LEVEL = 0.721;
-	let MOUNTAIN_LEVEL = 0.908;
+	let MOUNTAIN_LEVEL = 0.838;
 
-	let FOREST_LEVEL = 0.0052;
+	let FOREST_LEVEL = 0.00252;
 	
 	let MAP_HEIGHT = 50;
 	let MAP_WIDTH = 80;
@@ -8656,7 +8905,7 @@ function GenerateMiniMap(channel, arguments)
 	
 	//do mountains
 	
-	let mountain_count = Math.floor(LANDMASSES*9/13);
+	let mountain_count = Math.floor(LANDMASSES*25/19);
 	
 	for (let i = 0; i < mountain_count; i++)
 	{
@@ -9072,146 +9321,6 @@ function GenerateMiniMap(channel, arguments)
 		))
 }
 
-function outputAdventureWorldMap(channel, arguments)
-{
-	
-	let mapmap = [];
-	for (let y = 0; y < asworld_height; y++)
-	{
-		for (let x  = 0; x < asworld_width; x++)
-		{
-			let xpos = (12*x);
-			let ypos = (14*y+((x%2)*7));
-			let trees = true;
-			if (asworldmap[x+(y*asworld_width)].sealevel > 10)
-			{
-				let snowless = (Math.random() < 0.55);
-				if (asworldmap[x+(y*asworld_width)].climate == "extremely cold")
-				{
-					mapmap.push({ src: './terrain_tiles_snow_flat.png', x: xpos, y: ypos});
-					snowless = false;
-				}
-				else if (asworldmap[x+(y*asworld_width)].climate == "cold")
-				{
-					mapmap.push({ src: './terrain_tiles_tundra_flat.png', x: xpos, y: ypos});
-				}
-				else if (asworldmap[x+(y*asworld_width)].climate == "temperate")
-				{
-					mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
-				}
-				else
-				{
-					mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
-					snowless = true;
-				}
-				
-				if (snowless)
-				{
-					mapmap.push({ src: './terrain_tiles_mountain_snowless.png', x: xpos, y: ypos});
-				}
-				else
-				{
-					mapmap.push({ src: './terrain_tiles_mountain.png', x: xpos, y: ypos});
-				}
-			}
-			else if (asworldmap[x+(y*asworld_width)].sealevel <= 10 && asworldmap[x+(y*asworld_width)].sealevel > 5)
-			{
-				if (asworldmap[x+(y*asworld_width)].climate == "extremely cold")
-				{
-					mapmap.push({ src: './terrain_tiles_snow_hills.png', x: xpos, y: ypos});
-				}
-				else if (asworldmap[x+(y*asworld_width)].climate == "cold")
-				{
-					mapmap.push({ src: './terrain_tiles_tundra_hills.png', x: xpos, y: ypos});
-				}
-				else if (asworldmap[x+(y*asworld_width)].climate == "temperate")
-				{
-					mapmap.push({ src: './terrain_tiles_grass_hills.png', x: xpos, y: ypos});
-				}
-				else
-				{
-					trees = false;
-					mapmap.push({ src: './terrain_tiles_desert_hills.png', x: xpos, y: ypos});
-				}
-			}
-			else if (asworldmap[x+(y*asworld_width)].sealevel <= 5 && asworldmap[x+(y*asworld_width)].sealevel > 0)
-			{
-				if (asworldmap[x+(y*asworld_width)].climate == "extremely cold")
-				{
-					mapmap.push({ src: './terrain_tiles_snow_flat.png', x: xpos, y: ypos});
-				}
-				else if (asworldmap[x+(y*asworld_width)].climate == "cold")
-				{
-					mapmap.push({ src: './terrain_tiles_tundra_flat.png', x: xpos, y: ypos});
-				}
-				else if (asworldmap[x+(y*asworld_width)].climate == "temperate")
-				{
-					mapmap.push({ src: './terrain_tiles_grass_flat.png', x: xpos, y: ypos});
-				}
-				else
-				{
-					trees = false;
-					mapmap.push({ src: './terrain_tiles_desert_flat.png', x: xpos, y: ypos});
-				}
-					
-			}
-			else if (asworldmap[x+(y*asworld_width)].sealevel <= 0)
-			{
-				trees = false;
-				mapmap.push({ src: './terrain_tiles_water.png', x: xpos, y: ypos});
-			}
-			
-			if (trees)
-			{
-				if (asworldmap[x+(y*asworld_width)].biome == "forest")
-				{
-					mapmap.push({ src: './terrain_tiles_forest.png', x: xpos, y: ypos});
-				}
-				else if (asworldmap[x+(y*asworld_width)].biome == "jungle")
-				{
-					mapmap.push({ src: './terrain_tiles_jungle.png', x: xpos, y: ypos});
-				}
-			}
-		}
-	}
-	
-	for (let y = 0; y < asworld_height; y++)
-	{
-		for (let x  = 0; x < asworld_width; x++)
-		{
-			let xpos = (12*x);
-			let ypos = (14*y+((x%2)*7));
-			if (asworldmap[x+(y*asworld_width)].landmark == "city")
-			{
-				mapmap.push({ src: './terrain_tiles_city.png', x: xpos, y: ypos});
-			}
-			else if (asworldmap[x+(y*asworld_width)].landmark == "town")
-			{
-				mapmap.push({ src: './terrain_tiles_town.png', x: xpos, y: ypos});
-			}
-		}
-	}
-	
-	let file = 'generatedmap.png';
-	let path = './' + file;
-	
-	mergeImages(mapmap, 
-	{
-		width: (12*asworld_width + 4),
-		height: (14*asworld_height + 7),
-		Canvas: Canvas,
-		Image: Image
-	})
-	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-		if (err) throw err;
-		console.log('The file has been saved!');
-		channel.send({ files: [{ attachment: path, name: file }] });
-		}
-		))
-	
-}
-
-
 //
 //
 // goblin generator function
@@ -9415,101 +9524,6 @@ function generateTurtle(channel, arguments)
 		
 }
 
-function generateFamiliar(channel, arguments)
-{
-	let fullFamiliar = [];
-	
-	let random_int = Math.floor(Math.random()*familiar_gen.bodies.length);
-	let fam_body = familiar_gen.bodies[random_int];
-	let bodypath = fam_body.path;
-	fullFamiliar.push(bodypath);
-	
-	random_int = Math.floor(Math.random()*familiar_gen.hats.length);
-	let famhat = familiar_gen.hats[random_int].path;
-	fullFamiliar.push(famhat);
-	
-	random_int = Math.floor(Math.random()*familiar_gen.heads.length);
-	let famhead = familiar_gen.heads[random_int].path;
-	fullFamiliar.push(famhead);
-	
-	random_int = Math.floor(Math.random()*familiar_gen.eyes.length);
-	let fameye = familiar_gen.eyes[random_int].path;
-	fullFamiliar.push(fameye);
-	
-	
-	let file = 'newestfamiliar.png';
-	let path = './' + file;
-	
-	mergeImages(fullFamiliar, 
-	{
-		Canvas: Canvas,
-		Image: Image
-	})
-	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-		if (err) throw err;
-		console.log('The file has been saved!');
-		channel.send({ files: [{ attachment: path, name: file }] });
-		}
-		))
-		
-}
-
-function generateBird(channel, arguments)
-{
-	let fullBird = [];
-	
-	let random_int = Math.floor(Math.random()*bird_gen.feet.length);
-	let birdfeet = bird_gen.feet[random_int].path;
-	fullBird.push(birdfeet);
-	
-	random_int = Math.floor(Math.random()*bird_gen.frontwings.length);
-	let birdfrontwing = bird_gen.frontwings[random_int].path;
-	fullBird.push(birdfrontwing);
-	
-	random_int = Math.floor(Math.random()*bird_gen.bodies.length);
-	let birdbody = bird_gen.bodies[random_int].path;
-	fullBird.push(birdbody);
-	
-	random_int = Math.floor(Math.random()*bird_gen.backwings.length);
-	let birdbackwing = bird_gen.backwings[random_int].path;
-	fullBird.push(birdbackwing);
-	
-	random_int = Math.floor(Math.random()*bird_gen.heads.length);
-	let birdhead = bird_gen.heads[random_int].path;
-	fullBird.push(birdhead);
-	
-	random_int = Math.floor(Math.random()*bird_gen.eyes.length);
-	let birdeyes = bird_gen.eyes[random_int].path;
-	fullBird.push(birdeyes);
-	
-	if (Math.random() < 0.2)
-	{
-		random_int = Math.floor(Math.random()*bird_gen.accessories.length);
-		let birdaccessory = bird_gen.accessories[random_int].path;
-		fullBird.push(birdaccessory);
-	}
-	
-	random_int = Math.floor(Math.random()*bird_gen.beaks.length);
-	let birdbeak = bird_gen.beaks[random_int].path;
-	fullBird.push(birdbeak);
-	
-	let file = 'newestbird.png';
-	let path = './' + file;
-	
-	mergeImages(fullBird, 
-	{
-		Canvas: Canvas,
-		Image: Image
-	})
-	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-		if (err) throw err;
-		console.log('The file has been saved!');
-		channel.send({ files: [{ attachment: path, name: file }] });
-		}
-		))
-		
-}
-
 function generateSlime(channel, arguments)
 {
 	let fullslime = [];
@@ -9559,6 +9573,66 @@ function generateSlime(channel, arguments)
 	
 	
 	mergeImages(fullslime, 
+	{
+		Canvas: Canvas,
+		Image: Image
+	})
+	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+		if (err) throw err;
+		console.log('The file has been saved!');
+		channel.send({ files: [{ attachment: path, name: file }] });
+		}
+		))
+}
+
+function generateLilBeatemupGuy(channel, arguments)
+{
+	let fullguy = [];
+	
+	fullguy.push(lil_beatemup_guy_gen.shadow)
+	
+	let behind_body = RandomArrayEntry(lil_beatemup_guy_gen.accessories.back, true, "[does not nesting]")
+	fullguy.push(behind_body)
+	
+	let body = RandomArrayEntry(lil_beatemup_guy_gen.body, true, "[does not nesting]")
+	fullguy.push(body)
+	
+	let mouth = RandomArrayEntry(lil_beatemup_guy_gen.mouth, true, "[does not nesting]")
+	fullguy.push(mouth)
+	
+	let eyes = RandomArrayEntry(lil_beatemup_guy_gen.eyes, true, "[does not nesting]")
+	fullguy.push(eyes)
+	
+	let hair = RandomArrayEntry(lil_beatemup_guy_gen.hair, true, "[does not nesting]")
+	fullguy.push(hair)
+	
+	let pants = RandomArrayEntry(lil_beatemup_guy_gen.pants, true, "[does not nesting]")
+	fullguy.push(pants)
+	
+	let feet = RandomArrayEntry(lil_beatemup_guy_gen.feet, true, "[does not nesting]")
+	fullguy.push(feet)
+	
+	let shirt = RandomArrayEntry(lil_beatemup_guy_gen.shirt, true, "[does not nesting]")
+	fullguy.push(shirt)
+	
+	let gloves = RandomArrayEntry(lil_beatemup_guy_gen.accessories.gloves, true, "[does not nesting]")
+	fullguy.push(gloves)
+	
+	let right_hand = RandomArrayEntry(lil_beatemup_guy_gen.accessories.right_hand, true, "[does not nesting]")
+	fullguy.push(right_hand)
+	
+	let left_hand = RandomArrayEntry(lil_beatemup_guy_gen.accessories.left_hand, true, "[does not nesting]")
+	fullguy.push(left_hand)
+	
+	let pants_side = RandomArrayEntry(lil_beatemup_guy_gen.accessories.side, true, "[does not nesting]")
+	fullguy.push(pants_side)
+	
+	
+	let file = 'lil_beatemup_guy.png';
+	let path = './' + file;
+	
+	
+	mergeImages(fullguy, 
 	{
 		Canvas: Canvas,
 		Image: Image
@@ -9661,124 +9735,6 @@ function isRoadAdjacent(map, mapwidth, mapheight, xpos, ypos)
 // generate hex city map
 //
 //
-
-
-function drawCirclesIntoMap(map, mapwidth, mapheight, size, xpos, ypos)
-{
-	let totalloops = 1;
-	let sizecovered = 7;
-	
-	while (size > sizecovered)
-	{
-		totalloops++;
-		sizecovered += totalloops*6;
-	}
-	let opacity = 1;
-	let curdirdur = 0;
-	let dirduration = 1;
-	let loopend = 6;
-	let sizereached = 0;
-	let startpos = { x: xpos, y: ypos };
-	let currenthex = { x:0, y:0 };
-	for(let j = 0; j < totalloops && sizereached < size; j++)
-	{
-		let direction = 3;
-		if (startpos.x  % 2 == 1)
-		{
-			startpos.x = startpos.x+1;
-		}
-		else
-		{
-			startpos.x = startpos.x+1;
-			startpos.y = startpos.y-1;
-		}
-		currenthex.x = startpos.x;
-		currenthex.y = startpos.y;
-		
-		for(let i = 0; i < loopend && sizereached < size; i++)
-		{
-			if (currenthex.x > -1 && currenthex.x < mapwidth && currenthex.y > -1 && currenthex.y < mapheight)
-			{
-				
-				map.push({ src: "./hexcity_gen/WhiteGrid.png", x: currenthex.x*25, y: currenthex.y*32+(currenthex.x%2)*16, opacity: opacity});
-				opacity -= 0.01;
-			}
-			
-			if (currenthex.x%2 == 1)
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-					currenthex.y++;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-					currenthex.y++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			} 
-			else
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-					currenthex.y--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-					currenthex.y--;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			}
-			curdirdur++;
-			if (curdirdur == dirduration)
-			{
-				curdirdur = 0;
-				direction++;
-				if (direction == 6)
-					direction = 0;
-			}
-			sizereached++;
-		}
-		
-		loopend += 6;
-		dirduration++;
-	}
-	return map;
-}
-
 
 
 function fillHexMapSpace(map, mapwidth, mapheight, size, xpos, ypos)
@@ -10269,789 +10225,6 @@ function hexMapTryPlaceBuilding(map, mapwidth, mapheight, buildings, xpos, ypos)
 	return false;
 }
 
-//
-// main generate hex city function
-//
-
-MAX_VILLAGE_HEIGHT = 30;
-MAX_VILLAGE_WIDTH = 50;
-
-function generateHexCity(channel, arguments)
-{
-	let premapmap = [];
-	let imagemap = [];
-	let terrainmap = [];
-	
-	let map_height = 12;
-	let map_width = 20;
-	
-	let main_road_count = Math.floor(Math.random()*(map_height+map_width)/50)+3;
-	
-	if (arguments != null)
-	{
-		if (!isNaN(arguments[1]))
-			map_height = Math.floor(arguments[1]);
-		if (!isNaN(arguments[0]))
-			map_width = Math.floor(arguments[0]);
-		if (!isNaN(arguments[2]))
-			main_road_count = Math.floor(arguments[2]);
-	}
-	
-	if (map_width < 1)
-		return null;
-	if (map_height < 1)
-		return null;
-	if (main_road_count < 1)
-		return null;
-	
-	map_height = Math.min(map_height,MAX_VILLAGE_HEIGHT);
-	map_width = Math.min(map_width,MAX_VILLAGE_WIDTH);
-	
-	for (let y = 0; y < map_height; y++)
-	{
-		for (let x = 0; x < map_width; x++)
-		{
-			premapmap.push("");
-		}
-	}
-	
-	let town_centre = { x: Math.floor(map_width/2+Math.random()*3)-1, y: Math.floor(map_height/2+Math.random()*3)-1};
-	
-	let map_hypotenuse = Math.sqrt(map_height*map_height+map_width*map_width);
-	let offshootroadpoints = [];
-	let initialdirections = [0,3,1,4,2,5];
-	
-	let next_offshootroadrandom = Math.floor((map_width+map_height)/6);
-	let next_offshootroadconst = Math.floor((map_width+map_height)/16);
-	
-	let townsquareplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.townsquare, town_centre.x, town_centre.y);
-	if (townsquareplacement != false)
-	{
-		premapmap = fillHexMapSpace(premapmap, map_width, map_height, townsquareplacement.size, townsquareplacement.x, townsquareplacement.y);
-		premapmap[town_centre.x+town_centre.y*map_width] = townsquareplacement;
-	}
-	
-	for (let i = 0; i < main_road_count; i++)
-	{
-		let next_offshootroadpoint = Math.floor(Math.random()*next_offshootroadrandom)+next_offshootroadconst;
-		let road_length = Math.floor(Math.random()*(map_hypotenuse)/2+Math.random()*(map_hypotenuse)/2)+map_hypotenuse/3;
-		let initial_direction = initialdirections[i%initialdirections.length];
-		initial_direction += (Math.random()-0.5);
-		
-		if (initial_direction < 0)
-			initial_direction = initial_direction+6;
-		if (initial_direction > 5)
-			initial_direction = initial_direction-6;
-			
-		let current_road_position = { x: town_centre.x, y: town_centre.y };
-		let directionchange = 0;
-		
-		while (road_length > 0)
-		{
-			let direction = Math.floor(initial_direction);
-			directionchange += initial_direction - Math.floor(initial_direction);
-			
-			if (directionchange <= -1)
-			{
-				direction--;
-				directionchange++;
-			}
-			else if (directionchange >= 1)
-			{
-				direction++;
-				directionchange--;
-			}
-			
-			if (direction < 0)
-				direction = direction+6;
-			if (direction > 5)
-				direction = direction-6;
-			
-			if (current_road_position.x%2 == 1)
-			{
-				if (direction == 5)
-				{
-					current_road_position.x--;
-				}
-				else if (direction == 4)
-				{
-					current_road_position.x--;
-					current_road_position.y++;
-				}
-				else if (direction == 3)
-				{
-					current_road_position.y++;
-				}
-				else if (direction == 2)
-				{
-					current_road_position.x++;
-					current_road_position.y++;
-				}
-				else if (direction == 1)
-				{
-					current_road_position.x++;
-				}
-				else if (direction == 0)
-				{
-					current_road_position.y--;
-				}
-			} 
-			else
-			{
-				if (direction == 5)
-				{
-					current_road_position.x--;
-					current_road_position.y--;
-				}
-				else if (direction == 4)
-				{
-					current_road_position.x--;
-				}
-				else if (direction == 3)
-				{
-					current_road_position.y++;
-				}
-				else if (direction == 2)
-				{
-					current_road_position.x++;
-				}
-				else if (direction == 1)
-				{
-					current_road_position.x++;
-					current_road_position.y--;
-				}
-				else if (direction == 0)
-				{
-					current_road_position.y--;
-				}
-			}
-			
-			if (current_road_position.y < map_height && current_road_position.y > -1 && current_road_position.x < map_width && current_road_position.x > -1)
-			{
-				if (premapmap[current_road_position.x + (current_road_position.y*map_width)] == "")
-				{
-					premapmap[current_road_position.x + (current_road_position.y*map_width)] = "r";
-				}
-			}
-			else
-			{
-				road_length = 0;
-			}
-			next_offshootroadpoint--;
-			if (next_offshootroadpoint == 0)
-			{
-				let offshootdirection = initial_direction;
-				if (Math.random() < 0.5)
-					offshootdirection += 1;
-				else
-					offshootdirection -= 1;
-				
-				if (offshootdirection < 0)
-					offshootdirection = offshootdirection+6;
-				if (offshootdirection > 5)
-					offshootdirection = offshootdirection-6;
-				
-				offshootroadpoints.push( { x: current_road_position.x, y: current_road_position.y, initialdirection: offshootdirection, nested: 0 } );
-				next_offshootroadpoint = Math.floor(Math.random()*next_offshootroadrandom)+next_offshootroadconst;
-			}
-			road_length--;
-		}
-	}
-	
-	let max_nesting = 4;
-	
-	next_offshootroadrandom = Math.floor((map_width+map_height)/3);
-	next_offshootroadconst = Math.floor((map_width+map_height)/8);
-	
-	for(let i = 0; i < offshootroadpoints.length; i++)
-	{
-		let next_offshootroadpoint = Math.floor(Math.random()*next_offshootroadrandom)+next_offshootroadconst;
-		let road_length = Math.floor(Math.random()*27)+4;
-		let initial_direction = offshootroadpoints[i].initialdirection;
-		let current_road_position = { x: offshootroadpoints[i].x, y: offshootroadpoints[i].y };
-		let directionchange = 0;
-		let nesting = offshootroadpoints[i].nested;
-		while (road_length > 0)
-		{
-			let direction = Math.floor(initial_direction);
-			directionchange += initial_direction - Math.floor(initial_direction);
-			
-			if (directionchange <= -1)
-			{
-				direction--;
-				directionchange++;
-			}
-			else if (directionchange >= 1)
-			{
-				direction++;
-				directionchange--;
-			}
-			
-			if (direction < 0)
-				direction = direction+6;
-			if (direction > 5)
-				direction = direction-6;
-			
-			if (current_road_position.x%2 == 1)
-			{
-				if (direction == 5)
-				{
-					current_road_position.x--;
-				}
-				else if (direction == 4)
-				{
-					current_road_position.x--;
-					current_road_position.y++;
-				}
-				else if (direction == 3)
-				{
-					current_road_position.y++;
-				}
-				else if (direction == 2)
-				{
-					current_road_position.x++;
-					current_road_position.y++;
-				}
-				else if (direction == 1)
-				{
-					current_road_position.x++;
-				}
-				else if (direction == 0)
-				{
-					current_road_position.y--;
-				}
-			} 
-			else
-			{
-				if (direction == 5)
-				{
-					current_road_position.x--;
-					current_road_position.y--;
-				}
-				else if (direction == 4)
-				{
-					current_road_position.x--;
-				}
-				else if (direction == 3)
-				{
-					current_road_position.y++;
-				}
-				else if (direction == 2)
-				{
-					current_road_position.x++;
-				}
-				else if (direction == 1)
-				{
-					current_road_position.x++;
-					current_road_position.y--;
-				}
-				else if (direction == 0)
-				{
-					current_road_position.y--;
-				}
-			}
-			
-			
-			
-			if (current_road_position.y < map_height && current_road_position.y > -1 && current_road_position.x < map_width && current_road_position.x > -1)
-			{
-				if (premapmap[current_road_position.x + (current_road_position.y*map_width)] == "")
-				{
-					premapmap[current_road_position.x + (current_road_position.y*map_width)] = "r";
-				}
-			}
-			else
-			{
-				road_length = 0;
-			}
-			next_offshootroadpoint--;
-			if (next_offshootroadpoint == 0 && nesting < max_nesting)
-			{
-				let offshootdirection = initial_direction;
-				if (Math.random() < 0.5)
-					offshootdirection += 1;
-				else
-					offshootdirection -= 1;
-				
-				if (offshootdirection < 0)
-					offshootdirection = offshootdirection+6;
-				if (offshootdirection > 5)
-					offshootdirection = offshootdirection-6;
-				
-				offshootroadpoints.push( { x: current_road_position.x, y: current_road_position.y, initialdirection: offshootdirection, nested:nesting+1 } );
-				next_offshootroadpoint = Math.floor(Math.random()*next_offshootroadrandom)+next_offshootroadconst;
-			}
-			road_length--;
-		}
-	}
-	
-	let churchcount = 0;
-	let inncount = 0;
-	let taverncount = 0;
-	let wellcount = 0;
-	let shrinecount = 0;
-	let barrackscount = 0;
-	
-	// populate with buildings
-	
-	let totalloops = 1;
-	let sizecovered = 7;
-	let mapsize = map_width*map_height;
-	
-	while (mapsize > sizecovered)
-	{
-		totalloops++;
-		sizecovered += totalloops*6;
-	}
-	
-	let curdirdur = 0;
-	let dirduration = 1;
-	let loopend = 6;
-	let sizereached = 1;
-	let startpos = { x: town_centre.x, y: town_centre.y };
-	let currenthex = { x:0, y:0 };
-	for(let j = 0; j < totalloops && sizereached < mapsize; j++)
-	{
-		let direction = 0;
-		if (startpos.x  % 2 == 0)
-		{
-			startpos.x = startpos.x-1;
-			startpos.y = startpos.y+1;
-		}
-		else
-		{
-			startpos.x = startpos.x-1;
-		}
-		currenthex.x = startpos.x;
-		currenthex.y = startpos.y;
-		
-		for(let i = 0; i < loopend && sizereached < mapsize; i++)
-		{
-			if (currenthex.x > -1 && currenthex.x < map_width && currenthex.y > -1 && currenthex.y < map_height && hexMapIsRoadAdjacent(premapmap, map_width, map_height, currenthex.x, currenthex.y) > 0)
-			{
-				let buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.houses, currenthex.x, currenthex.y);
-					let baserand = Math.random();
-					
-					if (baserand < 0.16 && churchcount < Math.floor((map_height+map_width)/45)+1)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.churches, currenthex.x, currenthex.y);
-						churchcount++;
-					}
-					else if (baserand < 0.24 && inncount < Math.floor((map_height+map_width)/40)+1)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.inns, currenthex.x, currenthex.y);
-						inncount++;
-					}
-					else if (baserand < 0.29 && taverncount < Math.floor((map_height+map_width)/35)+2)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.taverns, currenthex.x, currenthex.y);
-						taverncount++;
-					}
-					else if (baserand < 0.42 && shrinecount < Math.floor((map_height+map_width)/25)+1)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.shrines, currenthex.x, currenthex.y);
-						shrinecount++;
-					}
-					else if (baserand < 0.42 && barrackscount < Math.floor((map_height+map_width)/75)+1)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.barracks, currenthex.x, currenthex.y);
-						barrackscount++;
-					}
-					
-					if (buildingplacement != false)
-					{
-						premapmap = fillHexMapSpace(premapmap, map_width, map_height, buildingplacement.size, buildingplacement.x, buildingplacement.y);
-						premapmap[buildingplacement.x+buildingplacement.y*map_width] = buildingplacement;
-					}
-			}
-			
-			if (currenthex.x%2 == 1)
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-					currenthex.y++;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-					currenthex.y++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			} 
-			else
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-					currenthex.y--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-					currenthex.y--;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			}
-			curdirdur++;
-			if (curdirdur == dirduration)
-			{
-				curdirdur = 0;
-				direction++;
-			}
-			sizereached++;
-		}
-		
-		loopend += 6;
-		dirduration++;
-	}
-	
-	curdirdur = 0;
-	dirduration = 1;
-	loopend = 6;
-	sizereached = 1;
-	startpos = { x: town_centre.x, y: town_centre.y };
-	currenthex = { x:0, y:0 };
-	for(let j = 0; j < totalloops && sizereached < mapsize; j++)
-	{
-		let direction = 0;
-		if (startpos.x  % 2 == 0)
-		{
-			startpos.x = startpos.x-1;
-			startpos.y = startpos.y+1;
-		}
-		else
-		{
-			startpos.x = startpos.x-1;
-		}
-		currenthex.x = startpos.x;
-		currenthex.y = startpos.y;
-		
-		for(let i = 0; i < loopend && sizereached < mapsize; i++)
-		{
-			if (currenthex.x > -1 && currenthex.x < map_width && currenthex.y > -1 && currenthex.y < map_height && premapmap[currenthex.x+currenthex.y*map_width] == "")
-			{
-				if (hexMapIsBuildingAdjacent(premapmap, map_width, map_height, currenthex.x, currenthex.y))
-				{
-					let randomcrop = Math.floor(Math.random()*hexcity_gen.terrain.crops.length);
-					terrainmap.push({ src: hexcity_gen.terrain.crops[randomcrop], x: currenthex.x*25, y: currenthex.y*32+(currenthex.x%2)*16});
-					premapmap[currenthex.x+currenthex.y*map_width] = "c";
-				}
-			}
-			
-			if (currenthex.x%2 == 1)
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-					currenthex.y++;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-					currenthex.y++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			} 
-			else
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-					currenthex.y--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-					currenthex.y--;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			}
-			curdirdur++;
-			if (curdirdur == dirduration)
-			{
-				curdirdur = 0;
-				direction++;
-			}
-			sizereached++;
-		}
-		
-		loopend += 6;
-		dirduration++;
-	}
-	
-	curdirdur = 0;
-	dirduration = 1;
-	loopend = 6;
-	sizereached = 1;
-	startpos = { x: town_centre.x, y: town_centre.y };
-	currenthex = { x:0, y:0 };
-	for(let j = 0; j < totalloops && sizereached < mapsize; j++)
-	{
-		let direction = 0;
-		if (startpos.x  % 2 == 0)
-		{
-			startpos.x = startpos.x-1;
-			startpos.y = startpos.y+1;
-		}
-		else
-		{
-			startpos.x = startpos.x-1;
-		}
-		currenthex.x = startpos.x;
-		currenthex.y = startpos.y;
-		
-		for(let i = 0; i < loopend && sizereached < mapsize; i++)
-		{
-			if (currenthex.x > -1 && currenthex.x < map_width && currenthex.y > -1 && currenthex.y < map_height && premapmap[currenthex.x+currenthex.y*map_width] == "")
-			{
-				if (Math.random() < 0.003)
-				{
-					let buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.houses, currenthex.x, currenthex.y);
-					let baserand = Math.random();
-					
-					if (baserand < 0.16 && churchcount < Math.floor((map_height+map_width)/45)+1)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.churches, currenthex.x, currenthex.y);
-						churchcount++;
-					}
-					else if (baserand < 0.24 && inncount < Math.floor((map_height+map_width)/40)+1)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.inns, currenthex.x, currenthex.y);
-						inncount++;
-					}
-					else if (baserand < 0.29 && taverncount < Math.floor((map_height+map_width)/35)+2)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.taverns, currenthex.x, currenthex.y);
-						taverncount++;
-					}
-					else if (baserand < 0.42 && shrinecount < Math.floor((map_height+map_width)/25)+1)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.shrines, currenthex.x, currenthex.y);
-						shrinecount++;
-					}
-					else if (baserand < 0.42 && barrackscount < Math.floor((map_height+map_width)/75)+1)
-					{
-						buildingplacement = hexMapTryPlaceBuilding(premapmap, map_width, map_height, hexcity_gen.buildings.barracks, currenthex.x, currenthex.y);
-						barrackscount++;
-					}
-					
-					if (buildingplacement != false)
-					{
-						premapmap = fillHexMapSpace(premapmap, map_width, map_height, buildingplacement.size, buildingplacement.x, buildingplacement.y);
-						premapmap[buildingplacement.x+buildingplacement.y*map_width] = buildingplacement;
-					}
-				}
-				
-				if (Math.random() < 0.11)
-				{
-					let randomtree = Math.floor(Math.random()*hexcity_gen.features.trees.length);
-					premapmap[currenthex.x+currenthex.y*map_width] = { path: hexcity_gen.features.trees[randomtree], size: 1, x: currenthex.x, y: currenthex.y };
-				}
-			}
-			
-			if (currenthex.x%2 == 1)
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-					currenthex.y++;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-					currenthex.y++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			} 
-			else
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-					currenthex.y--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-					currenthex.y--;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			}
-			curdirdur++;
-			if (curdirdur == dirduration)
-			{
-				curdirdur = 0;
-				direction++;
-			}
-			sizereached++;
-		}
-		
-		loopend += 6;
-		dirduration++;
-	}
-	
-	for (let y = 0; y < map_height; y++)
-	{
-		for (let x = 0; x < map_width; x++)
-		{
-			let xpos = x*25;
-			let ypos = y*32 + (x%2)*16;
-			if (premapmap[x+y*map_width] != "c")
-				terrainmap.push({ src: hexcity_gen.terrain.grass[0], x: xpos, y: ypos});
-		}
-	}
-	
-	imagemap = terrainmap.concat(imagemap);
-	
-	for (let y = 0; y < map_height; y++)
-	{
-		for (let x = 0; x < map_width; x++)
-		{
-			let xpos = x*25;
-			let ypos = y*32+(x%2)*16;
-			if (premapmap[x+y*map_width] == "r")
-			{
-				let roadgraphic = hexMapIsRoadAdjacent(premapmap, map_width, map_height, x, y);
-				if (roadgraphic > 0)
-				{
-					imagemap.push({ src: hexcity_gen.roads[roadgraphic-1], x: xpos, y: ypos})
-				}
-				
-			}
-			else if (premapmap[x+y*map_width] != "" && premapmap[x+y*map_width] != "b" && premapmap[x+y*map_width] != "c")
-			{
-				if (premapmap[x+y*map_width].size == 1)
-					imagemap.push({ src: premapmap[x+y*map_width].path, x: xpos, y: ypos});
-				else
-				{
-					let initialoffset = 0;
-					let initialoffsetsize = 1;
-					while (premapmap[x+y*map_width].size >= initialoffsetsize)
-					{
-						initialoffset++;
-						initialoffsetsize += 6*initialoffset;
-					}
-					let xoffset = Math.floor(initialoffset/2)*25;
-					let yoffset = Math.floor(initialoffset/2)*32+(initialoffset%2)*16;
-					imagemap.push({ src: premapmap[x+y*map_width].path, x: xpos-xoffset, y: ypos-yoffset });
-				}
-			}
-		}
-	}
-	
-	//imagemap = drawCirclesIntoMap(imagemap, map_width, map_height, 3, town_centre.x, town_centre.y)
-	let file = 'generatedhabitat.png';
-	let path = './' + file;
-	
-	
-	mergeImages(imagemap, 
-	{
-		width: (25*map_width + 7),
-		height: (32*map_height + 16),
-		Canvas: Canvas,
-		Image: Image
-	})
-	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-		if (err) throw err;
-		console.log('The file has been saved!');
-		channel.send({ files: [{ attachment: path, name: file }] });
-		}
-		))
-	
-}
-
-
 
 //
 //
@@ -11061,60 +10234,110 @@ function generateHexCity(channel, arguments)
 
 function noisemaptopng(channel, arguments)
 {
-	let map_width = 100;
-	let map_height = 100;
-	let noise_variance = 0.25;
-	let edge_value = 0.5;
-	let smoothing_val = 0.24;
-	let smoothing_loops = 1;
+	let start = new Date().getTime(); 
 	
-	if (arguments != null)
+	let map_width = 2048;
+	let map_height = 2048;
+	let noise_map_resolution = 128
+	let edge_value = { x: 0, y: 0 };
+	let smooth = 0.0
+	let contrast = 0.0
+	
+	if (arguments != null && arguments.length > 0)
 	{
-		if (!isNaN(arguments[0]))
-			map_width = parseInt(arguments[0]);
-		if (!isNaN(arguments[1]))
-			map_height = parseInt(arguments[1]);
-		if (!isNaN(arguments[2]))
-			noise_variance = parseFloat(arguments[2]);
-		if (!isNaN(arguments[3]))
-			edge_value = parseFloat(arguments[3]);
-		if (!isNaN(arguments[4]))
-			smoothing_val = parseFloat(arguments[4]);
-		if (!isNaN(arguments[5]))
-			smoothing_loops = parseInt(arguments[5]);
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			map_width = parseInt(arguments[argumentpos+1]);
+		if (map_width > 2048)
+			map_width = 2048;
+		if (map_width < 1)
+			map_width = 1;
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			map_height = parseInt(arguments[argumentpos+1]);
+		if (map_height > 2048)
+			map_height = 2048;
+		if (map_height < 1)
+			map_height = 1;
+		argumentpos = arguments.indexOf("-edge")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			edge_value.x = parseFloat(arguments[argumentpos+1]);
+		if (edge_value.x > 1)
+			edge_value.x = 1;
+		if (edge_value.x < 0)
+			edge_value.x = 0;
+		if (argumentpos > -1 && argumentpos+2 < arguments.length && !isNaN(arguments[argumentpos+2]) && arguments[argumentpos+2] > 0)
+			edge_value.y = parseFloat(arguments[argumentpos+2]);
+		if (edge_value.y > 1)
+			edge_value.y = 1;
+		if (edge_value.y < 0)
+			edge_value.y = 0;
+		// argumentpos = arguments.indexOf("-smooth")
+		// if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			// smooth = parseFloat(arguments[argumentpos+1]);
+		// if (smooth > 1)
+			// smooth = 1;
+		// if (smooth < 0)
+			// smooth = 0;
+		// argumentpos = arguments.indexOf("-contrast")
+		// if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
+			// contrast = parseFloat(arguments[argumentpos+1]);
+		// if (contrast > 1)
+			// contrast = 1;
+		// if (contrast < 0)
+			// contrast = 0;
 	}
 	
-	let imagemap = [];
-	let noisemap = noiseMap2D(map_height, map_width, 0.23, 045);
-	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.8);
-	noisemap = smoothenMap(noisemap, map_height, map_width, 0.175);
-	//noisemap = increaseContrast(noisemap, map_height, map_width, 0.25);
+	let noisemap = objectShapeMap(-1, 1);
+	//let noisemap = objectNoiseMap2D(map_width/noise_map_resolution, map_height/noise_map_resolution, edge_value);
+	noisemap.init()
+	// if (smooth > 0.0)
+		// noisemap.smoothen(smooth)
+	// if (contrast != 0.0)
+		// noisemap.contrast(contrast)
 	
-	for (let y = 0; y < map_height; y++)
+	// console.log(noisemap.map)
+	var tempcanvas = new Canvas();
+	tempcanvas.width = map_width;
+	tempcanvas.height = map_height;
+	if (tempcanvas.getContext)
 	{
-		for (let x = 0; x < map_width; x++)
-		{
-			imagemap.push({ src: "./blackdot.png", x: x, y: y });
-			imagemap.push({ src: "./whitedot.png", x: x, y: y, opacity: noisemap[x+y*map_width]});
+		var ctx = tempcanvas.getContext('2d');
+
+		var imgdata = ctx.getImageData(0,0, map_width, map_height);
+		var imgdatalen = imgdata.data.length;
+		// console.log(imgdatalen/4)
+		for(let i=0;i<imgdatalen/4;i++)
+		{  //iterate over every pixel in the canvas
+			let x = (i % map_width)
+			let y = Math.floor(i / map_width) 
+			let p = {x: x / map_width * noisemap.width, y: y / map_height * noisemap.height }
+			
+			let noise_sample = (noisemap.sample(p) + 1) / 2
+			
+			let _red = Math.round(255 * noise_sample)
+			let _green = Math.round(255 * noise_sample)
+			let _blue = Math.round(255 * noise_sample)
+			
+			imgdata.data[4*i] = _red;    // RED (0-255)
+			imgdata.data[4*i+1] = _green;    // GREEN (0-255)
+			imgdata.data[4*i+2] = _blue;    // BLUE (0-255)
+			imgdata.data[4*i+3] = 255;  // APLHA (0-255)
 		}
+		ctx.putImageData(imgdata,0,0);
+		
+		let file = 'voronoimap.png';
+		let path = './' + file;
+		
+		let b64 = tempcanvas.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			let end = new Date().getTime(); 
+			console.log('The drawn landmass has been saved! Took ' + (end-start) + ' milliseconds');
+			channel.send({ files: [{ attachment: path, name: file }] });
+		})
 	}
-	
-	let file = 'generatedmap.png';
-	let path = './' + file;
-	
-	mergeImages(imagemap, 
-	{
-		width: (map_width),
-		height: (map_height),
-		Canvas: Canvas,
-		Image: Image
-	})
-	.then(b64 => fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-		if (err) throw err;
-		console.log('The file has been saved!');
-		channel.send({ files: [{ attachment: path, name: file }] });
-		}
-		))
 }
 
 
@@ -11432,4637 +10655,6 @@ function encodeToAlienLanguage(channel, arguments)
 		))
 }
 
-//
-//
-// adventuring party simulator
-//
-//
-//
-//
-
-var adventuringparties = [];
-var asworld_width = 128;
-var asworld_height = 72;
-var asworldmap = [];
-
-var adventure_sim_max_lines = 24;
-
-function outputAdventureSimLog(partyid)
-{
-	let party = getPartyById(partyid)
-	if (party == null)
-		return null;
-	
-	let output = "";
-	for (let i = 0; i < party.log.length && output.length < 1800; i++)
-	{
-		output += party.log[i] + "\n";
-	}
-	if (output.length < 2000) //just to double check
-	{
-		console.log("partylog length:" + output.length);
-		return output.trim();
-	}
-}
-
-function addToAdventureSimLog(party, logtext)
-{
-	if (party.log.length == 0 || logtext != party.log[party.log.length-1])
-	{
-		party.log.push(logtext);
-		return true;
-	}
-	return false;
-	//while(party.log.length >= adventure_sim_max_lines)
-	//	party.log.shift();
-}
-
-//
-// sim world generation
-//
-
-function initializeSimWorldMap()
-{
-	for (let y = 0; y < asworld_height; y++)
-	{
-		for (let x = 0; x < asworld_width; x++)
-		{
-			asworldmap.push({ biome: "", sealevel: 1, climate: "", landmark: "none"});
-		}
-	}
-}
-
-function generateSimWorldMap()
-{
-	let LAND_LEVEL = 0.37;
-	let HILL_LEVEL = 0.721;
-	let MOUNTAIN_LEVEL = 0.908;
-	let SNOW_MOUNTAIN_LEVEL = 0.931; 
-
-	let PLAINS_LEVEL = 0.16;
-	let GRASS_LEVEL = 0.32;
-	let TUNDRA_LEVEL = 0.794;
-	let SNOW_LEVEL = 0.825;
-
-	let FOREST_LEVEL = 0.0052;
-	let JUNGLE_LEVEL = 0.0031;
-
-	let ColdBalance = 25;
-	let HotBalance = 25;
-	
-	let Map_Size = asworld_height+asworld_width;
-	
-	let city_density = 0.25;
-	
-	initializeSimWorldMap();
-	let noisemapsealevel = noiseMap2D(asworld_height,asworld_width, 0.08);
-	noisemapsealevel = increaseContrast(noisemapsealevel, asworld_height, asworld_width, 0.4);
-	noisemapsealevel = smoothenMap(noisemapsealevel, asworld_height, asworld_width, 0.175);
-	noisemapsealevel = increaseContrast(noisemapsealevel, asworld_height, asworld_width, 0.25)
-	let noisemapbiome = noiseMap2D(asworld_height,asworld_width, 0.05);
-	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.4);
-	noisemapbiome = smoothenMap(noisemapbiome, asworld_height, asworld_width, 0.175);
-	noisemapbiome = increaseContrast(noisemapbiome, asworld_height, asworld_width, 0.25);
-	let noisemapclimate = noiseMap2D(asworld_height,asworld_width, 0.07);
-	noisemapclimate = increaseContrast(noisemapclimate, asworld_height, asworld_width, 0.4);
-	noisemapclimate = smoothenMap(noisemapclimate, asworld_height, asworld_width, 0.175);
-	noisemapclimate = increaseContrast(noisemapclimate, asworld_height, asworld_width, 0.25);
-	let noisemaplandmarks = noiseMap2D(asworld_height,asworld_width, 0.04);
-	noisemaplandmarks = increaseContrast(noisemaplandmarks, asworld_height, asworld_width, 0.6);
-	noisemaplandmarks = smoothenMap(noisemaplandmarks, asworld_height, asworld_width, 0.175);
-	noisemaplandmarks = increaseContrast(noisemaplandmarks, asworld_height, asworld_width, 0.333);
-	
-	//do landmasses
-	let landmasses = 27;
-	
-	let landmap = [];
-	//initialize landmap
-	for (let y = 0; y < asworld_height; y++)
-	{
-		for (let x  = 0; x < asworld_width; x++)
-		{
-			landmap.push(0);
-		}
-	}
-	
-	// landmass map
-	
-	let landmassmap = [];
-	let landmassstarts = [];
-	
-	for (let x = 0; x < asworld_width; x++)
-	{
-		for (let y = 0; y < asworld_height; y++)
-		{
-			landmassmap.push(-1);
-		}
-	}
-	
-	let premapmap = [];
-	//initialize the premapmap
-	for (let y = 0; y < asworld_height; y++)
-	{
-		for (let x  = 0; x < asworld_width; x++)
-		{
-			premapmap.push({ sealevel: "water", terrain: "grass", trees: "none"});
-		}
-	}
-	
-	//do Landmasses
-	
-	for (let i = 0; i < landmasses; i++)
-	{
-		let tempcontigmap = [];
-		//initialize the tempcontigmap
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				tempcontigmap.push(false);
-			}
-		}
-		
-		let temppremap = [];
-		//initialize the temppremap
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				temppremap.push({ sealevel: "water", terrain: "grass" });
-			}
-		}
-		
-		let randomsize = Math.floor(Math.random()*(asworld_height*asworld_width/6)+Map_Size);
-		let randomx = Math.floor(Math.random()*(asworld_width*3/4)+(asworld_width/8));
-		let randomy = Math.floor(Math.random()*(asworld_height*3/4)+(asworld_height/8));
-		
-		temppremap[randomx+(randomy*asworld_width)].sealevel = "land";
-		tempcontigmap[randomx+(randomy*asworld_width)] = true;
-		
-		let totalloops = 1;
-		let sizecovered = 7;
-
-		while (randomsize > sizecovered)
-		{
-			totalloops++;
-			sizecovered += totalloops*6;
-		}
-		
-		let startpos = { x: randomx, y: randomy };
-		landmassstarts.push({ x: randomx, y: randomy });
-		let currenthex = { x:0, y:0 };
-		let curdirdur = 0;
-		let dirduration = 1;
-		let loopend = 6;
-		let sizereached = 1;
-		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
-		{
-			let direction = 3;
-			if (startpos.x  % 2 == 1)
-			{
-				startpos.x = startpos.x+1;
-			}
-			else
-			{
-				startpos.x = startpos.x+1;
-				startpos.y = startpos.y-1;
-			}
-			currenthex.x = startpos.x;
-			currenthex.y = startpos.y;
-			
-			for(let k = 0; k < loopend && sizereached < randomsize; k++)
-			{
-				if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1)
-				{
-					let position = currenthex.x+(currenthex.y*asworld_width);
-					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-					let probability = LAND_EROSION * Math.log2(Map_Size) * Math.sqrt(randomsize);
-					
-					if (Math.random()*distance < probability)
-					{
-						if (AdjacentMapHexContiguous(tempcontigmap, currenthex.x, currenthex.y, asworld_width, asworld_height, true))
-						{
-							tempcontigmap[position] = true;
-							temppremap[position].sealevel = "land";
-						}
-					}
-				}
-				
-				MoveHex(currenthex, direction);
-				curdirdur++;
-				if (curdirdur == dirduration)
-				{
-					curdirdur = 0;
-					direction++;
-					if (direction == 6)
-						direction = 0;
-				}
-				sizereached++;
-			}
-			
-			loopend += 6;
-			dirduration++;
-		}
-		
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				if (temppremap[x+(y*asworld_width)].sealevel == "land")
-				{
-					landmassmap[x+(y*asworld_width)] = i+1;
-					landmap[x+(y*asworld_width)] += LAND_LEVEL;
-				}
-			}
-		}
-	}
-	
-	for (let y = 0; y < asworld_width; y++)
-	{
-		for (let x  = 0; x < asworld_width; x++)
-		{
-			if (landmap[x+(y*asworld_width)] == 0)
-				noisemapsealevel[x+(y*asworld_width)] = 0;
-			else if (noisemapsealevel[x+(y*asworld_width)] < LAND_LEVEL)
-				noisemapsealevel[x+(y*asworld_width)] = LAND_LEVEL;
-		}
-	}
-	
-	//do mountains
-	
-	let mountain_count = Math.floor(landmasses*landmasses/13);
-	
-	for (let i = 0; i < mountain_count; i++)
-	{
-		let tempcontigmap = [];
-		//initialize the tempcontigmap
-		for (let y = 0; y < asworld_width; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				tempcontigmap.push(false);
-			}
-		}
-		
-		let temppremap = [];
-		//initialize the temppremap
-		for (let y = 0; y < asworld_width; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				temppremap.push(0);
-			}
-		}
-		
-		let randomsize = Math.floor(Math.random()*(asworld_width*asworld_width/2)+(asworld_width*asworld_width/4));
-		let randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
-		let randomy = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
-		
-		while (noisemapsealevel[randomx+(randomy*asworld_width)] < LAND_LEVEL)
-		{
-			randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
-			randomy = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
-		}
-		
-		let randomheight = (Math.random()*0.345)+0.486;
-		let lastdistance = 0;
-		let lastheight = randomheight;
-		
-		temppremap[randomx+(randomy*asworld_width)] = randomheight;
-		tempcontigmap[randomx+(randomy*asworld_width)] = true;
-		
-		let totalloops = 1;
-		let sizecovered = 7;
-
-		while (randomsize > sizecovered)
-		{
-			totalloops++;
-			sizecovered += totalloops*6;
-		}
-		
-		let startpos = { x: randomx, y: randomy };
-		let currenthex = { x:0, y:0 };
-		let curdirdur = 0;
-		let dirduration = 1;
-		let loopend = 6;
-		let sizereached = 1;
-		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
-		{
-			let direction = 3;
-			if (startpos.x  % 2 == 1)
-			{
-				startpos.x = startpos.x+1;
-			}
-			else
-			{
-				startpos.x = startpos.x+1;
-				startpos.y = startpos.y-1;
-			}
-			currenthex.x = startpos.x;
-			currenthex.y = startpos.y;
-			
-			for(let k = 0; k < loopend && sizereached < randomsize; k++)
-			{
-				if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1)
-				{
-					let position = currenthex.x+(currenthex.y*asworld_width);
-					let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-					let probability = MOUNTAIN_EROSION * Math.log2(Map_Size) * Math.sqrt(randomsize);
-					let ddh = 0.028;
-					let dh = Math.random()*(0.0901-ddh);
-					let nextheight = 0;
-					
-					if (Math.random()*distance < probability)
-					{
-						dh = Math.random()*(0.0901-ddh);
-						if (Math.random() < 0.333)
-							dh -= Math.random()*(0.0199+ddh);
-						
-						nextheight = Math.min(Math.max(lastheight-dh,0),1);
-					}
-					
-					ddh -= 0.003;
-					
-					if (!tempcontigmap[position] && nextheight >= LAND_LEVEL)
-					{
-						if (AdjacentMapHexContiguous(tempcontigmap, currenthex.x, currenthex.y, asworld_width, asworld_height, true))
-						{
-							tempcontigmap[position] = true;
-							temppremap[position] = nextheight;
-						}
-						lastheight = nextheight;
-					}
-					
-				}
-				
-				MoveHex(currenthex, direction);
-				curdirdur++;
-				if (curdirdur == dirduration)
-				{
-					curdirdur = 0;
-					direction++;
-					if (direction == 6)
-						direction = 0;
-				}
-				sizereached++;
-			}
-			
-			loopend += 6;
-			dirduration++;
-			lastdistance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-		}
-		
-		//temppremap = NormalizeMap(temppremap, 1, 0);
-		
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-					noisemapsealevel[x+(y*asworld_width)] += temppremap[x+(y*asworld_width)];
-			}
-		}
-		
-	}
-	
-	for (let x = 0; x < asworld_width; x++)
-	{
-		for (let y = 0; y < asworld_height; y++)
-		{
-			if (noisemapsealevel[x+(y*asworld_width)] >= LAND_LEVEL)
-			{
-				premapmap[x+(y*asworld_width)].sealevel = "land";
-			}
-		}
-	}
-	
-	for (let i = 0; i < SMOOTHING_ITERATIONS; i++)
-	{
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				let waterCount = 6;
-				if (x+((y+1)*asworld_width) < premapmap.length && premapmap[x+((y+1)*asworld_width)].sealevel == "land")
-					waterCount--;
-				if (x+((y-1)*asworld_width) > -1 && premapmap[x+((y-1)*asworld_width)].sealevel == "land")
-					waterCount--
-				if (x%2 == 0)
-				{
-					if ((x+1)+(y*asworld_width) < premapmap.length && premapmap[(x+1)+(y*asworld_width)].sealevel == "land")
-						waterCount--;
-					if ((x+1)+((y-1)*asworld_width) > -1 && (x+1)+((y-1)*asworld_width) < premapmap.length && premapmap[(x+1)+((y-1)*asworld_width)].sealevel == "land")
-						waterCount--;
-					if ((x-1)+(y*asworld_width) > -1 && premapmap[(x-1)+(y*asworld_width)].sealevel == "land")
-						waterCount--;
-					if ((x-1)+((y-1)*asworld_width) > -1 && premapmap[(x-1)+((y-1)*asworld_width)].sealevel == "land")
-						waterCount--;
-				}
-				else
-				{
-					if ((x+1)+((y+1)*asworld_width) < premapmap.length && premapmap[(x+1)+((y+1)*asworld_width)].sealevel == "land")
-						waterCount--;
-					if ((x+1)+(y*asworld_width) < premapmap.length && premapmap[(x+1)+(y*asworld_width)].sealevel == "land")
-						waterCount--;
-					if ((x-1)+((y+1)*asworld_width) > -1 && (x-1)+((y+1)*asworld_width) < premapmap.length && premapmap[(x-1)+((y+1)*asworld_width)].sealevel == "land")
-						waterCount--;
-					if ((x-1)+(y*asworld_width) > -1 && premapmap[(x-1)+(y*asworld_width)].sealevel == "land")
-						waterCount--;
-				}
-				
-				if (waterCount == 6)
-				{
-					premapmap[x+(y*asworld_width)].sealevel = "water";
-				}
-				else if (waterCount < 3 && premapmap[x+(y*asworld_width)].sealevel == "water")
-				{
-					premapmap[x+(y*asworld_width)].sealevel = "land";
-				}
-			}
-		}
-	}
-	
-	for (let y = 0; y < asworld_height; y++)
-	{
-		for (let x  = 0; x < asworld_width; x++)
-		{
-			if (premapmap[x+(y*asworld_width)].sealevel == "land")
-			{
-				if (noisemapsealevel[x+(y*asworld_width)] > MOUNTAIN_LEVEL)
-				{
-					if (noisemapbiome[x+(y*asworld_width)] > SNOW_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].sealevel = "mountain";
-						premapmap[x+(y*asworld_width)].terrain = "snow";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > TUNDRA_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].sealevel = "mountain";
-						premapmap[x+(y*asworld_width)].terrain = "tundra";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > GRASS_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].sealevel = "mountain";
-						premapmap[x+(y*asworld_width)].terrain = "grass";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > PLAINS_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].sealevel = "mountain";
-						premapmap[x+(y*asworld_width)].terrain = "tundra";
-					}
-					else
-					{
-						premapmap[x+(y*asworld_width)].sealevel = "mountain";
-						premapmap[x+(y*asworld_width)].terrain = "desert";
-					}
-				}
-				else if (noisemapsealevel[x+(y*asworld_width)] > HILL_LEVEL)
-				{
-					if (noisemapbiome[x+(y*asworld_width)] > SNOW_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].sealevel = "hill";
-						premapmap[x+(y*asworld_width)].terrain = "snow";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > TUNDRA_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].sealevel = "hill";
-						premapmap[x+(y*asworld_width)].terrain = "tundra";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > GRASS_LEVEL)
-					{
-						
-						premapmap[x+(y*asworld_width)].sealevel = "hill";
-						premapmap[x+(y*asworld_width)].terrain = "grass";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > PLAINS_LEVEL)
-					{
-						
-						premapmap[x+(y*asworld_width)].sealevel = "hill";
-						premapmap[x+(y*asworld_width)].terrain = "tundra";
-					}
-					else
-					{
-						premapmap[x+(y*asworld_width)].sealevel = "hill";
-						premapmap[x+(y*asworld_width)].terrain = "desert";
-					}
-				}
-				else //if (heightmap[x+(y*asworld_width)] > LAND_LEVEL)
-				{
-					if (noisemapbiome[x+(y*asworld_width)] > SNOW_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].terrain = "snow";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > TUNDRA_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].terrain = "tundra";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > GRASS_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].terrain = "grass";
-					}
-					else if (noisemapbiome[x+(y*asworld_width)] > PLAINS_LEVEL)
-					{
-						premapmap[x+(y*asworld_width)].terrain = "plains";
-					}
-					else
-					{
-						premapmap[x+(y*asworld_width)].terrain = "desert";
-					}
-				}
-			}
-		}
-	}
-	
-	// do water border
-	for (let y = 0; y < asworld_height; y++)
-	{
-		position = (y*asworld_width);
-		premapmap[position].terrain = "grass";
-		premapmap[position].sealevel = "water";
-		
-		position = (asworld_width-1+y*asworld_width);
-		premapmap[position].terrain = "grass";
-		premapmap[position].sealevel = "water";
-	}
-	for (let x = 0; x < asworld_width; x++)
-	{
-		position = (x);
-		premapmap[position].terrain = "grass";
-		premapmap[position].sealevel = "water";
-		
-		position = (x+(asworld_height-1)*asworld_width);
-		premapmap[position].terrain = "grass";
-		premapmap[position].sealevel = "water";
-	}
-	
-	//do automata
-	MapTerrainAutomataPass(premapmap, "desert", "tundra", asworld_width, asworld_height, 2);
-	MapTerrainAutomataPass(premapmap, "snow", "tundra", asworld_width, asworld_height, 2);
-	
-	// do landmass map
-	for (let i = 0; i < landmassstarts.length; i++)
-	{
-		let position = landmassstarts[i].x + landmassstarts[i].y * asworld_width; 
-		landmassmap = LandmassCalculation(premapmap, landmassmap, landmassmap[position], landmassstarts[i].x, landmassstarts[i].y, asworld_width, asworld_height, Map_Size);
-	}
-	
-	//do jungles
-	let jungle_count = Math.floor(Math.random()* landmasses * (Math.sqrt(Map_Size)/11 +1)) +1;
-	for (let i = 0; i < jungle_count; i++)
-	{
-		let temptreemap = [];
-		//initialize the tempmap
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				temptreemap.push("none");
-			}
-		}
-		
-		let randomsize = Math.floor((Math.random()*(asworld_height*asworld_width/6)+asworld_height+asworld_width)*2/3);
-		let randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
-		let randomy = Math.floor(Math.random()*(asworld_height*5/6)+(asworld_height/12));
-		while (premapmap[randomx+randomy*asworld_width].sealevel == "water" || premapmap[randomx+randomy*asworld_width].sealevel == "mountain" || premapmap[randomx+randomy*asworld_width].terrain == "desert")
-		{
-			randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
-			randomy = Math.floor(Math.random()*(asworld_height*5/6)+(asworld_height/12));
-		}
-		
-		temptreemap[randomx+(randomy*asworld_width)] = "jungle";
-		
-		let totalloops = 1;
-		let sizecovered = 7;
-
-		while (randomsize > sizecovered)
-		{
-			totalloops++;
-			sizecovered += totalloops*6;
-		}
-		
-		let startpos = { x: randomx, y: randomy };
-		let currenthex = { x:0, y:0 };
-		let curdirdur = 0;
-		let dirduration = 1;
-		let loopend = 6;
-		let sizereached = 1;
-		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
-		{
-			let direction = 3;
-			if (startpos.x  % 2 == 1)
-			{
-				startpos.x = startpos.x+1;
-			}
-			else
-			{
-				startpos.x = startpos.x+1;
-				startpos.y = startpos.y-1;
-			}
-			currenthex.x = startpos.x;
-			currenthex.y = startpos.y;
-			
-			for(let k = 0; k < loopend && sizereached < randomsize; k++)
-			{
-				if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1)
-				{
-					let position = currenthex.x+(currenthex.y*asworld_width);
-					if ((premapmap[position].sealevel == "land" || premapmap[position].sealevel == "hill") && premapmap[position].terrain != "desert")
-					{
-						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-						let probability = JUNGLE_LEVEL * Math.log2(Map_Size) * Math.sqrt(randomsize);
-						
-						if (Math.random()*distance < probability)
-						{
-							temptreemap[position] = "jungle";
-						}
-					}
-				}
-				
-				MoveHex(currenthex, direction);
-				curdirdur++;
-				if (curdirdur == dirduration)
-				{
-					curdirdur = 0;
-					direction++;
-					if (direction == 6)
-						direction = 0;
-				}
-				sizereached++;
-			}
-			
-			loopend += 6;
-			dirduration++;
-		}
-		
-		temptreemap = TreesContiguousToPoint(temptreemap, "jungle", randomx, randomy, asworld_width, asworld_height, randomsize);
-		
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				if (temptreemap[x+(y*asworld_width)] == "jungle")
-				{
-					premapmap[x+(y*asworld_width)].trees = "jungle";
-				}
-			}
-		}
-	}
-	
-	//do forests
-	let forest_count = Math.floor(Math.random()* landmasses * (Math.sqrt(Map_Size)/9 +1)) +1;
-	for (let i = 0; i < forest_count; i++)
-	{
-		let temptreemap = [];
-		//initialize the tempmap
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				temptreemap.push("none");
-			}
-		}
-		
-		let randomsize = Math.floor((Math.random()*(asworld_height*asworld_width/6)+asworld_height+asworld_width)*3/4);
-		let randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
-		let randomy = Math.floor(Math.random()*(asworld_height*5/6)+(asworld_height/12));
-		while (premapmap[randomx+randomy*asworld_width].sealevel == "water" || premapmap[randomx+randomy*asworld_width].sealevel == "mountain" || premapmap[randomx+randomy*asworld_width].terrain == "desert")
-		{
-			randomx = Math.floor(Math.random()*(asworld_width*5/6)+(asworld_width/12));
-			randomy = Math.floor(Math.random()*(asworld_height*5/6)+(asworld_height/12));
-		}
-		
-		temptreemap[randomx+(randomy*asworld_width)] = "forest";
-		
-		let totalloops = 1;
-		let sizecovered = 7;
-
-		while (randomsize > sizecovered)
-		{
-			totalloops++;
-			sizecovered += totalloops*6;
-		}
-		
-		let startpos = { x: randomx, y: randomy };
-		let currenthex = { x:0, y:0 };
-		let curdirdur = 0;
-		let dirduration = 1;
-		let loopend = 6;
-		let sizereached = 1;
-		for(let j = 0; j < totalloops && sizereached < randomsize; j++)
-		{
-			let direction = 3;
-			if (startpos.x  % 2 == 1)
-			{
-				startpos.x = startpos.x+1;
-			}
-			else
-			{
-				startpos.x = startpos.x+1;
-				startpos.y = startpos.y-1;
-			}
-			currenthex.x = startpos.x;
-			currenthex.y = startpos.y;
-			
-			for(let k = 0; k < loopend && sizereached < randomsize; k++)
-			{
-				if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1)
-				{
-					let position = currenthex.x+(currenthex.y*asworld_width);
-					if ((premapmap[position].sealevel == "land" || premapmap[position].sealevel == "hill") && premapmap[position].terrain != "desert")
-					{
-						let distance = Math.sqrt((currenthex.x - randomx)*(currenthex.x - randomx) + (currenthex.y - randomy)*(currenthex.y - randomy));
-						let probability = FOREST_LEVEL * Math.log2(Map_Size) * Math.sqrt(randomsize);
-						
-						if (Math.random()*distance < probability)
-						{
-							temptreemap[position] = "forest";
-						}
-					}
-				}
-				
-				MoveHex(currenthex, direction);
-				curdirdur++;
-				if (curdirdur == dirduration)
-				{
-					curdirdur = 0;
-					direction++;
-					if (direction == 6)
-						direction = 0;
-				}
-				sizereached++;
-			}
-			
-			loopend += 6;
-			dirduration++;
-		}
-		
-		temptreemap = TreesContiguousToPoint(temptreemap, "forest", randomx, randomy, asworld_width, asworld_height, randomsize);
-		
-		for (let y = 0; y < asworld_height; y++)
-		{
-			for (let x  = 0; x < asworld_width; x++)
-			{
-				if (temptreemap[x+(y*asworld_width)] == "forest")
-				{
-					premapmap[x+(y*asworld_width)].trees = "forest";
-				}
-			}
-		}
-	}
-	
-	
-	// do landmarks
-	let landmarks = [];
-	let citycount = 4;
-	let landmarkcount = 1;
-	let landmarklandmass = Math.ceil(Map_Size);
-	for (let i = 0; i < landmarklandmass; i++)
-	{
-		let landmarksroll = Math.max(Math.floor(Math.random()*4+Math.random()*4)-3,1);
-		landmarkcount += landmarksroll;
-	}
-	for (let i = 0; i < landmarklandmass; i++)
-	{
-		let landmarksroll = Math.max(Math.floor(Math.random()*4+Math.random()*4)-3,0);
-		citycount += landmarksroll;
-	}
-	
-	citycount = Math.ceil(citycount*city_density);
-	
-	
-	//cities
-	for (let i = 0; i < citycount; i++)
-	{
-		let currenthex;
-		//ideal location random placement attempts
-		let landmarkvalid = true;
-		
-		for (let j = 0; j < 255 && landmarkvalid; j++)
-		{
-			let placeattempts = 0;
-			currenthex = { x: Math.floor(Math.random()*(asworld_width-1)+1), y: Math.floor(Math.random()*(asworld_height-1)+1), capitalcity: i };
-			while (!CityLocationValid(currenthex, landmarks, premapmap, asworld_width) && placeattempts <= 255)
-			{
-				currenthex = { x: Math.floor(Math.random()*(asworld_width-1)+1), y: Math.floor(Math.random()*(asworld_height-1)+1), capitalcity: i };
-				placeattempts++;
-				if (placeattempts > 255)
-				{
-					console.log("stopping placing cities, " + i + " cities placed");
-					landmarkvalid = false;
-					citycount = i;
-					i += citycount;
-				}
-			}
-			
-			if (landmarkvalid)
-			{
-				let position = currenthex.x + currenthex.y*asworld_width;
-				let hasShore = (NearestWaterbodyToPoint(premapmap, currenthex.x, currenthex.y, asworld_width, asworld_height, 7) != null);
-				let hasGrasslands = (NearestGrasslandsToPoint(premapmap, currenthex, asworld_width, asworld_height, 7) != null);
-				let chanceToStay = 0.1;
-				let factorsToStay = 0.16;
-				if (hasShore)
-				{
-					factorsToStay++;
-				}
-				if (hasGrasslands)
-				{
-					factorsToStay++;
-				}
-				chanceToStay += factorsToStay*factorsToStay*0.1;
-				if (Math.random() < chanceToStay)
-					j += 255;
-				else
-					j++;
-			}
-		}
-		if (landmarkvalid)
-		{
-			landmarks.push(currenthex);
-			asworldmap[currenthex.x+(currenthex.y*asworld_width)].landmark = "city";
-		}
-	}
-	
-	//other landmarks
-	for (let i = 0; i < landmarkcount; i++)
-	{
-		let currenthex;
-		//ideal location random placement attempts
-		let landmarkvalid = true;
-		
-		for (let j = 0; j < 255 && landmarkvalid; j++)
-		{
-			let placeattempts = 0;
-			currenthex = { x: Math.floor(Math.random()*(asworld_width-1)+1), y: Math.floor(Math.random()*(asworld_height-1)+1), capitalcity: i };
-			while (!CityLocationValid(currenthex, landmarks, premapmap, asworld_width) && placeattempts <= 255)
-			{
-				currenthex = { x: Math.floor(Math.random()*(asworld_width-1)+1), y: Math.floor(Math.random()*(asworld_height-1)+1), capitalcity: i };
-				placeattempts++;
-				if (placeattempts > 255)
-				{
-					console.log("stopping placing landmarks, " + i + " landmarks placed");
-					landmarkvalid = false;
-					landmarkcount = i;
-					i += landmarkcount;
-				}
-			}
-			
-			if (landmarkvalid)
-			{
-				let position = currenthex.x + currenthex.y*asworld_width;
-				let hasShore = (NearestWaterbodyToPoint(premapmap, currenthex.x, currenthex.y, asworld_width, asworld_height, 7) != null);
-				let hasGrasslands = (NearestGrasslandsToPoint(premapmap, currenthex, asworld_width, asworld_height, 7) != null);
-				let chanceToStay = 0.1;
-				let factorsToStay = 0.16;
-				if (hasShore)
-				{
-					factorsToStay++;
-				}
-				if (hasGrasslands)
-				{
-					factorsToStay++;
-				}
-				chanceToStay += factorsToStay*factorsToStay*0.1;
-				if (Math.random() < chanceToStay)
-					j += 255;
-				else
-					j++;
-			}
-		}
-		if (landmarkvalid)
-		{
-			landmarks.push(currenthex);
-			let randomroll = Math.random();
-			if (randomroll < 0.5)
-				asworldmap[currenthex.x+(currenthex.y*asworld_width)].landmark = "monster lair";
-			else if (randomroll < 0.8)
-				asworldmap[currenthex.x+(currenthex.y*asworld_width)].landmark = "quest site";
-			else
-				asworldmap[currenthex.x+(currenthex.y*asworld_width)].landmark = "evil castle";
-		}
-	}
-	
-	
-	for (let x = 0; x < asworld_width; x++)
-	{
-		for (let y = 0; y < asworld_height; y++)
-		{
-			//asworldmap[x+(y*asworld_width)].sealevel = noisemapsealevel[x+(y*asworld_width)]*1;
-			if (premapmap[x+(y*asworld_width)].sealevel == "mountain")
-				asworldmap[x+(y*asworld_width)].sealevel = 12.5;
-			else if (premapmap[x+(y*asworld_width)].sealevel == "hill")
-				asworldmap[x+(y*asworld_width)].sealevel = 7.5;
-			else if (premapmap[x+(y*asworld_width)].sealevel == "land")
-				asworldmap[x+(y*asworld_width)].sealevel = 1;
-			else
-				asworldmap[x+(y*asworld_width)].sealevel = -1;
-			if (premapmap[x+(y*asworld_width)].terrain == "snow")
-				asworldmap[x+(y*asworld_width)].climate = "extremely cold";
-			else if (premapmap[x+(y*asworld_width)].terrain == "tundra")
-				asworldmap[x+(y*asworld_width)].climate = "cold";
-			else if (premapmap[x+(y*asworld_width)].terrain == "grass")
-				asworldmap[x+(y*asworld_width)].climate = "temperate";
-			else if (premapmap[x+(y*asworld_width)].terrain == "plains")
-				asworldmap[x+(y*asworld_width)].climate = "hot";
-			else
-				asworldmap[x+(y*asworld_width)].climate = "extremely hot";
-			if (premapmap[x+(y*asworld_width)].trees == "jungle")
-				asworldmap[x+(y*asworld_width)].biome = "jungle";
-			else if (premapmap[x+(y*asworld_width)].trees == "forest")
-				asworldmap[x+(y*asworld_width)].biome = "forest";
-			else if (premapmap[x+(y*asworld_width)].climate == "temperate")
-				asworldmap[x+(y*asworld_width)].biome = "grasslands";
-			else if (premapmap[x+(y*asworld_width)].terrain == "plains")
-				asworldmap[x+(y*asworld_width)].biome = "plains";
-			else if (premapmap[x+(y*asworld_width)].terrain == "snow")
-				asworldmap[x+(y*asworld_width)].biome = "desolate";
-			else
-				asworldmap[x+(y*asworld_width)].biome = "desolate";
-		}
-	}
-	
-	console.log("adventuresim world generated");
-	saveSimWorldMap();
-}
-
-function findClassByName(classname)
-{
-	for(let i = 0; i < adventure_sim.adventurers.classes.length; i++)
-	{
-		if (adventure_sim.adventurers.classes[i].name == classname)
-			return adventure_sim.adventurers.classes[i];
-	}
-	return null;
-}
-
-function makeAdventurer(classname)
-{
-	let species = adventure_sim.adventurers.species[Math.floor(Math.random()*adventure_sim.adventurers.species.length)];
-	let adventurerclass = adventure_sim.adventurers.classes[Math.floor(Math.random()*adventure_sim.adventurers.classes.length)];
-	
-	classname = classname.toLowerCase();
-	
-	if (classname != null && classname != "")
-	{
-		let tempclass = findClassByName(classname);
-		if (tempclass != null)
-			adventurerclass = tempclass;
-	}
-	
-	let firstname = monster_names[Math.floor(Math.random()*monster_names.length)];
-	let surname = monster_surnames[Math.floor(Math.random()*monster_surnames.length)];
-	let heightadj = adventure_sim.adventurers.heightAdjectives[Math.floor(Math.random()*adventure_sim.adventurers.heightAdjectives.length)]
-	let weightadj = adventure_sim.adventurers.weightAdjectives[Math.floor(Math.random()*adventure_sim.adventurers.weightAdjectives.length)];
-	let adventurer = {
-		name: firstname + " " + surname, 
-		species: species.name, 
-		classname: adventurerclass.name,
-		cstatus: "good",
-		stats: {
-			level: 1,
-			exp: 0,
-			woundLevelUp: 0,
-			woundMax: species.stats.wounds + adventurerclass.stats.wounds,
-			wounds: [],
-			woundThreshold: species.stats.woundThreshold + adventurerclass.stats.woundThreshold,
-			healRate: species.stats.healRate,
-			initiative: species.stats.initiative + adventurerclass.stats.initiative,
-			skills: {
-				acrobatics: species.stats.skills.acrobatics + adventurerclass.stats.skills.acrobatics,
-				animalHandling: species.stats.skills.animalHandling + adventurerclass.stats.skills.animalHandling,
-				arcana: species.stats.skills.arcana + adventurerclass.stats.skills.arcana,
-				athletics: species.stats.skills.athletics + adventurerclass.stats.skills.athletics,
-				deception: species.stats.skills.deception + adventurerclass.stats.skills.deception,
-				insight: species.stats.skills.insight + adventurerclass.stats.skills.insight,
-				intimidation: species.stats.skills.intimidation + adventurerclass.stats.skills.intimidation,
-				investigation: species.stats.skills.investigation + adventurerclass.stats.skills.investigation,
-				medicine: species.stats.skills.medicine + adventurerclass.stats.skills.medicine,
-				nature: species.stats.skills.nature + adventurerclass.stats.skills.nature,
-				perception: species.stats.skills.perception + adventurerclass.stats.skills.perception,
-				performance: species.stats.skills.performance + adventurerclass.stats.skills.performance,
-				persuasion: species.stats.skills.persuasion + adventurerclass.stats.skills.persuasion,
-				religion: species.stats.skills.religion + adventurerclass.stats.skills.religion,
-				sleightOfHand: species.stats.skills.sleightOfHand + adventurerclass.stats.skills.sleightOfHand,
-				stealth: species.stats.skills.stealth + adventurerclass.stats.skills.stealth,
-				survival: species.stats.skills.survival + adventurerclass.stats.skills.survival
-			},
-			damageModLevelUp: 0,
-			damageMod: adventurerclass.stats.damageMod,
-			damagetype: adventurerclass.stats.damagetype,
-			damagedienum: adventurerclass.stats.damagedienum,
-			damagediesides: adventurerclass.stats.damagediesides,
-			resistances: [],
-			weaknesses: []
-		},
-		side: 0,
-		magicitems: {
-			mainHand: null,
-			offHand: null,
-			clothes: null,
-			armour: null,
-			accessories: [ null, null, null, null ]
-		},
-		scars: [],
-		heightAdjective: heightadj,
-		weightAdjective: weightadj,
-		personallog: []
-	}
-	
-	return adventurer;
-}
-
-function addToPersonalLog(adventurer, logtext)
-{
-	if (adventurer.personallog !== undefined)
-	{
-		if (adventurer.personallog.length == 0 || adventurer.personallog[adventurer.personallog.length-1] != logtext)
-		{
-			adventurer.personallog.push(logtext);
-			return true;
-		}
-	}
-	return false;
-}
-
-function getPartyMemberStat(partymember, stat)
-{
-	if (stat == "woundMax")
-	{
-		let statvalue = partymember.stats.woundMax;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.woundMaxMod;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.woundMaxMod;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.woundMaxMod;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.woundMaxMod;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.woundMaxMod;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.woundMaxMod;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.woundMaxMod;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.woundMaxMod;
-		
-		return statvalue;
-	}
-	
-	if (stat == "woundThreshold")
-	{
-		let statvalue = partymember.stats.woundThreshold;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.woundThresholdMod;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.woundThresholdMod;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.woundThresholdMod;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.woundThresholdMod;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.woundThresholdMod;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.woundThresholdMod;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.woundThresholdMod;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.woundThresholdMod;
-		
-		return statvalue;
-	}
-	
-	if (stat == "healRate")
-	{
-		let statvalue = partymember.stats.healRate;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.healRateMod;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.healRateMod;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.healRateMod;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.healRateMod;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.healRateMod;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.healRateMod;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.healRateMod;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.healRateMod;
-		
-		return statvalue;
-	}
-	
-	if (stat == "initiative")
-	{
-		let statvalue = partymember.stats.initiative;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.initiativeMod;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.initiativeMod;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.initiativeMod;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.initiativeMod;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.initiativeMod;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.initiativeMod;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.initiativeMod;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.initiativeMod;
-		
-		return statvalue;
-	}
-	
-	if (stat == "acrobatics")
-	{
-		let statvalue = partymember.stats.skills.acrobatics;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.acrobatics;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.acrobatics;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.acrobatics;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.acrobatics;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.acrobatics;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.acrobatics;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.acrobatics;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.acrobatics;
-		
-		return statvalue;
-	}
-	
-	if (stat == "animalHandling")
-	{
-		let statvalue = partymember.stats.skills.animalHandling;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.animalHandling;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.animalHandling;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.animalHandling;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.animalHandling;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.animalHandling;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.animalHandling;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.animalHandling;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.animalHandling;
-		
-		return statvalue;
-	}
-	
-	if (stat == "arcana")
-	{
-		let statvalue = partymember.stats.skills.arcana;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.arcana;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.arcana;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.arcana;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.arcana;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.arcana;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.arcana;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.arcana;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.arcana;
-		
-		return statvalue;
-	}
-	
-	if (stat == "athletics")
-	{
-		let statvalue = partymember.stats.skills.athletics;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.athletics;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.athletics;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.athletics;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.athletics;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.athletics;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.athletics;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.athletics;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.athletics;
-		
-		return statvalue;
-	}
-	
-	if (stat == "deception")
-	{
-		let statvalue = partymember.stats.skills.deception;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.deception;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.deception;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.deception;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.deception;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.deception;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.deception;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.deception;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.deception;
-		
-		return statvalue;
-	}
-	
-	if (stat == "insight")
-	{
-		let statvalue = partymember.stats.skills.insight;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.insight;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.insight;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.insight;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.insight;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.insight;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.insight;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.insight;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.insight;
-		
-		return statvalue;
-	}
-	
-	if (stat == "intimidation")
-	{
-		let statvalue = partymember.stats.skills.intimidation;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.intimidation;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.intimidation;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.intimidation;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.intimidation;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.intimidation;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.intimidation;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.intimidation;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.intimidation;
-		
-		return statvalue;
-	}
-	
-	if (stat == "investigation")
-	{
-		let statvalue = partymember.stats.skills.investigation;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.investigation;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.investigation;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.investigation;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.investigation;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.investigation;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.investigation;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.investigation;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.investigation;
-		
-		return statvalue;
-	}
-	
-	if (stat == "medicine")
-	{
-		let statvalue = partymember.stats.skills.medicine;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.medicine;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.medicine;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.medicine;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.medicine;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.medicine;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.medicine;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.medicine;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.medicine;
-		
-		return statvalue;
-	}
-	
-	if (stat == "nature")
-	{
-		let statvalue = partymember.stats.skills.nature;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.nature;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.nature;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.nature;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.nature;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.nature;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.nature;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.nature;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.nature;
-		
-		return statvalue;
-	}
-	
-	if (stat == "perception")
-	{
-		let statvalue = partymember.stats.skills.perception;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.perception;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.perception;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.perception;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.perception;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.perception;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.perception;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.perception;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.perception;
-		
-		return statvalue;
-	}
-	
-	if (stat == "performance")
-	{
-		let statvalue = partymember.stats.skills.performance;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.performance;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.performance;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.performance;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.performance;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.performance;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.performance;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.performance;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.performance;
-		
-		return statvalue;
-	}
-	
-	if (stat == "persuasion")
-	{
-		let statvalue = partymember.stats.skills.persuasion;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.persuasion;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.persuasion;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.persuasion;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.persuasion;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.persuasion;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.persuasion;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.persuasion;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.persuasion;
-		
-		return statvalue;
-	}
-	
-	if (stat == "religion")
-	{
-		let statvalue = partymember.stats.skills.religion;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.religion;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.religion;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.religion;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.religion;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.religion;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.religion;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.religion;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.religion;
-		
-		return statvalue;
-	}
-	
-	if (stat == "sleightOfHand")
-	{
-		let statvalue = partymember.stats.skills.sleightOfHand;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.sleightOfHand;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.sleightOfHand;
-		
-		return statvalue;
-	}
-	
-	if (stat == "stealth")
-	{
-		let statvalue = partymember.stats.skills.stealth;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.stealth;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.stealth;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.stealth;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.stealth;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.stealth;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.stealth;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.stealth;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.stealth;
-		
-		return statvalue;
-	}
-	
-	if (stat == "survival")
-	{
-		let statvalue = partymember.stats.skills.survival;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.skillMod.survival;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.skillMod.survival;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.skillMod.survival;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.skillMod.survival;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.skillMod.survival;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.skillMod.survival;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.skillMod.survival;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.skillMod.survival;
-		
-		return statvalue;
-	}
-	
-	if (stat == "damageMod")
-	{
-		let statvalue = partymember.stats.damageMod;
-		
-		if (partymember.magicitems.mainHand != null)
-			statvalue += partymember.magicitems.mainHand.effects.damageMod;
-		if (partymember.magicitems.offHand != null)
-			statvalue += partymember.magicitems.offHand.effects.damageMod;
-		if (partymember.magicitems.clothes != null)
-			statvalue += partymember.magicitems.clothes.effects.damageMod;
-		if (partymember.magicitems.armour != null)
-			statvalue += partymember.magicitems.armour.effects.damageMod;
-		if (partymember.magicitems.accessories[0] != null)
-			statvalue += partymember.magicitems.accessories[0].effects.damageMod;
-		if (partymember.magicitems.accessories[1] != null)
-			statvalue += partymember.magicitems.accessories[1].effects.damageMod;
-		if (partymember.magicitems.accessories[2] != null)
-			statvalue += partymember.magicitems.accessories[2].effects.damageMod;
-		if (partymember.magicitems.accessories[3] != null)
-			statvalue += partymember.magicitems.accessories[3].effects.damageMod;
-		
-		return statvalue;
-	}
-	
-	if (stat == "damagedienum")
-	{
-		let statvalue = partymember.stats.damagedienum;
-		
-		return statvalue;
-	}
-	
-	if (stat == "damagediesides")
-	{
-		let statvalue = partymember.stats.damagedienum;
-		
-		return statvalue;
-	}
-	
-	if (stat == "damagediesides")
-	{
-		let statvalue = partymember.stats.damagedienum;
-		
-		return statvalue;
-	}
-}
-
-function getPartyMemberByName(party, name)
-{
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].name == name)
-			return party.members[i];
-	}
-	return null;
-}
-
-function getPartyById(id)
-{
-	for (let i = 0; i < adventuringparties.length; i++)
-	{
-		if (adventuringparties[i].id == id)
-			return adventuringparties[i];
-	}
-	return null;
-}
-
-function recruitPartyMembers(arguments)
-{
-	if (arguments == null || arguments.length == 0)
-		return "You must provide a party id for this command";
-	
-	let party = getPartyById(arguments[0]);
-	if (party == null)
-		return "There is no party with that id currently";
-	
-	if (arguments.length < 1)
-		return "you must specify at least one class, or put \"any\" for any class";
-	
-	if (party.members.length >= MAX_PARTY_MEMBERS)
-	{
-		return party.name + " are full";
-	}
-	
-	let output = "";
-	for (let i = 1; i < arguments.length && party.members.length < MAX_PARTY_MEMBERS; i++)
-	{
-		let adventurer = makeAdventurer(arguments[i]);
-		party.members.push(adventurer);
-		output += "Recruited " + adventurer.name + ", the " + adventurer.species + " " + adventurer.classname + "\n";
-	}
-	output = output.trim();
-	
-	saveAdventuringParties();
-	
-	return output;
-}
-
-function retirePartyMember(arguments)
-{
-	if (arguments == null || arguments.length == 0)
-		return "You must provide a party id for this command";
-	
-	let party = getPartyById(arguments[0]);
-	if (party == null)
-		return "There is no party with that id currently";
-	
-	let partymembername = argumentsbacktostring(arguments, 1);
-	let partymember = -1
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].name == partymembername)
-			partymember = i;
-	}
-	if (partymember == -1)
-		return "there is no party member with that name in this party";
-	
-	party.members.splice(partymember, 1);
-	
-	if (party.members.length == 0)
-	{
-		output = partymembername + " has been retired";
-		output += "\n" + disbandParty(arguments);
-		return output;
-	}
-	
-	
-	saveAdventuringParties();
-	
-	return partymembername + " has been retired";
-}
-
-function outputAdventurerWounds(adventurer)
-{
-	if (adventurer.stats.wounds.length == 0)
-	{
-		return "none";
-	}
-	
-	let output = "";
-	for (let i = 0; i < adventurer.stats.wounds.length; i++)
-	{
-		output += adventurer.stats.wounds[i] + "wound";
-		if (i+1 < adventurer.stats.wounds.length)
-			output += ", ";
-	}
-	
-	return output;
-}
-
-function outputPartyMemberSummary(arguments)
-{
-	if (arguments == null || arguments.length == 0)
-		return "You must provide a party id for this command";
-	
-	let party = getPartyById(arguments[0]);
-	if (party == null)
-		return "There is no party with that id currently";
-	
-	let partymember = getPartyMemberByName(party, argumentsbacktostring(arguments, 1));
-	if (partymember == null)
-		return "there is no party member with that name in this party";
-	
-	let output = partymember.name + " the " + partymember.species + " " + partymember.classname + "\n"
-		+ "Level: " + partymember.stats.level + ", Status: " + partymember.cstatus + ", Experience: " + partymember.stats.exp + "\n"
-		+ "Max Wounds: " + getPartyMemberStat(partymember, "woundMax") + ", Wound Threshold: " + getPartyMemberStat(partymember, "woundThreshold") + ", Heal Rate: " + getPartyMemberStat(partymember, "healRate") + "\n"
-		+ "Attack: " + partymember.stats.damagedienum + "d" + partymember.stats.damagediesides + " +" + getPartyMemberStat(partymember, "damageMod") + " " + partymember.stats.damagetype + "\n"
-		+ "Skills: ";
-	
-	let skillscount = 0;
-	
-	if (partymember.stats.skills.acrobatics > 0)
-	{
-		skillscount++;
-		output += "acrobatics +" + getPartyMemberStat(partymember, "acrobatics");
-	}
-
-	if (partymember.stats.skills.animalHandling > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "animal handling +" + getPartyMemberStat(partymember, "animalHandling");
-	}
-	
-	if (partymember.stats.skills.arcana > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "arcana +" + getPartyMemberStat(partymember, "arcana");
-	}
-	
-	if (partymember.stats.skills.athletics > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "athletics +" + getPartyMemberStat(partymember, "athletics");
-	}
-	
-	if (partymember.stats.skills.deception > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "deception +" + getPartyMemberStat(partymember, "deception");
-	}
-	
-	if (partymember.stats.skills.insight > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "insight +" + getPartyMemberStat(partymember, "insight");
-	}
-	
-	if (partymember.stats.skills.intimidation > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "intimidation +" + getPartyMemberStat(partymember, "intimidation");
-	}
-	
-	if (partymember.stats.skills.investigation > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "investigation +" + getPartyMemberStat(partymember, "investigation");
-	}
-	
-	if (partymember.stats.skills.medicine > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "medicine +" + getPartyMemberStat(partymember, "medicine");
-	}
-	
-	if (partymember.stats.skills.nature > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "nature +" + getPartyMemberStat(partymember, "nature");
-	}
-	
-	if (partymember.stats.skills.perception > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "perception +" + getPartyMemberStat(partymember, "perception");
-	}
-	
-	if (partymember.stats.skills.performance > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "performance +" + getPartyMemberStat(partymember, "performance");
-	}
-	
-	if (partymember.stats.skills.persuasion > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "persuasion +" + getPartyMemberStat(partymember, "persuasion");
-	}
-	
-	if (partymember.stats.skills.religion > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "religion +" + getPartyMemberStat(partymember, "religion");
-	}
-	
-	if (partymember.stats.skills.sleightOfHand > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "sleight of hand +" + getPartyMemberStat(partymember, "sleightOfHand");
-	}
-	
-	if (partymember.stats.skills.stealth > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "stealth +" + getPartyMemberStat(partymember, "stealth");
-	}
-	
-	if (partymember.stats.skills.survival > 0)
-	{
-		if (skillscount > 0)
-			output += ", ";
-		skillscount++;
-		output += "survival +" + getPartyMemberStat(partymember, "survival");
-	}
-	
-	output += "\nEquipment\n";
-	
-	let itemcount = 0;
-	
-	if (partymember.magicitems.mainHand != null)
-	{
-		itemcount++;
-		output += partymember.magicitems.mainHand.name + " (level " + partymember.magicitems.mainHand.itlvl + ") in main hand";
-	}
-	
-	if (partymember.magicitems.offHand != null)
-	{
-		if (itemcount > 0)
-			output += ", ";
-		itemcount++;
-		output += partymember.magicitems.offHand.name + " (level " + partymember.magicitems.offHand.itlvl + ") in off hand";
-	}
-	
-	if (partymember.magicitems.clothes != null)
-	{
-		if (itemcount > 0)
-			output += ", ";
-		itemcount++;
-		output += partymember.magicitems.clothes.name + " (level " + partymember.magicitems.clothes.itlvl + ") as clothes";
-	}
-	
-	if (partymember.magicitems.armour != null)
-	{
-		if (itemcount > 0)
-			output += ", ";
-		itemcount++;
-		output += partymember.magicitems.armour.name + " (level " + partymember.magicitems.armour.itlvl + ") as armour";
-	}
-	
-	if (partymember.magicitems.accessories[0] != null)
-	{
-		if (itemcount > 0)
-			output += ", ";
-		itemcount++;
-		output += partymember.magicitems.accessories[0].name + " (level " + partymember.magicitems.accessories[0].itlvl + ") as an accessory";
-	}
-	
-	if (partymember.magicitems.accessories[1] != null)
-	{
-		if (itemcount > 0)
-			output += ", ";
-		itemcount++;
-		output += partymember.magicitems.accessories[1].name + " (level " + partymember.magicitems.accessories[1].itlvl + ") as an accessory";
-	}
-	
-	if (partymember.magicitems.accessories[2] != null)
-	{
-		if (itemcount > 0)
-			output += ", ";
-		itemcount++;
-		output += partymember.magicitems.accessories[2].name + " (level " + partymember.magicitems.accessories[2].itlvl + ") as an accessory";
-	}
-	
-	if (partymember.magicitems.accessories[3] != null)
-	{
-		if (itemcount > 0)
-			output += ", ";
-		itemcount++;
-		output += partymember.magicitems.accessories[3].name + " (level " + partymember.magicitems.accessories[3].itlvl + ") as an accessory";
-	}
-	output += "\nDescription:\n" + grammarCapitalFirstLetter(partymember.heightAdjective) + " and " + partymember.weightAdjective;
-	
-	for (let i = 0; i < partymember.scars.length; i++)
-	{
-		output += ", " + partymember.scars[i];
-	}
-	
-	output += "\nPersonal Log:\n";
-	
-	for (let i = 0; i < partymember.personallog.length; i++)
-	{
-		output += partymember.personallog[i];
-		if (i < partymember.personallog.length-1)
-			output += "\n";
-	}
-	
-	if (output.length > 2000)
-		return "sorry, party summary too long to display";
-	
-	return output;
-}
-
-function outputPartySummary(arguments)
-{
-	if (arguments == null || arguments.length == 0)
-		return "You must provide a party id for this command";
-	
-	let party = getPartyById(arguments[0]);
-	if (party == null)
-		return "There is no party with that id currently";
-	
-	let output = "id: " + party.id + ", name: " + party.name + "\n"
-		+ "members: " + party.members.length + "\;\n";
-	for (let i = 0; i < party.members.length; i++)
-	{
-		output += party.members[i].name + " the level " + party.members[i].stats.level + " " + party.members[i].species + " " + party.members[i].classname + " (" + party.members[i].cstatus + ")\n";
-	}
-	output += "Silverpieces: " + party.silverpieces;
-	
-	if (output.length > 2000)
-		return "sorry, party summary too long to display";
-	
-	return output;
-}
-
-function checkIdIsUnique(id)
-{
-	for (let i = 0; i < adventuringparties.length; i++)
-	{
-		if (adventuringparties[i].id == id)
-			return false;
-	}
-	return true;
-}
-
-var MAX_PARTY_MEMBERS = 12;
-
-function makeParty(arguments)
-{
-	if (arguments == null || arguments.length == 0)
-		return "You must provide arguments for this command";
-	
-	if (!checkIdIsUnique(arguments[0]))
-		return "Sorry, that party id is already in use!";
-	
-	let partyname = arguments[0];
-	let partymemberclass = [];
-	
-	for (let i = 1; i < arguments.length; i++)
-	{
-		if (arguments[i] == "-n")
-		{
-			let end = i+1;
-			for (let j = i+1; j < arguments.length; j++)
-			{
-				end = j;
-				if (arguments[j].charAt(0) == "-")
-				{
-					j += arguments.length;
-				}
-			}
-			partyname = argumentsbacktostring(arguments, i+1, end);
-		}
-		else if (arguments[i] == "-c")
-		{
-			for (let j = i+1; j < arguments.length; j++)
-			{
-				if (arguments[j].charAt(0) == "-")
-				{
-					j += arguments.length;
-				}
-				else
-				{
-					partymemberclass.push(arguments[j]);
-				}
-			}
-		}
-	}
-	
-	if (partymemberclass.length < 1)
-		return "You must provide at least one class specification or \"any\" for this command";
-	
-	let nearestCity = findNearestLandmark(64, 36, "city", 0.667);
-	while (nearestCity != null && nearestCity == false)
-	{
-		nearestCity = findNearestLandmark(64, 36, "city", 0.667);
-	}
-	if (nearestCity == null)
-		throw "no city found";
-	
-	adventuringparty = {
-		id: arguments[0],
-		name: partyname,
-		members: [], 
-		xpos: nearestCity.x, 
-		ypos: nearestCity.y, 
-		cstamina: 1,
-		cstatus: "intown",
-		cactionduration: 0,
-		silverpieces: 200, 
-		inventory: [],
-		priorities: [{name: "adventure", count: 1}],
-		currentlyinencounter: false,
-		encounterinitiative: [],
-		encounterengagements: [],
-		currentinitiative: 0,
-		currentpartymember: 0,
-		encounterenemies: [],
-		encounterexp: 0,
-		encountersummary: "",
-		currentenemy: 0,
-		questfight: false,
-		questpath: [],
-		questlocation: 0,
-		questcomplete: false,
-		questsucceed: false,
-		dungeon: [],
-		dungeonexplore: false,
-		dungeonroomnum: 0,
-		dungeoncomplete: false,
-		log: []
-	};
-	
-	for (let i = 0; i < partymemberclass.length && i < MAX_PARTY_MEMBERS; i++)
-	{
-		adventuringparty.members.push(makeAdventurer(partymemberclass[i]));
-	}
-	adventuringparties.push(adventuringparty);
-	
-	saveAdventuringParties();
-	
-	return "Adventuring party \"" + adventuringparty.name +"\" successfully created";
-}
-
-function disbandParty(arguments)
-{
-	if (arguments == null || arguments.length == 0)
-		return "You must provide a party id for this command";
-	
-	
-	let party = -1;
-	let partyname = "";
-	for (let i = 0; i < adventuringparties.length; i++)
-	{
-		if (adventuringparties[i].id == arguments[0])
-		{
-			party = i;
-			partyname = adventuringparties[i].name;
-		}
-	}
-	if (party == -1)
-		return "There is no party with that id currently";
-	
-	
-	
-	adventuringparties.splice(party,1);
-	
-	saveAdventuringParties();
-	
-	return partyname + " has disbanded";
-}
-
-function addPriority(priorities, priority)
-{
-	for (let i = 0; i < priorities.length; i++)
-	{
-		if (priorities[i].name == priority)
-		{
-			priorities[i].count++;
-			return;
-		}
-	}
-	priorities.push({name:priority, count: 1});
-}
-
-function minusPriority(priorities, priority)
-{
-	for (let i = 0; i < priorities.length; i++)
-	{
-		if (priorities[i].name == priority)
-		{
-			if (priorities[i].count > 0)
-				priorities[i].count--;
-			return;
-		}
-	}
-}
-
-function clearPriority(prioritylist, priority)
-{
-	for (let i = 0; i < prioritylist.length; i++)
-	{
-		if (prioritylist[i].name == priority)
-		{
-			prioritylist[i].count = 0;
-			return;
-		}
-	}
-}
-
-function inventoryContainsItem(itemname)
-{
-	let itemcount = 0;
-	for(let i = 0; i < adventuringparty.inventory.length; i++)
-	{
-		if (adventuringparty.inventory[i].name == itemname)
-		{
-			itemcount++;
-		}
-	}
-	return itemcount;
-}
-
-function getHighestPriority(priorities)
-{
-	let currenthighest = 0;
-	let currentpos = -1;
-	for(let i = 0; i < priorities.length; i++)
-	{
-		if (priorities[i].count > currenthighest)
-		{
-			currenthighest = priorities[i].count;
-			currentpos = i;
-		}
-	}
-	if (currentpos == -1)
-		return null;
-	return priorities[currentpos].name;
-}
-
-function copyPrioritiesList(priorities)
-{
-	newlist = [];
-	for (let i = 0; i < priorities.length; i++)
-	{
-		newlist.push({ name: priorities[i].name, count: priorities[i].count });
-	}
-	
-	return newlist;
-}
-
-function getLandmarkKeywords(xpos, ypos)
-{
-	for (let i = 0; i < adventure_sim.landmarks.length; i++)
-	{
-		if (asworldmap[xpos+(ypos*asworld_width)].landmark == adventure_sim.landmarks[i].name)
-		{
-			return adventure_sim.landmarks[i].keywords;
-		}
-	}
-	return null;
-}
-
-function getAdventurerItemByName(itemname)
-{
-	for (let i = 0; i < adventure_sim.itemblueprints.length; i++)
-	{
-		if (adventure_sim.itemblueprints[i].name == itemname)
-		{
-			return adventure_sim.itemblueprints[i];
-		}
-	}
-	
-	return null;
-}
-
-function getEncounterTableByName(tablename)
-{
-	for (let i = 0; i < adventure_sim.encounters.length; i++)
-	{
-		if (adventure_sim.encounters[i].name == tablename)
-			return adventure_sim.encounters[i];
-	}
-	return null;
-}
-
-function getCreatureByBlueprintID(creatureid)
-{
-	for (let i = 0; i < adventure_sim.enemyblueprints.length; i++)
-	{
-		if (adventure_sim.enemyblueprints[i].id == creatureid)
-		{
-			let creature = {
-				id: adventure_sim.enemyblueprints[i].id,
-				name: adventure_sim.enemyblueprints[i].name,
-				plural: adventure_sim.enemyblueprints[i].plural,
-				cstatus: "good",
-				experience: adventure_sim.enemyblueprints[i].experience,
-				stats:
-				{
-					level: adventure_sim.enemyblueprints[i].stats.level,
-					woundMax: adventure_sim.enemyblueprints[i].stats.wounds,
-					wounds: [],
-					woundThreshold: adventure_sim.enemyblueprints[i].stats.woundThreshold,
-					initiative: adventure_sim.enemyblueprints[i].stats.initiative,
-					damagetype: adventure_sim.enemyblueprints[i].stats.damagetype,
-					damagedienum: adventure_sim.enemyblueprints[i].stats.damagedienum,
-					damagediesides: adventure_sim.enemyblueprints[i].stats.damagediesides,
-					resistances: [],
-					weaknesses: []
-				},
-				side: 1,
-			};
-			
-			// give enemies resistance/weakness
-			
-			return creature;
-		}
-	}
-	return null;
-}
-
-function scarTarget(target, damagetype)
-{
-	let scarloc = adventure_sim.adventurers.scarlocations[Math.floor(Math.random()*adventure_sim.adventurers.scarlocations.length)]
-	let scartypes = adventure_sim.adventurers.scardescriptions.filter(filterByList,damagetype);
-	let randomscartype = Math.floor(Math.random()*scartypes.length);
-	let scar = scartypes[randomscartype].desc[Math.floor(Math.random()*scartypes[randomscartype].desc.length)];
-	target.scars.push(scar + " on their " + scarloc);
-	if (target.scars.length > 12)
-		target.scars.splice(Math.floor(Math.random()*12), 1);
-}
-
-function woundTarget(party, target, woundlevel, attacker)
-{
-	let maxWounds = target.stats.woundMax;
-	if (target.sides == 0)
-	{
-		if (target.magicitems.mainHand != null)
-			maxWounds += target.magicitems.mainHand.effects.woundMax;
-		if (target.magicitems.offHand != null)
-			maxWounds += target.magicitems.offHand.effects.woundMax;
-		if (target.magicitems.clothes != null)
-			maxWounds += target.magicitems.clothes.effects.woundMax;
-		if (target.magicitems.armour != null)
-			maxWounds += target.magicitems.armour.effects.woundMax;
-		if (target.magicitems.accessories[0] != null)
-			maxWounds += target.magicitems.accessories[0].effects.woundMax;
-		if (target.magicitems.accessories[1] != null)
-			maxWounds += target.magicitems.accessories[1].effects.woundMax;
-		if (target.magicitems.accessories[2] != null)
-			maxWounds += target.magicitems.accessories[2].effects.woundMax;
-		if (target.magicitems.accessories[3] != null)
-			maxWounds += target.magicitems.accessories[3].effects.woundMax;
-	}
-	
-	if (target.stats.wounds.length < maxWounds)
-		target.stats.wounds.push(woundlevel)
-	else
-	{
-		let woundapplied = false;
-		for (let i = 0; i < target.stats.wounds.length; i++)
-		{
-			if (target.stats.wounds[i] < woundlevel)
-			{
-				woundapplied = true;
-				target.stats.wounds[i] = woundlevel;
-			}
-		}
-		if (!woundapplied)
-		{
-			for (let i = 0; i < target.stats.wounds.length; i++)
-			{
-				if (target.stats.wounds[i] == woundlevel)
-				{
-					woundapplied = true;
-					woundlevel++;
-					target.stats.wounds[i] = woundlevel;
-				}
-			}
-		}
-	}
-	
-	if (woundlevel >= 2 && target.side == 0 && Math.random() < 0.12)
-	{
-		scarTarget(target, attacker.stats.damagetype);
-	}
-	
-	
-	if (woundlevel == 0 && target.side == 0 && Math.random() < 0.15)
-	{
-		scarTarget(target, attacker.stats.damagetype);
-	}
-	
-	if (target.stats.wounds.length >= maxWounds)
-	{
-		let criticalwoundcount = 0;
-		for (let i = 0; i < target.stats.wounds.length; i++)
-		{
-			if (target.stats.wounds[i] >= 1)
-			{
-				criticalwoundcount++;
-			}
-		}
-		
-		if (criticalwoundcount >= maxWounds)
-		{
-			if (target.side == 0)
-			{
-				target.cstatus = "dead";
-				addToAdventureSimLog(party,target.name + " killed by " + attacker.name);
-				addToPersonalLog(target, "Killed by " + attacker.name);
-				removeFromEngagements(party, target);
-			}
-			else
-			{
-				for (let i = 0; i < party.encounterenemies.length; i++)
-				{
-					if (party.encounterenemies[i] == target)
-					{
-						party.encounterenemies.splice(i, 1);
-						i--;
-					}
-				}
-				
-				removeFromEngagements(party, target);
-				party.encounterexp += target.experience;
-			}
-		}
-	}
-}
-
-function getResistances(target)
-{
-	let resistances = target.stats.resistances.slice();
-	if (target.side == 0)
-	{
-		if (target.magicitems.mainHand != null)
-		{
-			for (let i = 0; i < target.magicitems.mainHand.effects.resistances.length; i++)
-			{
-				if (resistances.indexOf(target.magicitems.mainHand.effects.resistances[i]) == -1)
-				{
-					resistances.push(target.magicitems.mainHand.effects.resistances[i]);
-				}
-			}
-		}
-		if (target.magicitems.offHand != null)
-		{
-			for (let i = 0; i < target.magicitems.offHand.effects.resistances.length; i++)
-			{
-				if (resistances.indexOf(target.magicitems.offHand.effects.resistances[i]) == -1)
-				{
-					resistances.push(target.magicitems.offHand.effects.resistances[i]);
-				}
-			}
-		}
-		if (target.magicitems.clothes != null)
-		{
-			for (let i = 0; i < target.magicitems.clothes.effects.resistances.length; i++)
-			{
-				if (resistances.indexOf(target.magicitems.clothes.effects.resistances[i]) == -1)
-				{
-					resistances.push(target.magicitems.clothes.effects.resistances[i]);
-				}
-			}
-		}
-		if (target.magicitems.armour != null)
-		{
-			for (let i = 0; i < target.magicitems.armour.effects.resistances.length; i++)
-			{
-				if (resistances.indexOf(target.magicitems.armour.effects.resistances[i]) == -1)
-				{
-					resistances.push(target.magicitems.armour.effects.resistances[i]);
-				}
-			}
-		}
-		if (target.magicitems.accessories[0] != null)
-		{
-			for (let i = 0; i < target.magicitems.accessories[0].effects.resistances.length; i++)
-			{
-				if (resistances.indexOf(target.magicitems.accessories[0].effects.resistances[i]) == -1)
-				{
-					resistances.push(target.magicitems.accessories[0].effects.resistances[i]);
-				}
-			}
-		}
-		if (target.magicitems.accessories[1] != null)
-		{
-			for (let i = 0; i < target.magicitems.accessories[1].effects.resistances.length; i++)
-			{
-				if (resistances.indexOf(target.magicitems.accessories[1].effects.resistances[i]) == -1)
-				{
-					resistances.push(target.magicitems.accessories[1].effects.resistances[i]);
-				}
-			}
-		}
-		if (target.magicitems.accessories[2] != null)
-		{
-			for (let i = 0; i < target.magicitems.accessories[2].effects.resistances.length; i++)
-			{
-				if (resistances.indexOf(target.magicitems.accessories[2].effects.resistances[i]) == -1)
-				{
-					resistances.push(target.magicitems.accessories[2].effects.resistances[i]);
-				}
-			}
-		}
-		if (target.magicitems.accessories[3] != null)
-		{
-			for (let i = 0; i < target.magicitems.accessories[3].effects.resistances.length; i++)
-			{
-				if (resistances.indexOf(target.magicitems.accessories[3].effects.resistances[i]) == -1)
-				{
-					resistances.push(target.magicitems.accessories[3].effects.resistances[i]);
-				}
-			}
-		}
-	}
-	
-	return resistances;
-}
-
-function getWeaknesses(target)
-{
-	let weaknesses = target.stats.weaknesses.slice();
-	
-	return weaknesses;
-}
-
-function attackTarget(party, attacker, target)
-{
-	let attackroll = 0;
-	if (attacker.side == 0)
-		attackroll = getPartyMemberStat(attacker, "damageMod");
-	for (let i = 0; i < Math.floor(attacker.stats.damagedienum); i++)
-	{
-		attackroll += Math.floor(Math.random()*Math.floor(attacker.stats.damagediesides))+1;
-	}
-	
-	let totalWoundThreshold = target.stats.woundThreshold;
-	if (target.side == 0)
-	{
-		totalWoundThreshold = getPartyMemberStat(target, "woundThreshold");
-	}
-	
-	targetresistances = getResistances(target);
-	targetweaknesses = getWeaknesses(target);
-	
-	for (let i = 0; i < targetresistances.length; i++)
-	{
-		if (attacker.stats.damagetype == targetresistances[i])
-		{
-			totalWoundThreshold = totalWoundThreshold * 2;
-			i += targetresistances.length;
-		}
-	}
-	
-	for (let i = 0; i < targetweaknesses.length; i++)
-	{
-		if (attacker.stats.damagetype == targetweaknesses[i])
-		{
-			totalWoundThreshold = Math.floor(totalWoundThreshold / 2);
-			i += targetweaknesses.length;
-		}
-	}
-	
-	if (attackroll > (totalWoundThreshold * 2))
-	{
-		woundTarget(party, target, 2, attacker)
-	}
-	else if (attackroll > totalWoundThreshold)
-	{
-		woundTarget(party, target, 1, attacker)
-	}
-	else if (attackroll > (totalWoundThreshold / 2))
-	{
-		woundTarget(party, target, 0, attacker)
-	}
-}
-
-function filterByCreatureLevel(creature)
-{
-	if (creature.stats.level <= this)
-			return true;
-	return false;
-}
-
-function getRandomCreatureOfLevel(creaturelevel)
-{
-	let tempcreaturelist = adventure_sim.enemyblueprints.filter(filterByCreatureLevel,creaturelevel);
-	
-	let creature = getCreatureByBlueprintID(tempcreaturelist[Math.floor(Math.random()*tempcreaturelist.length)].id);
-	
-	return creature;
-}
-
-function addToInitiativeList(party, creature, side)
-{
-	if (side == 0)
-	{
-		party.encounterallies.push(creature);
-		party.encounterinitiative.push({ combatant: creature, initiative: 0 });
-	}
-	else
-	{
-		party.encounterenemies.push(creature);
-		party.encounterinitiative.push({ combatant: creature, initiative: 0 });
-	}
-}
-
-function getEngagedTarget(party, combatant)
-{
-	for (let i = 0; i < party.encounterengagements.length; i++)
-	{
-		if (party.encounterengagements[i].attacker == combatant)
-			return party.encounterengagements[i].defender;
-	}
-	
-	if (combatant.side == 0)
-	{
-		tempenemylist = party.encounterenemies.slice();
-	
-		for (let i = 0; i < tempenemylist.length; i++)
-		{
-			for (let j = 0; j < party.encounterengagements.length; j++)
-			{
-				if (tempenemylist[i] == party.encounterengagements[j].attacker)
-				{
-					tempenemylist.splice(i, 1);
-					i--;
-					j += party.encounterengagements.length;
-				}
-			}
-		}
-		
-		if (tempenemylist.length > 0)
-		{
-			let randomtarget = tempenemylist[Math.floor(Math.random()*tempenemylist.length)];
-			party.encounterengagements.push({ attacker: combatant, defender: randomtarget});
-			party.encounterengagements.push({ attacker: randomtarget, defender: combatant});
-			
-			return randomtarget;
-		}
-		else
-		{
-			let randomtarget = party.encounterenemies[Math.floor(Math.random()*party.encounterenemies.length)];
-			party.encounterengagements.push({ attacker: combatant, defender: randomtarget});
-			
-			return randomtarget;
-		}
-	}
-	else
-	{
-		tempenemylist = party.members.slice();
-	
-		for (let i = 0; i < tempenemylist.length; i++)
-		{
-			if (tempenemylist[i].cstatus == "dead")
-			{
-				tempenemylist.splice(i, 1);
-				i--;
-			}				
-			else
-			{
-				for (let j = 0; j < party.encounterengagements.length; j++)
-				{
-					if (tempenemylist[i] == party.encounterengagements[j].attacker)
-					{
-						tempenemylist.splice(i, 1);
-						i--;
-						j += party.encounterengagements.length;
-					}
-				}
-			}
-		}
-		
-		if (tempenemylist.length > 0)
-		{
-			let randomtarget = tempenemylist[Math.floor(Math.random()*tempenemylist.length)];
-			party.encounterengagements.push({ attacker: combatant, defender: randomtarget});
-			party.encounterengagements.push({ attacker: randomtarget, defender: combatant});
-			
-			return randomtarget;
-		}
-		else
-		{
-			let randomtarget = party.members[Math.floor(Math.random()*party.members.length)];
-			while (randomtarget.cstatus == "dead")
-			{
-				randomtarget = party.members[Math.floor(Math.random()*party.members.length)];
-			}
-			party.encounterengagements.push({ attacker: combatant, defender: randomtarget});
-			
-			return randomtarget;
-		}
-	}
-}
-
-function removeFromEngagements(party, combatant)
-{
-	for (let i = 0; i < party.encounterengagements.length; i++)
-	{
-		if (party.encounterengagements[i].attacker == combatant || party.encounterengagements[i].defender == combatant)
-		{
-			party.encounterengagements.splice(i, 1);
-			i--;
-		}
-	}
-}
-
-function doCombatTurn(party, combatant)
-{
-	/*
-	if (side == 0 && party.encounterlevel > partyTotalLevel(party))
-	{
-		addStatusTo(combatant,"fled");
-	}
-	*/
-	let target = getEngagedTarget(party, combatant);
-	
-	attackTarget(party, combatant, target);
-	
-}
-
-function givePartyMemberExp(party, partymember, experience)
-{
-	partymember.stats.exp += experience;
-	let levelup = false;
-	let charclass = findClassByName(partymember.classname);
-	while (partymember.stats.exp >= expLevelUpRequirement(partymember.stats.level))
-	{
-		levelup = true;
-		partymember.stats.level++;
-		partymember.stats.woundLevelUp += charclass.stats.levelup.wounds;
-		while (partymember.stats.woundLevelUp > 1)
-		{
-			partymember.stats.woundLevelUp--;
-			partymember.stats.woundMax++;
-		}
-		partymember.stats.damageModLevelUp += charclass.stats.levelup.damageMod;
-		while (partymember.stats.damageModLevelUp > 1)
-		{
-			partymember.stats.damageModLevelUp--;
-			partymember.stats.damageMod++;
-		}
-	}
-	if (levelup)
-		addToAdventureSimLog(party, partymember.name + " levels up to level " + partymember.stats.level);
-}
-
-function expLevelUpRequirement(characterlevel)
-{
-	return (375*characterlevel*(characterlevel+1));
-}
-
-
-function removeStatusFrom(p, statustoremove)
-{
-	let currentstatus = p.cstatus.split(" ");
-	let position = -1;
-	for (let i = 0; i < currentstatus.length; i++)
-	{
-		if (currentstatus[i] == statustoremove)
-			position = i;
-	}
-	if (isNaN(parseInt(currentstatus[position+1])))
-	{
-		p.cstatus = argumentsbacktostring(currentstatus,0,position) + " " + argumentsbacktostring(currentstatus,position+1);
-	}
-	else
-	{
-		p.cstatus = argumentsbacktostring(currentstatus,0,position) + " " + argumentsbacktostring(currentstatus,position+2);
-	}
-	p.cstatus = p.cstatus.trim();
-}
-
-function changeStatusAmountOn(p, statustodecrease, change)
-{
-	let currentstatus = p.cstatus.split(" ");
-	let position = -1;
-	for (let i = 0; i < currentstatus.length; i++)
-	{
-		if (currentstatus[i] == statustodecrease)
-			position = i;
-	}
-	
-	amount = parseInt(currentstatus[position+1]);
-	
-	if (isNaN(amount))
-	{
-		return null;
-	}
-	
-	amount += change;
-	
-	if (amount < 1)
-	{
-		p.cstatus = argumentsbacktostring(currentstatus,0,position) + " " + argumentsbacktostring(currentstatus,position+2);
-	}
-	else
-	{
-		p.cstatus = argumentsbacktostring(currentstatus,0,position) + " " + statustodecrease + " " + amount + " " + argumentsbacktostring(currentstatus,position+2);
-	}
-	p.cstatus = p.cstatus.trim();
-}
-
-function addStatusTo(p, statustoadd, amount = -1)
-{
-	let currentstatus = p.cstatus.split(" ");
-	for (let i = 0; i < currentstatus.length; i++)
-	{
-		if (currentstatus[i] == statustoadd)
-		{
-			if (amount > 0 && amount > currentstatus[i+1])
-			{
-				currentstatus[i+1] = amount;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
-	p.cstatus += " " + statustoadd;
-	if (amount > 0)
-		p.cstatus += " " + amount;
-	return true;
-}
-
-function removeWorstWound(partymember)
-{
-	let highestwoundval = -1;
-	let highestwoundind = -1;
-	
-	for (let i = 0; i < partymember.stats.wounds.length; i++)
-	{
-		if (partymember.stats.wounds[i] > highestwoundval)
-		{
-			highestwoundval = partymember.stats.wounds[i];
-			highestwoundind = i;
-		}
-	}
-	
-	if (highestwoundind > -1)
-		partymember.stats.wounds.splice(highestwoundind, 1);
-}
-
-function partyRest(party)
-{
-	for (let i = 0; i < party.members.length; i++)
-	{
-		for (let j = 0; j < party.members[i].stats.healRate; j++)
-		{
-			removeWorstWound(party.members[i]);
-		}
-	}
-}
-
-function combatRound(party)
-{
-	if (party.currentinitiative >= party.encounterinitiative.length)
-		party.currentinitiative = 0;
-	
-	//console.log("combat " + party.currentinitiative);
-	
-	let combatant = party.encounterinitiative[party.currentinitiative].combatant;
-	
-	if (combatant.cstatus != "dead")
-	{
-		doCombatTurn(party, combatant);
-	}
-	
-	party.currentinitiative++;
-	
-	if (party.encounterenemies.length == 0)
-	{
-		addToAdventureSimLog(party,party.name + " defeat the " + party.encountersummary);
-		if (party.questfight)
-		{
-			party.questsucceed = true;
-		}
-		
-		let livingpartycount = 0;
-		for (let i = 0; i < party.members.length; i++)
-		{
-			if (party.members[i].cstatus != "dead")
-				livingpartycount++;
-		}
-		
-		for (let i = 0; i < party.members.length; i++)
-		{
-			if (party.members[i].cstatus != "dead")
-				givePartyMemberExp(party, party.members[i], Math.ceil(party.encounterexp / livingpartycount));
-		}
-		party.encounterexp = 0;
-		party.currentlyinencounter = false;
-		partyRest(party);
-	}
-	else if (isPartyDead(party))
-	{
-		addToAdventureSimLog(party,party.name + " have been defeated by the " + party.encountersummary);
-		party.currentlyinencounter = false;
-		party.xpos = party.questpath[0].x;
-		party.ypos = party.questpath[0].y;
-		saveAdventuringParties();
-	}
-}
-
-function isPartyDead(party)
-{
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-			return false;
-	}
-	
-	return true;
-}
-
-function randomLivingPartyMember(party)
-{
-	let character;
-	do {
-		character = party.members[Math.floor(Math.random()*party.members.length)];
-	}
-	while (character.cstatus == "dead");
-	
-	return character;
-}
-
-function filterByRoomLevel(room)
-{
-	if (room.level <= this)
-		return true;
-	return false;
-}
-
-function generateQuestDungeon(rooms, questlevel)
-{
-	let dungeonrooms = [];
-	
-	let potentialrooms = adventure_sim.dungeonrooms.filter(filterByRoomLevel, questlevel);
-	let hasfinalroom = false;
-	
-	for (let i = 0; i < rooms; i++)
-	{
-		let randomroom = Math.floor(Math.random()*potentialrooms.length);
-		let newroom = potentialrooms[randomroom];
-		let rerolls = 0;
-		while (newroom.id == "questfight" && rerolls < 3)
-		{
-			rerolls++;
-			randomroom = Math.floor(Math.random()*potentialrooms.length);
-			newroom = potentialrooms[randomroom];
-		}
-		
-		if (newroom.id == "questfight")
-		{
-			i += rooms;
-			hasfinalroom = true;
-		}
-		
-		dungeonrooms.push(newroom);
-	}
-	
-	if (!hasfinalroom)
-	{
-		dungeonrooms.push({ id: "questfight", trap: { name: "", experience: 0, damagetype: "", damagedienum: 0, damagediesides: 0} });
-	}
-	
-	let dungeon = [];
-	
-	for (let i = 0; i < dungeonrooms.length; i++)
-	{
-		let room = 
-		{
-			id: dungeonrooms[i].id,
-			experience: dungeonrooms[i].experience,
-			solutions: [],
-			fight: [],
-			trap: 
-			{
-				name: dungeonrooms[i].trap.name,
-				damagetype: dungeonrooms[i].trap.damagetype,
-				damagedienum: dungeonrooms[i].trap.damagedienum,
-				damagediesides: dungeonrooms[i].trap.damagediesides
-			}
-		};
-		
-		if (room.id != "questfight")
-		{
-			for (let j = 0; j < dungeonrooms[i].solutions.length; j++)
-			{
-				let solutiondc = Math.floor(Math.random() * (dungeonrooms[i].solutions[j].dcmax - dungeonrooms[i].solutions[j].dcmin)) + dungeonrooms[i].solutions[j].dcmin;
-				let solution =
-				{
-					type: dungeonrooms[i].solutions[j].type,
-					bypasstext: dungeonrooms[i].solutions[j].bypasstext,
-					skill: dungeonrooms[i].solutions[j].skill,
-					dc: solutiondc,
-					failure: dungeonrooms[i].solutions[j].failure,
-					success: dungeonrooms[i].solutions[j].success
-				}
-				
-				room.solutions.push(solution);
-			}
-			
-			let randomenemycount = Math.floor(Math.random() * (dungeonrooms[i].fight.enemymax - dungeonrooms[i].fight.enemymin) + dungeonrooms[i].fight.enemymin);
-			
-			for (let j = 0; j < randomenemycount; j++)
-			{
-				let randomenemy = Math.floor(Math.random() * dungeonrooms[i].fight.enemylist.length);
-				
-				room.fight.push(dungeonrooms[i].fight.enemylist[randomenemy]);
-			}
-			
-			for (let j = 0; j < dungeonrooms[i].fight.mandatoryenemies.length; j++)
-			{
-				room.fight.push(dungeonrooms[i].fight.mandatoryenemies[j]);
-			}
-		}
-		
-		dungeon.push(room);
-	}
-	
-	return dungeon;
-}
-
-function initiateDungeonExplore(party)
-{
-	party.dungeonexplore = true;
-	party.dungeonroomnum = 0;
-	party.dungeon = generateQuestDungeon(Math.floor(Math.random()*2*party.quest.level)+1, party.quest.level);
-}
-
-function initiateRoomEncounter(party, room)
-{
-	for (let i = 0; i < room.fight.length; i++)
-	{
-		let enemy = getCreatureByBlueprintID(room.fight[i]);
-		if (enemy != null)
-			party.encounterenemies.push(enemy);
-	}
-	
-	tempinitlist = [];
-	party.encounterinitiative = [];
-	for (let i = 0; i < party.members.length; i++)
-	{
-		tempinitlist.push({ combatant: party.members[i], initiative: party.members[i].stats.initiative + Math.random()*10+1 });
-	}
-	for (let i = 0; i < party.encounterenemies.length; i++)
-	{
-		tempinitlist.push({ combatant: party.encounterenemies[i], initiative: party.encounterenemies[i].stats.initiative + Math.random()*10+1 });
-	}
-	while (tempinitlist.length > 0)
-	{
-		let highest = 0;
-		let selected = -1;
-		for (let i = 0; i < tempinitlist.length; i++)
-		{
-			if (tempinitlist[i].initiative > highest)
-				selected = i;
-		}
-		party.encounterinitiative.push(tempinitlist[selected]);
-		tempinitlist.splice(selected,1);
-	}
-	
-	party.encountersummary = getEnemySummary(party.encounterenemies);
-	party.currentlyinencounter = true;
-}
-
-function initiateQuestEncounter(party, encounter)
-{
-	let parsedencounter = encounter.split(" ");
-	for (let i = 0; i < parsedencounter.length; i++)
-	{
-		let enemy = getCreatureByBlueprintID(parsedencounter[i]);
-		if (enemy != null)
-			party.encounterenemies.push(enemy);
-	}
-	
-	tempinitlist = [];
-	party.encounterinitiative = [];
-	for (let i = 0; i < party.members.length; i++)
-	{
-		tempinitlist.push({ combatant: party.members[i], initiative: party.members[i].stats.initiative + Math.random()*10+1 });
-	}
-	for (let i = 0; i < party.encounterenemies.length; i++)
-	{
-		tempinitlist.push({ combatant: party.encounterenemies[i], initiative: party.encounterenemies[i].stats.initiative + Math.random()*10+1 });
-	}
-	while (tempinitlist.length > 0)
-	{
-		let highest = 0;
-		let selected = -1;
-		for (let i = 0; i < tempinitlist.length; i++)
-		{
-			if (tempinitlist[i].initiative > highest)
-				selected = i;
-		}
-		party.encounterinitiative.push(tempinitlist[selected]);
-		tempinitlist.splice(selected,1);
-	}
-	
-	party.encountersummary = getEnemySummary(party.encounterenemies);
-	party.questfight = true;
-	party.currentlyinencounter = true;
-}
-
-function initiateCombatEncounter(party, biome, climate)
-{
-	let encountertable;
-	if (biome == "jungle")
-	{
-		if (climate == "extremely hot" || climate == "hot")
-			encountertable = getEncounterTableByName("hot jungle");
-		else if (climate == "temperate")
-			encountertable = getEncounterTableByName("temperate jungle");
-		else if (climate == "extremely cold" || climate == "cold")
-			encountertable = getEncounterTableByName("cold jungle");
-	}
-	else if (biome == "forest")
-	{
-		if (climate == "extremely hot" || climate == "hot")
-			encountertable = getEncounterTableByName("hot forest");
-		else if (climate == "temperate")
-			encountertable = getEncounterTableByName("temperate forest");
-		else if (climate == "extremely cold" || climate == "cold")
-			encountertable = getEncounterTableByName("cold forest");
-	}
-	else if (biome == "grasslands")
-	{
-		if (climate == "extremely hot" || climate == "hot")
-			encountertable = getEncounterTableByName("hot grasslands");
-		else if (climate == "temperate")
-			encountertable = getEncounterTableByName("temperate grasslands");
-		else if (climate == "extremely cold" || climate == "cold")
-			encountertable = getEncounterTableByName("cold grasslands");
-	}
-	else if (biome == "plains")
-	{
-		if (climate == "extremely hot" || climate == "hot")
-			encountertable = getEncounterTableByName("hot plains");
-		else if (climate == "temperate")
-			encountertable = getEncounterTableByName("temperate plains");
-		else if (climate == "extremely cold" || climate == "cold")
-			encountertable = getEncounterTableByName("cold plains");
-	}
-	else if (biome == "desolate")
-	{
-		if (climate == "extremely hot" || climate == "hot")
-			encountertable = getEncounterTableByName("hot desolate");
-		else if (climate == "temperate")
-			encountertable = getEncounterTableByName("temperate desolate");
-		else if (climate == "extremely cold" || climate == "cold")
-			encountertable = getEncounterTableByName("cold desolate");
-	}
-	
-	let encounter = encountertable.encounters[Math.floor(Math.random()*encountertable.encounters.length)].split(" ");
-	for (let i = 0; i < encounter.length; i++)
-	{
-		let enemy = getCreatureByBlueprintID(encounter[i]);
-		if (enemy != null)
-			party.encounterenemies.push(enemy);
-	}
-	
-	
-	tempinitlist = [];
-	party.encounterinitiative = [];
-	for (let i = 0; i < party.members.length; i++)
-	{
-		tempinitlist.push({ combatant: party.members[i], initiative: party.members[i].stats.initiative + Math.random()*10+1 });
-	}
-	for (let i = 0; i < party.encounterenemies.length; i++)
-	{
-		tempinitlist.push({ combatant: party.encounterenemies[i], initiative: party.encounterenemies[i].stats.initiative + Math.random()*10+1 });
-	}
-	while (tempinitlist.length > 0)
-	{
-		let highest = 0;
-		let selected = -1;
-		for (let i = 0; i < tempinitlist.length; i++)
-		{
-			if (tempinitlist[i].initiative > highest)
-				selected = i;
-		}
-		party.encounterinitiative.push(tempinitlist[selected]);
-		tempinitlist.splice(selected,1);
-	}
-	party.encountersummary = getEnemySummary(party.encounterenemies);
-	party.questfight = false;
-	party.currentlyinencounter = true;
-}
-
-function getNextInQueue(queue)
-{
-	let lowest = 9999999;
-	let found = -1;
-	for(let i = 0; i < queue.length; i++)
-	{
-		if (queue[i].priority < lowest)
-		{
-			lowest = queue[i].priority;
-			found = i;
-		}
-	}
-	
-	return found;
-}
-
-function arrayContainsPosition(array, position)
-{
-	for(let i = 0; i < array.length; i++)
-	{
-		if (array[i].x == position.x && array[i].y == position.y)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-function addToDictionary(dictionary, key, value)
-{
-	for(let i = 0; i < dictionary.length; i++)
-	{
-		if (dictionary[i].key.x == key.x && dictionary[i].key.y == key.y)
-		{
-			dictionary[i].value = value;
-			return;
-		}
-	}
-	
-	dictionary.push({ key: key, value: value });
-}
-
-function getFromDictionary(dictionary, key)
-{
-	for(let i = 0; i < dictionary.length; i++)
-	{
-		if (dictionary[i].key.x == key.x && dictionary[i].key.y == key.y)
-		{
-			return dictionary[i].value;
-		}
-	}
-	
-	return null;
-}
-
-function dictionaryToDirection(dictionary, end, start)
-{
-	let backwards = [];
-	let forwards = [];
-	let current = end;
-	backwards.push(end)
-	while (current.x != start.x || current.y != start.y)
-	{
-		current = getFromDictionary(dictionary, current);
-		backwards.push(current);
-	}
-	
-	for (let i = backwards.length-1; i >= 0; i--)
-	{
-		forwards.push(backwards[i]);
-	}
-	
-	return forwards;
-}
-
-function pathHeuristic(a, b)
-{
-	return Math.ceil(Math.abs(a.x - b.x) + Math.abs(a.y - b.y));
-}
-
-function pathToPosition(start, end)
-{
-	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
-	let dictionaryCameFrom = [];
-	let dictionaryCostSoFar = [];
-	let closest = { x: start.x, y: start.y };
-	let closestHexHeuristic = 99999999;
-	let newcost = 0;
-	let oldcost;
-	let priority;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		current = frontierQueue[nextinqueue];
-		frontierQueue.splice(nextinqueue,1);
-		
-		if (current.x == end.x && current.y == end.y)
-		{
-			console.log("path found");
-			//console.log(dictionaryCameFrom);
-			return dictionaryToDirection(dictionaryCameFrom, end, start);
-		}
-		
-		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
-		if (tempcost != null)
-		{
-			newcost = tempcost;
-			newcost += 1;
-		}
-		let connection = { x: current.x, y: current.y+1 };
-		if (connection.y < asworld_height && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-		{
-			tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-			if (tempcost != null)
-			{
-				oldcost = tempcost;
-				if (newcost < oldcost)
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			else
-			{
-				addToDictionary(dictionaryCostSoFar, connection, newcost);
-				priority = newcost + pathHeuristic(connection, end);
-				if (priority - newcost < closestHexHeuristic)
-				{
-					closest = connection;
-					closestHexHeuristic = priority - newcost;
-				}
-				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-				addToDictionary(dictionaryCameFrom, connection, current);
-			}
-		}
-		connection = { x: current.x, y: current.y-1 };
-		if (connection.y > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-		{
-			tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-			if (tempcost != null)
-			{
-				oldcost = tempcost;
-				if (newcost < oldcost)
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			else
-			{
-				addToDictionary(dictionaryCostSoFar, connection, newcost);
-				priority = newcost + pathHeuristic(connection, end);
-				if (priority - newcost < closestHexHeuristic)
-				{
-					closest = connection;
-					closestHexHeuristic = priority - newcost;
-				}
-				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-				addToDictionary(dictionaryCameFrom, connection, current);
-			}
-		}
-		if (current.x%2 == 0)
-		{
-			connection = { x: current.x+1, y: current.y };
-			if (connection.x < asworld_width && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-			{
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (newcost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, newcost);
-						priority = newcost + pathHeuristic(connection, end);
-						if (priority - newcost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - newcost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			connection = { x: current.x+1, y: current.y-1 };
-			if (connection.x < asworld_width && connection.y > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-			{
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (newcost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, newcost);
-						priority = newcost + pathHeuristic(connection, end);
-						if (priority - newcost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - newcost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			connection = { x: current.x-1, y: current.y };
-			if (connection.x > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-			{
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (newcost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, newcost);
-						priority = newcost + pathHeuristic(connection, end);
-						if (priority - newcost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - newcost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			connection = { x: current.x-1, y: current.y-1 };
-			if (connection.x > -1 && connection.y > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-			{
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (newcost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, newcost);
-						priority = newcost + pathHeuristic(connection, end);
-						if (priority - newcost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - newcost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-		}
-		else
-		{
-			connection = { x: current.x+1, y: current.y+1 };
-			if (connection.x < asworld_width && connection.y < asworld_height && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-			{
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (newcost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, newcost);
-						priority = newcost + pathHeuristic(connection, end);
-						if (priority - newcost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - newcost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			connection = { x: current.x+1, y: current.y };
-			if (connection.x < asworld_width && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-			{
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (newcost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, newcost);
-						priority = newcost + pathHeuristic(connection, end);
-						if (priority - newcost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - newcost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			connection = { x: current.x-1, y: current.y+1 };
-			if (connection.x > -1 && connection.y < asworld_height && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-			{
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (newcost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, newcost);
-						priority = newcost + pathHeuristic(connection, end);
-						if (priority - newcost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - newcost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			connection = { x: current.x-1, y: current.y };
-			if (connection.x > -1 && asworldmap[connection.x+(connection.y*asworld_width)].sealevel > 0)
-			{
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (newcost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, newcost);
-						priority = newcost + pathHeuristic(connection, end);
-						if (priority - newcost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - newcost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, newcost);
-					priority = newcost + pathHeuristic(connection, end);
-					if (priority - newcost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - newcost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-		}
-	}
-	console.log("full path not found");
-	return dictionaryToDirection(dictionaryCameFrom, closest, start)
-}
-
-
-function findNearestLandmark(xpos, ypos, landmark, probability = 1)
-{
-	let size = 1951; // radius 24
-	let totalloops = 1;
-	let sizecovered = 7;
-	
-	while (size > sizecovered)
-	{
-		totalloops++;
-		sizecovered += totalloops*6;
-	}
-	
-	let startpos = { x: xpos, y: ypos };
-	let currenthex = { x:0, y:0 };
-	let curdirdur = 0;
-	let dirduration = 1;
-	let loopend = 6;
-	let sizereached = 1;
-	let landmarkfound = false;
-	for(let j = 0; j < totalloops && sizereached < size; j++)
-	{
-		let direction = 3;
-		if (startpos.x  % 2 == 1)
-		{
-			startpos.x = startpos.x+1;
-		}
-		else
-		{
-			startpos.x = startpos.x+1;
-			startpos.y = startpos.y-1;
-		}
-		currenthex.x = startpos.x;
-		currenthex.y = startpos.y;
-		
-		for(let i = 0; i < loopend && sizereached < size; i++)
-		{
-			if (currenthex.x < asworld_width && currenthex.y < asworld_height && currenthex.x > -1 && currenthex.y > -1 && asworldmap[currenthex.x + (currenthex.y*asworld_width)].landmark == landmark)
-			{
-				landmarkfound = true;
-				if (Math.random() < probability)
-				{
-					let start = { x: xpos, y: ypos };
-					let end = { x: currenthex.x, y: currenthex.y };
-					let pathToTown = pathToPosition(start, end);
-
-					if (pathToTown[pathToTown.length-1].x == end.x && pathToTown[pathToTown.length-1].y == end.y)
-						return { x: currenthex.x, y: currenthex.y };
-				}
-			}
-			
-			if (currenthex.x%2 == 1)
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-					currenthex.y++;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-					currenthex.y++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			} 
-			else
-			{
-				if (direction == 5)
-				{
-					currenthex.x--;
-					currenthex.y--;
-				}
-				else if (direction == 4)
-				{
-					currenthex.x--;
-				}
-				else if (direction == 3)
-				{
-					currenthex.y++;
-				}
-				else if (direction == 2)
-				{
-					currenthex.x++;
-				}
-				else if (direction == 1)
-				{
-					currenthex.x++;
-					currenthex.y--;
-				}
-				else if (direction == 0)
-				{
-					currenthex.y--;
-				}
-			}
-			curdirdur++;
-			if (curdirdur == dirduration)
-			{
-				curdirdur = 0;
-				direction++;
-				if (direction == 6)
-					direction = 0;
-			}
-			sizereached++;
-		}
-		
-		loopend += 6;
-		dirduration++;
-	}
-	if (landmarkfound)
-		return false;
-	return null;
-}
-
-function getEnemySummary(enemies)
-{
-	let enemycounts = []
-	let found = false;
-	for (let i = 0; i < enemies.length; i++)
-	{
-		for (let j = 0; j < enemycounts.length; j++)
-		{
-			if (enemies[i].id == enemycounts[j].id)
-			{
-				found = true;
-				enemycounts[j].count++;
-				j += enemycounts.length;
-			}
-		}
-		if (!found)
-		{
-			enemycounts.push({ id: enemies[i].id, count: 1 });
-		}
-	}
-	
-	let summary = "";
-	for (let i = 0; i < enemycounts.length; i++)
-	{
-		let enemy = getCreatureByBlueprintID(enemycounts[i].id);
-		if (enemycounts[i].count > 1)
-			summary += enemy.plural;
-		else
-			summary += enemy.name;
-		
-		if (i < enemycounts.length-2)
-			summary += ", ";
-		else if (i == enemycounts.length-2)
-			summary += " and ";
-	}
-	
-	return summary;
-}
-
-function partyActionAdventure(party)
-{
-	if (party.questlocation < party.questpath.length-1)
-	{
-		party.questlocation++;
-		party.xpos = party.questpath[party.questlocation].x;
-		party.ypos = party.questpath[party.questlocation].y;
-	}
-	
-	let positionbiome = asworldmap[party.xpos+(party.ypos*asworld_width)].biome;
-	let positionclimate = asworldmap[party.xpos+(party.ypos*asworld_width)].climate;
-	let positionlandmark = asworldmap[party.xpos+(party.ypos*asworld_width)].landmark;
-	
-	// encounter logic
-	if (party.questlocation > 0 && Math.random() < 0.12)
-	{
-		if (positionlandmark != "town" && positionlandmark != "city" && positionlandmark != "village")
-		{
-			party.questfight = false;
-			initiateCombatEncounter(party, positionbiome, positionclimate);
-		}
-	}
-	else if (party.questlocation == party.questpath.length-1)
-	{
-		addToAdventureSimLog(party, party.name + " make it to the " + positionlandmark);
-		clearPriority(party.priorities,"adventure");
-		addPriority(party.priorities,"dungeon");
-		initiateDungeonExplore(party);
-	}
-}
-
-function skillCheckOdds(partymember, skill, dc)
-{
-	let skillvalue = getPartyMemberStat(partymember, skill);
-	let successneeds = dc - skillvalue;
-	let odds = Math.max(Math.min((21 - successneeds) / 20, 1), 0);
-	
-	return odds;
-}
-
-function roomResolutionOddCalc(party, solution)
-{
-	let livingpartycount = 0;
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-			livingpartycount++;
-	}
-	
-	if (solution.type == "skillone")
-	{
-		let bestmemberodds = 0;
-		let bestmemberi = -1;
-		for (let i = 0; i < party.members.length; i++)
-		{
-			if (party.members[i].cstatus != "dead")
-			{
-				let odds = skillCheckOdds(party.members[i], solution.skill, solution.dc);
-				if (odds > bestmemberodds)
-				{
-					bestmemberodds = odds;
-					bestmemberi = i;
-				}
-			}
-		}
-		return { odds: bestmemberodds, member: bestmemberi };
-	}
-	
-	if (solution.type == "skillall")
-	{
-		let totalodds = 1;
-		for (let i = 0; i < party.members.length; i++)
-		{
-			if (party.members[i].cstatus != "dead")
-			{
-				let odds = skillCheckOdds(party.members[i], solution.skill, solution.dc);
-				totalodds *= odds;
-			}
-		}
-		return { odds: totalodds, member: -1 };
-	}
-	
-	if (solution.type == "fight")
-	{
-		//don't do odds, just do as 25% ?
-		
-		return { odds: 0.25, member: -1 };
-	}
-}
-
-function resolveRoomViaSolution(party, room, solution, resolver)
-{
-	if (solution.type == "fight")
-	{
-		initiateRoomEncounter(party, room);
-	}
-	else
-	{
-		let resolveOdds = roomResolutionOddCalc(party, solution);
-		let randomroll = Math.random();
-		
-		if (randomroll < resolveOdds.odds)
-		{
-			if (solution.type == "skillone")
-			{
-				addToAdventureSimLog(party,party.members[resolver].name + " " + solution.bypasstext + " " + party.dungeon[party.dungeonroomnum].trap.name);
-			}
-			else if (solution.type == "skillall")
-			{
-				addToAdventureSimLog(party,party.name + " " + solution.bypasstext + " " + party.dungeon[party.dungeonroomnum].trap.name);
-			}
-			
-			let livingpartycount = 0;
-			for (let i = 0; i < party.members.length; i++)
-			{
-				if (party.members[i].cstatus != "dead")
-					livingpartycount++;
-			}
-			
-			for (let i = 0; i < party.members.length; i++)
-			{
-				if (party.members[i].cstatus != "dead")
-					givePartyMemberExp(party, party.members[i], Math.ceil(party.dungeon[party.dungeonroomnum].experience / livingpartycount));
-			}
-		}
-		else
-		{
-			if (solution.failure == "fight")
-			{
-				initiateRoomEncounter(party, room)
-			}
-			else if (solution.failure == "hurtone")
-			{
-				let attacker = 
-				{
-					name: party.dungeon[party.dungeonroomnum].trap.name,
-					stats: 
-					{
-						damagetype: party.dungeon[party.dungeonroomnum].trap.damagetype,
-						damagedienum: party.dungeon[party.dungeonroomnum].trap.damagedienum,
-						damagediesides: party.dungeon[party.dungeonroomnum].trap.damagediesides,
-					}
-				}
-				
-				attackTarget(party, attacker, party.members[resolver]);
-				addToAdventureSimLog(party,party.members[resolver].name + " sets off " + party.dungeon[party.dungeonroomnum].trap.name);
-				
-			}
-			else if (solution.failure == "hurtall")
-			{
-				let attacker = 
-				{
-					name: party.dungeon[party.dungeonroomnum].trap.name,
-					stats: 
-					{
-						damagetype: party.dungeon[party.dungeonroomnum].trap.damagetype,
-						damagedienum: party.dungeon[party.dungeonroomnum].trap.damagedienum,
-						damagediesides: party.dungeon[party.dungeonroomnum].trap.damagediesides,
-					}
-				}
-				
-				for (let i = 0; i < party.members.length; i++)
-				{
-					if (party.members[i].cstatus != "dead")
-						attackTarget(party, attacker, party.members[i]);
-				}
-				
-				addToAdventureSimLog(party,"Someone sets off " + party.dungeon[party.dungeonroomnum].trap.name);
-			}
-		}
-	}
-	
-	
-	
-	party.dungeonroomnum++;
-}
-
-function partyActionDungeon(party)
-{
-	if (party.dungeon[party.dungeonroomnum].id == "questfight")
-	{
-		addToAdventureSimLog(party, party.name + " find the targets!");
-		clearPriority(party.priorities,"dungeon");
-		addPriority(party.priorities,"town");
-		initiateQuestEncounter(party, party.quest.encounters[Math.floor(Math.random()*party.quest.encounters.length)]);
-		party.dungeonexplore = false;
-		party.dungeoncomplete = true;
-		party.dungeon = [];
-		
-		return;
-	}
-	
-	let roomsolutionodds = [];
-	let totalsolutionodds = 0;
-	let avgsolutionodds = 0;
-	let highestsolutionodds = 0;
-	
-	for (let i = 0; i < party.dungeon[party.dungeonroomnum].solutions.length; i++)
-	{
-		let roomodds = roomResolutionOddCalc(party, party.dungeon[party.dungeonroomnum].solutions[i]);
-		roomsolutionodds.push(roomodds);
-		totalsolutionodds += roomodds.odds;
-		if (roomodds.odds > highestsolutionodds)
-			highestsolutionodds = roomodds.odds;
-	}
-	
-	avgsolutionodds = totalsolutionodds / party.dungeon[party.dungeonroomnum].solutions.length;
-	
-	let consideredsolutions = [];
-	
-	for (let i = 0; i < roomsolutionodds.length; i++)
-	{
-		if (roomsolutionodds[i].odds > (highestsolutionodds - (avgsolutionodds / 3)))
-		{
-			consideredsolutions.push({ index: i, resolver: roomsolutionodds[i].member });
-		}
-	}
-	
-	let chosensolution = Math.floor(Math.random()*consideredsolutions.length);
-	
-	resolveRoomViaSolution(party, party.dungeon[party.dungeonroomnum], party.dungeon[party.dungeonroomnum].solutions[consideredsolutions[chosensolution].index], consideredsolutions[chosensolution].resolver);
-	
-}
-
-function partyActionGoToTown(party)
-{
-	
-	if (party.questlocation > 0)
-	{
-		party.questlocation--;
-		party.xpos = party.questpath[party.questlocation].x;
-		party.ypos = party.questpath[party.questlocation].y;
-	}
-	
-	
-	let positionbiome = asworldmap[party.xpos+(party.ypos*asworld_width)].biome;
-	let positionclimate = asworldmap[party.xpos+(party.ypos*asworld_width)].climate;
-	let positionlandmark = asworldmap[party.xpos+(party.ypos*asworld_width)].landmark;
-	
-	// encounter logic
-	if (party.questlocation > 0 && Math.random() < 0.1)
-	{
-		if (positionlandmark != "town" && positionlandmark != "city" && positionlandmark != "village")
-		{
-			party.questfight = false;
-			initiateCombatEncounter(party, positionbiome, positionclimate);
-		}
-	}
-	else if (party.questlocation == 0)
-	{
-		// in town stuff TO DO
-		addToAdventureSimLog(party, party.name + " return to the " + positionlandmark);
-		onReturnToTown(party);
-		party.cstatus = "intown";
-	}
-}
-
-function partyGetAction(party)
-{
-	if (party.questsucceed)
-	{
-		partyActionGoToTown(party);
-	}
-	else if (party.dungeonexplore)
-	{
-		partyActionDungeon(party);
-	}
-	else
-	{
-		partyActionAdventure(party);
-	}
-}
-
-function simulateAdventuring(party)
-{
-	if (!party.currentlyinencounter && !isPartyDead(party))
-	{
-		partyGetAction(party);
-	}
-	
-	while (party.currentlyinencounter)
-	{
-		combatRound(party);
-	}
-}
-
-function filterByItLvl(itemproperty)
-{
-	if (itemproperty.itlvl == this)
-			return true;
-	return false;
-}
-
-function getItemPropertyById(itempropertyid)
-{
-	for (let i = 0; i < adventure_sim.itemproperties.length; i++)
-	{
-		if (adventure_sim.itemproperties[i].id == itempropertyid)
-			return adventure_sim.itemproperties[i];
-	}
-	return null;
-}
-
-function createAdventureSimItem(itemlevel)
-{
-	let tempitemproperties = adventure_sim.itemproperties.filter(filterByItLvl,itemlevel);
-	
-	if (tempitemproperties.length == 0)
-	{
-		console.log("no properties found of level: " + itemlevel);
-		return null;
-	}
-	
-	let randomproperty = tempitemproperties[Math.floor((Math.random()*tempitemproperties.length))];
-	let itemslot = randomproperty.ittypes[Math.floor((Math.random()*randomproperty.ittypes.length))];
-	let itemname;
-	
-	if (itemslot == "mainhand")
-		itemname = adventure_sim.itemnames.mainhand[Math.floor(Math.random()*adventure_sim.itemnames.mainhand.length)];
-	else if (itemslot == "offhand")
-		itemname = adventure_sim.itemnames.offhand[Math.floor(Math.random()*adventure_sim.itemnames.offhand.length)];
-	else if (itemslot == "clothes")
-		itemname = adventure_sim.itemnames.clothes[Math.floor(Math.random()*adventure_sim.itemnames.clothes.length)];
-	else if (itemslot == "armour")
-		itemname = adventure_sim.itemnames.armour[Math.floor(Math.random()*adventure_sim.itemnames.armour.length)];
-	else if (itemslot == "accessory")
-		itemname = adventure_sim.itemnames.accessory[Math.floor(Math.random()*adventure_sim.itemnames.accessory.length)];
-	
-	itemname += " " + randomproperty.name;
-	
-	let item = { 
-		itlvl: itemlevel,
-		name: itemname,
-		slot: itemslot,
-		effects: {
-			damageMod: randomproperty.effects.damageMod,
-			woundMaxMod: randomproperty.effects.woundMaxMod,
-			woundThresholdMod: randomproperty.effects.woundThresholdMod,
-			healRateMod: randomproperty.effects.healRateMod,
-			initiativeMod: randomproperty.effects.initiativeMod,
-			skillMod: {
-				acrobatics: randomproperty.effects.skillMod.acrobatics,
-				animalHandling: randomproperty.effects.skillMod.animalHandling,
-				arcana: randomproperty.effects.skillMod.arcana,
-				athletics: randomproperty.effects.skillMod.athletics,
-				deception: randomproperty.effects.skillMod.deception,
-				insight: randomproperty.effects.skillMod.insight,
-				intimidation: randomproperty.effects.skillMod.intimidation,
-				investigation: randomproperty.effects.skillMod.investigation,
-				medicine: randomproperty.effects.skillMod.medicine,
-				nature: randomproperty.effects.skillMod.nature,
-				perception: randomproperty.effects.skillMod.perception,
-				performance: randomproperty.effects.skillMod.performance,
-				persuasion: randomproperty.effects.skillMod.persuasion,
-				religion: randomproperty.effects.skillMod.religion,
-				sleightOfHand: randomproperty.effects.skillMod.sleightOfHand,
-				stealth: randomproperty.effects.skillMod.stealth,
-				survival: randomproperty.effects.skillMod.survival
-				},
-			resistances: []
-			}
-		};
-	
-	for (let i = 0; i < randomproperty.effects.resistances.length; i++)
-	{
-		item.effects.resistances.push(randomproperty.effects.resistances[i]);
-	}
-	
-	return item;
-}
-
-function unequipAdventurerWithItem(adventurer, item)
-{
-	if (item.slot == "mainhand")
-	{
-		adventurer.magicitems.mainhand = null;
-	}
-	else if (item.slot == "offhand")
-	{
-		adventurer.magicitems.offHand = null;
-	}
-	else if (item.slot == "clothes")
-	{
-		adventurer.magicitems.clothes = null;
-	}
-	else if (item.slot == "armour")
-	{
-		adventurer.magicitems.armour = null;
-	}
-	else if (item.slot == "accessory")
-	{
-		if (adventurer.magicitems.accessories[0] != null && adventurer.magicitems.accessories[0] == item)
-			adventurer.magicitems.accessories[0] = null;
-		else if (adventurer.magicitems.accessories[1] != null && adventurer.magicitems.accessories[1] == item)
-			adventurer.magicitems.accessories[1] = null;
-		else if (adventurer.magicitems.accessories[2] != null && adventurer.magicitems.accessories[2] == item)
-			adventurer.magicitems.accessories[2] = null;
-		else if (adventurer.magicitems.accessories[3] != null && adventurer.magicitems.accessories[3] == item)
-			adventurer.magicitems.accessories[3] = null;
-	}
-}
-
-function equipAdventurerWithItem(adventurer, item)
-{
-	if (item.slot == "mainhand")
-	{
-		adventurer.magicitems.mainHand = item;
-	}
-	else if (item.slot == "offhand")
-	{
-		adventurer.magicitems.offHand = item;
-	}
-	else if (item.slot == "clothes")
-	{
-		adventurer.magicitems.clothes = item;
-	}
-	else if (item.slot == "armour")
-	{
-		adventurer.magicitems.armour = item;
-	}
-	else if (item.slot == "accessory")
-	{
-		if (adventurer.magicitems.accessories[0] == null)
-			adventurer.magicitems.accessories[0] = item;
-		else if (adventurer.magicitems.accessories[1] == null)
-			adventurer.magicitems.accessories[1] = item;
-		else if (adventurer.magicitems.accessories[2] == null)
-			adventurer.magicitems.accessories[2] = item;
-		else if (adventurer.magicitems.accessories[3] == null)
-			adventurer.magicitems.accessories[3] = item;
-	}
-}
-
-function smartEquipUnequipAdventurer(adventurer, item)
-{
-	if (item.slot == "mainhand")
-	{
-		if (adventurer.magicitems.mainHand == null)
-		{
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " equipped " + item.name + " in their main hand";
-			return null;
-		}
-		else if (adventurer.magicitems.mainHand.itlvl < item.itlvl)
-		{
-			let lostitem = adventurer.magicitems.mainhand;
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " in their main hand";
-			return lostitem;
-		}
-		else
-		{
-			//return adventurer.name + " discarded " + item.name;
-			return item;
-		}
-	}
-	else if (item.slot == "offhand")
-	{
-		if (adventurer.magicitems.offHand == null)
-		{
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " equipped " + item.name + " in their off hand";
-			return null;
-		}
-		else if (adventurer.magicitems.offHand.itlvl < item.itlvl)
-		{
-			let lostitem = adventurer.magicitems.offHand;
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " in their off hand";
-			return lostitem;
-		}
-		else
-		{
-			//return adventurer.name + " discarded " + item.name;
-			return item;
-		}
-	}
-	else if (item.slot == "clothes")
-	{
-		if (adventurer.magicitems.clothes == null)
-		{
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " equipped " + item.name + " as clothes";
-			return null;
-		}
-		else if (adventurer.magicitems.clothes.itlvl < item.itlvl)
-		{
-			let lostitem = adventurer.magicitems.clothes;
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " as clothes";
-			return lostitem;
-		}
-		else
-		{
-			//return adventurer.name + " discarded " + item.name;
-			return item;
-		}
-	}
-	else if (item.slot == "armour")
-	{
-		if (adventurer.magicitems.armour == null)
-		{
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " equipped " + item.name + " as armour";
-			return null;
-		}
-		else if (adventurer.magicitems.armour.itlvl < item.itlvl)
-		{
-			let lostitem = adventurer.magicitems.armour;
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " as armour";
-			return lostitem;
-		}
-		else
-		{
-			//return adventurer.name + " discarded " + item.name;
-			return item;
-		}
-	}
-	else if (item.slot == "accessory")
-	{
-		if (adventurer.magicitems.accessories[0] == null || adventurer.magicitems.accessories[1] == null || adventurer.magicitems.accessories[2] == null || adventurer.magicitems.accessories[3] == null)
-		{
-			equipAdventurerWithItem(adventurer, item);
-			//return adventurer.name + " equipped " + item.name + " as an accessory";
-			return null;
-		}
-		else
-		{
-			lowestitlvl = 999;
-			lowestiti = -1;
-			for (let i = 0; i < 4; i++)
-			{
-				if (adventurer.magicitems.accessories[i].itlvl < lowestitlvl)
-				{
-					lowestitlvl = adventurer.magicitems.accessories[i].itlvl;
-					lowestiti = i;
-				}
-			}
-			
-			if (lowestiti > -1 && adventurer.magicitems.accessories[lowestiti].itlvl < item.itlvl)
-			{
-				let lostitem = adventurer.magicitems.accessories[lowestiti];
-				unequipAdventurerWithItem(adventurer, adventurer.magicitems.accessories[lowestiti]);
-				equipAdventurerWithItem(adventurer, item);
-				//return adventurer.name + " swapped " + lostitem.name + " for " + item.name + " as an accessory";
-				return lostitem;
-			}
-			else
-			{
-				//return adventurer.name + " discarded " + item.name;
-				return item;
-			}
-		}
-	}
-}
-
-function getPartyMemberWithLeastItems(party)
-{
-	let lowestitemcount = 999;
-	let lowestitemmember = -1;
-	for(let i = 0; i < party.length; i++)
-	{
-		let itemcount = 0;
-		if (party[i].magicitems.mainHand != null)
-			itemcount++;
-		if (party[i].magicitems.offHand != null)
-			itemcount++;
-		if (party[i].magicitems.clothes != null)
-			itemcount++;
-		if (party[i].magicitems.armour != null)
-			itemcount++;
-		if (party[i].magicitems.accessories[0] != null)
-			itemcount++;
-		if (party[i].magicitems.accessories[1] != null)
-			itemcount++;
-		if (party[i].magicitems.accessories[2] != null)
-			itemcount++;
-		if (party[i].magicitems.accessories[3] != null)
-			itemcount++;
-		
-		if (itemcount < lowestitemcount)
-		{
-			lowestitemcount = itemcount;
-			lowestitemmember = i;
-		}
-	}
-	
-	return party[lowestitemmember];
-}
-
-function getLivingPartyMembers(party)
-{
-	let temppartymemberlist = [];
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-		{
-			temppartymemberlist.push(party.members[i]);
-		}
-	}
-	
-	return temppartymemberlist;
-}
-
-function equipPartyWithItems(party, items)
-{
-	for(let i = 0; i < items.length; i++)
-	{
-		let tempmemberlist = getLivingPartyMembers(party);
-		
-		let itemallocated = false;
-		while (tempmemberlist.length > 0 && !itemallocated)
-		{
-			let partymember = getPartyMemberWithLeastItems(tempmemberlist);
-			let potentialdiscard = smartEquipUnequipAdventurer(partymember, items[i]);
-
-			if (potentialdiscard == items[i])
-			{
-				tempmemberlist.splice(tempmemberlist.indexOf(partymember), 1);
-			}
-			else if (potentialdiscard != null)
-			{
-				addToAdventureSimLog(party, partymember.name + " took " +  items[i].name);
-				itemallocated = true;
-				items.push(potentialdiscard);
-			}
-			else
-			{
-				addToAdventureSimLog(party, partymember.name + " took " +  items[i].name);
-				itemallocated = true;
-			}
-		}
-		
-		if (!itemallocated)
-		{
-			addToAdventureSimLog(party, items[i].name + " was discarded");
-		}
-	}
-}
-
-function getItemBlueprintFromId(id)
-{
-	for (let i = 0; i < adventure_sim.items.length; i++)
-	{
-		if (adventure_sim.items[i].id == id)
-			return adventure_sim.items[i];
-	}
-	return null;
-}
-
-function questComplete(party)
-{
-	party.silverpieces += party.quest.reward.silverpieces;
-	addToAdventureSimLog(party, party.name + " are awarded " +  party.quest.reward.silverpieces + " silver pieces");
-	let itemcount = Math.floor(Math.random()*(party.quest.reward.itemrandom+1))+party.quest.reward.itemmin;
-	let itemstobe = [];
-	for (let i = 0; i < itemcount; i++)
-	{
-		itemstobe.push(getItemBlueprintFromId(party.quest.reward.items[Math.floor(Math.random()*party.quest.reward.items.length)]));
-	}
-	let items = [];
-	for (let i = 0; i < itemstobe.length; i++)
-	{
-		let itlvl = itemstobe[i].itlvlmin + Math.floor(Math.random()*(itemstobe[i].itlvlrandom));
-		let newitem = createAdventureSimItem(itlvl);
-		if (newitem != null)
-			items.push(newitem);
-	}
-	if (items.length > 0)
-		equipPartyWithItems(party, items);
-}
-
-var MAX_QUEST_LEVEL = 9;
-
-//filter where a quests level is equal to the passed 'this' variable
-function filterQuestsByLevel(quest)
-{
-	if (quest.level == this)
-			return true;
-	return false;
-}
-
-function getRandomQuestOfLevel(level = -1)
-{
-	if (level < 0)
-		level = Math.floor(Math.random()*MAX_QUEST_LEVEL)+1;
-	if (level > MAX_QUEST_LEVEL)
-		level = MAX_QUEST_LEVEL;
-	
-	availableQuests = adventure_sim.quests.filter(filterQuestsByLevel,level);
-	
-	return availableQuests[Math.floor(Math.random()*availableQuests.length)];
-}
-
-var REVIVE_COST = 750;
-
-function onReturnToTown(party)
-{
-	if (party.questsucceed)
-	{
-		questComplete(party);
-	}
-	
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus == "dead" && party.silverpieces >= REVIVE_COST)
-		{
-			party.members[i].cstatus = "good";
-			party.silverpieces -= REVIVE_COST;
-			addToAdventureSimLog(party, party.members[i].name + " was revived");
-			addToPersonalLog(party.members[i], "Revived");
-		}
-	}
-	
-	saveAdventuringParties();
-}
-
-function startAdventure(partyid, questlevel)
-{
-	party = getPartyById(partyid);
-	
-	if (party == null)
-		return "invalid party id";
-	
-	if (isPartyDead(party))
-		return party.name + " are all dead";
-	
-	let partytotallevel = 0;
-	let partymembercount = 0;
-	for (let i = 0; i < party.members.length; i++)
-	{
-		if (party.members[i].cstatus != "dead")
-		{
-			partytotallevel += party.members[i].stats.level;
-			partymembercount++;
-		}
-	}
-	
-	if (questlevel == null || isNaN(questlevel))
-		questlevel = Math.max(Math.floor(partytotallevel / partymembercount), 1);
-	
-	party.cstatus = "good";
-	party.quest = getRandomQuestOfLevel(questlevel);
-	party.questcomplete = false;
-	party.questsucceed = false;
-	party.questlocation = 0;
-	party.log = [];
-	for (let i = 0; i < party.members.length; i++)
-	{
-		party.members[i].stats.wounds = [];
-	}
-	clearPriority(party.priorities,"town");
-	addPriority(party.priorities,"adventure");
-	let nearestquestsite = findNearestLandmark(party.xpos, party.ypos, party.quest.landmark, 0.667);
-	while (nearestquestsite != null && nearestquestsite == false)
-	{
-		nearestquestsite = findNearestLandmark(party.xpos, party.ypos, party.quest.landmark, 0.667);
-	}
-	if (nearestquestsite == null)
-		throw "no quest site found";
-	let start = { x: party.xpos, y: party.ypos };
-	party.questpath = pathToPosition(start, nearestquestsite);
-	while (party.cstatus != "intown" && !isPartyDead(party))
-	{
-		simulateAdventuring(party);
-	}
-	let arguments = [];
-	arguments.push(partyid);
-	return outputAdventureSimLog(arguments); //output to discord
-}
-
-function verifyAdventuringPartiesExperience()
-{
-	for (let i = 0; i < adventuringparties.length; i++)
-	{
-		for (let j = 0; j < adventuringparties[i].members.length; j++)
-		{
-			if (!isNaN(adventuringparties[i].members[j].stats.exp))
-			{
-				adventuringparties[i].members[j].stats.backupexp = adventuringparties[i].members[j].stats.exp;
-			}
-			else if (isNaN(adventuringparties[i].members[j].stats.exp) || adventuringparties[i].members[j].stats.exp == null)
-			{
-				adventuringparties[i].members[j].stats.exp = adventuringparties[i].members[j].stats.backupexp;
-			}
-		}
-	}
-}
-
-function setAdventuringPartiesBackupExperience()
-{
-	for (let i = 0; i < adventuringparties.length; i++)
-	{
-		for (let j = 0; j < adventuringparties[i].members.length; j++)
-		{
-			if (!isNaN(adventuringparties[i].members[j].stats.exp))
-			{
-				adventuringparties[i].members[j].stats.backupexp = adventuringparties[i].members[j].stats.exp;
-			}
-			else 
-			{
-				adventuringparties[i].members[j].stats.backupexp = 0;
-			}
-		}
-	}
-}
-
-function saveAdventuringParties()
-{
-	verifyAdventuringPartiesExperience();
-	let file = 'savedadventuringparties.json';
-	let path = './' + file;
-	let data = JSON.stringify(adventuringparties);
-	
-	fs.writeFile(path, data, (err) => {
-		if (err) throw err;
-		console.log('adventuring parties saved');
-		});
-}
-
-function loadAdventuringParties()
-{
-	try
-	{
-		adventuringparties = JSON.parse(fs.readFileSync('savedadventuringparties.json'));
-		console.log('adventuring parties loaded');
-		setAdventuringPartiesBackupExperience();
-	}
-	catch (err)
-	{
-		console.log('no adventuring parties to load');
-	}
-}
-
-function saveSimWorldMap()
-{
-	let file = 'savedadventureworldmap.json';
-	let path = './' + file;
-	let data = JSON.stringify(asworldmap);
-	
-	fs.writeFile(path, data, (err) => {
-		if (err) throw err;
-		console.log('adventure world map saved');
-		});
-}
-
-function loadSimWorldMap()
-{
-	try
-	{
-		asworldmap = JSON.parse(fs.readFileSync('savedadventureworldmap.json'));
-		console.log('adventure world map loaded');
-	}
-	catch (err)
-	{
-		generateSimWorldMap();
-		console.log('no adventure world map to load');
-		for (let i = 0; i < adventuringparties.length; i++)
-		{
-			let nearestCity = findNearestLandmark(64, 36, "city", 0.667);
-			while (nearestCity != null && nearestCity == false)
-			{
-				nearestCity = findNearestLandmark(64, 36, "city", 0.667);
-			}
-			if (nearestCity == null)
-				throw "no city found";
-			adventuringparties[i].xpos = nearestCity.x;
-			adventuringparties[i].ypos = nearestCity.y;
-		}
-	}
-}
-
-
-function initializeAndStartAdventureSim()
-{
-	loadAdventuringParties();
-	loadSimWorldMap();
-}
-
 function GetPhonemeByCharacter(character)
 {
 	for(let i = 0; i < phonemes_english.length; i++)
@@ -16277,210 +10869,6 @@ function DrawSquares(channel ,arguments)
 	
 }
 
-var riverthickness = 180;
-var wallcapradius = 35;
-var wallthickness = 28;
-var roadthickness = 24;
-var sroadthickness = 12;
-
-function DrawTownMap(channel, arguments)
-{
-	let wallvisibility = true;
-	if (arguments.includes("-nowalls"))
-		wallvisibility = false;
-	let tempcanvas = new Canvas();
-	tempcanvas.width = 2000;
-	tempcanvas.height = 2000;
-	
-	let town = GenerateTown(arguments);
-	
-	if (tempcanvas.getContext)
-	{
-		let ctx = tempcanvas.getContext('2d');
-		
-		ctx.fillStyle = "#DDCC99";
-		ctx.fillRect(0,0,2000,2000);
-		
-		// draw river
-		ctx.fillStyle = "#0088FF";
-		ctx.strokeStyle = "#0044AA";
-		
-		
-		if (town.river.length > 0)
-		{
-			let startdir = DirectionVector(town.river[0].start, town.river[0].end);
-			startdir = NintyDegreeTurn(startdir);
-			
-			ctx.beginPath();
-			ctx.moveTo(town.river[0].start.x, town.river[0].start.y);
-			ctx.lineTo(town.river[0].start.x + startdir.x*riverthickness/2, town.river[0].start.y + startdir.y*riverthickness/2);
-			for (let i = 0; i < town.river.length; i++)
-			{
-				let dir = { x: town.river[i].end.x - town.river[i].start.x, y: town.river[i].end.y - town.river[i].start.y };
-				dir = NormalizeVector(NintyDegreeTurn(dir));
-				
-				ctx.lineTo(town.river[i].end.x + dir.x*riverthickness/2, town.river[i].end.y + dir.y*riverthickness/2);
-				
-			}
-			for (let i = town.river.length-1; i > -1; i--)
-			{
-				let dir = { x: town.river[i].end.x - town.river[i].start.x, y: town.river[i].end.y - town.river[i].start.y };
-				dir = NormalizeVector(NintyDegreeTurn(dir));
-				
-				ctx.lineTo(town.river[i].start.x + dir.x*riverthickness*-1/2, town.river[i].start.y + dir.y*riverthickness*-1/2);
-				
-			}
-			startdir = DirectionVector(town.river[town.river.length-1].start, town.river[town.river.length-1].end);
-			startdir = NintyDegreeTurn(startdir);
-			ctx.lineTo(town.river[0].start.x + startdir.x*riverthickness*-1/2, town.river[0].start.y + startdir.y*riverthickness*-1/2);
-			ctx.closePath();
-			//ctx.stroke();
-			ctx.fill()
-		}
-		
-		// draw roads
-		ctx.fillStyle = "#FFFFFF";
-		ctx.strokeStyle = "#FFFFFF"
-		
-		for (let i = 0; i < town.roads.length-1; i++)
-		{
-			ctx.beginPath();
-			ctx.moveTo(town.roads[i].start.x, town.roads[i].start.y);
-			let dir = { x: town.roads[i].end.x - town.roads[i].start.x, y: town.roads[i].end.y - town.roads[i].start.y };
-			dir = NormalizeVector(NintyDegreeTurn(dir));
-			
-			ctx.lineTo(town.roads[i].start.x + dir.x*roadthickness/2, town.roads[i].start.y + dir.y*roadthickness/2);
-			ctx.lineTo(town.roads[i].end.x + dir.x*roadthickness/2, town.roads[i].end.y + dir.y*roadthickness/2);
-			ctx.lineTo(town.roads[i].end.x + dir.x*roadthickness*-1/2, town.roads[i].end.y + dir.y*roadthickness*-1/2);
-			ctx.lineTo(town.roads[i].start.x + dir.x*roadthickness*-1/2, town.roads[i].start.y + dir.y*roadthickness*-1/2);
-			
-			ctx.closePath();
-			//ctx.stroke();
-			ctx.fill()
-		}
-		
-		for (let i = 0; i < town.smallroads.length; i++)
-		{
-			ctx.beginPath();
-			ctx.moveTo(town.smallroads[i].start.x, town.smallroads[i].start.y);
-			let dir = { x: town.smallroads[i].end.x - town.smallroads[i].start.x, y: town.smallroads[i].end.y - town.smallroads[i].start.y };
-			dir = NormalizeVector(NintyDegreeTurn(dir));
-			
-			ctx.lineTo(town.smallroads[i].start.x + dir.x*sroadthickness/2, town.smallroads[i].start.y + dir.y*sroadthickness/2);
-			ctx.lineTo(town.smallroads[i].end.x + dir.x*sroadthickness/2, town.smallroads[i].end.y + dir.y*sroadthickness/2);
-			ctx.lineTo(town.smallroads[i].end.x + dir.x*sroadthickness*-1/2, town.smallroads[i].end.y + dir.y*sroadthickness*-1/2);
-			ctx.lineTo(town.smallroads[i].start.x + dir.x*sroadthickness*-1/2, town.smallroads[i].start.y + dir.y*sroadthickness*-1/2);
-			
-			ctx.closePath();
-			//ctx.stroke();
-			ctx.fill()
-		}
-		
-		
-		ctx.fillStyle = "#776633";
-		ctx.strokeStyle = "#000000"
-		
-		for (let i = 0; i < town.buildings.length; i++)
-		{
-			/*
-			ctx.beginPath();
-			ctx.moveTo(town.buildings[i].position.x, town.buildings[i].position.y);
-			ctx.arc(town.buildings[i].position.x, town.buildings[i].position.y, 6, 0, 2 * Math.PI);
-			ctx.closePath();
-			//ctx.stroke();
-			ctx.fill();
-			*/
-			
-			//building
-			
-			ctx.beginPath();
-			
-			for (let j = 0; j < town.buildings[i].sides.length; j++)
-			{
-				let temproad = GetBuildingWall(town.buildings[i], j);
-				if (j == 0)
-				{
-					ctx.moveTo(temproad.start.x, temproad.start.y)
-					//ctx.lineTo(temproad.start.x, temproad.start.y);
-				}
-				ctx.lineTo(temproad.end.x, temproad.end.y);
-			}
-			//ctx.closePath();
-			ctx.fill()
-			ctx.stroke();
-			
-		}
-		
-		
-		if (wallvisibility)
-		{
-			// draw walls
-			ctx.fillStyle = "#000000";
-			
-			for (let i = 0; i < town.walls.length; i++)
-			{
-				//wall segment
-				ctx.beginPath();
-				ctx.moveTo(town.walls[i].start.x, town.walls[i].start.y);
-				let dir = { x: town.walls[i].end.x - town.walls[i].start.x, y: town.walls[i].end.y - town.walls[i].start.y };
-				dir = NormalizeVector(NintyDegreeTurn(dir));
-				ctx.lineTo(town.walls[i].start.x + dir.x*wallthickness/2, town.walls[i].start.y + dir.y*wallthickness/2);
-				ctx.lineTo(town.walls[i].end.x + dir.x*wallthickness/2, town.walls[i].end.y + dir.y*wallthickness/2);
-				ctx.lineTo(town.walls[i].end.x + dir.x*wallthickness*-1/2, town.walls[i].end.y + dir.y*wallthickness*-1/2);
-				ctx.lineTo(town.walls[i].start.x + dir.x*wallthickness*-1/2, town.walls[i].start.y + dir.y*wallthickness*-1/2);
-				ctx.closePath();
-				//ctx.stroke();
-				ctx.fill()
-			}
-			
-			for (let i = 0; i < town.towers.length; i++)
-			{
-				//wall corner/tower
-				ctx.beginPath();
-				if (town.towers[i].type == "circle")
-				{
-					ctx.moveTo(town.towers[i].x, town.towers[i].y);
-					ctx.arc(town.towers[i].x, town.towers[i].y, wallcapradius, 0, 2 * Math.PI);
-					ctx.closePath();
-					//ctx.stroke();
-					ctx.fill();
-				}
-				else if (town.towers[i].type == "entry")
-				{
-					let dir = town.towers[i].facing;
-					let rightangledir = NintyDegreeTurn(dir);
-					ctx.moveTo(town.towers[i].x + dir.x*wallcapradius*2, town.towers[i].y + dir.y*wallcapradius*2);
-					
-					ctx.lineTo(town.towers[i].x + dir.x*wallcapradius*2, town.towers[i].y + dir.y*wallcapradius*2);
-					ctx.lineTo(town.towers[i].x + rightangledir.x*wallcapradius*2, town.towers[i].y + rightangledir.y*wallcapradius*2);
-					ctx.lineTo(town.towers[i].x + dir.x*wallcapradius*-2, town.towers[i].y + dir.y*wallcapradius*-2);
-					ctx.lineTo(town.towers[i].x + rightangledir.x*wallcapradius*-2, town.towers[i].y + rightangledir.y*wallcapradius*-2);
-					
-					ctx.closePath();
-					//ctx.stroke();
-					ctx.fill();
-				}
-			}
-		}
-		
-		//output file
-		let file = 'drawntown.png';
-		let path = './' + file;
-		
-		let b64 = tempcanvas.toDataURL('image/png', 0.92);
-		
-		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-			if (err) throw err;
-			console.log('The file has been saved!');
-			channel.send({ files: [{ attachment: path, name: file }] });
-		})
-	}
-	else
-	{
-		console.log("getContext failed");
-	}
-}
-
 function NormalizeVector(vector)
 {
 	let length = Math.sqrt((vector.x*vector.x) + (vector.y*vector.y));
@@ -16490,43 +10878,6 @@ function NormalizeVector(vector)
 	return { x: x, y: y };
 }
 
-function NintyDegreeTurn(vector)
-{
-	y = vector.x*-1;
-	x = vector.y;
-	
-	return { x, y };
-}
-
-function FindCirclePoint(d, radius, length)
-{
-	let circlepoint = { x: 0, y: 0 };
-	
-	circlepoint.x = (Math.sin(d / radius) * length);
-	circlepoint.y = (Math.cos(d / radius) * length);
-
-	return circlepoint;
-}
-
-function FindShapePoint(t, radius)
-{
-	let shapepoint = { x: 0, y: 0 };
-	
-	shapepoint.x = (Math.sin(t) * radius);
-	shapepoint.y = (Math.cos(t) * radius);
-	
-	return shapepoint;
-}
-
-
-function RandomPoint(xmax, xmin, ymax, ymin)
-{
-	let randompoint = { x: Math.random()*(xmax-xmin)+xmin, y: Math.random()*(ymax-ymin)+ymin };
-	
-	return randompoint;
-}
-
-
 function LengthBetweenPoints(a, b)
 {
 		let dVector = { x: b.x - a.x, y: b.y - a.y };
@@ -16535,28 +10886,6 @@ function LengthBetweenPoints(a, b)
 		return distance;
 }
 
-function PointWithinCircle(point, circle)
-{
-	let distance = LengthBetweenPoints(point, circle);
-	if (distance < circle.radius)
-		return true;
-	else
-		return false;
-}
-
-function AdjacentContentContains(map, width, height, point, content)
-{
-	if (point.x-1 > -1 && map[x-1+(y*height)].content == content)
-		return true;
-	else if (point.x+1 < width && map[x+1+(y*height)].content == content)
-		return true;
-	else if (point.y-1 > -1 && map[x+((y-1)*height)].content == content)
-		return true;
-	else if (point.y+1 < height && map[x+((y+1)*height)].content == content)
-		return true;
-	
-	return false;
-}
 
 function ContainsIdenticalXY(array, point)
 {
@@ -16569,1297 +10898,6 @@ function ContainsIdenticalXY(array, point)
 	return false;
 }
 
-function DirectionVector(a, b)
-{
-	d = { x: b.x - a.x, y: b.y - a.y };
-	
-	return NormalizeVector(d);
-}
-
-function GetBuildingWall(building, wallno)
-{
-	let wall = 
-		{ 
-			start: { x: building.sides[wallno].start.x, y: building.sides[wallno].start.y },
-			end: { x: building.sides[wallno].end.x, y: building.sides[wallno].end.y }
-		};
-	
-	wall.start.x += building.position.x;
-	wall.start.y += building.position.y;
-	wall.end.x += building.position.x;
-	wall.end.y += building.position.y;
-	
-	return wall;
-}
-
-function OnSegment(p, q, r)
-{
-	if (q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) && q.y <= Math.max(p.y, r.y) && q.y >= Math.min (p.y, r.y))
-		return true;
-	
-	return false;
-}
-
-function Orientation(p, q, r)
-{
-	let val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-	
-	if (val == 0)
-		return 0;
-	
-	return (val > 0) ? 1 : 2;
-}
-
-
-function RoadIntersects(mainroad, intersectingroad)
-{
-	let o1 = Orientation(mainroad.start, mainroad.end, intersectingroad.start);
-	let o2 = Orientation(mainroad.start, mainroad.end, intersectingroad.end);
-	let o3 = Orientation(intersectingroad.start, intersectingroad.end, mainroad.start);
-	let o4 = Orientation(intersectingroad.start, intersectingroad.end, mainroad.end);
-	
-	if (o1 != o2 && o3 != o4)
-		return true;
-	
-	if (o1 = 0 && OnSegment(mainroad.start, intersectingroad.start, mainroad.end))
-		return true;
-	
-	if (o2 = 0 && OnSegment(mainroad.start, intersectingroad.end, mainroad.end))
-		return true;
-	
-	if (o3 = 0 && OnSegment(intersectingroad.start, mainroad.start, intersectingroad.end))
-		return true;
-	
-	if (o4 = 0 && OnSegment(intersectingroad.start, mainroad.end, intersectingroad.end))
-		return true;
-	
-	return false;
-}
-
-//returns collision point if collides, else returns false
-function RoadIntersectsAtPoint(road1, road2, thickness = 0)
-{
-	let temproad = { start: { x: road2.start.x, y: road2.start.y}, end: { x: road2.end.x, y: road2.end.y } };
-	
-	if (thickness > 0)
-	{
-		let tempdir = DirectionVector(road2.start, road2.end);
-		
-		tempdir = NintyDegreeTurn(tempdir);
-		
-		temproad.start.x = road2.start.x + tempdir.x*thickness/2;
-		temproad.start.y = road2.start.y +tempdir.y*thickness/2;
-		temproad.end.x = road2.end.x + tempdir.x*thickness/2;
-		temproad.end.y = road2.end.y + tempdir.y*thickness/2;
-		
-		let side1 = RoadIntersectsAtPoint(road1, temproad);
-		
-		tempdir.x *= -1;
-		tempdir.y *= -1;
-		
-		temproad.start.x = road2.start.x + tempdir.x*thickness/2;
-		temproad.start.y = road2.start.y +tempdir.y*thickness/2;
-		temproad.end.x = road2.end.x + tempdir.x*thickness/2;
-		temproad.end.y = road2.end.y + tempdir.y*thickness/2;
-		
-		let side2 = RoadIntersectsAtPoint(road1, temproad);
-		if (side1 != false && side2 != false)
-		{
-			let distance1 = LengthBetweenPoints(road1.start, side1);
-			let distance2 = LengthBetweenPoints(road1.start, side2);
-			if (distance1 < distance2)
-				return side1;
-			else 
-				return side2;
-		}
-		else if (side1 != false && side2 == false)
-		{
-			return side1;
-		}
-		else if (side1 == false && side2 != false)
-		{
-			return side2;
-		}
-		else
-		{
-			return false;
-		}
-		/*
-		if (PointInTriangle(road1.start, road2.start, temproad.end, temproad.start))
-			return { x: road1.start.x, y: road1.start.y };
-		if (PointInTriangle(road1.start, road2.start,  road2.end, temproad.end))
-			return { x: road1.start.x, y: road1.start.y };
-		*/
-	}
-	
-	
-	let s1 = { x: road1.end.x - road1.start.x, y: road1.end.y - road1.start.y };
-	let s2 = { x: temproad.end.x - temproad.start.x, y: temproad.end.y - temproad.start.y };
-	
-	if ((-s2.x * s1.y + s1.x * s2.y) == 0)
-		return false;
-	
-	let s = (-s1.y * (road1.start.x - temproad.start.x) + s1.x * (road1.start.y - temproad.start.y)) / (-s2.x * s1.y + s1.x * s2.y);
-	let t = (s2.x * (road1.start.y - temproad.start.y) - s2.y * (road1.start.x - temproad.start.x)) / (-s2.x * s1.y + s1.x * s2.y);
-	
-	if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
-	{
-		//collision detected, returning
-		let collisionpoint = { x: road1.start.x + (t * s1.x), y: road1.start.y + (t * s1.y)};
-		return collisionpoint;
-	}
-	
-	return false; // no collision
-}
-
-function PointInTriangle (point, trianglePoint1, trianglePoint2, trianglePoint3)
-{
-	let s = (trianglePoint1.x - trianglePoint3.x) * (point.y - trianglePoint3.y) - (trianglePoint1.y - trianglePoint3.y) * (point.x - trianglePoint3.x);
-	let t = (trianglePoint2.x - trianglePoint1.x) * (point.y - trianglePoint1.y) - (trianglePoint2.y - trianglePoint1.y) * (point.x - trianglePoint1.x);
-	
-	if ((s < 0) != (t < 0) && s != 0 && t != 0)
-		return false;
-	
-	let d = (trianglePoint3.x - trianglePoint2.x) * (point.y - trianglePoint2.y) - (trianglePoint3.y - trianglePoint2.y) * (point.x - trianglePoint2.x);
-	return d == 0 || (d < 0) == (s + t <= 0);
-}
-
-function PointInRoad(point, road, thickness)
-{
-	if (thickness <= 0)
-		return false;
-	
-	let side0 = { start: { x: road.start.x, y: road.start.y}, end: { x: road.end.x, y: road.end.y } };
-	let side1 = { start: { x: road.start.x, y: road.start.y}, end: { x: road.end.x, y: road.end.y } };
-	let tempdir = DirectionVector(side0.start, side0.end);
-	
-	tempdir = NintyDegreeTurn(tempdir);
-	
-	side0.start.x += tempdir.x*thickness/2;
-	side0.start.y += tempdir.y*thickness/2;
-	side0.end.x += tempdir.x*thickness/2;
-	side0.end.y += tempdir.y*thickness/2;
-	side1.start.x += tempdir.x*-1*thickness/2;
-	side1.start.y += tempdir.y*-1*thickness/2;
-	side1.end.x += tempdir.x*-1*thickness/2;
-	side1.end.y += tempdir.y*-1*thickness/2;
-	
-	if (PointInTriangle(point, side0.start, side0.end, side1.start))
-		return true;
-	if (PointInTriangle(point, side1.start,  side1.end, side0.end))
-		return true;
-	
-	return false
-}
-
-
-function GenerateTown(arguments)
-{
-	let xoffset = 1000;
-	let yoffset = 1000;
-	let variance = 50;
-	let wallsSides = Math.floor(Math.random()*8+9);
-	let wallsRadius = Math.floor(Math.random()*250+500);
-	
-	let maxbuildingcount = 100000000;
-	let argumentpos = arguments.indexOf("-b");
-	if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
-		maxbuildingcount = arguments[argumentpos+1];
-	
-	let towncenter = { x: xoffset, y: yoffset };
-	towncenter.x += Math.random()*variance - variance/2;
-	towncenter.y += Math.random()*variance - variance/2;
-	
-	console.log("make river");
-	
-	// make river
-	let river = []
-	
-	let newroad = 
-		{ 
-			start: { x: 0, y: 0 },
-			end: { x: 1, y: 1 }
-		};
-	let riverRand = Math.random();
-	let riverX = riverRand < 0.5 ? Math.random()*600+200 : Math.random()*600+1200;
-	let riverDir = riverRand < 0.5 ? FindShapePoint(Math.random()*Math.PI/3, 1) : FindShapePoint(-Math.random()*Math.PI/3, 1);
-	console.log(riverDir);
-	let	currentpos = { x: riverX, y: -250 };
-	
-	while (currentpos.x > -500 && currentpos.x < 2500 && currentpos.y > -500 && currentpos.y < 2500)
-	{
-		let stretchOfRoad = Math.floor(Math.random()*360+240);
-		newroad = 
-		{ 
-			start: { x: currentpos.x, y: currentpos.y },
-			end: { x: currentpos.x + riverDir.x*stretchOfRoad, y: currentpos.y + riverDir.y*stretchOfRoad }
-		};
-		newroad.end.x += Math.random()*variance*2 - variance;
-		newroad.end.y += Math.random()*variance*2 - variance;
-	
-		river.push(newroad);
-		currentpos.x = newroad.end.x;
-		currentpos.y = newroad.end.y;
-	}
-	
-	
-	
-	let tcInRiver = false;
-	let tcShiftAmount = 2.5;
-	do
-	{
-		tcInRiver = false;
-		for (let i = 0; i < river.length && !tcInRiver; i++)
-		{
-			if (PointInRoad(towncenter, river[i], riverthickness))
-			{
-				tcInRiver = true;
-			}
-		}
-		
-		if (tcInRiver)
-		{
-			tcShiftAmount *= -2;
-			towncenter.x = xoffset + tcShiftAmount;
-		}
-	}
-	while (tcInRiver)
-	
-	console.log("make walls");
-	
-	// make walls and towers
-	let walls = [];
-	let towers = [];
-	
-	let wallPoint1;
-	let wallPoint2;
-	let wallStart;
-	
-	let newwall = 
-		{ 
-			start: { x: 0, y: 0 },
-			end: { x: 1, y: 1 }
-		};
-	
-	for (let i = 0; i < wallsSides; i++)
-	{
-		let intersectFound = false;
-		let wallSubmerged = false;
-		let twoSidesWall = false;
-		let startInRiver = false;
-		let endInRiver = false;
-		if (i > 0)
-			wallPoint1 = { x: wallPoint2.x, y:wallPoint2.y };
-		else
-		{
-			wallPoint1 = FindShapePoint(Math.PI*2*i/wallsSides, wallsRadius);
-			wallPoint1.x += towncenter.x + Math.random()*variance - variance/2;
-			wallPoint1.y += towncenter.y + Math.random()*variance - variance/2;
-			wallStart = { x: wallPoint1.x, y:wallPoint1.y };
-		}
-		if (i == wallsSides-1)
-		{
-			wallPoint2 = { x: wallStart.x, y:wallStart.y };
-		}
-		else
-		{
-			wallPoint2 = FindShapePoint(Math.PI*2*(i+1)/wallsSides, wallsRadius);
-			wallPoint2.x += towncenter.x + Math.random()*variance - variance/2;
-			wallPoint2.y += towncenter.y + Math.random()*variance - variance/2;
-		}
-		
-		newwall = 
-			{ 
-				start: { x: wallPoint1.x, y: wallPoint1.y },
-				end: { x: wallPoint2.x, y: wallPoint2.y }
-			};
-		for (let j = 0; j < river.length && !intersectFound; j++)
-		{
-			if (PointInRoad(newwall.start, river[j], riverthickness))
-			{
-				startInRiver = true;
-			}
-			if (PointInRoad(newwall.end, river[j], riverthickness))
-			{
-				endInRiver = true;
-			}
-		}
-		
-		for (let j = 0; j < river.length && !intersectFound; j++)
-		{
-			if (startInRiver && endInRiver)
-			{
-				wallSubmerged = true;
-			}
-			else if (startInRiver && !endInRiver)
-			{
-				let intersectPoint0 = RoadIntersectsAtPoint(newwall, river[j], riverthickness);
-				if (intersectPoint0 != false)
-				{
-					newwall.start.x = intersectPoint0.x;
-					newwall.start.y = intersectPoint0.y
-					if (!ContainsIdenticalXY(towers, newwall.start))
-					{
-						let newtower = { x: newwall.start.x, y: newwall.start.y };
-						newtower.type = "circle";
-						towers.push(newtower);
-					}
-					
-				}
-				
-				walls.push(newwall);
-			}
-			else if (!startInRiver && endInRiver)
-			{
-				let intersectPoint0 = RoadIntersectsAtPoint(newwall, river[j], riverthickness);
-				if (intersectPoint0 != false)
-				{
-					newwall.end.x = intersectPoint0.x;
-					newwall.end.y = intersectPoint0.y
-					if (!ContainsIdenticalXY(towers, newwall.end))
-					{
-						let newtower = { x: newwall.end.x, y: newwall.end.y };
-						newtower.type = "circle";
-						towers.push(newtower);
-					}
-				}
-				
-				walls.push(newwall);
-				if (!ContainsIdenticalXY(towers, newwall.start))
-				{
-					let newtower = { x: newwall.start.x, y: newwall.start.y };
-					newtower.type = "circle";
-					towers.push(newtower);
-				}
-			}
-			else
-			{
-				reversewall = 
-				{ 
-					start: { x: wallPoint2.x, y: wallPoint2.y },
-					end: { x: wallPoint1.x, y: wallPoint1.y }
-				};
-				let intersectPoint0 = RoadIntersectsAtPoint(newwall, river[j], riverthickness);
-				let intersectPoint1 = RoadIntersectsAtPoint(reversewall, river[j], riverthickness);
-				if (intersectPoint0 != false)
-				{
-					newwall.end.x = intersectPoint0.x;
-					newwall.end.y = intersectPoint0.y
-					if (!ContainsIdenticalXY(towers, newwall.end))
-					{
-						let newtower = { x: newwall.end.x, y: newwall.end.y };
-						newtower.type = "circle";
-						towers.push(newtower);
-					}
-				}
-				if (intersectPoint1 != false)
-				{
-					reversewall.end.x = intersectPoint1.x;
-					reversewall.end.y = intersectPoint1.y
-					if (!ContainsIdenticalXY(towers, reversewall.end))
-					{
-						let newtower = { x: reversewall.end.x, y: reversewall.end.y };
-						newtower.type = "circle";
-						towers.push(newtower);
-					}
-					walls.push(reversewall);
-				}
-				
-				walls.push(newwall);
-				if (!ContainsIdenticalXY(towers, newwall.start))
-				{
-					let newtower = { x: newwall.start.x, y: newwall.start.y };
-					newtower.type = "circle";
-					towers.push(newtower);
-				}
-			}
-		}
-	}
-	
-	console.log("make roads");
-	
-	// make roads
-	let roads = [];
-	/*let newroad = 
-		{ 
-			start: { x: 0, y: 0 },
-			end: { x: 1, y: 1 }
-		};*/
-	let newartery = 
-		{ 
-			start: { x: 0, y: 0 },
-			end: { x: 1, y: 1 }
-		};
-	
-	let arterystarts = [];
-	// main roads;
-	let totalmainroadcount = Math.floor(Math.max(Math.random()*5-2,0)+3);
-	let mainroadcount = Math.ceil(totalmainroadcount/2);
-	let innermainroadcount = totalmainroadcount - mainroadcount;
-	let initialMainRoadDir = Math.random()*Math.PI*2;
-	for (let i = 0; i < mainroadcount; i++)
-	{
-		let intersectFound = false;
-		let intersectPoint;
-		let	currentpos = { x: towncenter.x, y: towncenter.y };
-		let roaddir = FindShapePoint(initialMainRoadDir+Math.PI*2/(totalmainroadcount)*i, 1);
-		let roadactualdir;
-		let pastwall = false;
-		while (currentpos.x > -200 && currentpos.x < 2200 && currentpos.y > -200 && currentpos.y < 2200)
-		{
-			let stretchOfRoad = Math.floor(Math.random()*110+110);
-			let arteryPoint = Math.floor(Math.random()*70+70);
-			newroad = 
-			{ 
-				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roaddir.x*stretchOfRoad, y: currentpos.y + roaddir.y*stretchOfRoad }
-			};
-			newroad.end.x += Math.random()*variance - variance/2;
-			newroad.end.y += Math.random()*variance - variance/2;
-			roadactualdir = DirectionVector(newroad.start, newroad.end);
-			newartery = 
-			{ 
-				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
-				dir: -1
-			};
-			
-			let createBridge = false;
-			for (let j = 0; j < river.length && !createBridge; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, river[j], riverthickness);
-				if (intersectPoint != false)
-				{
-					let bridgeDir = DirectionVector(river[j].start, river[j].end);
-					bridgeDir = NintyDegreeTurn(bridgeDir);
-					//intersectFound = true;
-					createBridge = true;
-					newroad.end.x = intersectPoint.x;
-					newroad.end.y = intersectPoint.y;
-					roads.push(newroad);
-					bridgeRoad = 
-					{ 
-						start: { x: newroad.end.x + bridgeDir.x*riverthickness*2, y: newroad.end.y + bridgeDir.y*riverthickness*2 },
-						end: { x: newroad.end.x, y: newroad.end.y}
-					};
-					bridgeEnd = RoadIntersectsAtPoint(bridgeRoad, river[j], riverthickness-1)
-					if (bridgeEnd != false)
-					{
-						bridgeRoad = 
-						{ 
-							start: { x: newroad.end.x, y: newroad.end.y },
-							end: { x: newroad.end.x + bridgeDir.x*riverthickness, y: newroad.end.y + bridgeDir.y*riverthickness }
-						};
-					}
-					else
-					{
-						bridgeRoad = 
-						{ 
-							start: { x: newroad.end.x, y: newroad.end.y },
-							end: { x: newroad.end.x - bridgeDir.x*riverthickness, y: newroad.end.y - bridgeDir.y*riverthickness }
-						};
-					}
-					roads.push(bridgeRoad);
-					newroad = 
-					{ 
-						start: { x: bridgeRoad.end.x, y: bridgeRoad.end.y },
-						end: { x: bridgeRoad.end.x + roaddir.x*2, y: bridgeRoad.end.y + roaddir.y*2 }
-					};
-				}
-			}
-		
-			for (let j = 0; j < walls.length && !intersectFound; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, walls[j]);
-				if (intersectPoint != false)
-				{
-					intersectFound = true;
-					let facingradians = Math.atan2(roaddir.x,roaddir.y);
-					facingradians += Math.PI/4;
-					let newtower = intersectPoint;
-					newtower.type = "entry";
-					newtower.facing = NormalizeVector(FindShapePoint(facingradians, 1));
-					towers.push(newtower);
-					pastwall = true;
-				}
-			}
-			
-			if (!createBridge && LengthBetweenPoints(newartery.end, towncenter) < wallsRadius*0.85)
-			{
-				if (Math.random() < 0.25)
-					arterystarts.push(newartery);
-				else
-				{
-					newartery.dir = 0;
-					arterystarts.push(newartery);
-					newartery = 
-					{ 
-						start: { x: currentpos.x, y: currentpos.y },
-						end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
-						dir: 1
-					};
-					arterystarts.push(newartery);
-				}
-			}
-			
-			roads.push(newroad);
-			currentpos.x = newroad.end.x;
-			currentpos.y = newroad.end.y;
-		}
-	}
-	// main inner roads
-	for (let i = 0; i < innermainroadcount; i++)
-	{
-		let intersectFound = false;
-		let intersectPoint;
-		let	currentpos = { x: towncenter.x, y: towncenter.y };
-		let roaddir = FindShapePoint(initialMainRoadDir+Math.PI*2/(totalmainroadcount)*(i+mainroadcount), 1);
-		let roadactualdir;
-		let pastwall = false;
-		while (currentpos.x > -200 && currentpos.x < 2200 && currentpos.y > -200 && currentpos.y < 2200)
-		{
-			let stretchOfRoad = Math.floor(Math.random()*110+110);
-			let arteryPoint = Math.floor(Math.random()*70+70);
-			newroad = 
-			{ 
-				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roaddir.x*stretchOfRoad, y: currentpos.y + roaddir.y*stretchOfRoad }
-			};
-			newroad.end.x += Math.random()*variance - variance/2;
-			newroad.end.y += Math.random()*variance - variance/2;
-			roadactualdir = DirectionVector(newroad.start, newroad.end);
-			newartery = 
-			{ 
-				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
-				dir: -1
-			};
-		
-		
-			let createBridge = false;
-			for (let j = 0; j < river.length && !createBridge; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, river[j], riverthickness);
-				if (intersectPoint != false)
-				{
-					let bridgeDir = DirectionVector(river[j].start, river[j].end);
-					bridgeDir = NintyDegreeTurn(bridgeDir);
-					//intersectFound = true;
-					createBridge = true;
-					newroad.end.x = intersectPoint.x;
-					newroad.end.y = intersectPoint.y;
-					roads.push(newroad);
-					bridgeRoad = 
-					{ 
-						start: { x: newroad.end.x + bridgeDir.x*riverthickness*2, y: newroad.end.y + bridgeDir.y*riverthickness*2 },
-						end: { x: newroad.end.x, y: newroad.end.y}
-					};
-					bridgeEnd = RoadIntersectsAtPoint(bridgeRoad, river[j], riverthickness-1)
-					if (bridgeEnd != false)
-					{
-						bridgeRoad = 
-						{ 
-							start: { x: newroad.end.x, y: newroad.end.y },
-							end: { x: newroad.end.x + bridgeDir.x*riverthickness, y: newroad.end.y + bridgeDir.y*riverthickness }
-						};
-					}
-					else
-					{
-						bridgeRoad = 
-						{ 
-							start: { x: newroad.end.x, y: newroad.end.y },
-							end: { x: newroad.end.x - bridgeDir.x*riverthickness, y: newroad.end.y - bridgeDir.y*riverthickness }
-						};
-					}
-					roads.push(bridgeRoad);
-					newroad = 
-					{ 
-						start: { x: bridgeRoad.end.x, y: bridgeRoad.end.y },
-						end: { x: bridgeRoad.end.x + roaddir.x*2, y: bridgeRoad.end.y + roaddir.y*2 }
-					};
-				}
-			}
-		
-			for (let j = 0; j < walls.length && !intersectFound; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, walls[j]);
-				if (intersectPoint != false)
-				{
-					intersectFound = true;
-					newroad.end.x = intersectPoint.x;
-					newroad.end.y = intersectPoint.y;
-				}
-			}
-			
-			if (LengthBetweenPoints(newartery.end, towncenter) < wallsRadius*0.85)
-			{
-				if (Math.random() < 0.25)
-					arterystarts.push(newartery);
-				else
-				{
-					newartery.dir = 0;
-					arterystarts.push(newartery);
-					newartery = 
-					{ 
-						start: { x: currentpos.x, y: currentpos.y },
-						end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
-						dir: 1
-					};
-					arterystarts.push(newartery);
-				}
-			}
-			
-			roads.push(newroad);
-			currentpos.x = newroad.end.x;
-			currentpos.y = newroad.end.y;
-			if (intersectFound)
-			{
-				currentpos.x = 25000;
-				currentpos.y = 25000;
-			}
-		}
-	}
-	
-	console.log("make artery roads");
-	
-	let arteryroads = [];
-	let subarterystarts = [];
-	
-	for (let i = 0; i < arterystarts.length; i++)
-	{
-		let	currentpos = { x: arterystarts[i].end.x, y: arterystarts[i].end.y };
-		let roaddir = NintyDegreeTurn(DirectionVector(arterystarts[i].start, arterystarts[i].end));
-		let roadactualdir;
-		let ignoreFirstRoad = 1;
-		
-		roadsubarr = [];
-		if (arterystarts[i].dir == 1 || (arterystarts[i].dir == -1 && Math.random() < 0.5))
-		{
-			roaddir.x *= -1;
-			roaddir.y *= -1;
-		}
-		
-		while (currentpos.x > -1 && currentpos.x < 2000 && currentpos.y > -1 && currentpos.y < 2000)
-		{
-			let stretchOfRoad = Math.floor(Math.random()*90+90);
-			let arteryPoint = Math.floor(Math.random()*50+50);
-			newroad = 
-			{
-				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roaddir.x*stretchOfRoad, y: currentpos.y + roaddir.y*stretchOfRoad }
-			};
-			newroad.end.x += Math.random()*variance/2 - variance/4;
-			newroad.end.y += Math.random()*variance/2 - variance/4;
-			roadactualdir = DirectionVector(newroad.start, newroad.end);
-			newartery = 
-			{ 
-				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
-				dir: -1
-			};
-			
-			let intersectPoint;
-			let intersectFound = false;
-			let inRiver = false;
-			for (let j = 0; j < river.length && !intersectFound; j++)
-			{
-				if (!inRiver && PointInRoad(newroad.start, river[j], riverthickness))
-				{
-					inRiver = true;
-				}
-				
-				let intersectPoint = RoadIntersectsAtPoint(newroad, river[j], riverthickness);
-				if (intersectPoint != false)
-				{
-					intersectFound = true;
-					newroad.end.x = intersectPoint.x;
-					newroad.end.y = intersectPoint.y;
-				}
-			}
-			
-			for (let j = 0; j < walls.length && !intersectFound; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, walls[j], wallthickness);
-				if (intersectPoint != false)
-				{
-					let truedir = DirectionVector(newroad.start, intersectPoint);
-					let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-					trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-					trueintersectpoint.x += truelength * truedir.x;
-					trueintersectpoint.y += truelength * truedir.y;
-					intersectFound = true;
-					newroad.end.x = trueintersectpoint.x;
-					newroad.end.y = trueintersectpoint.y;
-				}
-			}
-			
-			for (let j = 0; j < roads.length && !intersectFound; j++)
-			{
-				if (i != j)
-				{
-					intersectPoint = RoadIntersectsAtPoint(newroad, roads[j], roadthickness);
-					if (intersectPoint != false)
-					{
-						if (ignoreFirstRoad > 0)
-						{
-							ignoreFirstRoad--;
-						}
-						else
-						{
-							let truedir = DirectionVector(newroad.start, intersectPoint);
-							let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-							trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-							trueintersectpoint.x += truelength * truedir.x;
-							trueintersectpoint.y += truelength * truedir.y;
-							intersectFound = true;
-							newroad.end.x = trueintersectpoint.x;
-							newroad.end.y = trueintersectpoint.y;
-						}
-					}
-				}
-			}
-			
-			for (let j = 0; j < arteryroads.length && !intersectFound; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, arteryroads[j], sroadthickness);
-				if (intersectPoint != false)
-				{
-					if (LengthBetweenPoints(newroad.start, intersectPoint) > 1)
-					{
-						if (ignoreFirstRoad > 0)
-						{
-							ignoreFirstRoad--;
-						}
-						else
-						{
-							let truedir = DirectionVector(newroad.start, intersectPoint);
-							let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-							trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-							trueintersectpoint.x += truelength * truedir.x;
-							trueintersectpoint.y += truelength * truedir.y;
-							intersectFound = true;
-							newroad.end.x = trueintersectpoint.x;
-							newroad.end.y = trueintersectpoint.y;
-						}
-					}
-				}
-			}
-			
-			if (!inRiver)
-			{
-				if (LengthBetweenPoints(newroad.start, newroad.end) > LengthBetweenPoints(newartery.start, newartery.end))
-				{
-					if (Math.random() < 0.334)
-						subarterystarts.push(newartery);
-					else
-					{
-						newartery.dir = 0;
-						subarterystarts.push(newartery);
-						newartery = 
-						{ 
-							start: { x: currentpos.x, y: currentpos.y },
-							end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
-							dir: 1
-						};
-						subarterystarts.push(newartery);
-					}
-				}
-				roadsubarr.push(newroad);
-			}
-			currentpos.x = newroad.end.x;
-			currentpos.y = newroad.end.y;
-			if (intersectFound || inRiver)
-			{
-				currentpos.x = 25000;
-				currentpos.y = 25000;
-			}
-			else
-			{
-				//roaddir = DirectionVector(newroad.start, newroad.end)
-			}
-		}
-		arteryroads = arteryroads.concat(roadsubarr);
-	}
-	
-	console.log("make sub-artery roads");
-	
-	for (let i = 0; i < subarterystarts.length; i++)
-	{
-		let	currentpos = { x: subarterystarts[i].end.x, y: subarterystarts[i].end.y };
-		let roaddir = NintyDegreeTurn(DirectionVector(subarterystarts[i].start, subarterystarts[i].end));
-		let roadactualdir;
-		let ignoreFirstRoad = 1;
-		
-		roadsubarr = [];
-		
-		if (subarterystarts[i].dir == 1 || (subarterystarts[i].dir == -1 && Math.random() < 0.5))
-		{
-			roaddir.x *= -1;
-			roaddir.y *= -1;
-		}
-		while (currentpos.x > -1 && currentpos.x < 2000 && currentpos.y > -1 && currentpos.y < 2000)
-		{
-			let stretchOfRoad = Math.floor(Math.random()*90+90);
-			let arteryPoint = Math.floor(Math.random()*50+50);
-			
-			newroad = 
-			{
-				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roaddir.x*stretchOfRoad, y: currentpos.y + roaddir.y*stretchOfRoad }
-			};
-			newroad.end.x += Math.random()*variance/2 - variance/4;
-			newroad.end.y += Math.random()*variance/2 - variance/4;
-			roadactualdir = DirectionVector(newroad.start, newroad.end);
-			
-			newartery = 
-			{ 
-				start: { x: currentpos.x, y: currentpos.y },
-				end: { x: currentpos.x + roadactualdir.x*arteryPoint, y: currentpos.y + roadactualdir.y*arteryPoint },
-				dir: -1
-			};
-			
-			let intersectPoint;
-			let intersectFound = false;
-			let inRiver = false;
-			for (let j = 0; j < river.length && !intersectFound; j++)
-			{
-				if (!inRiver && PointInRoad(newroad.start, river[j], riverthickness))
-				{
-					inRiver = true;
-				}
-				
-				let intersectPoint = RoadIntersectsAtPoint(newroad, river[j], riverthickness);
-				if (intersectPoint != false)
-				{
-					intersectFound = true;
-					newroad.end.x = intersectPoint.x;
-					newroad.end.y = intersectPoint.y;
-				}
-			}
-			
-			for (let j = 0; j < walls.length && !intersectFound; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, walls[j], wallthickness);
-				if (intersectPoint != false)
-				{
-					let truedir = DirectionVector(newroad.start, intersectPoint);
-					let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-					trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-					trueintersectpoint.x += truelength * truedir.x;
-					trueintersectpoint.y += truelength * truedir.y;
-					intersectFound = true;
-					newroad.end.x = trueintersectpoint.x;
-					newroad.end.y = trueintersectpoint.y;
-				}
-			}
-			
-			for (let j = 0; j < roads.length && !intersectFound; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, roads[j], roadthickness);
-				if (intersectPoint != false)
-				{
-					if (ignoreFirstRoad > 0)
-					{
-						ignoreFirstRoad--;
-					}
-					else
-					{
-						let truedir = DirectionVector(newroad.start, intersectPoint);
-						let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-						trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-						trueintersectpoint.x += truelength * truedir.x;
-						trueintersectpoint.y += truelength * truedir.y;
-						intersectFound = true;
-						newroad.end.x = trueintersectpoint.x;
-						newroad.end.y = trueintersectpoint.y;
-					}
-				}
-			}
-			
-			for (let j = 0; j < arteryroads.length && !intersectFound; j++)
-			{
-				intersectPoint = RoadIntersectsAtPoint(newroad, arteryroads[j], sroadthickness);
-				if (intersectPoint != false)
-				{
-					if (ignoreFirstRoad > 0)
-					{
-						ignoreFirstRoad--;
-					}
-					else
-					{
-						let truedir = DirectionVector(newroad.start, intersectPoint);
-						let truelength = LengthBetweenPoints(newroad.start, intersectPoint);
-						trueintersectpoint = { x: newroad.start.x, y: newroad.start.y };
-						trueintersectpoint.x += truelength * truedir.x;
-						trueintersectpoint.y += truelength * truedir.y;
-						intersectFound = true;
-						newroad.end.x = trueintersectpoint.x;
-						newroad.end.y = trueintersectpoint.y;
-					}
-				}
-			}
-			
-			if (!inRiver)
-			{
-				if (Math.random() < 0.334 && LengthBetweenPoints(newroad.start, newroad.end) > LengthBetweenPoints(newartery.start, newartery.end))
-				{
-					if (Math.random() < 0.667)
-						subarterystarts.push(newartery);
-					else
-					{
-						newartery.dir = 0;
-						subarterystarts.push(newartery);
-						newartery = 
-						{ 
-							start: { x: currentpos.x, y: currentpos.y },
-							end: { x: currentpos.x + roaddir.x*arteryPoint, y: currentpos.y + roaddir.y*arteryPoint },
-							dir: 1
-						};
-						subarterystarts.push(newartery);
-					}
-				}
-				roadsubarr.push(newroad);
-			}
-			currentpos.x = newroad.end.x;
-			currentpos.y = newroad.end.y;
-			if (intersectFound || inRiver)
-			{
-				currentpos.x = 25000;
-				currentpos.y = 25000;
-			}
-			else
-			{
-				//roaddir = DirectionVector(newroad.start, newroad.end)
-			}
-		}
-		arteryroads = arteryroads.concat(roadsubarr);
-	}
-	
-	console.log("make buildings");
-	
-	// make buildings
-	let buildings = [];
-	let totalbuildingcount = 0;
-	
-	for (let i in roads)
-	{
-		let buildingsCount = Math.floor(Math.random()*3+3);
-		
-		for (let j = 0; j < buildingsCount && totalbuildingcount < maxbuildingcount; j++)
-		{
-			let attempts = 0;
-			let buildingSides = 4;
-			let buildingRadius = Math.floor(Math.random()*5+6)*3;
-			let buildingpos = DirectionVector(roads[i].start, roads[i].end);
-			let roaddir = { x: buildingpos.x, y: buildingpos.y };
-			let roadradians = Math.atan2(roaddir.x,roaddir.y) + Math.PI/4;
-			let awayfromroad = NintyDegreeTurn(roaddir);
-			if (Math.random() < 0.5)
-			{
-				awayfromroad.x *= -1;
-				awayfromroad.y *= -1;
-			}
-			let awayFromRoadDir = 0;
-			let awayAmount = buildingRadius+roadthickness/2+3;
-			let randomroadpos = Math.random()*LengthBetweenPoints(roads[i].start, roads[i].end);
-			buildingpos.x = roads[i].start.x + buildingpos.x * randomroadpos;
-			buildingpos.y = roads[i].start.y + buildingpos.y * randomroadpos;
-			buildingpos.x += awayfromroad.x*awayAmount;
-			buildingpos.y += awayfromroad.y*awayAmount;
-			
-			let newbuilding = 
-					{ 
-						position: { x: buildingpos.x, y: buildingpos.y },
-						radius: buildingRadius,
-						sides: []
-					};
-			for (let k = 0; k < buildingSides; k++)
-			{
-				if (k > 0)
-					wallPoint1 = { x: wallPoint2.x, y:wallPoint2.y };
-				else
-				{
-					wallPoint1 = FindShapePoint(roadradians + Math.PI*2*k/buildingSides, buildingRadius);
-					//wallPoint1.x += Math.random()*variance/3 - variance/6;
-					//wallPoint1.y += Math.random()*variance/3 - variance/6;
-					wallStart = { x: wallPoint1.x, y:wallPoint1.y };
-				}
-				if (k == buildingSides-1)
-				{
-					wallPoint2 = { x: wallStart.x, y:wallStart.y };
-				}
-				else
-				{
-					wallPoint2 = FindShapePoint(roadradians + Math.PI*2*(k+1)/buildingSides, buildingRadius);
-					//wallPoint2.x += Math.random()*variance/3 - variance/6;
-					//wallPoint2.y += Math.random()*variance/3 - variance/6;
-				}
-				newwall = 
-					{ 
-						start: { x: wallPoint1.x, y: wallPoint1.y },
-						end: { x: wallPoint2.x, y: wallPoint2.y }
-					};
-				newbuilding.sides.push(newwall);
-			}
-			let intersectPoint;
-			let intersectFound = true;
-			while (intersectFound == true && attempts < 255)
-			{
-				intersectFound = false;
-				
-				for (let l = 0; l < newbuilding.sides.length; l++)
-				{
-					
-					let temproad = GetBuildingWall(newbuilding, l)
-					
-					for (let j = 0; j < river.length && !intersectFound; j++)
-					{
-						if (PointInRoad(temproad.start, river[j], riverthickness))
-						{
-							intersectFound = true;
-						}
-						
-						let intersectPoint = RoadIntersectsAtPoint(temproad, river[j], riverthickness);
-						if (intersectPoint != false)
-						{
-							intersectFound = true;
-						}
-					}
-					
-					for (let k = 0; k < walls.length && !intersectFound; k++)
-					{
-						intersectPoint = RoadIntersectsAtPoint(temproad, walls[k], wallthickness);
-						if (intersectPoint != false)
-						{
-							intersectFound = true;
-						}
-					}
-					
-					for (let k = 0; k < roads.length && !intersectFound; k++)
-					{
-						intersectPoint = RoadIntersectsAtPoint(temproad, roads[k], roadthickness);
-						if (intersectPoint != false)
-						{
-							intersectFound = true;
-						}
-					}
-					
-					for (let k = 0; k < arteryroads.length && !intersectFound; k++)
-					{
-						intersectPoint = RoadIntersectsAtPoint(temproad, arteryroads[k], sroadthickness);
-						if (intersectPoint != false)
-						{
-							intersectFound = true;
-						}
-					}
-					/*
-					for (let k = 0; k < buildings.length && !intersectFound; k++)
-					{
-						for (let m = 0; m < buildings[k].sides.length && !intersectFound; m++)
-						{
-							intersectPoint = RoadIntersectsAtPoint(temproad, GetBuildingWall(buildings[k],m));
-							if (intersectPoint != false)
-							{
-								intersectFound = true;
-							}
-						}
-					}
-					*/
-				}
-				for (let k = 0; k < buildings.length && !intersectFound; k++)
-				{
-					let buildingToBuildingDistance = LengthBetweenPoints(buildings[k].position, newbuilding.position);
-					if (buildingToBuildingDistance < (buildings[k].radius + newbuilding.radius)/1.41)
-						intersectFound = true;
-				}
-				if (intersectFound)
-				{
-					if (awayFromRoadDir == 0)
-						awayfromroad.x *= -1;
-					else
-						awayfromroad.y *= -1;
-					awayFromRoadDir = (awayFromRoadDir+1)%2;
-					buildingpos = DirectionVector(roads[i].start, roads[i].end);
-					randomroadpos = Math.random()*LengthBetweenPoints(roads[i].start, roads[i].end);
-					buildingpos.x = roads[i].start.x + buildingpos.x * randomroadpos;
-					buildingpos.y = roads[i].start.y + buildingpos.y * randomroadpos;
-					buildingpos.x += awayfromroad.x*awayAmount;
-					buildingpos.y += awayfromroad.y*awayAmount;
-					newbuilding.position.x = buildingpos.x;
-					newbuilding.position.y = buildingpos.y;
-					attempts++;
-				}
-			}
-			if (!intersectFound && LengthBetweenPoints(towncenter, buildingpos) < wallsRadius*0.975)
-			{
-				totalbuildingcount++;
-				buildings.push(newbuilding);
-			}
-		}
-	}
-	
-	for (let i in arteryroads)
-	{
-		let buildingsCount = Math.floor(Math.random()*3+3);
-		
-		for (let j = 0; j <  buildingsCount && totalbuildingcount < maxbuildingcount; j++)
-		{
-			let attempts = 0;
-			let buildingSides = 4;
-			let buildingRadius = Math.floor(Math.random()*5+6)*3;
-			let buildingpos = DirectionVector(arteryroads[i].start, arteryroads[i].end);
-			let roaddir = { x: buildingpos.x, y: buildingpos.y };
-			let roadradians = Math.atan2(roaddir.x,roaddir.y) + Math.PI/4;
-			let awayfromroad = NintyDegreeTurn(roaddir);
-			if (Math.random() < 0.5)
-			{
-				awayfromroad.x *= -1;
-				awayfromroad.y *= -1;
-			}
-			let awayFromRoadDir = 0;
-			let awayAmount = buildingRadius+sroadthickness/2+2;
-			let randomroadpos = Math.random()*LengthBetweenPoints(arteryroads[i].start, arteryroads[i].end);
-			buildingpos.x = arteryroads[i].start.x + buildingpos.x * randomroadpos;
-			buildingpos.y = arteryroads[i].start.y + buildingpos.y * randomroadpos;
-			buildingpos.x += awayfromroad.x*awayAmount;
-			buildingpos.y += awayfromroad.y*awayAmount;
-			
-			let newbuilding = 
-					{ 
-						position: { x: buildingpos.x, y: buildingpos.y },
-						radius: buildingRadius,
-						sides: []
-					};
-			for (let k = 0; k < buildingSides; k++)
-			{
-				if (k > 0)
-					wallPoint1 = { x: wallPoint2.x, y:wallPoint2.y };
-				else
-				{
-					wallPoint1 = FindShapePoint(roadradians + Math.PI*2*k/buildingSides, buildingRadius);
-					//wallPoint1.x += Math.random()*variance/3 - variance/6;
-					//wallPoint1.y += Math.random()*variance/3 - variance/6;
-					wallStart = { x: wallPoint1.x, y:wallPoint1.y };
-				}
-				if (k == buildingSides-1)
-				{
-					wallPoint2 = { x: wallStart.x, y:wallStart.y };
-				}
-				else
-				{
-					wallPoint2 = FindShapePoint(roadradians + Math.PI*2*(k+1)/buildingSides, buildingRadius);
-					//wallPoint2.x += Math.random()*variance/3 - variance/6;
-					//wallPoint2.y += Math.random()*variance/3 - variance/6;
-				}
-				newwall = 
-					{ 
-						start: { x: wallPoint1.x, y: wallPoint1.y },
-						end: { x: wallPoint2.x, y: wallPoint2.y }
-					};
-				newbuilding.sides.push(newwall);
-			}
-			let intersectPoint;
-			let intersectFound = true;
-			while (intersectFound == true && attempts < 255)
-			{
-				intersectFound = false;
-				
-				for (let l = 0; l < newbuilding.sides.length; l++)
-				{
-					let temproad = GetBuildingWall(newbuilding, l)
-					
-					for (let j = 0; j < river.length && !intersectFound; j++)
-					{
-						if (PointInRoad(temproad.start, river[j], riverthickness))
-						{
-							intersectFound = true;
-						}
-						
-						let intersectPoint = RoadIntersectsAtPoint(temproad, river[j], riverthickness);
-						if (intersectPoint != false)
-						{
-							intersectFound = true;
-						}
-					}
-					
-					for (let k = 0; k < walls.length && !intersectFound; k++)
-					{
-						intersectPoint = RoadIntersectsAtPoint(temproad, walls[k], wallthickness);
-						if (intersectPoint != false)
-						{
-							intersectFound = true;
-						}
-					}
-					
-					for (let k = 0; k < roads.length && !intersectFound; k++)
-					{
-						intersectPoint = RoadIntersectsAtPoint(temproad, roads[k], roadthickness);
-						if (intersectPoint != false)
-						{
-							intersectFound = true;
-						}
-					}
-					
-					for (let k = 0; k < arteryroads.length && !intersectFound; k++)
-					{
-						intersectPoint = RoadIntersectsAtPoint(temproad, arteryroads[k], sroadthickness);
-						if (intersectPoint != false)
-						{
-							intersectFound = true;
-						}
-					}
-					/*
-					for (let k = 0; k < buildings.length && !intersectFound; k++)
-					{
-						for (let m = 0; m < buildings[k].sides.length && !intersectFound; m++)
-						{
-							intersectPoint = RoadIntersectsAtPoint(temproad, GetBuildingWall(buildings[k],m));
-							if (intersectPoint != false)
-							{
-								intersectFound = true;
-							}
-						}
-					}
-					*/
-				}
-				for (let k = 0; k < buildings.length && !intersectFound; k++)
-				{
-					let buildingToBuildingDistance = LengthBetweenPoints(buildings[k].position, newbuilding.position);
-					if (buildingToBuildingDistance < (buildings[k].radius + newbuilding.radius)/1.41)
-						intersectFound = true;
-				}
-				
-				if (intersectFound)
-				{
-					if (awayFromRoadDir == 0)
-						awayfromroad.x *= -1;
-					else
-						awayfromroad.y *= -1;
-					awayFromRoadDir = (awayFromRoadDir+1)%2;
-					buildingpos = DirectionVector(arteryroads[i].start, arteryroads[i].end);
-					randomroadpos = Math.random()*LengthBetweenPoints(arteryroads[i].start, arteryroads[i].end);
-					buildingpos.x = arteryroads[i].start.x + buildingpos.x * randomroadpos;
-					buildingpos.y = arteryroads[i].start.y + buildingpos.y * randomroadpos;
-					buildingpos.x += awayfromroad.x*awayAmount;
-					buildingpos.y += awayfromroad.y*awayAmount;
-					newbuilding.position.x = buildingpos.x;
-					newbuilding.position.y = buildingpos.y;
-					attempts++;
-				}
-			}
-			
-			if (!intersectFound && LengthBetweenPoints(towncenter, buildingpos) < wallsRadius*0.975)
-			{
-				totalbuildingcount++;
-				buildings.push(newbuilding);
-			}
-		}
-	}
-	
-	town = { roads: roads, smallroads: arteryroads, walls: walls, towers: towers, buildings: buildings, river: river };
-	
-	return town;
-}
 
 function MoveHex(hex, direction)
 {
@@ -17989,1011 +11027,6 @@ function MoveUpwardHex(hex, direction)
 	}
 }
 
-function GetHexNeighbour(hex, direction)
-{
-	direction = direction%6;
-	
-	hexNeighbour = { x: hex.x, y: hex.y }
-	
-	if (hex.y%2 == 1)
-	{
-		if (direction == 5)
-		{
-			hexNeighbour.y--;
-		}
-		else if (direction == 4)
-		{
-			hexNeighbour.x--;
-		}
-		else if (direction == 3)
-		{
-			hexNeighbour.y++;
-		}
-		else if (direction == 2)
-		{
-			hexNeighbour.x++;
-			hexNeighbour.y++;
-		}
-		else if (direction == 1)
-		{
-			hexNeighbour.x++;
-		}
-		else if (direction == 0)
-		{
-			hexNeighbour.x++;
-			hexNeighbour.y--;
-		}
-	} 
-	else
-	{
-		if (direction == 5)
-		{
-			hexNeighbour.x--;
-			hexNeighbour.y--;
-		}
-		else if (direction == 4)
-		{
-			hexNeighbour.x--;
-		}
-		else if (direction == 3)
-		{
-			hexNeighbour.x--;
-			hexNeighbour.y++;
-		}
-		else if (direction == 2)
-		{
-			hexNeighbour.y++;
-		}
-		else if (direction == 1)
-		{
-			hexNeighbour.x++;
-		}
-		else if (direction == 0)
-		{
-			hexNeighbour.y--;
-		}
-	}
-	
-	return hexNeighbour;
-}
-
-function ContainsHexInArray(hex, array)
-{
-	for (let i = 0; i < array.length; i++)
-	{
-		if (array[i].x == hex.x && array[i].y == hex.y)
-			return true;
-	}
-	
-	return false;
-}
-
-function GetContiguousLandHexes(start, map, map_width, map_height)
-{
-	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
-	let doneHexes = [];
-	let priority = 0;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		if (nextinqueue < 0)
-		{
-			console.log(frontierQueue);
-			console.log("unexpected contigous land exit");
-			return doneHexes;
-		}
-		current = frontierQueue[nextinqueue];
-		frontierQueue.splice(nextinqueue,1);
-		
-		let connection = { x: current.x, y: current.y };
-		for (let i = 0; i < 6; i++)
-		{
-			connection = { x: current.x, y: current.y };
-			MoveUpwardHex(connection,i);
-			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && !ContainsHexInArray(connection, doneHexes) && map.hexes[connection.y * map_width + connection.x].height >= 0)
-			{
-				doneHexes.push({ x: connection.x, y: connection.y });
-				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-			}
-		}
-		
-		priority++;
-	}
-	
-	return doneHexes;
-}
-
-function GetContiguousHexesAboveHeight(start, map, map_width, map_height, height_threshold)
-{
-	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
-	let doneHexes = [];
-	let priority = 0;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		if (nextinqueue < 0)
-		{
-			console.log(frontierQueue);
-			console.log("unexpected contigous land exit");
-			return doneHexes;
-		}
-		current = frontierQueue[nextinqueue];
-		frontierQueue.splice(nextinqueue,1);
-		
-		let connection = { x: current.x, y: current.y };
-		for (let i = 0; i < 6; i++)
-		{
-			connection = { x: current.x, y: current.y };
-			MoveUpwardHex(connection,i);
-			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && !ContainsHexInArray(connection, doneHexes) && map.hexes[connection.y * map_width + connection.x].height >= height_threshold)
-			{
-				doneHexes.push({ x: connection.x, y: connection.y });
-				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-			}
-		}
-		
-		priority++;
-	}
-	
-	return doneHexes;
-}
-
-function GetContiguousWaterHexes(start, map, map_width, map_height)
-{
-	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
-	let doneHexes = [];
-	let priority = 0;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		if (nextinqueue < 0)
-		{
-			console.log(frontierQueue);
-			console.log("unexpected contigous water exit");
-			return doneHexes;
-		}
-		current = frontierQueue[nextinqueue];
-		frontierQueue.splice(nextinqueue,1);
-		
-		let connection = { x: current.x, y: current.y };
-		for (let i = 0; i < 6; i++)
-		{
-			connection = { x: current.x, y: current.y };
-			MoveUpwardHex(connection,i);
-			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && !ContainsHexInArray(connection, doneHexes) && map.hexes[connection.y * map_width + connection.x].height < 0)
-			{
-				doneHexes.push({ x: connection.x, y: connection.y });
-				frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-			}
-		}
-		
-		priority++;
-	}
-	
-	return doneHexes;
-}
-
-/*
-function addToBasicDictionary(dictionary, key, value)
-{
-	for(let i = 0; i < dictionary.length; i++)
-	{
-		if (dictionary[i].key == key)
-		{
-			dictionary[i].value = value;
-			return;
-		}
-	}
-	
-	dictionary.push({ key: key, value: value });
-}
-
-function getFromBasicDictionary(dictionary, key)
-{
-	for(let i = 0; i < dictionary.length; i++)
-	{
-		if (dictionary[i].key == key)
-		{
-			return dictionary[i].value;
-		}
-	}
-	
-	return null;
-}
-*/
-
-function getDistanceBetweenCells(a, b)
-{
-	let x = (b.site.x - a.site.x) * (b.site.x - a.site.x);
-	let y = (b.site.y - a.site.y) * (b.site.y - a.site.y);
-	
-	let h = Math.sqrt(x+y);
-	
-	return h;
-}
-
-function dictionaryToCellPath(dictionary, start, end)
-{
-	let current = end;
-	let reversepath = [];
-	
-	while (current != start && current != null)
-	{
-		reversepath.push(current);
-		current = getFromBasicDictionary(dictionary, current.site.voronoiId);
-	}
-	
-	let path = [];
-	
-	for (let i = reversepath.length - 1; i > -1; i--)
-	{
-		path.push(reversepath[i]);
-	}
-	
-	return path;
-}
-
-function pathToCell(startcell, targetcell, cells)
-{
-	let frontierQueue = [{ cell: startcell, priority: 0 }];
-	let dictionaryCameFrom = [];
-	let dictionaryCostSoFar = [];
-	let closest = startcell;
-	let closestHeuristic = 99999999;
-	let newcost = 0;
-	let oldcost;
-	let priority;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		if (nextinqueue < 0)
-		{
-			//unexpected Path End
-			return dictionaryToCellPath(dictionaryCameFrom, startcell, closest);
-		}
-		current = frontierQueue[nextinqueue].cell;
-		frontierQueue.splice(nextinqueue,1);
-		
-		if (current == targetcell)
-		{
-			return dictionaryToCellPath(dictionaryCameFrom, startcell, targetcell);
-		}
-		
-		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current.site.voronoiId)
-		if (tempcost != null)
-		{
-			newcost = tempcost;
-		}
-		
-		let neighbours = current.getNeighborIds();
-		
-		for (let i = 0; i < neighbours.length; i++)
-		{
-			neighbourCell = cells[neighbours[i]];
-			let heightweight = neighbourCell.height < 0 ? (neighbourCell.height + 1) * (neighbourCell.height + 1) : (neighbourCell.height * neighbourCell.height)
-			if (neighbourCell.height < 0)
-				heightweight = 0.25;
-			let connectioncost = newcost + 1 + heightweight;
-			tempcost = getFromBasicDictionary(dictionaryCostSoFar, neighbours[i])
-			if (tempcost != null)
-			{
-				oldcost = tempcost;
-				if (connectioncost < oldcost)
-				{
-					reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
-					priority = connectioncost + getDistanceBetweenCells(neighbourCell, targetcell);
-					if (priority - connectioncost < closestHeuristic)
-					{
-						closest = neighbourCell;
-						closestHeuristic = priority - connectioncost;
-					}
-					frontierQueue.push({ cell: neighbourCell, priority: priority });
-					reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
-				}
-			}
-			else
-			{
-				reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
-				priority = connectioncost + getDistanceBetweenCells(neighbourCell, targetcell);
-				if (priority - connectioncost < closestHeuristic)
-				{
-					closest = neighbourCell;
-					closestHeuristic = priority - connectioncost;
-				}
-				frontierQueue.push({ cell: neighbourCell, priority: priority });
-				reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
-			}
-		}
-	}
-	
-	return dictionaryToCellPath(dictionaryCameFrom, startcell, closest);
-}
-
-function findOceanCells(cells)
-{
-	let topleftcorner = cells[0];
-	let topleftcornerBbox = topleftcorner.getBbox();
-	cells.forEach(cell => {
-		let cellBbox = cell.getBbox();
-		if (cellBbox.x < topleftcornerBbox.x)
-		{
-			topleftcorner = cell;
-			topleftcornerBbox = topleftcorner.getBbox();
-		}
-		else if (cellBbox.x == topleftcornerBbox.x && cellBbox.y < topleftcornerBbox.y)
-		{
-			topleftcorner = cell;
-			topleftcornerBbox = topleftcorner.getBbox();
-		}
-	});
-	
-	let frontierQueue = [{ cell: topleftcorner, priority: 0 }];
-	let doneCells = [];
-	let priority;
-	
-	let current;
-	
-	doneCells.push(topleftcorner.site.voronoiId);
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		if (nextinqueue < 0)
-		{
-			//unexpected ocean end
-			return false;
-		}
-		current = frontierQueue[nextinqueue].cell;
-		priority = frontierQueue[nextinqueue].priority;
-		frontierQueue.splice(nextinqueue,1);
-		
-		let neighbours = current.getNeighborIds();
-		
-		for (let i = 0; i < neighbours.length; i++)
-		{
-			neighbourCell = cells[neighbours[i]];
-			
-			if (!doneCells.includes(neighbours[i]))
-			{
-				if (neighbourCell.height < 0)
-				{
-					neighbourCell.oceanCell = true;
-					frontierQueue.push({ cell: neighbourCell, priority: priority + 1});
-				}
-				doneCells.push(neighbours[i]);
-			}
-		}
-	}
-	
-	return true
-}
-
-
-function nearestOceanCell(startcell, cells)
-{
-	let frontierQueue = [{ cell: startcell, priority: 0 }];
-	let dictionaryCameFrom = [];
-	let dictionaryCostSoFar = [];
-	let newcost = 0;
-	let oldcost;
-	let priority;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		if (nextinqueue < 0)
-		{
-			//unexpected Path End
-			return null;
-		}
-		current = frontierQueue[nextinqueue].cell;
-		frontierQueue.splice(nextinqueue,1);
-		
-		if (current.oceanCell)
-		{
-			return current;
-		}
-		
-		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current.site.voronoiId)
-		if (tempcost != null)
-		{
-			newcost = tempcost;
-		}
-		
-		let neighbours = current.getNeighborIds();
-		
-		for (let i = 0; i < neighbours.length; i++)
-		{
-			neighbourCell = cells[neighbours[i]];
-			let heightweight = neighbourCell.height < 1 ? (neighbourCell.height + 1) * (neighbourCell.height + 1) : (neighbourCell.height * neighbourCell.height)
-			if (neighbourCell.height < 0)
-				heightweight = 10 - neighbourCell.height;
-			let connectioncost = newcost + 1 + heightweight;
-			tempcost = getFromBasicDictionary(dictionaryCostSoFar, neighbours[i])
-			if (tempcost != null)
-			{
-				oldcost = tempcost;
-				if (connectioncost < oldcost)
-				{
-					reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
-					priority = connectioncost + 1;
-					frontierQueue.push({ cell: neighbourCell, priority: priority });
-					reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
-				}
-			}
-			else
-			{
-				reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
-				priority = connectioncost + 1;
-				frontierQueue.push({ cell: neighbourCell, priority: priority });
-				reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
-			}
-		}
-	}
-	
-	return null;
-}
-
-function nearestCellBelowXHeight(startcell, targetHeight, cells)
-{
-	let frontierQueue = [{ cell: startcell, priority: 0 }];
-	let dictionaryCameFrom = [];
-	let dictionaryCostSoFar = [];
-	let newcost = 0;
-	let oldcost;
-	let priority;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		if (nextinqueue < 0)
-		{
-			//unexpected Path End
-			return null;
-		}
-		current = frontierQueue[nextinqueue].cell;
-		frontierQueue.splice(nextinqueue,1);
-		
-		if (current.height < targetHeight)
-		{
-			return current;
-		}
-		
-		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current.site.voronoiId)
-		if (tempcost != null)
-		{
-			newcost = tempcost;
-		}
-		
-		let neighbours = current.getNeighborIds();
-		
-		for (let i = 0; i < neighbours.length; i++)
-		{
-			neighbourCell = cells[neighbours[i]];
-			let heightweight = neighbourCell.height < 1 ? (neighbourCell.height + 1) * (neighbourCell.height + 1) : (neighbourCell.height * neighbourCell.height)
-			let connectioncost = newcost + 1 + heightweight;
-			tempcost = getFromBasicDictionary(dictionaryCostSoFar, neighbours[i])
-			if (tempcost != null)
-			{
-				oldcost = tempcost;
-				if (connectioncost < oldcost)
-				{
-					reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
-					priority = connectioncost + 1;
-					frontierQueue.push({ cell: neighbourCell, priority: priority });
-					reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
-				}
-			}
-			else
-			{
-				reassignToBasicDictionary(dictionaryCostSoFar, neighbours[i], connectioncost);
-				priority = connectioncost + 1;
-				frontierQueue.push({ cell: neighbourCell, priority: priority });
-				reassignToBasicDictionary(dictionaryCameFrom, neighbours[i], current);
-			}
-		}
-	}
-	
-	return null;
-}
-
-function generateVoronoiMap(numberOfPoints, margin, w, h, waterpasses, relaxation, smoothingIterations, landmassCount, mountainsCount, mountainsLength)
-{
-	if (h <= 0 || w <= 0)
-		return false;
-	
-	let points = [];
-	
-	for (let i = 0; i < numberOfPoints; i++)
-	{
-		let newx = Math.floor(((w - margin*2) * Math.random()) + margin);
-		let newy = Math.floor(((h - margin*2) * Math.random()) + margin);
-		let newpoint = { x: newx, y: newy };
-		if (!ContainsIdenticalXY(points, newpoint))
-		{
-			points.push(newpoint);
-		}
-	}
-	
-	let boundbox = { xl: margin, xr: w - margin, yt: margin, yb: h - margin };
-	
-	let diagram = new Voronoi().compute(points, boundbox);
-	
-	//let noisemapHeight = noiseMap2D(h, w, 0.64);
-	//noisemapHeight = increaseContrast(noisemapHeight, h, w, 0.66);
-	//noisemapHeight = smoothenMap(noisemapHeight, h, w, 0.25);
-	
-	for (let i = 0; i < relaxation; i++)
-	{
-		points = [];
-		
-		diagram.cells.forEach(cell => {
-			let cellBbox = cell.getBbox();
-			let newpoint = { x: Math.floor((cellBbox.x + (cellBbox.width/2))), y: Math.floor((cellBbox.y + (cellBbox.height/2))) };
-			points.push(newpoint);
-		});
-		
-		diagram = new Voronoi().compute(points, boundbox);
-	}
-	
-	diagram.cells.forEach(cell => {
-		cell.height = -10;
-	});
-	
-	// random landmasses
-	
-	let watercellborder = Math.min(w/4, h/4);
-	for (let i = 0; i < landmassCount; i++)
-	{
-		let centrePoint = { x: w/8 + Math.random()*w*6/8, y: h/8 + Math.random()*h*6/8 };
-		let radius = Math.random() * Math.min(w/4, h/4) + Math.min(w/4, h/4);
-		let maxDistance = Math.min(w - watercellborder - centrePoint.x, centrePoint.x - watercellborder, h - watercellborder - centrePoint.y, centrePoint.y - watercellborder, radius);
-		if (maxDistance < 0)
-		{
-			i--;
-		}
-		else
-		{
-			diagram.cells.forEach(cell => {
-				let heightmapindex = cell.site.x + (cell.site.y * w);
-				let distanceFromC = LengthBetweenPoints(cell.site, centrePoint);
-				let propDistance = Math.max(1 - (distanceFromC / maxDistance), 0);
-				let newheight = 4 * propDistance;
-				if (newheight > 0)
-					cell.height = newheight;
-			});
-		}
-	}
-	
-	let attempts = 0;
-	//random mountains
-	for (let j = 0; j < mountainsCount; j++)
-	{
-		let randomCell = Math.floor(Math.random()*diagram.cells.length);
-		let neighbours = diagram.cells[randomCell].getNeighborIds();
-		let peakheight = 1.8 + Math.random()*3.6;
-		
-		let cellBbox = diagram.cells[randomCell].getBbox();
-		if (cellBbox.x > watercellborder && (cellBbox.x + cellBbox.width) < w - watercellborder && cellBbox.y > watercellborder && (cellBbox.y + cellBbox.height) < h - watercellborder)
-		{
-			diagram.cells[randomCell].height += peakheight;
-			for (let i = 0; i < neighbours.length; i++)
-			{
-				diagram.cells[neighbours[i]].height += peakheight*2/3;
-			}
-			
-			let nextCell = neighbours[Math.floor(Math.random()*neighbours.length)];
-			let forbiddenCells = [];
-			
-			for (let i = 0; i < mountainsLength; i++)
-			{
-				diagram.cells[nextCell].height += peakheight/2;
-				let nextNeighbours = diagram.cells[nextCell].getNeighborIds();
-				for (let k = 0; k < nextNeighbours.length; k++)
-				{
-					diagram.cells[nextNeighbours[k]].height += peakheight/3;
-				}
-				forbiddenCells.push(nextCell);
-				nextCell = nextNeighbours[Math.floor(Math.random()*nextNeighbours.length)];
-				let nextAttempts = 0;
-				while (forbiddenCells.includes(nextCell))
-				{
-					nextCell = nextNeighbours[Math.floor(Math.random()*nextNeighbours.length)];
-					nextAttempts++;
-					if (nextAttempts > 128)
-					{
-						i = mountainsLength;
-						break;
-					}
-				}
-			}
-			
-			attempts = 0;
-		}
-		else if (attempts < 24)
-		{
-			attempts++;
-			j--;
-		}
-		else
-		{
-			attempts = 0;
-		}			
-	}
-	
-	let lakescount = 0; //mountainsCount/3;
-	
-	//random lakes
-	for (let j = 0; j < lakescount; j++)
-	{
-		let randomCell = Math.floor(Math.random()*diagram.cells.length);
-		let neighbours = diagram.cells[randomCell].getNeighborIds();
-		let peakheight = 0.75 + Math.random()*1.25;
-		
-		let cellBbox = diagram.cells[randomCell].getBbox();
-		if (cellBbox.x > watercellborder && (cellBbox.x + cellBbox.width) < w - watercellborder && cellBbox.y > watercellborder && (cellBbox.y + cellBbox.height) < h - watercellborder)
-		{
-			diagram.cells[randomCell].height -= peakheight;
-			for (let i = 0; i < neighbours.length; i++)
-			{
-				diagram.cells[neighbours[i]].height -= peakheight;
-			}
-			
-			let nextCell = neighbours[Math.floor(Math.random()*neighbours.length)];
-			let forbiddenCells = [];
-			
-			for (let i = 0; i < mountainsLength; i++)
-			{
-				diagram.cells[nextCell].height -= peakheight;
-				let nextNeighbours = diagram.cells[nextCell].getNeighborIds();
-				for (let k = 0; k < nextNeighbours.length; k++)
-				{
-					diagram.cells[nextNeighbours[k]].height -= peakheight;
-				}
-				forbiddenCells.push(nextCell);
-				nextCell = nextNeighbours[Math.floor(Math.random()*nextNeighbours.length)];
-				let nextAttempts = 0;
-				while (forbiddenCells.includes(nextCell))
-				{
-					nextCell = nextNeighbours[Math.floor(Math.random()*nextNeighbours.length)];
-					nextAttempts++;
-					if (nextAttempts > 128)
-					{
-						i = mountainsLength;
-						break;
-					}
-				}
-			}
-			
-			attempts = 0;
-		}
-		else if (attempts < 24)
-		{
-			attempts++;
-			j--;
-		}
-		else
-		{
-			attempts = 0;
-		}			
-	}
-	
-	// land/water automata
-	for (let j = 0; j < waterpasses; j++)
-	{
-		let automataChanges = [];
-		diagram.cells.forEach(cell => {
-			let neighbours = cell.getNeighborIds();
-			let surroundingWater = 0;
-			for (let i = 0; i < neighbours.length; i++)
-			{
-				if (diagram.cells[neighbours[i]].height < 0)
-				{
-					surroundingWater++;
-				}
-			}
-			if (surroundingWater/neighbours.length > 0.667 && cell.height > 0)
-			{
-				automataChanges.push({ voronoiId: cell.site.voronoiId, newHeight: -1 });
-			}
-			else if (surroundingWater/neighbours.length < 0.333 && cell.height < 0)
-			{
-				automataChanges.push({ voronoiId: cell.site.voronoiId, newHeight: 1 });
-			}
-		});
-		
-		for (let i = 0; i < automataChanges.length; i++)
-		{
-			diagram.cells[automataChanges[i].voronoiId].height = automataChanges[i].newHeight;
-		}
-	}
-	
-	//smooth heights
-	
-	for (let j = 0; j < smoothingIterations; j++);
-	{
-		let cellChanges = [];
-	
-		diagram.cells.forEach(cell => {
-			let neighbours = cell.getNeighborIds();
-			let totalHeight = 0;
-			let totalCount = 0;
-			
-			for (let i = 0; i < neighbours.length; i++)
-			{
-				totalHeight += diagram.cells[neighbours[i]].height;
-				totalCount++;
-			}
-			
-			let stddev = (totalHeight/totalCount);
-			
-			let heightChange;
-			
-			heightChange = (stddev + cell.height)/2;
-			
-			/*			
-			if (cell.height < 0)
-			{
-				heightChange = (stddev + stddev + stddev + cell.height)/4;
-			}
-			else if (Math.abs(stddev - cell.height) > cell.height/2)
-				heightChange = (stddev + cell.height + cell.height + cell.height)/4;
-			else
-				heightChange = (stddev + cell.height)/2;
-			*/
-			
-			cellChanges.push({ voronoiId: cell.site.voronoiId, newHeight: heightChange });
-		});
-		
-		for (let i = 0; i < cellChanges.length; i++)
-		{
-			diagram.cells[cellChanges[i].voronoiId].height = cellChanges[i].newHeight;
-		}
-	}
-	
-	return diagram;
-}
-
-function DrawVoronoiMapMap(channel, arguments)
-{
-	let p = 4000;
-	let m = 0.75;
-	let w = 1920;
-	let h = 1080;
-	let wp = 4;
-	let r = 4;
-	let s = 64;
-	let lm = 16;
-	
-	if (arguments != null && arguments.length > 0)
-	{
-		let argumentpos = arguments.indexOf("-p");
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			p = parseInt(arguments[argumentpos+1]);
-		if (p > 16000)
-			p = 16000;
-		argumentpos = arguments.indexOf("-w")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			w = parseInt(arguments[argumentpos+1]);
-		if (w > 6400)
-			w = 6400;
-		argumentpos = arguments.indexOf("-h")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			h = parseInt(arguments[argumentpos+1]);
-		argumentpos = arguments.indexOf("-m")
-		if (h > 4800)
-			h = 4800;
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
-			m = parseFloat(arguments[argumentpos+1]);
-		if (m < 0)
-			m = 0;
-		if (m > 5)
-			m = 5;
-		argumentpos = arguments.indexOf("-wp")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			wp = parseInt(arguments[argumentpos+1]);
-		if (wp > 100)
-			wp = 100;
-		argumentpos = arguments.indexOf("-r")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			r = parseInt(arguments[argumentpos+1]);
-		if (r > 9)
-			r = 8;
-		argumentpos = arguments.indexOf("-lm")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			lm = parseInt(arguments[argumentpos+1]);
-		if (lm > 64)
-			lm = 64;
-		argumentpos = arguments.indexOf("-s")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			s = parseInt(arguments[argumentpos+1]);
-		if (s > 100)
-			s = 100;
-	}
-	
-	let plog = Math.log2(p);
-	let mountains = (Math.random()*0.333 + 0.667) * plog * plog * m; // p / 61;
-	let mountainsL = mountains / 7;
-	let rivers = mountains / 6;
-	let riversL = rivers / 9;
-	let margin = 4;
-	
-	let diagram = generateVoronoiMap(p, margin, w, h, wp, r, s, lm, mountains, mountainsL);
-	
-	findOceanCells(diagram.cells);
-	
-	let tempcanvas = new Canvas();
-	tempcanvas.width = w;
-	tempcanvas.height = h;
-	
-	if (tempcanvas.getContext)
-	{
-		let ctx = tempcanvas.getContext('2d');
-		
-		ctx.fillStyle =  '#0030C0' //"#0055FF";
-		ctx.fillRect(0,0,w,h);
-		
-		let randomColorString = "6dABCDEF123456789";
-		
-		ctx.strokeStyle = "#000000"
-		
-		diagram.cells.forEach(cell => {
-			//let randomColor = "#" + dieRoll(randomColorString);
-			//ctx.fillStyle = randomColor;
-			if (cell && cell.halfedges.length > 2) {
-				ctx.beginPath();
-				let colorval = "#";
-				let rval;
-				let gval;
-				let bval;
-				let rstr;
-				let gstr;
-				let bstr;
-				if (cell.height < 0)
-				{
-					rval = 0;
-					gval = 48;
-					bval = 192;
-				}
-				else if (cell.height <= 2)
-				{
-					rval = Math.floor(16 - (cell.height / 2) * 16);
-					gval = 192;
-					bval = 0;
-				}
-				else if (cell.height <= 9)
-				{
-					rval = 0;
-					gval = 192 // Math.floor(192 - ((cell.height - 2) / 9) * 80);
-					bval = 0;
-				}
-				else if (cell.height <= 20)
-				{
-					rval = Math.min(Math.ceil(64 + ((cell.height - 9) / 20) * 128), 192);
-					gval = 192; //Math.min(Math.ceil(160 + (((cell.height - 9) / 20) * 32)), 192);
-					bval = Math.min(Math.ceil(((cell.height - 9) / 20) * 192), 192);
-				}
-				else
-				{
-					rval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
-					gval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
-					bval = Math.min(Math.ceil(192 + ((cell.height - 20) / 25) * 63), 255);
-				}
-				if (rval < 16)
-				{
-					rstr = "0" + rval.toString(16);
-				}
-				else
-				{
-					rstr = rval.toString(16);
-				}
-				if (gval < 16)
-				{
-					gstr = "0" + gval.toString(16);
-				}
-				else
-				{
-					gstr = gval.toString(16)
-				}
-				if (bval < 16)
-				{
-					bstr = "0" + bval.toString(16);
-				}
-				else
-				{
-					bstr = bval.toString(16);
-				}
-				colorval += rstr + gstr + bstr;
-				ctx.fillStyle = colorval.toUpperCase();
-				ctx.strokeStyle = colorval.toUpperCase();
-				ctx.moveTo(cell.halfedges[0].getStartpoint().x, cell.halfedges[0].getStartpoint().y);
-				cell.halfedges.forEach(halfedge => {
-					ctx.lineTo(halfedge.getEndpoint().x, halfedge.getEndpoint().y);
-				});
-				ctx.closePath();
-				ctx.stroke();
-				ctx.fill()
-			}
-			
-			//ctx.fillStyle = '#FFFFFF';
-			//ctx.fillRect(cell.site.x,cell.site.y,2,2);
-		});
-		
-		ctx.strokeStyle =  '#0030C0' //"#0055FF";
-		ctx.lineWidth = Math.ceil(w / 1200);
-		
-		for (let i = 0; i < rivers; i++)
-		{
-			let randomCell = Math.floor(Math.random()*diagram.cells.length);
-			while (diagram.cells[randomCell].oceanCell)
-			{
-				randomCell = Math.floor(Math.random()*diagram.cells.length);
-			}
-			
-			let currentCell = diagram.cells[randomCell];
-			
-			let closestWater;
-			if (currentCell.height > 0)
-			{
-				closestWater = nearestCellBelowXHeight(currentCell, 0, diagram.cells);
-			}
-			else
-			{
-				closestWater = nearestOceanCell(currentCell, diagram.cells);
-			}
-			
-			if (closestWater != null)
-			{
-				let pathToClosestWater = pathToCell(currentCell, closestWater, diagram.cells);
-				
-				if (pathToClosestWater.length > 7)
-				{				
-					ctx.beginPath();
-					ctx.moveTo(currentCell.site.x, currentCell.site.y);
-					
-					for(let j = 0; j < pathToClosestWater.length; j++)
-					{
-						ctx.lineTo(pathToClosestWater[j].site.x, pathToClosestWater[j].site.y);
-					}
-					
-					ctx.stroke();
-				}
-				else
-				{
-					i--;
-				}
-			}
-		}
-		
-		//output file
-		let file = 'voronoimap.png';
-		let path = './' + file;
-		
-		let b64 = tempcanvas.toDataURL('image/png', 0.92);
-		
-		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-			if (err) throw err;
-			console.log('The file has been saved!');
-			channel.send({ files: [{ attachment: path, name: file }] });
-		})
-	}
-}
 
 // D&D 5e adventure generation
 //
@@ -19005,7 +11038,7 @@ function RandomArrayEntry(array, nesting, nestingcode)
 	{
 		entry = array[Math.floor(Math.random()*array.length)];
 	}
-	return array[Math.floor(Math.random()*array.length)];
+	return entry;
 }
 
 function RandomNPCAbilities()
@@ -19538,10 +11571,10 @@ function TileMapPathToPosition(start, end, tilemap, map_width, map_height)
 			connection = { x: current.x, y: current.y };
 			MoveTile(connection,i);
 			let tilemapPos = connection.x + (connection.y * map_width);
-			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "doorway" || tilemap[tilemapPos] == "unknown"))
+			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "unknown"))
 			{
 				let connectioncost = newcost + 1;
-				if (tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "doorway")
+				if (tilemap[tilemapPos] == "coridoor" || tilemap[tilemapPos] == "open")
 					connectioncost -= 0.99;
 				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
 				if (tempcost != null)
@@ -19577,88 +11610,6 @@ function TileMapPathToPosition(start, end, tilemap, map_width, map_height)
 	}
 	//console.log("full path not found");
 	return dictionaryToDirection(dictionaryCameFrom, closest, start);
-}
-
-function TileMapCanReachPosition(start, end, tilemap, map_width, map_height, include_secret_doors)
-{
-	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
-	let dictionaryCameFrom = [];
-	let dictionaryCostSoFar = [];
-	let closest = { x: start.x, y: start.y };
-	let closestHexHeuristic = 99999999;
-	let newcost = 0;
-	let oldcost;
-	let priority;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		current = frontierQueue[nextinqueue];
-		frontierQueue.splice(nextinqueue,1);
-		if (current.x == end.x && current.y == end.y)
-		{
-			//console.log("path found");
-			//console.log(dictionaryCameFrom);
-			let pathLength = dictionaryToDirection(dictionaryCameFrom, end, start).length;
-			return pathLength;
-		}
-		
-		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
-		if (tempcost != null)
-		{
-			newcost = tempcost;
-			//newcost += 1;
-		}
-		let connection = { x: current.x, y: current.y };
-		for (let i = 0; i < 4; i++)
-		{
-			connection = { x: current.x, y: current.y };
-			MoveTile(connection,i);
-			let tilemapPos = connection.x + (connection.y * map_width);
-			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height 
-				&& (tilemap[tilemapPos] == "open" || tilemap[tilemapPos] == "coridoor" ||  tilemap[tilemapPos] == "doorway"
-				|| tilemap[tilemapPos] == "door_horizontal" || tilemap[tilemapPos] == "door_vertical" 
-				|| tilemap[tilemapPos] == "grate_horizontal" || tilemap[tilemapPos] == "grate_vertical"
-				|| (include_secret_doors && tilemap[tilemapPos] == "secret_door_horizontal") || (include_secret_doors && tilemap[tilemapPos] == "secret_door_vertical")
-				|| (include_secret_doors && tilemap[tilemapPos] == "secret_door_other")))
-			{
-				let connectioncost = newcost + 1;
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (connectioncost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, connectioncost);
-						priority = connectioncost + pathHeuristic(connection, end);
-						if (priority - connectioncost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - connectioncost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, connectioncost);
-					priority = connectioncost + pathHeuristic(connection, end);
-					if (priority - connectioncost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - connectioncost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-		}
-	}
-	//console.log("full path not found");
-	return -1;
 }
 
 function CountAdjacentTileType(x, y, tilemap, tiletype, width, height)
@@ -19898,88 +11849,79 @@ function DictionaryToRoomPath(dictionary, end, start)
 	return forwards;
 }
 
-function DetermineMandatoryRoomPath(roomconnections, start, end)
+function ChainRemoveDoorspaces(pos, doorspaces)
 {
-	let frontierQueue = [{ index: start, priority: 0 }];
-	let dictionaryCameFrom = [];
-	let dictionaryCostSoFar = [];
-	let newcost = 0;
-	let oldcost;
-	let priority;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
+	for (let i = 0; i < doorspaces.length; i++)
 	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		current = frontierQueue[nextinqueue];
-		frontierQueue.splice(nextinqueue,1);
-		if (current.index == end)
+		if (doorspaces[i].y == pos.y - 1) //up
 		{
-			//console.log("mandatory room path found");
-			//console.log(dictionaryCameFrom);
-			return DictionaryToRoomPath(dictionaryCameFrom, end, start);
+			let temp_pos = doorspaces[i]
+			doorspaces.splice(i);
+			ChainRemoveDoorspaces(temp_pos, doorspaces);
+			i--;
 		}
-		
-		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current)
-		if (tempcost != null)
+		else if (doorspaces[i].x == pos.x - 1) //left
 		{
-			newcost = tempcost;
-			//newcost += 1;
+			let temp_pos = doorspaces[i]
+			doorspaces.splice(i);
+			ChainRemoveDoorspaces(temp_pos, doorspaces);
+			i--;
 		}
-		let individual_room_connections = [];
-		for (let i = 0; i < roomconnections.length; i++)
+		else if (doorspaces[i].x == pos.x + 1) //right
 		{
-			if(roomconnections[i].start == current.index)
-			{
-				individual_room_connections.push(roomconnections[i].end);
-			}
-			else if (roomconnections[i].end == current.index)
-			{
-				individual_room_connections.push(roomconnections[i].start);
-			}
+			let temp_pos = doorspaces[i]
+			doorspaces.splice(i);
+			ChainRemoveDoorspaces(temp_pos, doorspaces);
+			i--;
 		}
-		let connection = -1;
-		for (let i = 0; i < individual_room_connections.length; i++)
+		else if (doorspaces[i].y == pos.y + 1) //down
 		{
-			connection = individual_room_connections[i];
-			let connectioncost = newcost + 1;
-			tempcost = getFromBasicDictionary(dictionaryCostSoFar, connection)
-			if (tempcost != null)
-			{
-				oldcost = tempcost;
-				if (connectioncost < oldcost)
-				{
-					reassignToBasicDictionary(dictionaryCostSoFar, connection, connectioncost);
-					frontierQueue.push({ index: connection, priority: connectioncost });
-					reassignToBasicDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			else
-			{
-				reassignToBasicDictionary(dictionaryCostSoFar, connection, connectioncost);
-				priority = connectioncost + pathHeuristic(connection, end);
-				frontierQueue.push({ index: connection, priority: connectioncost });
-				reassignToBasicDictionary(dictionaryCameFrom, connection, current);
-			}
+			let temp_pos = doorspaces[i]
+			doorspaces.splice(i);
+			ChainRemoveDoorspaces(temp_pos, doorspaces);
+			i--;
 		}
-		//console.log(frontierQueue);
 	}
-	//console.log("mandatory room path not found");
-	return false;
+	
+	return doorspaces;
 }
 
-var DUNGEONMAP_MAX_WIDTH = 48;
+function GetDoorPositionAndOrientation(start, end)
+{
+	// console.log (start)
+	// console.log (end)
+	// if (start.x == end.x && start.y == end.y)
+		// console.log("warning, same tile for door start and end")
+	
+	if(start.x == end.x)
+	{
+		if (start.y < end.y)
+			return {pos: start, img: dungeon_gen_assets.door_horizontal[Math.floor(Math.random()*dungeon_gen_assets.door_horizontal.length)]}
+		else
+			return {pos: end, img: dungeon_gen_assets.door_horizontal[Math.floor(Math.random()*dungeon_gen_assets.door_horizontal.length)]}
+	}
+	else
+	{
+		if (start.x < end.x)
+			return {pos: start, img: dungeon_gen_assets.door_vertical[Math.floor(Math.random()*dungeon_gen_assets.door_vertical.length)]}
+		else
+			return {pos: end, img: dungeon_gen_assets.door_vertical[Math.floor(Math.random()*dungeon_gen_assets.door_vertical.length)]}
+	}
+}
+
+var DUNGEONMAP_MAX_WIDTH = 150;
 var DUNGEONMAP_MIN_WIDTH = 20;
-var DUNGEONMAP_MAX_HEIGHT = 36;
+var DUNGEONMAP_MAX_HEIGHT = 120;
 var DUNGEONMAP_MIN_HEIGHT = 15;
-var DUNGEONMAP_MAX_ROOMS = 36;
+var DUNGEONMAP_MAX_ROOMS = 48;
 var DUNGEONMAP_MIN_ROOMS = 3;
+var DUNGEONMAP_ROOM_MIN_HEIGHT = 4;
+var DUNGEONMAP_ROOM_MIN_WIDTH = 4;
 
 function GenerateDungeonMap(arguments)
 {
-	let w = 32;
-	let h = 24;
+	let w = 64;
+	let h = 48;
 	let rooms = 8;
 	let add_loops = false;
 	let secret_doors = false;
@@ -20010,34 +11952,7 @@ function GenerateDungeonMap(arguments)
 			rooms = DUNGEONMAP_MAX_ROOMS;
 		if (rooms < DUNGEONMAP_MIN_ROOMS)
 			rooms = DUNGEONMAP_MIN_ROOMS;
-		argumentpos = arguments.indexOf("-stairsup")
-		if (argumentpos > -1)
-		{
-			if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "n" || arguments[argumentpos+1] == "north"))
-				stairs_up_side = 0.625;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "e" || arguments[argumentpos+1] == "east"))
-				stairs_up_side = 0.375;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "s" || arguments[argumentpos+1] == "south"))
-				stairs_up_side = 0.875;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "w" || arguments[argumentpos+1] == "west"))
-				stairs_up_side = 0.125;
-			else
-				stairs_up_side = -2;
-		}
-		argumentpos = arguments.indexOf("-stairsdown")
-		if (argumentpos > -1)
-		{
-			if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "n" || arguments[argumentpos+1] == "north"))
-				stairs_down_side = 0.625;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "e" || arguments[argumentpos+1] == "east"))
-				stairs_down_side = 0.375;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "s" || arguments[argumentpos+1] == "south"))
-				stairs_down_side = 0.875;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "w" || arguments[argumentpos+1] == "west"))
-				stairs_down_side = 0.125;
-			else
-				stairs_down_side = -2;
-		}
+		
 		argumentpos = arguments.indexOf("-loops")
 		if (argumentpos > -1)
 			add_loops = true;
@@ -20052,913 +11967,227 @@ function GenerateDungeonMap(arguments)
 		}
 	}
 	
+	let map = { rooms: [], width: w, height: h, tilemap: [], doors: [] }
+	let room_map = [];
+	let room_count = 0;
+	let attempts = 0;
 	
-	let tilemap = [];
-	
-	for (let y = 0; y < h; y++)
+	for(let x = 0; x < w; x++)
 	{
-		for (let x = 0; x < w; x++)
+		for(let y = 0; y < h; y++)
 		{
-			if (x == 0 || y == 0 || x == w - 1 || y == h - 1)
-				tilemap.push("closed");
-			else
-				tilemap.push("unknown");
+			let local_pos_index = x + (y * w);
+			room_map[local_pos_index] = 0;
+			map.tilemap[local_pos_index] = "unknown";
 		}
 	}
 	
-	let roommap = [];
-	
-	let roomconnections = [];
-	
-	let roomattempts = 0;
-	
-	for (let r = 0; r < rooms && roomattempts < 4096; r++)
+	//rooms
+	while (room_count < rooms && attempts < rooms*64)
 	{
-		let randomw = Math.floor(Math.random() * 6) + 5;
-		let randomh = Math.floor(Math.random() * 6) + 5;
-		let randomx = Math.floor(Math.random() * (w - 4 - randomw)) + 2;
-		let randomy = Math.floor(Math.random() * (h - 4 - randomh)) + 2;
+		attempts++;
+		let new_room = { img: "", height: 0, width: 0, x_pos: 0, y_pos: 0, layout: [], doorspaces: []}
+		let room_blueprint = dungeon_gen_assets.rooms[Math.floor(Math.random()*dungeon_gen_assets.rooms.length)]
 		
-		let adjacentroom = Math.floor(Math.random() * roommap.length);
-		let roomside = Math.random();
+		new_room.img = room_blueprint.img
+		new_room.height = room_blueprint.height
+		new_room.width = room_blueprint.width
+		new_room.layout = room_blueprint.layout
 		
-		let randomgap = Math.max(Math.floor(Math.random() * 3) - Math.floor(Math.random() * 2), 0) + 2;
+		let rand_x = Math.floor(Math.random()* (w-2 - new_room.width)) + 1
+		let rand_y = Math.floor(Math.random()* (h-2 - new_room.height)) + 1
 		
+		new_room.x_pos = rand_x
+		new_room.y_pos = rand_y
 		
-		if (roommap.length > 0)
-		{	
-			if (roomside < 0.25) // west side
-			{
-				randomx = roommap[adjacentroom].x - randomw - randomgap;
-				randomy = Math.floor(Math.random() * roommap[adjacentroom].h + randomh) + roommap[adjacentroom].y - randomh;
-			}
-			else if (roomside < 0.5) // east side
-			{
-				randomx = roommap[adjacentroom].x + roommap[adjacentroom].w + randomgap;
-				randomy = Math.floor(Math.random() * roommap[adjacentroom].h + randomh) + roommap[adjacentroom].y - randomh;
-			}
-			else if (roomside < 0.75) // south side
-			{
-				randomx = Math.floor(Math.random() * roommap[adjacentroom].w + randomw) + roommap[adjacentroom].x - randomw;
-				randomy = roommap[adjacentroom].y - randomh - randomgap;
-			}
-			else // north side
-			{
-				randomx = Math.floor(Math.random() * roommap[adjacentroom].w + randomw) + roommap[adjacentroom].x - randomw;
-				randomy = roommap[adjacentroom].y + roommap[adjacentroom].h + randomgap;
-			}
-		}
-		
-		let newroom = { x: randomx, y: randomy, w: randomw, h: randomh, secret: false };
-		
-		if (!CheckRoomInBounds(newroom, w, h))
+		let valid_room = true
+		let auto_pass = true
+		for(let i = 0; i < map.rooms.length; i++)
 		{
-			roomattempts++;
-			r--;
-		}
-		else if (!CheckRoomNoOverlap(roommap, newroom))
-		{
-			roomattempts++;
-			r--;
-		}
-		else if (roomattempts < 4096)
-		{
-			for (let y = newroom.y; y <= newroom.h + newroom.y; y++)
+			let current_room = map.rooms[i]
+			if (new_room.x_pos + new_room.width < current_room.x_pos || current_room.x_pos + current_room.width < new_room.x_pos)
 			{
-				tilemap[newroom.x + (y * w)] = "closed";
-				tilemap[newroom.x + newroom.w + (y * w)] = "closed";
-			}
-			for (let x = newroom.x; x <= newroom.w + newroom.x; x++)
-			{
-				tilemap[x + (newroom.y * w)] = "closed";
-				tilemap[x + ((newroom.y + newroom.h) * w)] = "closed";
-			}
-			for (let y = newroom.y + 1; y <= newroom.h + newroom.y - 1; y++)
-			{
-				for (let x = newroom.x + 1; x <= newroom.w + newroom.x - 1; x++)
+				if (new_room.y_pos + new_room.height < current_room.y_pos || current_room.y_pos + current_room.height < new_room.y_pos)
 				{
-					tilemap[x + (y * w)] = "open";
+					continue;
 				}
-			}
-			roommap.push(newroom);
-			roomconnections.push({ start: adjacentroom, end: roommap.length - 1, side: roomside});
-		}
-	}
-	
-	// add loops, optionally
-	
-	let loopconnections = [];
-	
-	if (add_loops)
-	{
-		let loopattempts = 0;
-		
-		for (let l = 0; l < rooms/2 && loopattempts < 256; l++)
-		{
-			let randomroomA = Math.floor(Math.random() * roommap.length);
-			let possible_connections = [];
-			let already_connected = [];
-			let randomroomB = -1;
-			
-			for (let i = 0; i < roommap.length; i++)
-			{
-				if (i != randomroomA)
-					possible_connections.push(i);
-			}
-			
-			for (let c = 0; c < possible_connections.length; c++)
-			{
-				if (roomconnections[c].start == randomroomA)
+				else
 				{
-					for (let i = 0; i < possible_connections.length; i++)
-					{
-						if (possible_connections[i] == roomconnections[c].end)
-						{
-							possible_connections.splice(i,1);
-							break;
-						}
-					}
-					already_connected.push(roomconnections[c].end);
+					auto_pass = false;
+					break;
 				}
-				else if (roomconnections[c].end == randomroomA)
-				{
-					for (let i = 0; i < possible_connections.length; i++)
-					{
-						if (possible_connections[i] == roomconnections[c].start)
-						{
-							possible_connections.splice(i,1);
-							break;
-						}
-					}
-					already_connected.push(roomconnections[c].start);
-				}
-			}
-			
-			if (possible_connections.length == 0)
-			{
-				loopattempts++;
-				l--;
 			}
 			else
 			{
-				randomroomB = possible_connections[Math.floor(Math.random() * possible_connections.length)];
-				
-				loopconnections.push({ start: randomroomA, end: randomroomB, side: 0});
+				auto_pass = false
+				break;
 			}
+		}
+		
+		if (!auto_pass)
+		{
+			for(let y = 0; y < new_room.height; y++)
+			{
+				for(let x = 0; x < new_room.width; x++)
+				{
+					let position_index = (x + new_room.x_pos) + ((y + new_room.y_pos) * w);
+					let local_pos_index = x + (y * new_room.width);
+					if ((room_map[position_index] == 1 || room_map[position_index] == 2) && (new_room.layout[local_pos_index] == 1 || new_room.layout[local_pos_index] == 2))
+					{
+						valid_room = false;
+						break;
+					}
+				}
+				if (!valid_room)
+				{
+					break;
+				}
+			}
+		}
+		if (valid_room)
+		{
+			room_count++;
+			let potential_doors = [];
+			
+			for(let x = 0; x < new_room.width; x++)
+			{
+				for(let y = 0; y < new_room.height; y++)
+				{
+					let position_index = (x + new_room.x_pos) + ((y + new_room.y_pos) * w);
+					let local_pos_index = x + (y * new_room.width);
+					room_map[position_index] += new_room.layout[local_pos_index];
+					if (new_room.layout[local_pos_index] == 2)
+					{
+						map.tilemap[position_index] = "doorway";
+						potential_doors.push({ x: x + new_room.x_pos, y: y + new_room.y_pos});
+					}
+					else if (new_room.layout[local_pos_index] == 1)
+					{
+						map.tilemap[position_index] = "closed";
+					}
+				}
+			}
+			new_room.doorspaces = potential_doors;
+			map.rooms.push(new_room);
 		}
 	}
 	
-	// add doors and paths between rooms
-	//let door_count = 0;
-	
-	for(let i = 0; i < roomconnections.length; i++)
+	//coridoors and doors
+	for(let i = 0; i < map.rooms.length; i++)
 	{
-		let tileIndex = 0;
+		if  (map.rooms[i].doorspaces.length < 1)
+			continue;
 		
-		// make doorways
-		let doorApos = { x: 0, y: 0 };
-		let doorBpos = { x: 0, y: 0 };
-		let Adoor = true;
-		let Bdoor = true;
-		if (roomconnections[i].side <= 0.25)
+		let find_end_attempts = 0;
+		let other_room = Math.floor(Math.random() * map.rooms.length)
+		while (find_end_attempts < 999 && (other_room == i || map.rooms[other_room].doorspaces.length < 1))
 		{
-			let randomy = Math.floor((Math.random() * (roommap[roomconnections[i].start].h - 2)) + roommap[roomconnections[i].start].y + 2);
-			doorApos = { x: roommap[roomconnections[i].start].x, y: randomy };
-			
-			randomy = Math.floor((Math.random() * (roommap[roomconnections[i].end].h - 2)) + roommap[roomconnections[i].end].y + 2);
-			doorBpos = { x: roommap[roomconnections[i].end].x + roommap[roomconnections[i].end].w, y: randomy };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			
-			while ((CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Adoor == true)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (doorApos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 2  && doorApos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
-					Adoor = false;
-			}
-			
-			doorApos.y += change;
-			
-			change = 0;
-			changesign = -1;
-			changeattempt = 1;
-			
-			while ((CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Bdoor == true)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (doorBpos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 2  && doorBpos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
-					Bdoor = false;
-			}
-			
-			doorBpos.y += change;
+			find_end_attempts++;
+			other_room = Math.floor(Math.random() * map.rooms.length);
 		}
-		else if (roomconnections[i].side <= 0.5)
+		
+		if (find_end_attempts >= 999)
 		{
-			let randomy = Math.floor((Math.random() * (roommap[roomconnections[i].start].h - 2)) + roommap[roomconnections[i].start].y + 2);
-			doorApos = { x: roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w, y: randomy };
-			
-			randomy = Math.floor((Math.random() * (roommap[roomconnections[i].end].h - 2)) + roommap[roomconnections[i].end].y + 2);
-			doorBpos = { x: roommap[roomconnections[i].end].x, y: randomy };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			
-			while ((CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Adoor == true)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (doorApos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 2 && doorApos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
-					Adoor = false;
-			}
-			
-			doorApos.y += change;
-			
-			change = 0;
-			changesign = -1;
-			changeattempt = 1;
-			
-			while ((CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x, doorBpos.y + change, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Bdoor == true)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (doorBpos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 2 && doorBpos.y - Math.abs(change) < roommap[roomconnections[i].start].y + 1)
-					Bdoor = false;
-			}
-			
-			doorBpos.y += change;
+			break;
 		}
-		else if (roomconnections[i].side <= 0.75)
+		
+		let door_count = 0;
+		let room_door = Math.floor(Math.random() * map.rooms[i].doorspaces.length)
+		let door_start = map.rooms[i].doorspaces[room_door]
+		let door_end = map.rooms[other_room].doorspaces[Math.floor(Math.random() * map.rooms[other_room].doorspaces.length)]
+		
+		let tile_path = TileMapPathToPosition(door_start, door_end, map.tilemap, map.width, map.height)
+		
+		map.rooms[i].doorspaces.splice(room_door)
+		map.rooms[i].doorspaces = ChainRemoveDoorspaces(door_start, map.rooms[i].doorspaces)
+		
+		for(let j = 0; j < tile_path.length; j++)
 		{
-			let randomx = Math.floor((Math.random() * (roommap[roomconnections[i].start].w - 2)) + roommap[roomconnections[i].start].x + 2);
-			doorApos = { x: randomx, y: roommap[roomconnections[i].start].y };
+			let path_index = tile_path[j].x + (tile_path[j].y * w)
 			
-			randomx = Math.floor((Math.random() * (roommap[roomconnections[i].end].w - 2)) + roommap[roomconnections[i].end].x + 2);
-			doorBpos = { x: randomx, y: roommap[roomconnections[i].end].y + roommap[roomconnections[i].end].h };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			
-			while ((CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Adoor == true)
+			if (map.tilemap[path_index] != "closed")
 			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (doorApos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 2 && doorApos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
-					Adoor = false;
+				map.tilemap[path_index] = "coridoor"
 			}
-			
-			doorApos.y += change;
-			
-			change = 0;
-			changesign = -1;
-			changeattempt = 1;
-			
-			while ((CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Bdoor == true)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (doorBpos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 2 && doorBpos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
-					Bdoor = false;
-			}
-			
-			doorBpos.y += change;
+		}
+		if (tile_path.length >= 2)
+		{
+			map.doors.push(GetDoorPositionAndOrientation(door_start, tile_path[1]))
+			map.doors.push(GetDoorPositionAndOrientation(door_end, tile_path[tile_path.length-1]))
 		}
 		else
 		{
-			let randomx = Math.floor((Math.random() * (roommap[roomconnections[i].start].w - 2)) + roommap[roomconnections[i].start].x + 2);
-			doorApos = { x: randomx, y: roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h };
-			
-			randomx = Math.floor((Math.random() * (roommap[roomconnections[i].end].w - 2)) + roommap[roomconnections[i].end].x + 2);
-			doorBpos = { x: randomx, y: roommap[roomconnections[i].end].y };
-			
-			let change = 0;
-			let changesign = -1;
-			let changeattempt = 1;
-			
-			while ((CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorApos.x + change, doorApos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Adoor == true)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (doorApos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 2 && doorApos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
-					Adoor = false;
-			}
-			
-			doorApos.y += change;
-			
-			change = 0;
-			changesign = -1;
-			changeattempt = 1;
-			
-			while ((CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "unknown", w, h) == 0 || CountAdjacentTileType(doorBpos.x + change, doorBpos.y, tilemap, "coridoor", w, h) > 0 || CountAdjacentTileType(doorApos.x, doorApos.y + change, tilemap, "doorway", w, h) > 0) && Bdoor == true)
-			{
-				change += Math.floor(changeattempt) * changesign;
-				changesign *= -1;
-				changeattempt += 0.5;
-				
-				if (doorBpos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 2 && doorBpos.x - Math.abs(change) < roommap[roomconnections[i].start].x + 1)
-					Bdoor = false;
-			}
-			
-			doorBpos.y += change;
-		}
-		
-		if (Adoor == true)
-		{
-			tileIndex = doorApos.x + (doorApos.y * w);
-			tilemap[tileIndex] = "doorway";
-		}
-		
-		if (Bdoor == true)
-		{
-			tileIndex = doorBpos.x + (doorBpos.y * w);
-			tilemap[tileIndex] = "doorway";
-		}
-		
-		//door_count += 2;
-		
-		let startx = Math.floor(roommap[roomconnections[i].start].x + (roommap[roomconnections[i].start].w / 2));
-		let starty = Math.floor(roommap[roomconnections[i].start].y + (roommap[roomconnections[i].start].h / 2));
-		let endx = Math.floor(roommap[roomconnections[i].end].x + (roommap[roomconnections[i].end].w / 2));
-		let endy = Math.floor(roommap[roomconnections[i].end].y + (roommap[roomconnections[i].end].h / 2));
-		
-		let startpos = { x: startx, y: starty };
-		let endpos = { x: endx, y: endy };
-		
-		let path = TileMapPathToPosition(startpos, endpos, tilemap, w, h);
-		{
-			for (let j = 0; j < path.length; j++)
-			{
-				tileIndex = path[j].x + (path[j].y * w);
-				if (tilemap[tileIndex] == "unknown")
-					tilemap[tileIndex] = "coridoor";
-			}
-		}
-	}
-	//console.log(door_count);
-	// make loop paths (no doorways, will use existing doorways)
-	
-	for(let i = 0; i < loopconnections.length; i++)
-	{
-		let tileIndex = 0;
-		
-		let startx = Math.floor(roommap[loopconnections[i].start].x + (roommap[loopconnections[i].start].w / 2));
-		let starty = Math.floor(roommap[loopconnections[i].start].y + (roommap[loopconnections[i].start].h / 2));
-		let endx = Math.floor(roommap[loopconnections[i].end].x + (roommap[loopconnections[i].end].w / 2));
-		let endy = Math.floor(roommap[loopconnections[i].end].y + (roommap[loopconnections[i].end].h / 2));
-		
-		let startpos = { x: startx, y: starty };
-		let endpos = { x: endx, y: endy };
-		
-		let path = TileMapPathToPosition(startpos, endpos, tilemap, w, h);
-		{
-			for (let j = 0; j < path.length; j++)
-			{
-				tileIndex = path[j].x + (path[j].y * w);
-				if (tilemap[tileIndex] == "unknown")
-					tilemap[tileIndex] = "coridoor";
-			}
+			map.doors.push(GetDoorPositionAndOrientation(door_start, door_end))
 		}
 		
 	}
 	
-	// determine stairs and furthest rooms
-	
-	let start_room = Math.floor(Math.random() * roommap.length);
-	let startx = Math.floor(roommap[start_room].x + (roommap[start_room].w / 2));
-	let starty = Math.floor(roommap[start_room].y + (roommap[start_room].h / 2));
-	
-	let startpos = { x: startx, y: starty };
-	
-	let reachablerooms = 0
-	let furthestdistance = -1;
-	let furthestroom = -1;
-	
-	for(let r = 0; r < roommap.length; r++)
-	{
-		if (r != start_room)
-		{
-			let endx = Math.floor(roommap[r].x + (roommap[r].w / 2));
-			let endy = Math.floor(roommap[r].y + (roommap[r].h / 2));
-			
-			let endpos = { x: endx, y: endy };
-			let roomDistance = TileMapCanReachPosition(startpos, endpos, tilemap, w, h, true);
+	return map;
+}
 
-			if(roomDistance == -1)
-			{
-				for (let y = roommap[r].y; y <= roommap[r].h + roommap[r].y; y++)
-				{
-					for (let x = roommap[r].x; x <= roommap[r].w + roommap[r].x; x++)
-					{
-						tilemap[x + (y * w)] = "unknown";
-					}
-				}
-			}
-			else
-			{
-				if (roomDistance > furthestdistance)
-				{
-					furthestdistance = roomDistance;
-					furthestroom = r;
-				}
-				reachablerooms++;
-			}	
-		}
+function GetTileCode(x, y, tilemap, h, w)
+{
+	let base_position = x + (y * w)
+	let tile_code = 0;
+	//upper wall
+	if (base_position - w < 0 || tilemap[base_position - w] != "coridoor")
+	{
+		tile_code += 2;
+	}
+	//left wall
+	if (base_position - 1 < 0 || tilemap[base_position - 1] != "coridoor")
+	{
+		tile_code += 8;
+	}
+	//right wall
+	if (base_position + 1 >= (h * w) || tilemap[base_position + 1] != "coridoor")
+	{
+		tile_code += 16;
+	}
+	//under wall
+	if (base_position + w >= (h * w) || tilemap[base_position + w] != "coridoor")
+	{
+		tile_code += 64;
 	}
 	
-	RemoveExtraneousTilesFromTilemap(tilemap, "coridoor", w, h);
-	RemoveExtraneousTilesFromTilemap(tilemap, "doorway", w, h);
+	//top_left
+	if  ((tile_code & 10) == 0 && (base_position - (w + 1) < 0 || tilemap[base_position - (w + 1)] != "coridoor"))
+	{
+		tile_code += 1;
+	}
+	//top_right
+	if  ((tile_code & 18) == 0 && (base_position - (w - 1) < 0 || tilemap[base_position - (w - 1)] != "coridoor"))
+	{
+		tile_code += 4;
+	}
+	//bottom_left
+	if  ((tile_code & 72) == 0 && (base_position + (w - 1) >= (h * w) || tilemap[base_position + (w - 1)] != "coridoor")) 
+	{
+		tile_code += 32;
+	}
+	//bottom_right
+	if  ((tile_code & 80) == 0 && (base_position + (w + 1) >= (h * w) || tilemap[base_position + (w + 1)] != "coridoor"))
+	{
+		tile_code += 128;
+	}
 	
-	let mandatory_room_path = []
-	if (furthestroom > 0)
-		mandatory_room_path = DetermineMandatoryRoomPath(roomconnections, start_room, furthestroom);
+	return tile_code;
+}
 
-
-	// add doors/portcullis
-	
-	for (let r = 0; r < roommap.length; r++)
+function arrayContainsIdentical(value, array)
+{
+	for (let i = 0; i < array.length; i++)
 	{
-		let grate_chance = 0.29;
-		let secret_door_chance = 0.67;
-		if (mandatory_room_path.includes(r)) //room is on path to next floor
-		{
-			grate_chance = 0.31;
-			secret_door_chance = 0.5;
-		}
-		else if (Math.random() < 0.33) // room is not on path, and is a secret room (all doors secret doors)
-		{
-			grate_chance = -1;
-			secret_door_chance = 1;
-		}
-		for (let y = roommap[r].y; y <= roommap[r].h + roommap[r].y; y++)
-		{
-			if (tilemap[roommap[r].x + (y * w)] == "doorway")
-			{
-				let randomfloat = Math.random();
-				let entrancetype = "door_vertical";
-				if (!secret_doors && randomfloat < 0.42)
-					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < grate_chance)
-					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < secret_door_chance)
-					entrancetype = "secret_door_vertical";
-				tilemap[roommap[r].x + (y * w)] = entrancetype;
-			}
-			else
-				tilemap[roommap[r].x + (y * w)] = "closed";
-			
-			if (tilemap[roommap[r].x + roommap[r].w + (y * w)] == "doorway"){
-				let randomfloat = Math.random();
-				let entrancetype = "door_vertical";
-				if (!secret_doors && randomfloat < 0.42)
-					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < grate_chance)
-					entrancetype = "grate_vertical";
-				else if (secret_doors && randomfloat < secret_door_chance)
-					entrancetype = "secret_door_vertical";
-				tilemap[roommap[r].x + roommap[r].w + (y * w)] = entrancetype;
-			}
-			else
-				tilemap[roommap[r].x + roommap[r].w + (y * w)] = "closed";
-		}
-		for (let x = roommap[r].x; x <= roommap[r].w + roommap[r].x; x++)
-		{
-			if (tilemap[x + (roommap[r].y * w)] == "doorway")
-			{
-				let randomfloat = Math.random();
-				let entrancetype = "door_horizontal";
-				if (!secret_doors && randomfloat < 0.42)
-					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < grate_chance)
-					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < secret_door_chance)
-					entrancetype = "secret_door_horizontal";
-				tilemap[x + (roommap[r].y * w)] = entrancetype;
-			}
-			else
-				tilemap[x + (roommap[r].y * w)] = "closed";
-			
-			if (tilemap[x + ((roommap[r].y + roommap[r].h) * w)] == "doorway")
-			{
-				let randomfloat = Math.random();
-				let entrancetype = "door_horizontal";
-				if (!secret_doors && randomfloat < 0.42)
-					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < grate_chance)
-					entrancetype = "grate_horizontal";
-				else if (secret_doors && randomfloat < secret_door_chance)
-					entrancetype = "secret_door_horizontal";
-				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = entrancetype;
-			}
-			else
-				tilemap[x + ((roommap[r].y + roommap[r].h) * w)] = "closed";
-		}
-		for (let y = roommap[r].y + 1; y <= roommap[r].h + roommap[r].y - 1; y++)
-		{
-			for (let x = roommap[r].x + 1; x <= roommap[r].w + roommap[r].x - 1; x++)
-			{
-				tilemap[x + (y * w)] = "open";
-			}
-		}
+		if (array[i] == value)
+			return true;
 	}
-	
-	if (furthestroom > -1)
-	{
-		let endx = Math.floor(roommap[furthestroom].x + (roommap[furthestroom].w / 2));
-		let endy = Math.floor(roommap[furthestroom].y + (roommap[furthestroom].h / 2));
-		
-		let endpos = { x: endx, y: endy };
-		let roomDistance = TileMapCanReachPosition(startpos, endpos, tilemap, w, h, secret_next_level);
-
-		if(roomDistance == -1)
-		{
-			//console.log("could not reach stairs");
-			return false;
-		}
-	}
-	
-	//HideSecretPathways(tilemap, w, h);
-	
-	if (stairs_up_side != -1)
-	{
-		//stairs up
-		
-		let stairs_side = Math.random();
-		let sides_attempted = 0;
-		let stairs_unplaced = true;
-		
-		if (stairs_up_side > -1)
-		{
-			stairs_side = stairs_up_side;
-			sides_attempted = 0.75;
-		}
-		
-		while (stairs_unplaced && sides_attempted < 1)
-		{
-			if (stairs_side > 1)
-				stairs_side -= 1;
-			
-			if (stairs_side <= 0.25) //west wall
-			{
-				let randomy = Math.floor((Math.random() * (roommap[start_room].h - 2)) + roommap[start_room].y + 2);
-				let stairspos = { x: roommap[start_room].x, y: randomy };
-				
-				let change = 0;
-				let changesign = -1;
-				let changeattempt = 1;
-				let trynextside = false;
-				
-				while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_vertical", w, h) > 0) && !trynextside)			
-				{
-					change += Math.floor(changeattempt) * changesign;
-					changesign *= -1;
-					changeattempt += 0.5;
-					
-					if (stairspos.y + Math.abs(change) > roommap[start_room].y + roommap[start_room].h - 2  && stairspos.y - Math.abs(change) < roommap[start_room].y + 2)
-					{
-						stairs_side += 0.25;
-						sides_attempted += 0.25;
-						trynextside = true;
-					}
-				}
-				
-				if (!trynextside)
-				{
-					stairspos.y += change;
-					tileIndex = stairspos.x + (stairspos.y * w);
-					tilemap[tileIndex] = "stairs_west";
-					stairs_unplaced = false;
-				}
-			}
-			else if (stairs_side <= 0.5) //east wall
-			{
-				let randomy = Math.floor((Math.random() * (roommap[start_room].h - 2)) + roommap[start_room].y + 2);
-				let stairspos = { x: roommap[start_room].x + roommap[start_room].w, y: randomy };
-				
-				let change = 0;
-				let changesign = -1;
-				let changeattempt = 1;
-				let trynextside = false;
-				
-				while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_vertical", w, h) > 0) && !trynextside)	
-				{
-					change += Math.floor(changeattempt) * changesign;
-					changesign *= -1;
-					changeattempt += 0.5;
-					
-					if (stairspos.y + Math.abs(change) > roommap[start_room].y + roommap[start_room].h - 2  && stairspos.y - Math.abs(change) < roommap[start_room].y + 2)
-					{
-						stairs_side += 0.25;
-						sides_attempted += 0.25;
-						trynextside = true;
-					}
-				}
-				
-				if (!trynextside)
-				{
-					stairspos.y += change;
-					tileIndex = stairspos.x + (stairspos.y * w);
-					tilemap[tileIndex] = "stairs_east";
-					stairs_unplaced = false;
-				}
-			}
-			else if (stairs_side <= 0.75) //north wall
-			{
-				let randomx = Math.floor((Math.random() * (roommap[start_room].w - 2)) + roommap[start_room].x + 2);
-				let stairspos = { x: randomx, y: roommap[start_room].y };
-				
-				let change = 0;
-				let changesign = -1;
-				let changeattempt = 1;
-				let trynextside = false;
-				
-				while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
-				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_vertical", w, h) > 0) && !trynextside)	
-				{
-					change += Math.floor(changeattempt) * changesign;
-					changesign *= -1;
-					changeattempt += 0.5;
-					
-					if (stairspos.x + Math.abs(change) > roommap[start_room].x + roommap[start_room].w - 1  && stairspos.x - Math.abs(change) < roommap[start_room].x + 1)
-					{
-						stairs_side += 0.25;
-						sides_attempted += 0.25;
-						trynextside = true;
-					}
-				}
-				
-				if (!trynextside)
-				{
-					stairspos.x += change;
-					tileIndex = stairspos.x + (stairspos.y * w);
-					tilemap[tileIndex] = "stairs_north";
-					stairs_unplaced = false;
-				}
-			}
-			else //south wall
-			{
-				let randomx = Math.floor((Math.random() * (roommap[start_room].w - 2)) + roommap[start_room].x + 2);
-				let stairspos = { x: randomx, y: roommap[start_room].y + roommap[start_room].h };
-				
-				let change = 0;
-				let changesign = -1;
-				let changeattempt = 1;
-				let trynextside = false;
-				
-				while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
-				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_vertical", w, h) > 0) && !trynextside)	
-				{
-					change += Math.floor(changeattempt) * changesign;
-					changesign *= -1;
-					changeattempt += 0.5;
-					
-					if (stairspos.x + Math.abs(change) > roommap[start_room].x + roommap[start_room].w - 1  && stairspos.x - Math.abs(change) < roommap[start_room].x + 1)
-					{
-						stairs_side += 0.25;
-						sides_attempted += 0.25;
-						trynextside = true;
-					}
-				}
-				
-				if (!trynextside)
-				{
-					stairspos.x += change;
-					tileIndex = stairspos.x + (stairspos.y * w);
-					tilemap[tileIndex] = "stairs_south";
-					stairs_unplaced = false;
-				}
-			}
-			
-			if (stairs_up_side != -1 && (sides_attempted == 1 || stairs_unplaced == true))
-			{
-				//console.log("no stairs up");
-				return false; //fail if no stairs up
-			}
-		}
-	}
-	
-	if (stairs_down_side != -1)
-	{
-		//stairs down
-		
-		stairs_side = Math.random();
-		sides_attempted = 0;
-		stairs_unplaced = true;
-		
-		if (stairs_down_side > -1)
-		{
-			stairs_side = stairs_down_side;
-			sides_attempted = 0.75;
-		}
-		
-		if (furthestroom > -1)
-		{
-			while (stairs_unplaced && sides_attempted < 1)
-			{
-				if (stairs_side > 1)
-					stairs_side -= 1;
-				
-				if (stairs_side <= 0.25) //west wall
-				{
-					let randomy = Math.floor((Math.random() * (roommap[furthestroom].h - 2)) + roommap[furthestroom].y + 2);
-					let stairspos = { x: roommap[furthestroom].x, y: randomy };
-					
-					let change = 0;
-					let changesign = -1;
-					let changeattempt = 1;
-					let trynextside = false;
-					
-					while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
-					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
-					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
-					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_vertical", w, h) > 0) && !trynextside)	 
-					{
-						change += Math.floor(changeattempt) * changesign;
-						changesign *= -1;
-						changeattempt += 0.5;
-						
-						if (stairspos.y + Math.abs(change) > roommap[furthestroom].y + roommap[furthestroom].h - 1  && stairspos.y - Math.abs(change) < roommap[furthestroom].y + 1)
-						{
-							stairs_side += 0.25;
-							sides_attempted += 0.25;
-							trynextside = true;
-						}
-					}
-					
-					if (!trynextside)
-					{
-						stairspos.y += change;
-						tileIndex = stairspos.x + (stairspos.y * w);
-						tilemap[tileIndex] = "stairs_east";
-						stairs_unplaced = false;
-					}
-				}
-				else if (stairs_side <= 0.5) //east wall
-				{
-					let randomy = Math.floor((Math.random() * (roommap[furthestroom].h - 2)) + roommap[furthestroom].y + 2);
-					let stairspos = { x: roommap[furthestroom].x + roommap[furthestroom].w, y: randomy };
-					
-					let change = 0;
-					let changesign = -1;
-					let changeattempt = 1;
-					let trynextside = false;
-					
-					while ((CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "coridoor", w, h) > 0 
-					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_horizontal", w, h) > 0
-					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_horizontal", w, h) > 0
-					|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "grate_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_vertical", w, h) > 0) && !trynextside)	
-					{
-						change += Math.floor(changeattempt) * changesign;
-						changesign *= -1;
-						changeattempt += 0.5;
-						
-						if (stairspos.y + Math.abs(change) > roommap[furthestroom].y + roommap[furthestroom].h - 1  && stairspos.y - Math.abs(change) < roommap[furthestroom].y + 1)
-						{
-							stairs_side += 0.25;
-							sides_attempted += 0.25;
-							trynextside = true;
-						}
-					}
-					
-					if (!trynextside)
-					{
-						stairspos.y += change;
-						tileIndex = stairspos.x + (stairspos.y * w);
-						tilemap[tileIndex] = "stairs_west";
-						stairs_unplaced = false;
-					}
-				}
-				else if (stairs_side <= 0.75) //north wall
-				{
-					let randomx = Math.floor((Math.random() * (roommap[furthestroom].w - 2)) + roommap[furthestroom].x + 2);
-					let stairspos = { x: randomx, y: roommap[furthestroom].y };
-					
-					let change = 0;
-					let changesign = -1;
-					let changeattempt = 1;
-					let trynextside = false;
-					
-					while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
-					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
-					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
-					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_vertical", w, h) > 0) && !trynextside)	
-					{
-						change += Math.floor(changeattempt) * changesign;
-						changesign *= -1;
-						changeattempt += 0.5;
-						
-						if (stairspos.x + Math.abs(change) > roommap[furthestroom].x + roommap[furthestroom].w - 1  && stairspos.x - Math.abs(change) < roommap[furthestroom].x + 1)
-						{
-							stairs_side += 0.25;
-							sides_attempted += 0.25;
-							trynextside = true;
-						}
-					}
-					
-					if (!trynextside)
-					{
-						stairspos.x += change;
-						tileIndex = stairspos.x + (stairspos.y * w);
-						tilemap[tileIndex] = "stairs_south";
-						stairs_unplaced = false;
-					}
-				}
-				else //south wall
-				{
-					let randomx = Math.floor((Math.random() * (roommap[furthestroom].w - 2)) + roommap[furthestroom].x + 2);
-					let stairspos = { x: randomx, y: roommap[furthestroom].y + roommap[furthestroom].h };
-					
-					let change = 0;
-					let changesign = -1;
-					let changeattempt = 1;
-					let trynextside = false;
-					
-					while ((CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "unknown", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "coridoor", w, h) > 0 
-					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "open", w, h) != 1 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_horizontal", w, h) > 0
-					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "door_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_horizontal", w, h) > 0
-					|| CountAdjacentTileType(stairspos.x + change, stairspos.y, tilemap, "grate_vertical", w, h) > 0 || CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_horizontal", w, h) > 0
-				|| CountAdjacentTileType(stairspos.x, stairspos.y + change, tilemap, "secret_door_vertical", w, h) > 0) && !trynextside)	
-					{
-						change += Math.floor(changeattempt) * changesign;
-						changesign *= -1;
-						changeattempt += 0.5;
-						
-						if (stairspos.x + Math.abs(change) > roommap[furthestroom].x + roommap[furthestroom].w - 1  && stairspos.x - Math.abs(change) < roommap[furthestroom].x + 1)
-						{
-							stairs_side += 0.25;
-							sides_attempted += 0.25;
-							trynextside = true;
-						}
-					}
-					
-					if (!trynextside)
-					{
-						stairspos.x += change;
-						tileIndex = stairspos.x + (stairspos.y * w);
-						tilemap[tileIndex] = "stairs_north";
-						stairs_unplaced = false;
-					}
-				}
-			}
-			
-			if (stairs_down_side != -1 && (sides_attempted == 1 || stairs_unplaced == true))
-			{
-				//console.log("no stairs down");
-				return false; //fail if no stairs down when required
-			}
-		}
-	}
-	
-	if (reachablerooms < roommap.length*2/3)
-	{
-		//console.log("not enough rooms");
-		return false;
-	}
-	else
-	{
-		return tilemap;
-	}
+	return false;
 }
 
 function OutputTileMap(channel, arguments)
 {
-	let w = 32;
-	let h = 24;
+	let w = 64;
+	let h = 48;
 	
 	if (arguments != null && arguments.length > 0)
 	{
@@ -20978,12 +12207,12 @@ function OutputTileMap(channel, arguments)
 			h = DUNGEONMAP_MIN_HEIGHT;
 	}
 	
-	let tilemap = false;
+	let map = false;
 	let attempts = 0;
-	while (tilemap == false && attempts < 32)
+	while (map == false && attempts < 32)
 	{
 		attempts++;
-		tilemap = GenerateDungeonMap(arguments);
+		map = GenerateDungeonMap(arguments);
 	}
 	
 	if (attempts >= 32)
@@ -20995,60 +12224,61 @@ function OutputTileMap(channel, arguments)
 	
 	let mapmap = [];
 	
+	//base map
 	for (let y = 0; y < h; y++)
 	{
-		for (let x  = 0; x < w; x++)
+		for (let x = 0; x < w; x++)
 		{
-			let xpos = (100*x);
-			let ypos = (100*y);
+			let xpos = (70*(x));
+			let ypos = (70*(y));
 			
-			if (tilemap[x+(y*w)] == "closed")
-				mapmap.push({ src: dungeon_gen_assets.closed[Math.floor(Math.random()*dungeon_gen_assets.closed.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "open")
-				mapmap.push({ src: dungeon_gen_assets.open[Math.floor(Math.random()*dungeon_gen_assets.open.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "coridoor")
-				mapmap.push({ src: dungeon_gen_assets.open[Math.floor(Math.random()*dungeon_gen_assets.open.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "doorway")
-				mapmap.push({ src: dungeon_gen_assets.open[Math.floor(Math.random()*dungeon_gen_assets.open.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "door_horizontal")
-				mapmap.push({ src: dungeon_gen_assets.door_horizontal[Math.floor(Math.random()*dungeon_gen_assets.door_horizontal.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "door_vertical")
-				mapmap.push({ src: dungeon_gen_assets.door_vertical[Math.floor(Math.random()*dungeon_gen_assets.door_vertical.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "grate_horizontal")
-				mapmap.push({ src: dungeon_gen_assets.grate_horizontal[Math.floor(Math.random()*dungeon_gen_assets.grate_horizontal.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "grate_vertical")
-				mapmap.push({ src: dungeon_gen_assets.grate_vertical[Math.floor(Math.random()*dungeon_gen_assets.grate_vertical.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "secret_door_horizontal")
-				mapmap.push({ src: dungeon_gen_assets.secret_door_horizontal[Math.floor(Math.random()*dungeon_gen_assets.secret_door_horizontal.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "secret_door_vertical")
-				mapmap.push({ src: dungeon_gen_assets.secret_door_vertical[Math.floor(Math.random()*dungeon_gen_assets.secret_door_vertical.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "secret_door_other")
-				mapmap.push({ src: dungeon_gen_assets.secret_door_other[Math.floor(Math.random()*dungeon_gen_assets.secret_door_other.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "stairs_north")
-				mapmap.push({ src: dungeon_gen_assets.stairs_north[Math.floor(Math.random()*dungeon_gen_assets.stairs_north.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "stairs_south")
-				mapmap.push({ src: dungeon_gen_assets.stairs_south[Math.floor(Math.random()*dungeon_gen_assets.stairs_south.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "stairs_east")
-				mapmap.push({ src: dungeon_gen_assets.stairs_east[Math.floor(Math.random()*dungeon_gen_assets.stairs_east.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "stairs_west")
-				mapmap.push({ src: dungeon_gen_assets.stairs_west[Math.floor(Math.random()*dungeon_gen_assets.stairs_west.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "test")
-				mapmap.push({ src: dungeon_gen_assets.test[Math.floor(Math.random()*dungeon_gen_assets.test.length)], x: xpos, y: ypos});
-			else if (tilemap[x+(y*w)] == "unknown")
-				mapmap.push({ src: dungeon_gen_assets.closed[Math.floor(Math.random()*dungeon_gen_assets.closed.length)], x: xpos, y: ypos});
-			else
-			{
-				console.log("unknown tile '" + tilemap[x+(y*w)] + "' at " + x + ", " + y);
-				mapmap.push({ src: dungeon_gen_assets.error[Math.floor(Math.random()*dungeon_gen_assets.error.length)], x: xpos, y: ypos});
-			}
+			mapmap.push({ src: dungeon_gen_assets.closed[Math.floor(Math.random()*dungeon_gen_assets.closed.length)], x: xpos, y: ypos});
 			
-			/*
-			if (grid_opacity > 0)
-			{
-				mapmap.push({ src: minimap_gen.grid[Math.floor(Math.random()*minimap_gen.grid.length)], x: xpos, y: ypos, opacity: grid_opacity });
-			}
-			*/
 		}
+	}
+	
+	//rooms
+	for (let i = 0; i < map.rooms.length; i++)
+	{
+			let xpos = (70*(map.rooms[i].x_pos));
+			let ypos = (70*(map.rooms[i].y_pos));
+			
+			mapmap.push({ src: map.rooms[i].img, x: xpos, y: ypos});
+	}
+	
+	
+	let test_img_types = []
+	//coridoors
+	for (let y = 0; y < h; y++)
+	{
+		for (let x = 0; x < w; x++)
+		{
+			let xpos = (70*(x));
+			let ypos = (70*(y));
+			let index_pos = x + (y * w);
+			if (map.tilemap[index_pos] != "unknown" && map.tilemap[index_pos] != "closed" && map.tilemap[index_pos] != "doorway")
+			{
+				let img_tile_code = GetTileCode(x, y, map.tilemap, map.height, map.width);
+				let tile_img = dungeon_gen_assets.open + img_tile_code.toString() + ".png"
+				if (!arrayContainsIdentical(tile_img, test_img_types))
+				{
+					test_img_types.push(tile_img)
+				}
+				
+				mapmap.push({ src: tile_img, x: xpos, y: ypos});
+			}
+		}
+	}
+	
+	// console.log(test_img_types)
+	
+	//doors
+	for (let i = 0; i < map.doors.length; i++)
+	{
+			let xpos = (70*(map.doors[i].pos.x));
+			let ypos = (70*(map.doors[i].pos.y));
+			
+			mapmap.push({ src: map.doors[i].img, x: xpos, y: ypos});
 	}
 	
 	let file = 'generatedmap.png';
@@ -21056,8 +12286,8 @@ function OutputTileMap(channel, arguments)
 	
 	mergeImages(mapmap, 
 	{
-		width: (100*w),
-		height: (100*h),
+		width: (70*w),
+		height: (70*h),
 		Canvas: Canvas,
 		Image: Image
 	})
@@ -21067,84 +12297,6 @@ function OutputTileMap(channel, arguments)
 		channel.send({ files: [{ attachment: path, name: file }] });
 		}
 		))
-}
-
-function DrawnMapPathToPosition(start, end, tilemap, map_width, map_height)
-{
-	let frontierQueue = [{ x: start.x, y: start.y, priority: 0 }];
-	let dictionaryCameFrom = [];
-	let dictionaryCostSoFar = [];
-	let closest = { x: start.x, y: start.y };
-	let closestHexHeuristic = 99999999;
-	let newcost = 0;
-	let oldcost;
-	let priority;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		current = frontierQueue[nextinqueue];
-		frontierQueue.splice(nextinqueue,1);
-		if (current.x == end.x && current.y == end.y)
-		{
-			//console.log("path found");
-			//console.log(dictionaryCameFrom);
-			return dictionaryToDirection(dictionaryCameFrom, end, start);
-		}
-		
-		let tempcost = getFromDictionary(dictionaryCostSoFar, current)
-		if (tempcost != null)
-		{
-			newcost = tempcost;
-			//newcost += 1;
-		}
-		let connection = { x: current.x, y: current.y };
-		for (let i = 0; i < 4; i++)
-		{
-			connection = { x: current.x, y: current.y };
-			MoveTile(connection,i);
-			let tilemapPos = connection.x + (connection.y * map_width);
-			if (connection.x > -1 && connection.x < map_width && connection.y > -1 && connection.y < map_height && (!isNaN(tilemap[tilemapPos]) || tilemap[tilemapPos].includes("corridor") || tilemap[tilemapPos].includes("unknown")))
-			{
-				let connectioncost = newcost + 1;
-				if (!isNaN(tilemap[tilemapPos]) || tilemap[tilemapPos].includes("corridor"))
-					connectioncost -= 0.99;
-				tempcost = getFromDictionary(dictionaryCostSoFar, connection)
-				if (tempcost != null)
-				{
-					oldcost = tempcost;
-					if (connectioncost < oldcost)
-					{
-						addToDictionary(dictionaryCostSoFar, connection, connectioncost);
-						priority = connectioncost + pathHeuristic(connection, end);
-						if (priority - connectioncost < closestHexHeuristic)
-						{
-							closest = connection;
-							closestHexHeuristic = priority - connectioncost;
-						}
-						frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-						addToDictionary(dictionaryCameFrom, connection, current);
-					}
-				}
-				else
-				{
-					addToDictionary(dictionaryCostSoFar, connection, connectioncost);
-					priority = connectioncost + pathHeuristic(connection, end);
-					if (priority - connectioncost < closestHexHeuristic)
-					{
-						closest = connection;
-						closestHexHeuristic = priority - connectioncost;
-					}
-					frontierQueue.push({ x: connection.x, y: connection.y, priority: priority });
-					addToDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-		}
-	}
-	//console.log("full path not found");
-	return dictionaryToDirection(dictionaryCameFrom, closest, start);
 }
 
 function TileMapCanReachPosition(start, end, tilemap, map_width, map_height, include_secret_doors)
@@ -21229,1551 +12381,6 @@ function TileMapCanReachPosition(start, end, tilemap, map_width, map_height, inc
 	return -1;
 }
 
-function CheckRoomNoOverlapNoBuffer(roommap, room)
-{
-	for(let i = 0; i < roommap.length; i++)
-	{
-		if (roommap[i].x + roommap[i].w > room.x && roommap[i].x < room.x + room.w )
-		{
-			if (roommap[i].y + roommap[i].h > room.y && roommap[i].y < room.y + room.h)
-				return false;
-		}
-	}
-	
-	return true;
-}
-
-function DetermineRoomDistances(roomconnections, start)
-{
-	let frontierQueue = [{ index: start, priority: 0 }];
-	let dictionaryCameFrom = [];
-	let dictionaryCostSoFar = [];
-	let newcost = 0;
-	let oldcost;
-	let priority;
-	
-	let current;
-	
-	while (frontierQueue.length > 0)
-	{
-		let nextinqueue = getNextInQueue(frontierQueue);
-		current = frontierQueue[nextinqueue];
-		frontierQueue.splice(nextinqueue,1);
-		
-		let tempcost = getFromBasicDictionary(dictionaryCostSoFar, current)
-		if (tempcost != null)
-		{
-			newcost = tempcost;
-			//newcost += 1;
-		}
-		let individual_room_connections = [];
-		for (let i = 0; i < roomconnections.length; i++)
-		{
-			if(roomconnections[i].start == current.index)
-			{
-				individual_room_connections.push(roomconnections[i].end);
-			}
-			else if (roomconnections[i].end == current.index)
-			{
-				individual_room_connections.push(roomconnections[i].start);
-			}
-		}
-		let connection = -1;
-		for (let i = 0; i < individual_room_connections.length; i++)
-		{
-			connection = individual_room_connections[i];
-			let connectioncost = newcost + 1;
-			tempcost = getFromBasicDictionary(dictionaryCostSoFar, connection)
-			if (tempcost != null)
-			{
-				oldcost = tempcost;
-				if (connectioncost < oldcost)
-				{
-					reassignToBasicDictionary(dictionaryCostSoFar, connection, connectioncost);
-					frontierQueue.push({ index: connection, priority: connectioncost });
-					reassignToBasicDictionary(dictionaryCameFrom, connection, current);
-				}
-			}
-			else
-			{
-				reassignToBasicDictionary(dictionaryCostSoFar, connection, connectioncost);
-				frontierQueue.push({ index: connection, priority: connectioncost });
-				reassignToBasicDictionary(dictionaryCameFrom, connection, current);
-			}
-		}
-		//console.log(frontierQueue);
-	}
-	//console.log("mandatory room path not found");
-	return dictionaryCostSoFar;
-}
-
-function CheckDoorOverlap(doors, startindex, endindex)
-{
-	for (let i = 0; i < doors.length; i++)
-	{
-		if ((doors[i].roomA == startindex && doors[i].roomB == endindex) || (doors[i].roomA == endindex && doors[i].roomB == startindex))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-function GenerateDrawnDungeonMap(arguments)
-{
-	let w = 32;
-	let h = 24;
-	let rooms = 8;
-	let add_loops = false;
-	let secret_doors = false;
-	let secret_next_level = false;
-	let stairs_up_side = -1;
-	let stairs_down_side = -1;
-	
-	if (arguments != null && arguments.length > 0)
-	{
-		argumentpos = arguments.indexOf("-w")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			w = parseInt(arguments[argumentpos+1]);
-		if (w > DUNGEONMAP_MAX_WIDTH)
-			w = DUNGEONMAP_MAX_WIDTH;
-		if (w < DUNGEONMAP_MIN_WIDTH)
-			w = DUNGEONMAP_MIN_WIDTH;
-		argumentpos = arguments.indexOf("-h")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			h = parseInt(arguments[argumentpos+1]);
-		if (h > DUNGEONMAP_MAX_HEIGHT)
-			h = DUNGEONMAP_MAX_HEIGHT;
-		if (h < DUNGEONMAP_MIN_HEIGHT)
-			h = DUNGEONMAP_MIN_HEIGHT;
-		argumentpos = arguments.indexOf("-r")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			rooms = parseInt(arguments[argumentpos+1]);
-		if (rooms > DUNGEONMAP_MAX_ROOMS)
-			rooms = DUNGEONMAP_MAX_ROOMS;
-		if (rooms < DUNGEONMAP_MIN_ROOMS)
-			rooms = DUNGEONMAP_MIN_ROOMS;
-		argumentpos = arguments.indexOf("-stairsup")
-		if (argumentpos > -1)
-		{
-			if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "n" || arguments[argumentpos+1] == "north"))
-				stairs_up_side = 0.625;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "e" || arguments[argumentpos+1] == "east"))
-				stairs_up_side = 0.375;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "s" || arguments[argumentpos+1] == "south"))
-				stairs_up_side = 0.875;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "w" || arguments[argumentpos+1] == "west"))
-				stairs_up_side = 0.125;
-			else
-				stairs_up_side = -2;
-		}
-		argumentpos = arguments.indexOf("-stairsdown")
-		if (argumentpos > -1)
-		{
-			if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "n" || arguments[argumentpos+1] == "north"))
-				stairs_down_side = 0.625;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "e" || arguments[argumentpos+1] == "east"))
-				stairs_down_side = 0.375;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "s" || arguments[argumentpos+1] == "south"))
-				stairs_down_side = 0.875;
-			else if (argumentpos+1 < arguments.length && (arguments[argumentpos+1] == "w" || arguments[argumentpos+1] == "west"))
-				stairs_down_side = 0.125;
-			else
-				stairs_down_side = -2;
-		}
-		argumentpos = arguments.indexOf("-loops")
-		if (argumentpos > -1)
-			add_loops = true;
-		argumentpos = arguments.indexOf("-secretdoors")
-		if (argumentpos > -1)
-			secret_doors = true;
-		argumentpos = arguments.indexOf("-secret_next_level")
-		if (argumentpos > -1)
-		{
-			secret_doors = true;
-			secret_next_level = true;
-		}
-	}
-	
-	let tilemap = [];
-	
-	let debug = [];
-	
-	for (let y = 0; y < h; y++)
-	{
-		for (let x = 0; x < w; x++)
-		{
-			let index = x + (y*w);
-			if (x == 0 || y == 0 || x == w - 1 || y == h - 1)
-				tilemap.push("closed");
-			else
-				tilemap.push("unknown");
-		}
-	}
-	
-	
-	let roommap = [];
-	
-	let roomconnections = [];
-	
-	let roomattempts = 0;
-	
-	for (let r = 0; r < rooms && roomattempts < 4096; r++)
-	{
-		let randomw = Math.floor(Math.random() * 6) + 3;
-		let randomh = Math.floor(Math.random() * 6) + 3;
-		let randomx = Math.floor(Math.random() * (w - 4 - randomw)) + 2;
-		let randomy = Math.floor(Math.random() * (h - 4 - randomh)) + 2;
-		
-		let adjacentroom = Math.floor(Math.random() * roommap.length);
-		let roomside = Math.random();
-		
-		let randomgap = Math.max(Math.floor(Math.random() * 4) - Math.floor(Math.random() * 2), 0);
-		
-		
-		if (roommap.length > 0)
-		{	
-			if (roomside < 0.25) // west side
-			{
-				randomx = roommap[adjacentroom].x - randomw - randomgap;
-				randomy = Math.floor(Math.random() * roommap[adjacentroom].h + randomh) + roommap[adjacentroom].y - randomh;
-			}
-			else if (roomside < 0.5) // east side
-			{
-				randomx = roommap[adjacentroom].x + roommap[adjacentroom].w + randomgap;
-				randomy = Math.floor(Math.random() * roommap[adjacentroom].h + randomh) + roommap[adjacentroom].y - randomh;
-			}
-			else if (roomside < 0.75) // south side
-			{
-				randomx = Math.floor(Math.random() * roommap[adjacentroom].w + randomw) + roommap[adjacentroom].x - randomw;
-				randomy = roommap[adjacentroom].y - randomh - randomgap;
-			}
-			else // north side
-			{
-				randomx = Math.floor(Math.random() * roommap[adjacentroom].w + randomw) + roommap[adjacentroom].x - randomw;
-				randomy = roommap[adjacentroom].y + roommap[adjacentroom].h + randomgap;
-			}
-		}
-		
-		let newroom = { x: randomx, y: randomy, w: randomw, h: randomh, secret: Math.random() < 0.36 };
-		
-		if (!CheckRoomInBounds(newroom, w, h))
-		{
-			roomattempts++;
-			r--;
-		}
-		else if (!CheckRoomNoOverlapNoBuffer(roommap, newroom))
-		{
-			roomattempts++;
-			r--;
-		}
-		else if (roomattempts < 4096)
-		{
-			for (let y = newroom.y; y < newroom.h + newroom.y; y++)
-			{
-				for (let x = newroom.x; x < newroom.w + newroom.x; x++)
-				{
-					tilemap[x + (y * w)] = r;
-				}
-			}
-			roommap.push(newroom);
-			if (roommap.length > 1)
-			{
-				let end_room_id = r;
-				let start_room_id = adjacentroom;
-				roomconnections.push({ start: adjacentroom, end: roommap.length-1, side: roomside, startroomid: start_room_id, endroomid: end_room_id});
-
-			}
-		}
-	}
-	
-	let start_room = Math.floor(Math.random() * roommap.length);
-	
-	let roomdistances = DetermineRoomDistances(roomconnections, start_room)
-	
-	let furthestdistance = -1;
-	let furthestindex = -1;
-	
-	for (let i = 0; i < roommap.length; i++)
-	{
-		let distance = getFromBasicDictionary(roomdistances, i)
-		if (distance > furthestdistance)
-		{
-			furthestdistance = distance;
-			furthestindex = i;
-		}
-	}
-	
-	
-	let mandatory_room_path = DetermineMandatoryRoomPath(roomconnections, start_room, furthestindex);
-	
-	for (let i = 0; i < mandatory_room_path.length; i++)
-	{
-		let nextindex = mandatory_room_path[i];
-		roommap[nextindex].secret = false;
-	}
-	
-	// add doors and paths between rooms
-	//let door_count = 0;
-	let doors = [];
-	for(let i = 0; i < roomconnections.length; i++)
-	{
-		let tileIndex = 0;
-		
-		// make doors
-		
-		let change = 0;
-		let changeattempt = 0;
-		let changesign = -1;
-		let sides_attempted = 0;
-		let doorApos = { x: 0, y: 0 };
-		let doorBpos = { x: 0, y: 0 };
-		let trynextside = false;
-		
-		let door_side = roomconnections[i].side;
-		let singularDoor = false;
-		let randomy = Math.floor(Math.random() * (roommap[roomconnections[i].start].h - 1) + roommap[roomconnections[i].start].y);
-		let randomx = Math.floor(Math.random() * (roommap[roomconnections[i].start].w - 1) + roommap[roomconnections[i].start].x);
-		
-		while (sides_attempted < 1 && singularDoor == false)
-		{
-			if (door_side > 1)
-				door_side -= 1;
-			
-			change = Math.floor(changeattempt) * changesign;	
-			
-			if (door_side <= 0.25)
-			{
-				doorApos = { x: roommap[roomconnections[i].start].x, y: randomy };
-				
-				if (doorApos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1  && doorApos.y - Math.abs(change) < roommap[roomconnections[i].start].y)
-				{
-					door_side += 0.25;
-					sides_attempted += 0.25;
-					trynextside = true;
-				}
-				else if (doorApos.y + change > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1 || doorApos.y + change < roommap[roomconnections[i].start].y)
-				{
-					changeattempt += 0.5;
-					changesign *= -1;
-				}
-				else
-				{
-					let index = doorApos.x + 1 + ((doorApos.y + change) * w);
-					if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-					{
-						let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x + 1, y: doorApos.y + change }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-						doors.push(newdoor);
-						//debug.push({ x: doorApos.x, y: doorApos.y + change, letter: "00: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + doorApos.x + "," + (doorApos.y+change) + ") " + roomconnections[i].startroomid });
-						singularDoor = true;
-					}
-					else
-					{
-						index = doorApos.x - 1 + ((doorApos.y + change) * w);
-						if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-						{
-							let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x - 1, y: doorApos.y + change }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-							doors.push(newdoor);
-							//debug.push({ x: doorApos.x, y: doorApos.y + change, letter: "01: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + doorApos.x + "," + (doorApos.y+change) + ") " + roomconnections[i].startroomid });
-							singularDoor = true;
-						}
-						else
-						{
-							index = doorApos.x  + ((doorApos.y + change + 1) * w);
-							if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-							{
-								let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change + 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-								doors.push(newdoor);
-								//debug.push({ x: doorApos.x, y: doorApos.y + change, letter: "02: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + doorApos.x + "," + (doorApos.y+change) + ") " + roomconnections[i].startroomid });
-								singularDoor = true;
-							}
-							else
-							{
-								index = doorApos.x + ((doorApos.y + change - 1) * w);
-								if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-								{
-									let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change - 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-									doors.push(newdoor);
-									//debug.push({ x: doorApos.x, y: doorApos.y + change, letter: "03: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + doorApos.x + "," + (doorApos.y+change) + ") " + roomconnections[i].startroomid });
-									singularDoor = true;
-									
-								}
-								else
-								{
-									changeattempt += 0.5;
-									changesign *= -1;
-								}
-							}
-						}
-					}
-				}
-			}
-			else if (door_side <= 0.5)
-			{
-				doorApos = { x: roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1, y: randomy };
-				
-				if (doorApos.y + Math.abs(change) > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1  && doorApos.y - Math.abs(change) < roommap[roomconnections[i].start].y)
-				{
-					door_side += 0.25;
-					sides_attempted += 0.25;
-					trynextside = true;
-				}
-				else if (doorApos.y + change > roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1 || doorApos.y + change < roommap[roomconnections[i].start].y)
-				{
-					changeattempt += 0.5;
-					changesign *= -1;
-				}
-				else
-				{
-					let index = doorApos.x + 1 + ((doorApos.y + change) * w);
-					if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-					{
-						let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x + 1, y: doorApos.y + change }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-						doors.push(newdoor);
-						//debug.push({ x: doorApos.x, y: doorApos.y + change, letter: "10: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + doorApos.x + "," + (doorApos.y+change) + ") " + roomconnections[i].startroomid });
-						singularDoor = true;
-					}
-					else
-					{
-						index = doorApos.x - 1 + ((doorApos.y + change) * w);
-						if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-						{
-							let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x - 1, y: doorApos.y + change }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-							doors.push(newdoor);
-							//debug.push({ x: doorApos.x, y: doorApos.y + change, letter: "11: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + doorApos.x + "," + (doorApos.y+change) + ") " + roomconnections[i].startroomid });
-							singularDoor = true;
-						}
-						else
-						{
-							index = doorApos.x + ((doorApos.y + change + 1) * w);
-							if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-							{
-								let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change + 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-								doors.push(newdoor);
-								//debug.push({ x: doorApos.x, y: doorApos.y + change, letter: "12: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + doorApos.x + "," + (doorApos.y+change) + ") " + roomconnections[i].startroomid });
-								singularDoor = true;
-							}
-							else
-							{
-								index = doorApos.x + ((doorApos.y + change - 1) * w);
-								if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-								{
-									let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change - 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-									doors.push(newdoor);
-									//debug.push({ x: doorApos.x, y: doorApos.y + change, letter: "13: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + doorApos.x + "," + (doorApos.y+change) + ") " + roomconnections[i].startroomid });
-									singularDoor = true;
-									
-								}
-								else
-								{
-									changeattempt += 0.5;
-									changesign *= -1;
-								}
-							}
-						}
-					}
-				}
-			}
-			else if (door_side <= 0.75)
-			{
-				doorApos = { x: randomx, y: roommap[roomconnections[i].start].y };
-				
-				if (doorApos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1  && doorApos.x - Math.abs(change) < roommap[roomconnections[i].start].x)
-				{
-					door_side += 0.25;
-					sides_attempted += 0.25;
-					trynextside = true;
-				}
-				else if (doorApos.x + change > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1 || doorApos.x + change < roommap[roomconnections[i].start].x)
-				{
-					changeattempt += 0.5;
-					changesign *= -1;
-				}
-				else
-				{
-					let index = doorApos.x + 1 + change + (doorApos.y * w);
-					if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-					{
-						let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change + 1, y: doorApos.y }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-						doors.push(newdoor);
-						//debug.push({ x: doorApos.x + change, y: doorApos.y, letter: "20: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + (doorApos.x+change) + "," + doorApos.y + ")" + roomconnections[i].startroomid });
-						singularDoor = true;
-					}
-					else
-					{
-						index = doorApos.x - 1 + change + (doorApos.y * w);
-						if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-						{
-							let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change - 1, y: doorApos.y }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-							doors.push(newdoor);
-							//debug.push({ x: doorApos.x + change, y: doorApos.y, letter: "21: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + (doorApos.x+change) + "," + doorApos.y + ")" + roomconnections[i].startroomid });
-							singularDoor = true;
-						}
-						else
-						{
-							index = doorApos.x + change + ((doorApos.y + 1) * w);
-							if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-							{
-								let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y + 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-								doors.push(newdoor);
-								//debug.push({ x: doorApos.x + change, y: doorApos.y, letter: "22: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + (doorApos.x+change) + "," + doorApos.y + ")" + roomconnections[i].startroomid });
-								singularDoor = true;
-							}
-							else
-							{
-								index = doorApos.x + change + ((doorApos.y - 1) * w);
-								if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-								{
-									let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y - 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-									doors.push(newdoor);
-									//debug.push({ x: doorApos.x + change, y: doorApos.y, letter: "23: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + (doorApos.x+change) + "," + doorApos.y + ") " + roomconnections[i].startroomid });
-									singularDoor = true;
-									
-								}
-								else
-								{
-									changeattempt += 0.5;
-									changesign *= -1;
-								}
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				doorApos = { x: randomx, y: roommap[roomconnections[i].start].y + roommap[roomconnections[i].start].h - 1 };
-				
-				if (doorApos.x + Math.abs(change) > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1  && doorApos.x - Math.abs(change) < roommap[roomconnections[i].start].x)
-				{
-					door_side += 0.25;
-					sides_attempted += 0.25;
-					trynextside = true;
-				}
-				else if (doorApos.x + change > roommap[roomconnections[i].start].x + roommap[roomconnections[i].start].w - 1 || doorApos.x + change < roommap[roomconnections[i].start].x)
-				{
-					changeattempt += 0.5;
-					changesign *= -1;
-				}
-				else
-				{
-					let index = doorApos.x + 1 + change + (doorApos.y * w);
-					if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-					{
-						let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change + 1, y: doorApos.y }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-						doors.push(newdoor);
-						//debug.push({ x: doorApos.x + change, y: doorApos.y, letter: "30: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + (doorApos.x+change) + "," + doorApos.y + ") " + roomconnections[i].startroomid });
-						singularDoor = true;
-					}
-					else
-					{
-						index = doorApos.x - 1 + change + (doorApos.y * w);
-						if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-						{
-							let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change - 1, y: doorApos.y }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-							doors.push(newdoor);
-							//debug.push({ x: doorApos.x + change, y: doorApos.y, letter: "31: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + (doorApos.x+change) + "," + doorApos.y + ") " + roomconnections[i].startroomid });
-							singularDoor = true;
-						}
-						else
-						{
-							index = doorApos.x + change + ((doorApos.y + 1) * w);
-							if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-							{
-								let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y + 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-								doors.push(newdoor);
-								//debug.push({ x: doorApos.x + change, y: doorApos.y, letter: "32: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + (doorApos.x+change) + "," + doorApos.y + ") " + roomconnections[i].startroomid });
-								singularDoor = true;
-							}
-							else
-							{
-								index = doorApos.x + change + ((doorApos.y - 1) * w);
-								if (tilemap[index] != roomconnections[i].startroomid && tilemap[index] == roomconnections[i].endroomid)
-								{
-									let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y - 1 }, secret: roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret, roomA: roomconnections[i].startroomid, roomB: roomconnections[i].endroomid }
-									doors.push(newdoor);
-									//debug.push({ x: doorApos.x + change, y: doorApos.y, letter: "33: " + tilemap[index] + "/" + roomconnections[i].endroomid + " (" + (doorApos.x+change) + "," + doorApos.y + ") " + roomconnections[i].startroomid });
-									singularDoor = true;
-									
-								}
-								else
-								{
-									changeattempt += 0.5;
-									changesign *= -1;
-								}
-							}
-						}
-					}
-				}
-			}
-		
-			if (trynextside)
-			{
-				trynextside = false;
-				change = 0;
-				changeattempt = 0;
-				changesign = -1;
-			}
-		}
-		
-		if (sides_attempted >= 1)
-		{
-			let path_start = { x: Math.floor(roommap[roomconnections[i].start].x + (roommap[roomconnections[i].start].w / 2)), y: Math.floor(roommap[roomconnections[i].start].y + (roommap[roomconnections[i].start].h / 2)) };
-			let path_end = { x: Math.floor(roommap[roomconnections[i].end].x + (roommap[roomconnections[i].end].w / 2)), y: Math.floor(roommap[roomconnections[i].end].y + (roommap[roomconnections[i].end].h / 2)) };
-			let corridor_path = DrawnMapPathToPosition(path_start, path_end, tilemap, w, h);
-			
-			for (let j = 0; j < corridor_path.length; j++)
-			{
-				let tileIndex = corridor_path[j].x + (corridor_path[j].y * w);
-				if (tilemap[tileIndex] == "unknown")
-				{
-					tilemap[tileIndex] = "corridor";
-					//debug.push({ x: corridor_path[i].x, y: corridor_path[i].y, letter: "C" });
-				}
-				if (j > 0 && j < corridor_path.length - 1)
-				{
-					let tileIndex2 = corridor_path[j-1].x + (corridor_path[j-1].y * w)
-					if (tilemap[tileIndex] != tilemap[tileIndex2] && ((tilemap[tileIndex] == "corridor" && tilemap[tileIndex2] != "corridor") || (tilemap[tileIndex] != "corridor" && tilemap[tileIndex2] == "corridor")))
-					{
-						let corridor_secret = roommap[roomconnections[i].start].secret || roommap[roomconnections[i].end].secret;
-						let roomB = tilemap[tileIndex2] == "unknown" ? "corridor" : tilemap[tileIndex2];
-						if (tilemap[corridor_path[j].x + (corridor_path[j].y * w)] != roomB)
-						{
-							let newdoor = { A: { x: corridor_path[j].x, y: corridor_path[j].y }, B: { x: corridor_path[j-1].x, y: corridor_path[j-1].y }, secret: corridor_secret, roomA: tilemap[corridor_path[j].x + (corridor_path[j].y * w)], roomB: roomB }
-							doors.push(newdoor);
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	
-	for(let i = 0; i < roommap.length; i++)
-	{
-		let tileIndex = 0;
-		
-		// make more doors
-		
-		let change = 0;
-		let changeattempt = 0;
-		let changesign = -1;
-		let sides_attempted = 0;
-		let doorApos = { x: 0, y: 0 };
-		let doorBpos = { x: 0, y: 0 };
-		let trynextside = false;
-		
-		let door_side = Math.random();
-		let singularDoor = false;
-		let randomy = Math.floor(Math.max(Math.random() * (roommap[i].h - 1), 0) + roommap[i].y);
-		let randomx = Math.floor(Math.max(Math.random() * (roommap[i].w - 1), 0) + roommap[i].x);
-		
-		index = roommap[i].x + (roommap[i].y * w);
-		let door_id = tilemap[index];
-		
-		while (sides_attempted < 1 && singularDoor == false)
-		{
-			if (door_side > 1)
-				door_side -= 1;
-			
-			change = Math.floor(changeattempt) * changesign;
-			
-			if (door_side <= 0.25)
-			{
-				doorApos = { x: roommap[i].x, y: randomy };
-				
-				if (doorApos.y + Math.abs(change) > roommap[i].y + roommap[i].h - 1 && doorApos.y - Math.abs(change) < roommap[i].y)
-				{
-					door_side += 0.25;
-					sides_attempted += 0.25;
-					trynextside = true;
-				}
-				else if (doorApos.y + change > roommap[i].y + roommap[i].h - 1 || doorApos.y + change < roommap[i].y)
-				{
-					changeattempt += 0.5;
-					changesign *= -1;
-					change = Math.floor(changeattempt) * changesign;
-				}
-				else
-				{
-					let index = doorApos.x + 1 + ((doorApos.y + change) * w);
-					if (doorApos.x + 1 < w &&  doorApos.y + change > -1 && doorApos.y + change < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-					{
-						let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-						let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x + 1, y: doorApos.y + change }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-						doors.push(newdoor);
-						singularDoor = true;
-					}
-					else
-					{
-						index = doorApos.x - 1 + ((doorApos.y + change) * w);
-						if (doorApos.x - 1 > 0 &&  doorApos.y + change > -1 && doorApos.y + change < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-						{
-							let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-							let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x - 1, y: doorApos.y + change }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-							doors.push(newdoor);
-							singularDoor = true;
-						}
-						else
-						{
-							index = doorApos.x + ((doorApos.y + change + 1) * w);
-							if (doorApos.y + change + 1 > -1 && doorApos.y + change + 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-							{
-								let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-								let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change + 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-								doors.push(newdoor);
-								singularDoor = true;
-							}
-							else
-							{
-								index = doorApos.x + ((doorApos.y + change - 1) * w);
-								if (doorApos.y + change - 1 > -1 && doorApos.y + change - 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-								{
-									let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-									let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change - 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-									doors.push(newdoor);
-									singularDoor = true;
-									
-								}
-								else
-								{
-									changeattempt += 0.5;
-									changesign *= -1;
-								}
-							}
-						}
-					}
-				}
-			}
-			else if (door_side <= 0.5)
-			{
-				doorApos = { x: roommap[i].x + roommap[i].w - 1, y: randomy };
-				
-				if (doorApos.y + Math.abs(change) > roommap[i].y + roommap[i].h - 1  && doorApos.y - Math.abs(change) < roommap[i].y)
-				{
-					door_side += 0.25;
-					sides_attempted += 0.25;
-					trynextside = true;
-				}
-				else if (doorApos.y + change > roommap[i].y + roommap[i].h - 1 || doorApos.y + change < roommap[i].y)
-				{
-					changeattempt += 0.5;
-					changesign *= -1;
-					change = Math.floor(changeattempt) * changesign;
-				}
-				
-				else
-				{
-					let index = doorApos.x + 1 + ((doorApos.y + change) * w);
-					if (doorApos.x + 1 < w &&  doorApos.y + change > -1 && doorApos.y + change < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-					{
-						let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-						let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x + 1, y: doorApos.y + change }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-						doors.push(newdoor);
-						singularDoor = true;
-					}
-					else
-					{
-						index = doorApos.x - 1 + ((doorApos.y + change) * w);
-						if (doorApos.x - 1 > -1 && doorApos.y + change > 1 && doorApos.y + change < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-						{
-							let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-							let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x - 1, y: doorApos.y + change }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-							doors.push(newdoor);
-							singularDoor = true;
-						}
-						else
-						{
-							index = doorApos.x + ((doorApos.y + change + 1) * w);
-							if (doorApos.y + change + 1 > -1 && doorApos.y + change + 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-							{
-								let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-								let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change + 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-								doors.push(newdoor);
-								singularDoor = true;
-							}
-							else
-							{
-								index = doorApos.x + ((doorApos.y + change - 1) * w);
-								if (doorApos.y + change - 1 > -1 && doorApos.y + change - 1 < h && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-								{
-									let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-									let newdoor = { A: { x: doorApos.x, y: doorApos.y + change }, B: { x: doorApos.x, y: doorApos.y + change - 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-									doors.push(newdoor);
-									singularDoor = true;
-									
-								}
-								else
-								{
-									changeattempt += 0.5;
-									changesign *= -1;
-								}
-							}
-						}
-					}
-				}
-			}
-			else if (door_side <= 0.75)
-			{
-				doorApos = { x: randomx, y: roommap[i].y };
-				
-				if (doorApos.x + Math.abs(change) > roommap[i].x + roommap[i].w - 1  && doorApos.x - Math.abs(change) < roommap[i].x)
-				{
-					door_side += 0.25;
-					sides_attempted += 0.25;
-					trynextside = true;
-				}
-				else if (doorApos.x + change > roommap[i].x + roommap[i].w - 1 || doorApos.x + change < roommap[i].x)
-				{
-					changeattempt += 0.5;
-					changesign *= -1;
-					change = Math.floor(changeattempt) * changesign;
-				}
-				else
-				{
-					let index = doorApos.x + 1 + change + (doorApos.y * w);
-					if (doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-					{
-						let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-						let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change + 1, y: doorApos.y }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-						doors.push(newdoor);
-						singularDoor = true;
-					}
-					else
-					{
-						index = doorApos.x - 1 + change + (doorApos.y * w);
-						if (doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-						{
-							let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-							let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change - 1, y: doorApos.y }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-							doors.push(newdoor);
-							singularDoor = true;
-						}
-						else
-						{
-							index = doorApos.x + change + ((doorApos.y + 1) * w);
-							if (doorApos.y + 1 < h && doorApos.x + change < w && doorApos.x + change > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-							{
-								let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-								let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y + 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-								doors.push(newdoor);
-								singularDoor = true;
-							}
-							else
-							{
-								index = doorApos.x + change + ((doorApos.y - 1) * w);
-								if (doorApos.y - 1 > -1 && doorApos.x + change < w && doorApos.x + change > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-								{
-									let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-									let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y - 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-									doors.push(newdoor);
-									singularDoor = true;
-									
-								}
-								else
-								{
-									changeattempt += 0.5;
-									changesign *= -1;
-								}
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				doorApos = { x: randomx, y: roommap[i].y + roommap[i].h - 1 };
-				
-				if (doorApos.x + Math.abs(change) > roommap[i].x + roommap[i].w - 1 && doorApos.x - Math.abs(change) < roommap[i].x)
-				{
-					door_side += 0.25;
-					sides_attempted += 0.25;
-					trynextside = true;
-				}
-				else if (doorApos.x + change > roommap[i].x + roommap[i].w - 1 || doorApos.x + change < roommap[i].x)
-				{
-					changeattempt += 0.5;
-					changesign *= -1;
-					change = Math.floor(changeattempt) * changesign;
-				}
-				else
-				{
-					let index = doorApos.x + 1 + change + (doorApos.y * w);
-					if (doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-					{
-						let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-						let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change + 1, y: doorApos.y }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-						doors.push(newdoor);
-						singularDoor = true;
-					}
-					else
-					{
-						index = doorApos.x - 1 + change + (doorApos.y * w);
-						if (doorApos.x + change - 1 < w && doorApos.x + change - 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-						{
-							let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-							let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change - 1, y: doorApos.y }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-							doors.push(newdoor);
-							singularDoor = true;
-						}
-						else
-						{
-							index = doorApos.x + change + ((doorApos.y + 1) * w);
-							if (doorApos.y + 1 < h && doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-							{
-								let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-								let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y + 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-								doors.push(newdoor);
-								singularDoor = true;
-							}
-							else
-							{
-								index = doorApos.x + change + ((doorApos.y - 1) * w);
-								if (doorApos.y - 1 > -1 && doorApos.x + change + 1 < w && doorApos.x + change + 1 > -1 && tilemap[index] != door_id && tilemap[index] != "unknown" && tilemap[index] != "closed" && CheckDoorOverlap(doors, door_id, tilemap[index]))
-								{
-									let secretB = tilemap[index] == "corridor" ? false : roommap[tilemap[index]].secret;
-									let newdoor = { A: { x: doorApos.x + change, y: doorApos.y }, B: { x: doorApos.x + change, y: doorApos.y - 1 }, secret: roommap[door_id].secret || secretB, roomA: door_id, roomB: tilemap[index] };
-									doors.push(newdoor);
-									singularDoor = true;
-									
-								}
-								else
-								{
-									changeattempt += 0.5;
-									changesign *= -1;
-								}
-							}
-						}
-					}
-				}
-			}
-		
-			if (trynextside)
-			{
-				trynextside = false;
-				change = 0;
-				changeattempt = 0;
-				changesign = -1;
-			}
-		}
-	}
-	
-	for (let i = 0; i < doors.length; i++)
-	{
-		//console.log(doors[i].roomA + " -> " + doors[i].roomB);
-		//debug.push({ x: doors[i].A.x, y: doors[i].A.y, letter: doors[i].roomA + " (" + doors[i].A.x + ", " + doors[i].A.y + ")"})
-		//debug.push({ x: doors[i].A.x, y: doors[i].A.y + 0.12, letter: doors[i].roomB + " (" + doors[i].B.x + ", " + doors[i].B.y + ")" })
-		if (doors[i].roomA == "unknown" || doors[i].roomB == "unknown" || (doors[i].roomA == "corridor" && doors[i].roomB == "corridor") || (doors[i].roomA == doors[i].roomB))
-		{;
-			doors.splice(i, 1);
-			i--;
-		}
-	}
-	
-	/*
-	for (let y = 0; y < h; y++)
-	{
-		for (let x = 0; x < w; x++)
-		{
-			//if (isNaN(tilemap[x + (y * w)]))
-			debug.push({ x: x, y: y + 0.5, letter: tilemap[x + (y * w)] });
-		}
-	}
-	*/
-	return {tilemap: tilemap, doors: doors, debugmarks: debug};
-}
-
-function RemoveXYFromQueue(coords, queue)
-{
-	
-	for (let i = 0; i < queue.length; i++)
-	{
-		if (queue[i].x == coords.x && queue[i].y == coords.y)
-		{
-			queue.splice(i,1);
-			i--;
-		}
-	}
-	
-	return queue;
-}
-
-function GetConnectionsRAsInt(x, y, tilemap, width, height)
-{
-	let code = 0;
-	let tileIndex = x + 1 + (y * width);
-	if (x < width - 1 && (!isNaN(tilemap[tileIndex]) || tilemap[tileIndex] == "coridoor"))
-	{
-		code += 1;
-	}
-	
-	tileIndex = x - 1 + (y * width);
-	if (x > 0 && (!isNaN(tilemap[tileIndex]) || tilemap[tileIndex] == "coridoor"))
-	{
-		code += 4;
-	}
-
-	tileIndex = x + ((y + 1) * width);
-	if (y < height - 1 && (!isNaN(tilemap[tileIndex]) || tilemap[tileIndex] == "coridoor"))
-	{
-		code += 2;
-	}
-	
-	tileIndex = x + ((y - 1) * width);
-	if (y > 0 && (!isNaN(tilemap[tileIndex]) || tilemap[tileIndex] == "coridoor"))
-	{
-		code += 8;
-	}
-	
-	return code;
-}
-
-function DrawDrawnDungeonMap(channel, arguments)
-{
-	let w = 32;
-	let h = 24;
-	let draw_grid = true;
-	
-	if (arguments != null && arguments.length > 0)
-	{
-		argumentpos = arguments.indexOf("-w")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			w = parseInt(arguments[argumentpos+1]);
-		if (w > DUNGEONMAP_MAX_WIDTH)
-			w = DUNGEONMAP_MAX_WIDTH;
-		if (w < DUNGEONMAP_MIN_WIDTH)
-			w = DUNGEONMAP_MIN_WIDTH;
-		argumentpos = arguments.indexOf("-h")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			h = parseInt(arguments[argumentpos+1]);
-		if (h > DUNGEONMAP_MAX_HEIGHT)
-			h = DUNGEONMAP_MAX_HEIGHT;
-		if (h < DUNGEONMAP_MIN_HEIGHT)
-			h = DUNGEONMAP_MIN_HEIGHT;
-		argumentpos = arguments.indexOf("-nogrid")
-		if (argumentpos > -1)
-			draw_grid = false;
-	}
-	
-	let fullmap = GenerateDrawnDungeonMap(arguments);
-	//let fullmap = { tilemap: [], doors: [] };
-	//fullmap.tilemap = GenerateDungeonMap(arguments);
-	
-	let leftcut = 0;
-	let bottomcut = 0;
-	
-	let cut = 0;
-	let stopcut = false;
-	
-	for (let y = 0; y < h && !stopcut; y++)
-	{
-		for (let x = 0; x < w && !stopcut; x++)
-		{
-			let index = x + (y * w);
-			cut++;
-			if (fullmap.tilemap[index] != "unknown" && fullmap.tilemap[index] != "closed")
-			{
-				cut--;
-				stopcut = true;
-			}
-		}
-	}
-	
-	bottomcut = Math.floor(cut / w);
-	cut = 0;
-	stopcut = false;
-	
-	for (let y = h - 1; y > 0 && !stopcut; y--)
-	{
-		for (let x = 0; x < w && !stopcut; x++)
-		{
-			let index = x + (y * w);
-			cut++;
-			if (fullmap.tilemap[index] != "unknown" && fullmap.tilemap[index] != "closed")
-			{
-				cut--;
-				stopcut = true;
-			}
-		}
-	}
-	
-	let canvash = h - Math.floor(cut / w);
-	cut = 0;
-	stopcut = false;
-	
-	for (let x = 0; x < w && !stopcut; x++)
-	{
-		for (let y = 0; y < h && !stopcut; y++)
-		{
-			let index = x + (y * w);
-			cut++;
-			if (fullmap.tilemap[index] != "unknown" && fullmap.tilemap[index] != "closed")
-			{
-				cut--;
-				stopcut = true;
-			}
-		}
-	}
-	
-	leftcut = Math.floor(cut / h);
-	cut = 0;
-	stopcut = false;
-	
-	for (let x = w - 1; x > 0 && !stopcut; x--)
-	{
-		for (let y = 0; y < h -0 && !stopcut; y++)
-		{
-			let index = x + (y * w);
-			cut++;
-			if (fullmap.tilemap[index] != "unknown" && fullmap.tilemap[index] != "closed")
-			{
-				cut--;
-				stopcut = true;
-			}
-		}
-	}
-	
-	let canvasw = w - Math.floor(cut / h);
-	
-	let tempcanvas = new Canvas();
-	tempcanvas.width = (canvasw - leftcut + 2) * 100;
-	tempcanvas.height = (canvash - bottomcut + 2) * 100;
-	
-	//console.log(leftcut)
-	//console.log(bottomcut)
-	//console.log(canvash)
-	//console.log(canvasw)
-	
-	if (tempcanvas.getContext)
-	{
-		let ctx = tempcanvas.getContext('2d');
-		
-		let closed_color = '#5693BA';
-		let open_color = '#FFFFFF'
-		let grid_color = '#A9CBDD'
-		
-		let map_offset = { x: (leftcut - 1) * -100, y: (bottomcut - 1) * -100};
-		
-		
-		ctx.fillStyle = closed_color;
-		ctx.fillRect(0,0,(canvasw - leftcut + 2) * 100,(canvash - bottomcut + 2) * 100);
-		
-		ctx.fillStyle = open_color;
-		ctx.fillRect(100,100,(canvasw - leftcut) * 100,(canvash - bottomcut) * 100);
-		
-		ctx.strokeStyle = grid_color;
-		ctx.lineWidth = 2;
-		
-		for (let y = 1; y < canvash - bottomcut + 2; y++)
-		{
-			ctx.beginPath();
-			ctx.moveTo(100, y * 100);
-			ctx.lineTo((canvasw - leftcut + 1) * 100, y * 100);
-			ctx.closePath();
-			ctx.stroke();
-		}
-		
-		for (let x = 1; x < canvasw - leftcut + 2; x++)
-		{
-			ctx.beginPath();
-			ctx.moveTo(x * 100, 100);
-			ctx.lineTo(x * 100,(canvash - bottomcut + 1) * 100);
-			ctx.closePath();
-			ctx.stroke();
-		}
-		
-		
-		ctx.fillStyle = open_color;
-		ctx.strokeStyle = closed_color;
-
-		ctx.lineWidth = 8;
-		let frontierQueue = [];
-		for (let y = bottomcut - 1; y < canvash; y++)
-		{
-			for (let x = leftcut - 1; x < canvasw; x++)
-			{
-				let index = x + (y * w);
-				let priority = 0;
-				if (fullmap.tilemap[index] == "unknown" || fullmap.tilemap[index] == "closed")
-					priority = 0;
-				else if (fullmap.tilemap[index] == "corridor" || !isNaN(fullmap.tilemap[index]))
-				{
-					priority = 0;
-					let queueposition = { x: x, y: y, priority: priority };
-					frontierQueue.push(queueposition);
-				}
-				
-			}
-		}
-		
-		ctx.strokeStyle = closed_color;
-		let drawn_tiles = [];
-		
-		while (frontierQueue.length > 0)
-		{
-			let next_queue = getNextInQueue(frontierQueue);
-			
-			let current_tile = { x: frontierQueue[next_queue].x, y: frontierQueue[next_queue].y };
-			
-			frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-			
-			let index = current_tile.x + (current_tile.y * w);
-			
-			let current_room_id = fullmap.tilemap[index];
-			if (current_room_id == "unknown" || current_room_id == "closed")
-				ctx.fillStyle = closed_color;
-			else
-				ctx.fillStyle = open_color;
-			
-			
-			//get topmost cell of shape
-			let check_tile = { x: current_tile.x, y: current_tile.y - 1 };
-			let continue_loop = true;
-			while (check_tile.y > -1 && continue_loop)
-			{
-				continue_loop = false;
-				index = check_tile.x + (check_tile.y * w);
-				if (fullmap.tilemap[index] == current_room_id)
-				{
-					current_tile.y--;
-					continue_loop = true;
-				}
-				
-				check_tile.y = current_tile.y - 1;
-			}
-			
-			index = current_tile.x + (current_tile.y * w);
-			
-			let startpoint = { x: current_tile.x * 100 + map_offset.x, y: current_tile.y*100 + map_offset.y };
-			let currentpoint = { x: startpoint.x, y: startpoint.y }
-			let point_position = 0;
-			ctx.beginPath();
-			ctx.moveTo(startpoint.x, startpoint.y)
-			//console.log(x + ", " + y);
-			//console.log(startpoint);
-			//console.log(ctx.fillStyle);
-			//console.log(current_room_id);
-			
-			if (!drawn_tiles.includes(index))
-			{
-				drawn_tiles.push(index);
-				let finished = false;
-				do
-				{
-					while (point_position == 0 && finished == false)
-					{
-						//console.log("loop 0 part 0");
-						check_tile.x = current_tile.x + 1;
-						check_tile.y = current_tile.y - 1;
-						index = check_tile.x + (check_tile.y * w);
-						if (check_tile.y > -1 && check_tile.x < w && fullmap.tilemap[index] == current_room_id)
-						{
-							//console.log("loop 0 part 1");
-							currentpoint = { x: (current_tile.x + 1) * 100 + map_offset.x, y: current_tile.y * 100  + map_offset.y};
-							ctx.lineTo(currentpoint.x, currentpoint.y);
-							current_tile.x++;
-							current_tile.y--;
-							index = current_tile.x + (current_tile.y * w);
-							point_position = 3;
-							frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-						}
-						else 
-						{
-							check_tile.x = current_tile.x + 1;
-							check_tile.y = current_tile.y;
-							index = check_tile.x + (check_tile.y * w);
-							if (check_tile.x < w && fullmap.tilemap[index] == current_room_id)
-							{
-								//console.log("loop 0 part 2")
-								current_tile.x++;
-								index = current_tile.x + (current_tile.y * w);
-								currentpoint = { x: current_tile.x * 100 + map_offset.x, y: current_tile.y * 100 + map_offset.y};
-								ctx.lineTo(currentpoint.x, currentpoint.y);
-								frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-							}
-							else
-							{
-								//console.log("loop 0 part 3")
-								currentpoint = { x: (current_tile.x + 1) * 100 + map_offset.x, y: current_tile.y * 100 + map_offset.y};
-								ctx.lineTo(currentpoint.x, currentpoint.y);
-								point_position = 1;
-								frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-							}
-						}
-						if (currentpoint.x == startpoint.x && currentpoint.y == startpoint.y)
-							finished = true;
-					}
-					
-					while (point_position == 1 && finished == false)
-					{
-						//console.log("loop 1 part 0")
-						check_tile.x = current_tile.x + 1;
-						check_tile.y = current_tile.y + 1;
-						index = check_tile.x + (check_tile.y * w);
-						if (check_tile.y < h && check_tile.x < w && fullmap.tilemap[index] == current_room_id)
-						{
-							//console.log("loop 1 part 1")
-							currentpoint = { x: (current_tile.x + 1) * 100 + map_offset.x, y: (current_tile.y + 1) * 100 + map_offset.y };
-							ctx.lineTo(currentpoint.x, currentpoint.y);
-							current_tile.x++;
-							current_tile.y++;
-							index = current_tile.x + (current_tile.y * w);
-							point_position = 0;
-							frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-						}
-						else 
-						{
-							check_tile.x = current_tile.x;
-							check_tile.y = current_tile.y + 1;
-							index = check_tile.x + (check_tile.y * w);
-							if (check_tile.y < h && fullmap.tilemap[index] == current_room_id)
-							{
-								//console.log("loop 1 part 2")
-								current_tile.y++;
-								index = current_tile.x + (current_tile.y * w);
-								currentpoint = { x: (current_tile.x + 1) * 100 + map_offset.x, y: current_tile.y * 100 + map_offset.y };
-								ctx.lineTo(currentpoint.x, currentpoint.y);
-								frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-							}
-							else
-							{
-								//console.log("loop 1 part 3")
-								currentpoint = { x: (current_tile.x + 1) * 100 + map_offset.x, y: (current_tile.y + 1) * 100 + map_offset.y};
-								ctx.lineTo(currentpoint.x, currentpoint.y);
-								point_position = 2;
-								frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-							}
-						}
-						if (currentpoint.x == startpoint.x && currentpoint.y == startpoint.y)
-							finished = true;
-					}
-					
-					while (point_position == 2 && finished == false)
-					{
-						//console.log("loop 2 part 0")
-						check_tile.x = current_tile.x - 1;
-						check_tile.y = current_tile.y + 1;
-						index = check_tile.x + (check_tile.y * w);
-						if (check_tile.y < h && check_tile.x > - 1 && fullmap.tilemap[index] == current_room_id)
-						{
-							//console.log("loop 2 part 1")
-							currentpoint = { x: current_tile.x * 100 + map_offset.x, y: (current_tile.y + 1) * 100 + map_offset.y };
-							ctx.lineTo(currentpoint.x, currentpoint.y);
-							current_tile.x--;
-							current_tile.y++;
-							index = current_tile.x + (current_tile.y * w);
-							point_position = 1;
-							frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-						}
-						else 
-						{
-							check_tile.x = current_tile.x - 1;
-							check_tile.y = current_tile.y;
-							index = check_tile.x + (check_tile.y * w);
-							if (check_tile.x > -1 && fullmap.tilemap[index] == current_room_id)
-							{
-								//console.log("loop 2 part 2")
-								current_tile.x--;
-								index = current_tile.x + (current_tile.y * w);
-								currentpoint = { x: (current_tile.x + 1) * 100 + map_offset.x, y: (current_tile.y + 1) * 100 + map_offset.y };
-								ctx.lineTo(currentpoint.x, currentpoint.y);
-								frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-							}
-							else
-							{
-								//console.log("loop 2 part 3")
-								currentpoint = { x: current_tile.x * 100 + map_offset.x, y: (current_tile.y + 1) * 100 + map_offset.y };
-								ctx.lineTo(currentpoint.x, currentpoint.y);
-								point_position = 3;
-								frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-							}
-						}
-						if (currentpoint.x == startpoint.x && currentpoint.y == startpoint.y)
-							finished = true;
-					}
-					
-					
-					while (point_position == 3 && finished == false)
-					{
-						//console.log("loop 3 part 0")
-						check_tile.x = current_tile.x - 1;
-						check_tile.y = current_tile.y - 1;
-						index = check_tile.x + (check_tile.y * w);
-						if (check_tile.y > -1 && check_tile.x > -1 && fullmap.tilemap[index] == current_room_id)
-						{
-							//console.log("loop 3 part 1")
-							currentpoint = { x: current_tile.x * 100 + map_offset.x, y: current_tile.y * 100 + map_offset.y };
-							ctx.lineTo(currentpoint.x, currentpoint.y);
-							current_tile.x--;
-							current_tile.y--;
-							index = current_tile.x + (current_tile.y * w);
-							point_position = 2;
-							frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-						}
-						else 
-						{
-							check_tile.x = current_tile.x;
-							check_tile.y = current_tile.y - 1;
-							index = check_tile.x + (check_tile.y * w);
-							if (check_tile.y > -1 && fullmap.tilemap[index] == current_room_id)
-							{
-								//console.log("loop 3 part 2")
-								current_tile.y--;
-								index = current_tile.x + (current_tile.y * w);
-								currentpoint = { x: current_tile.x * 100 + map_offset.x, y: (current_tile.y + 1) * 100 + map_offset.y };
-								ctx.lineTo(currentpoint.x, currentpoint.y);
-								frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-							}
-							else
-							{
-								//console.log("loop 3 part 3")
-								currentpoint = { x: current_tile.x * 100 + map_offset.x, y: current_tile.y * 100 + map_offset.y };
-								ctx.lineTo(currentpoint.x, currentpoint.y);
-								point_position = 0;
-								frontierQueue = RemoveXYFromQueue(current_tile, frontierQueue);
-							}
-						}
-						if (currentpoint.x == startpoint.x && currentpoint.y == startpoint.y)
-							finished = true;
-					}
-				} while (finished == false);
-				
-				ctx.closePath();
-				//ctx.fill();
-				ctx.stroke();
-			}
-			
-		}
-		
-		ctx.fillStyle = grid_color;
-		//ctx.strokeStyle = grid_color;
-		//ctx.lineWidth = 2;
-		
-		for (let y = bottomcut -1; y < canvash +1; y++)
-		{
-			for (let x = leftcut -1; x < canvasw +1; x++)
-			{
-				let index = x + (y * w);
-				if (fullmap.tilemap[index] == "unknown" || fullmap.tilemap[index] == "closed")
-				{
-					
-					ctx.fillStyle = closed_color;
-					ctx.fillRect(x * 100 + map_offset.x, y * 100 + map_offset.y, 100, 100);
-					
-					let code = GetConnectionsRAsInt(x, y, fullmap.tilemap, w, h);
-					
-					ctx.fillStyle = grid_color;
-					if ((code & 12) == 0)
-					{
-						ctx.beginPath();
-						ctx.arc(x * 100 + map_offset.x, y * 100 + map_offset.y, 2, 0, 2 * Math.PI);
-						ctx.fill();
-					}
-					if ((code & 9) == 0)
-					{
-						ctx.beginPath();
-						ctx.arc(x * 100 + map_offset.x + 100, y * 100 + map_offset.y, 2, 0, 2 * Math.PI);
-						ctx.fill();
-					}
-					if ((code & 6) == 0)
-					{
-						ctx.beginPath();
-						ctx.arc(x * 100 + map_offset.x, y * 100 + map_offset.y + 100, 2, 0, 2 * Math.PI);
-						ctx.fill();
-					}
-					if ((code & 3) == 0)
-					{
-						ctx.beginPath();
-						ctx.arc(x * 100 + map_offset.x + 100, y * 100 + map_offset.y + 100, 2, 0, 2 * Math.PI);
-						ctx.fill();
-					}
-				}
-			}
-		}
-		
-		let secret_symbol = new Image(20,27);
-		secret_symbol.src = "./secret.svg"
-		//ctx.font = "60px sans-serif";
-		ctx.lineWidth = 8;
-		for (let i = 0; i < fullmap.doors.length; i++)
-		{
-			let doorposition = { x: fullmap.doors[i].A.x * 100, y: fullmap.doors[i].A.y * 100 };
-			let offset = { x: fullmap.doors[i].A.x - fullmap.doors[i].B.x, y: fullmap.doors[i].A.y - fullmap.doors[i].B.y };
-			ctx.strokeStyle = '#000000';
-			ctx.fillStyle = '#FFFFFF';
-			if (offset.x == 0)
-			{
-				if (fullmap.doors[i].secret) // 32x45
-				{
-					ctx.strokeStyle = grid_color;
-					doorposition.x += offset.x * -50 + 20 + map_offset.x;
-					doorposition.y += offset.y * -50 + 40 + map_offset.y;
-					ctx.fillRect(doorposition.x, doorposition.y, 60, 20);
-					ctx.strokeRect(doorposition.x, doorposition.y, 60, 20);
-					ctx.fillStyle = '#000000';
-					doorposition.x += 14;
-					doorposition.y += 30;
-					ctx.drawImage(secret_symbol, doorposition.x + 6, doorposition.y - 32); // done!
-					//ctx.fillText("S", doorposition.x, doorposition.y);
-					//ctx.strokeText("S", doorposition.x, doorposition.y)
-				}
-				else
-				{
-					doorposition.x += offset.x * -50 + 20 + map_offset.x;
-					doorposition.y += offset.y * -50 + 40 + map_offset.y;
-					ctx.fillRect(doorposition.x, doorposition.y, 60, 20);
-					ctx.strokeRect(doorposition.x, doorposition.y, 60, 20);
-				}
-			}
-			else
-			{
-				if (fullmap.doors[i].secret)
-				{
-					ctx.strokeStyle = grid_color;
-					doorposition.x += offset.x * -50 + 40 + map_offset.x;
-					doorposition.y += offset.y * -50 + 20 + map_offset.y;
-					ctx.fillRect(doorposition.x, doorposition.y, 20, 60);
-					ctx.strokeRect(doorposition.x, doorposition.y, 20, 60);
-					ctx.fillStyle = '#000000';
-					doorposition.x -= 6;
-					doorposition.y += 50;
-					ctx.drawImage(secret_symbol, doorposition.x + 6, doorposition.y - 32)
-					//ctx.fillText("S", doorposition.x, doorposition.y);
-					//ctx.strokeText("S", doorposition.x, doorposition.y)
-				}
-				else
-				{
-					doorposition.x += offset.x * -50 + 40 + map_offset.x;
-					doorposition.y += offset.y * -50 + 20 + map_offset.y;
-					ctx.fillRect(doorposition.x, doorposition.y, 20, 60);
-					ctx.strokeRect(doorposition.x, doorposition.y, 20, 60);
-				}
-			}
-		}
-		
-		ctx.font = "12px sans-serif";
-		for (let i = 0; i < fullmap.debugmarks.length; i++)
-		{
-			ctx.fillStyle = '#CC0000';
-			let xpos = (fullmap.debugmarks[i].x * 100) + 10 + map_offset.x;
-			let ypos = (fullmap.debugmarks[i].y * 100) + 10 + map_offset.y;
-			ctx.fillText(fullmap.debugmarks[i].letter, xpos, ypos);
-		}
-		
-		
-		//output file
-		let file = 'drawndungeonmap.png';
-		let path = './' + file;
-		
-		let b64 = tempcanvas.toDataURL('image/png', 0.92);
-		
-		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
-			if (err) throw err;
-			console.log('The drawndungeonmap has been saved!');
-			channel.send({ files: [{ attachment: path, name: file }] });
-		})
-	}
-}
 
 //
 // save/load currentgay variable
@@ -22814,7 +12421,7 @@ function loadCurrentGayValue()
 
 function generatePodcaster()
 {
-	let podcaster = RandomArrayEntry(podcaster_gen.podcaster_firstnames, false, "[donotnest]") + " " + RandomArrayEntry(podcaster_gen.podcaster_lastnames, false, "[donotnest]");
+	let podcaster = RandomArrayEntry(monster_names, false, "[donotnest]") + " " + RandomArrayEntry(monster_surnames, false, "[donotnest]");
 	let podcastname = RandomArrayEntry(podcaster_gen.podcastnames, false, "[donotnest]");
 	let subject1 = RandomArrayEntry(podcaster_gen.podcast_subjects, false, "[donotnest]");
 	let subject2 = RandomArrayEntry(podcaster_gen.podcast_subjects, false, "[donotnest]");
@@ -23327,7 +12934,7 @@ function LoadBattleshipsGames()
 
 //
 //
-// BLASEBALL GENERATOR
+// BLASEBALLER GENERATOR
 
 
 function GenerateBlaseballer()
@@ -23348,977 +12955,8 @@ function GenerateBlaseballer()
 }
 
 //
+// isometric map gen?
 //
-// Voronoi/SVG City Generator
-
-function DistanceBetweenPoints(a, b)
-{
-	let dirvector = { x: b.x - a.x, y:  b.y - a.y };
-	return Math.sqrt((dirvector.x*dirvector.x) + (dirvector.y*dirvector.y));
-}
-
-function DoLinesIntersect(line1, line2)
-{
-	let s1 = { x: line1.end.x - line1.start.x, y: line1.end.y - line1.start.y };
-	let s2 = { x: line2.end.x - line2.start.x, y: line2.end.y - line2.start.y };
-	
-	if ((-s2.x * s1.y + s1.x * s2.y) == 0)
-		return false;
-	
-	let s = (-s1.y * (line1.start.x - line2.start.x) + s1.x * (line1.start.y - line2.start.y)) / (-s2.x * s1.y + s1.x * s2.y);
-	let t = (s2.x * (line1.start.y - line2.start.y) - s2.y * (line1.start.x - line2.start.x)) / (-s2.x * s1.y + s1.x * s2.y);
-	
-	if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
-	{
-		//collision detected, returning
-		//let collisionpoint = { x: line1.start.x + (t * s1.x), y: line1.start.y + (t * s1.y)};
-		return true;
-	}
-	
-	return false;
-}
-
-function RotatePoint(point, radians)
-{
-	let rotatedpoint = { x: point.x , y: point.y };
-	rotatedpoint.x = Math.cos(radians)*point.x - Math.sin(radians)*point.y;
-	rotatedpoint.y = Math.sin(radians)*point.x + Math.cos(radians)*point.y;
-	
-	return rotatedpoint;
-}
-
-function RotateLine(line, radians)
-{
-	let rotatedline = { start: { x: line.start.x , y: line.start.y}, end: { x: line.end.x , y: line.end.y } };
-	rotatedline.start.x = Math.cos(radians)*line.start.x - Math.sin(radians)*line.start.y;
-	rotatedline.start.y = Math.sin(radians)*line.start.x + Math.cos(radians)*line.start.y;
-	rotatedline.end.x = Math.cos(radians)*line.end.x - Math.sin(radians)*line.end.y;
-	rotatedline.end.y = Math.sin(radians)*line.end.x + Math.cos(radians)*line.end.y;
-	
-	return rotatedline;
-}
-
-function AddVectors(a, b)
-{
-	let c = { x: a.x + b.x, y: a.y + b.y };
-	return c;
-}
-
-function SubtractVectors(a, b)
-{
-	let c = { x: a.x - b.x, y: a.y - b.y };
-	
-	return c;
-}
-
-function MultiplyVector(a, b)
-{
-	let c = { x: a.x * b, y: a.y * b };
-	
-	return c;
-}
-
-function GenerateVoronoiCity(margin, w, h)
-{
-	if (h <= 0 || w <= 0)
-		return false;
-	
-	let city = {
-		voronoi: new Voronoi(),
-		sites: [],
-		diagram: null,
-		margin: margin,
-		bbox: { xl: 0, xr: w, yt: 0, yb: h },
-		
-		init: function()
-		{
-			this.randomSites(128);
-		},
-		
-		addSite: function(site)
-		{
-			this.sites.push(site);
-			
-			this.diagram = this.voronoi.compute(this.sites, this.bbox);
-		},
-		
-		circleOfSites: function(r, n, c)
-		{
-			let sites = [];
-			for (let i = 0; i < Math.PI*2; i += Math.PI*2/n)
-			{
-				let x = Math.sin(i)*r + c.x;
-				let y = Math.cos(i)*r + c.y;
-				
-				this.sites.push({x: x, y: y});
-			}
-			
-			this.compute(this.sites);
-		},
-		
-		circleOfRandomSites: function(r, n, c, v)
-		{
-			let xo = Math.max(this.margin, c.x - v);
-			let xp = Math.min(this.bbox.xr - this.margin, c.x + v)
-			let dx = Math.min(v*2, xp - xo);
-			let yo = Math.max(this.margin, c.y - v);
-			let yp = Math.min(this.bbox.yb - this.margin, c.y + v)
-			let dy = Math.min(v*2, yp - yo);
-			let sites = [];
-			for (let i = 0; i < Math.PI*2; i += Math.PI*2/n)
-			{
-				let random_x = Math.round(xo+Math.random()*dx)
-				let random_y = Math.round(yo+Math.random()*dy)
-				
-				let random_site = { x: 0, y: 0 };
-				random_site.x += Math.sin(i)*r + random_x;
-				random_site.y += Math.cos(i)*r + random_y;
-				
-				this.sites.push({x: random_site.x, y: random_site.y});
-			}
-			
-			this.compute(this.sites);
-		},
-		
-		randomSites: function(n)
-		{
-			let xo = this.margin;
-			let dx = w - this.margin*2;
-			let yo = this.margin;
-			let dy = h - this.margin*2;
-			for (let i = 0; i < n; i++)
-			{
-				this.sites.push({ x: Math.round(xo+Math.random()*dx), y: Math.round(yo+Math.random()*dy) });
-			}
-			this.diagram = this.voronoi.compute(this.sites, this.bbox);
-		},
-		
-		relax: function(n)
-		{
-			for (let i = 0; i < n; i++)
-			{
-				this.relaxSites();
-			}
-		},
-		
-		relaxSites: function()
-		{
-			if (!this.diagram) {return;}
-			var cells = this.diagram.cells,
-				iCell = cells.length,
-				cell,
-				site, sites = [],
-				again = false,
-				rn, dist;
-			var p = 1 / iCell * 0.1;
-			while (iCell--) 
-			{
-				cell = cells[iCell];
-				rn = Math.random();
-				// probability of apoptosis
-				if (rn < p) {
-					continue;
-					}
-				site = this.cellCentroid(cell);
-				dist = this.distance(site, cell.site);
-				if (dist > 2) {
-					site.x = (site.x+cell.site.x)/2;
-					site.y = (site.y+cell.site.y)/2;
-					}
-				// probability of mytosis
-				if (rn > (1-p)) {
-					dist /= 2;
-					sites.push({
-						x: site.x+(site.x-cell.site.x)/dist,
-						y: site.y+(site.y-cell.site.y)/dist,
-						});
-					}
-				sites.push(site);
-			}
-			this.compute(sites);
-		},
-		
-		cellArea: function(cell)
-		{
-			var area = 0,
-				halfedges = cell.halfedges,
-				iHalfedge = halfedges.length,
-				halfedge,
-				p1, p2;
-			while (iHalfedge--) {
-				halfedge = halfedges[iHalfedge];
-				p1 = halfedge.getStartpoint();
-				p2 = halfedge.getEndpoint();
-				area += p1.x * p2.y;
-				area -= p1.y * p2.x;
-				}
-			area /= 2;
-			return area;
-		},
-		
-		cellCentroid: function(cell)
-		{
-			var x = 0, y = 0,
-				halfedges = cell.halfedges,
-				iHalfedge = halfedges.length,
-				halfedge,
-				v, p1, p2;
-			while (iHalfedge--)
-			{
-				halfedge = halfedges[iHalfedge];
-				p1 = halfedge.getStartpoint();
-				p2 = halfedge.getEndpoint();
-				v = p1.x*p2.y - p2.x*p1.y;
-				x += (p1.x+p2.x) * v;
-				y += (p1.y+p2.y) * v;
-			}
-			
-			v = this.cellArea(cell) * 6;
-			return {x:x/v,y:y/v};
-		},
-		
-		distance: function(a, b)
-		{
-			var dx = a.x-b.x,
-				dy = a.y-b.y;
-			return Math.sqrt(dx*dx+dy*dy);
-		},
-		
-		compute: function(sites)
-		{
-			this.sites = sites;
-			this.voronoi.recycle(this.diagram);
-			this.diagram = this.voronoi.compute(sites, this.bbox);
-		},
-		
-		setDistricts: function(n, district0size, roads)
-		{
-			let centrepoint = { x: (this.bbox.xr - this.bbox.xl)/2, y: (this.bbox.yb - this.bbox.yt)/2 };
-			let maxdx = (centrepoint.x * centrepoint.x);
-			let maxdy = (centrepoint.y * centrepoint.y);
-			let maxdistanceSQ = Math.min(maxdx, maxdy);
-			
-			this.diagram.cells.forEach(cell => {
-				let cellBbox = cell.getBbox();
-				let cellCentre = { x: Math.floor((cellBbox.x + (cellBbox.width/2))), y: Math.floor((cellBbox.y + (cellBbox.height/2))) };
-				let distanceX = (cellCentre.x - centrepoint.x)*(cellCentre.x - centrepoint.x);
-				let distanceY = (cellCentre.y - centrepoint.y)*(cellCentre.y - centrepoint.y);
-				let distanceSQ = (distanceX + distanceY);
-				let proportionaldistance = distanceSQ / maxdistanceSQ;
-				
-				let previous_district = -1;
-				
-				if (proportionaldistance < 0.0025*district0size)
-				{
-					cell.district = 0;
-				}
-				else if ((cellCentre.x / (this.bbox.xr - this.bbox.xl)) < 0.5)
-				{
-					if ((cellCentre.y / (this.bbox.yb - this.bbox.yt)) < 0.5)
-					{
-						if (proportionaldistance < 0.425)
-						{
-							if (previous_district = -1)
-							{
-								previous_district = Math.floor(Math.random()*n)+1;
-								cell.district = previous_district;
-							}
-							else
-							{
-								cell.district = previous_district;
-								previous_district = -1
-							}
-						}
-						else
-						{
-							cell.district = (n*4)+Math.ceil(roads/4);
-						}
-					}
-					else
-					{
-						if (proportionaldistance < 0.425)
-						{
-							if (previous_district = -1)
-							{
-								previous_district = Math.floor(Math.random()*n)+(n)+1;
-								cell.district = previous_district;
-							}
-							else
-							{
-								cell.district = previous_district;
-								previous_district = -1
-							}
-						}
-						else
-						{
-							cell.district = (n*4)+Math.ceil(2*roads/4);
-						}
-					}
-				}
-				else
-				{
-					if ((cellCentre.y / (this.bbox.yb - this.bbox.yt)) < 0.5)
-					{
-						if (proportionaldistance < 0.425)
-						{
-							if (previous_district = -1)
-							{
-								previous_district = Math.floor(Math.random()*n)+(n*2)+1;
-								cell.district = previous_district;
-							}
-							else
-							{
-								cell.district = previous_district;
-								previous_district = -1
-							}
-						}
-						else
-						{
-							cell.district = (n*4)+Math.ceil(3*roads/4);
-						}
-					}
-					else
-					{
-						if (proportionaldistance < 0.425)
-						{
-							if (previous_district = -1)
-							{
-								previous_district = Math.floor(Math.random()*n)+(n*3)+1;
-								cell.district = previous_district;
-							}
-							else
-							{
-								cell.district = previous_district;
-								previous_district = -1
-							}
-						}
-						else
-						{
-							cell.district = (n*4)+Math.ceil(4*roads/4);
-						}
-					}
-				}
-			});
-		}
-	}
-	
-	return city;
-}
-
-function areaOfTriangle(p0, p1, p2)
-{
-	let area = Math.abs(p0.x*(p1.y-p2.y)+p1.x*(p2.y-p0.y)+p2.x*(p0.y-p1.y)/2);
-	
-	return area;
-}
-
-async function DrawVoronoiCity(channel, arguments)
-{
-	let p = 256;
-	let m = 100;
-	let w = 800;
-	let h = 800;
-	let r = 9;
-	let d = 2;
-	let building_scale = 1;
-	let output_svg = false;
-	
-	if (arguments != null && arguments.length > 0)
-	{
-		let argumentpos = arguments.indexOf("-p");
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			p = parseInt(arguments[argumentpos+1]);
-		if (p > 8192)
-			p = 8192;
-		argumentpos = arguments.indexOf("-w")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			w = parseInt(arguments[argumentpos+1]);
-		if (w > 6400)
-			w = 6400;
-		argumentpos = arguments.indexOf("-h")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			h = parseInt(arguments[argumentpos+1]);
-		argumentpos = arguments.indexOf("-m")
-		if (h > 6400)
-			h = 6400;
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
-			m = parseFloat(arguments[argumentpos+1]);
-		if (m < 0)
-			m = 0;
-		if (m > Math.min(w, h)/3)
-			m = Math.min(w, h)/3;
-		argumentpos = arguments.indexOf("-r")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			r = parseInt(arguments[argumentpos+1]);
-		if (r > 10000)
-			r = 10000;
-		argumentpos = arguments.indexOf("-d")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			d = parseInt(arguments[argumentpos+1]);
-		if (d > 16)
-			d = 16;
-		if (d < 1)
-			d = 1;
-		argumentpos = arguments.indexOf("-b")
-		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]) && arguments[argumentpos+1] > 0)
-			building_scale = parseFloat(arguments[argumentpos+1]);
-		if (building_scale > 8)
-			building_scale = 8;
-		if (building_scale < 0.125)
-			building_scale = 0.125;
-		argumentpos = arguments.indexOf("-svg")
-		if (argumentpos != -1)
-			output_svg = true;
-	}
-	
-	let start_time = new Date().getTime();
-	
-	let city = null;
-	let max_distance = DistanceBetweenPoints({ x:0, y:0 }, { x:w/2, y:h/2 });
-	
-	while (city == null || city.sites.length == 0)
-	{
-		try 
-		{
-			let outsite_roads = 2+Math.round(Math.random()*2);
-			city = GenerateVoronoiCity(m, w, h);
-			let district0size = (building_scale*2) - 1;
-			
-			city.circleOfRandomSites(Math.min(w - m*2, h - m*2)/4*(Math.random()+Math.random()+1), Math.round(Math.random()*2)+3, { x: w/2, y: h/2 }, Math.min(w, h)*1/7);
-			
-			let random_center_site = { x: w/2, y: h/2 };
-			random_center_site.x += Math.random()*Math.min(w, h)*2/9 - Math.min(w, h)*1/9;
-			random_center_site.y += Math.random()*Math.min(w, h)*2/9 - Math.min(w, h)*1/9;
-			city.addSite(random_center_site);
-			let corner_site0 = { x: m, y: m };
-			let corner_site1 = { x: w - m, y: m };
-			let corner_site2 = { x: m, y: h - m };
-			let corner_site3 = { x: w - m, y: h - m };
-			corner_site0.x += Math.random()*m/4;
-			corner_site0.y += Math.random()*m/4;
-			corner_site1.x -= Math.random()*m/4;
-			corner_site1.y += Math.random()*m/4;
-			corner_site1.x += Math.random()*m/4;
-			corner_site1.y -= Math.random()*m/4;
-			corner_site1.x -= Math.random()*m/4;
-			corner_site1.y -= Math.random()*m/4;
-			
-			let original_circle = [];
-			
-			city.sites.forEach(site =>
-			{
-				original_circle.push({ x: site.x, y: site.y });
-			});
-			
-			original_circle.forEach(site =>
-			{
-				city.circleOfRandomSites(Math.min(w - m*2, h - m*2)/12*(Math.random()+Math.random()+1), Math.floor(((p-1-original_circle.length)/original_circle.length)/16), site, Math.min(w, h)/18);
-			});
-			
-			city.relax(r-1);
-			
-			city.circleOfSites((w-m*2)+20, 8, { x: w/2, y: h/2 });
-			
-			city.setDistricts(d, district0size, outsite_roads);
-			
-			original_circle = [];
-			for(let i = 0; i < 4; i++)
-			{
-				city.diagram.cells.forEach(cell =>
-				{
-					if (cell.district < (d*4)+1 && city.cellArea(cell) > 400*building_scale)
-						original_circle.push({ x: cell.site.x, y: cell.site.y });
-						city.setDistricts(d, district0size, outsite_roads);
-				});
-			}
-			
-			original_circle.forEach(site =>
-			{
-				city.circleOfRandomSites(Math.min(w - m*2, h - m*2)/15*(Math.random()+Math.random()+1), 4, site, Math.min(w, h)/37);
-			});
-			
-			city.addSite(corner_site0);
-			city.addSite(corner_site1);
-			city.addSite(corner_site2);
-			city.addSite(corner_site3);
-			city.setDistricts(d, district0size, outsite_roads);
-		}
-		catch (err)
-		{
-			console.log("failed to generate city: " + err);
-			city = null;
-		}
-	}
-	
-	
-	let citygen_time = new Date().getTime() - start_time;
-	
-	console.log("City generation took " + (citygen_time) + " milliseconds");
-	
-	let tempcanvas = new Canvas();
-	tempcanvas.width = w;
-	tempcanvas.height = h;
-	
-	if (tempcanvas.getContext)
-	{
-		let centrepoint = {x: w/2, y: h/2};
-		let max_distance = Math.min(Math.sqrt((w/2)*(w/2)*2), Math.sqrt((h/2)*(h/2)*2));
-		let ctx = tempcanvas.getContext('2d');
-		
-		// ctx.fillStyle = '#BFA87F';
-		// ctx.fillRect(0, 0, w, h);
-		
-		let scope = new paper.PaperScope();
-		scope.setup(tempcanvas);
-		
-		let rect = new scope.Path.Rectangle(new scope.Point(0,0), new scope.Size(w, h));
-		rect.fillColor = new scope.Color('#BFA87F');
-		
-		let paperMap =
-		{
-			districtPaths: [],
-			roadPaths: [],
-			roadPathsInner: [],
-			buildingPaths: [],
-			debugPaths: []
-		}
-		
-		city.diagram.cells.forEach(cell =>
-		{
-			if (cell.halfedges.length > 2)
-			{
-				cell.path = new scope.Path();
-				cell.path.moveTo(cell.halfedges[0].getStartpoint());
-				cell.halfedges.forEach(halfedge =>
-				{
-					cell.path.lineTo(halfedge.getEndpoint());
-				});
-				cell.path.closePath();
-				cell.path.visible = false;
-			}
-		});
-		
-		console.log("Cell paths done");
-		
-		city.diagram.cells.forEach(cell =>
-		{
-			cell.halfedges.forEach(halfedge =>
-			{
-				if (halfedge.edge.rSite && city.diagram.cells[halfedge.edge.rSite.voronoiId].district != cell.district)
-				{
-					let path = new scope.Path();
-					path.strokeColor = new scope.Color('#000000');
-					path.strokeWidth = 6;
-					path.strokeJoin = 'round';
-					path.strokeCap = 'round';
-					
-					let start = halfedge.getStartpoint();
-					let end = halfedge.getEndpoint();
-					let startpoint = new scope.Point(start.x, start.y);
-					let endpoint = new scope.Point(end.x, end.y);
-					
-					path.moveTo(startpoint);
-					path.lineTo(endpoint);
-					paperMap.roadPaths.push(path);
-				}
-				else if (cell.district < d*4+1)
-				{
-					
-					let path = new scope.Path();
-					path.strokeColor = new scope.Color('#000000');
-					path.strokeWidth = 4;
-					path.strokeJoin = 'round';
-					path.strokeCap = 'round';
-					
-					let start = halfedge.getStartpoint();
-					let end = halfedge.getEndpoint();
-					let startpoint = new scope.Point(start.x, start.y);
-					let endpoint = new scope.Point(end.x, end.y);
-					
-					path.moveTo(startpoint);
-					path.lineTo(endpoint);
-					paperMap.roadPaths.push(path);
-				}
-			});
-		});
-		
-		city.diagram.cells.forEach(cell =>
-		{
-			cell.halfedges.forEach(halfedge =>
-			{
-				if (halfedge.edge.rSite && city.diagram.cells[halfedge.edge.rSite.voronoiId].district != cell.district)
-				{
-					let path = new scope.Path();
-					path.strokeColor = new scope.Color('#C4B9B7');
-					path.strokeWidth = 5;
-					path.strokeJoin = 'round';
-					path.strokeCap = 'round';
-					
-					let start = halfedge.getStartpoint();
-					let end = halfedge.getEndpoint();
-					let startpoint = new scope.Point(start.x, start.y);
-					let endpoint = new scope.Point(end.x, end.y);
-					
-					path.moveTo(startpoint);
-					path.lineTo(endpoint);
-					paperMap.roadPaths.push(path);
-				}
-				else if (cell.district < d*4+1)
-				{
-					
-					let path = new scope.Path();
-					path.strokeColor = new scope.Color('#C4B9B7');
-					path.strokeWidth = 3;
-					path.strokeJoin = 'round';
-					path.strokeCap = 'round';
-					
-					let start = halfedge.getStartpoint();
-					let end = halfedge.getEndpoint();
-					let startpoint = new scope.Point(start.x, start.y);
-					let endpoint = new scope.Point(end.x, end.y);
-					
-					path.moveTo(startpoint);
-					path.lineTo(endpoint);
-					paperMap.roadPaths.push(path);
-				}
-			});
-		});
-		
-		console.log("Roads done");
-		// buildings
-		
-		city.diagram.cells.forEach(cell =>
-		{
-			if (cell.path)
-			{
-				cell.buildings = new scope.Path();
-				cell.buildings.closePath();
-				let buildings = new scope.Path();
-				buildings.closePath();
-				buildings.visible = false;
-				
-				let cArea = Math.abs(city.cellArea(cell));
-				
-				if (cell.district < d*4+1 && cArea > 600*building_scale)
-				{
-					for (let i = 0; i < cell.path.segments.length; i++)
-					{
-						let building_path = new scope.Path();
-						building_path.visible = false;
-						let startpoint = { x: cell.path.segments[i].point.x, y: cell.path.segments[i].point.y };
-						let endpoint = { x: cell.path.segments[(i+1)%cell.path.segments.length].point.x, y: cell.path.segments[(i+1)%cell.path.segments.length].point.y };
-						let distance = Math.max(DistanceBetweenPoints(endpoint, centrepoint),DistanceBetweenPoints(startpoint, centrepoint));
-						
-						let pushFromRoad = 2;
-						
-						let pathDir = SubtractVectors(endpoint, startpoint);
-						pathDir = NormalizeVector(pathDir);
-						let awayDir = { x: pathDir.y, y: -pathDir.x };
-						let length = DistanceBetweenPoints(startpoint, endpoint);
-						let remaining_length = length;
-						
-						if (remaining_length > (5*building_scale))
-						{
-							let between_distance = (1+Math.random()*4)*building_scale;
-							let point0 = new scope.Point(startpoint.x + awayDir.x*pushFromRoad, startpoint.y + awayDir.y*pushFromRoad);
-							let point1 = point0.clone();
-							let random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-							point1 = point1.add(new scope.Point(awayDir.x*(random_height), awayDir.y*(random_height)));
-							let previous_height = random_height;
-							building_path.moveTo(point0);
-							building_path.lineTo(point1);
-							while (remaining_length > 0)
-							{
-								let random_length = (Math.random()*(5*building_scale))+(5*building_scale);
-								random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-								
-								if (random_length > remaining_length)
-									random_length = remaining_length;
-								
-								remaining_length -= random_length;
-								if (remaining_length <= 0)
-								{
-									point0 = point1.clone();
-									point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
-									point1 = point0.clone();
-									point1 = point1.add(new scope.Point(awayDir.x*(-previous_height), awayDir.y*(-previous_height)));
-									//point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
-									
-									building_path.lineTo(point0);
-									building_path.lineTo(point1);
-								}
-								else
-								{
-									point0 = point1.clone();
-									point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
-									point1 = point0.clone();
-									point1 = point1.add(new scope.Point(awayDir.x*(random_height-previous_height), awayDir.y*(random_height-previous_height)));
-									//point1 = point1.add(new scope.Point(awayDir.x*(previous_height-random_height), awayDir.y*(previous_height-random_height)));
-									
-									building_path.lineTo(point0);
-									building_path.lineTo(point1);
-									
-									previous_height = random_height;
-								}
-							}
-							building_path.closePath();
-							
-							buildings = buildings.unite(building_path);
-						}
-						//other side of road
-						remaining_length = length;
-						
-						if (remaining_length > (5*building_scale))
-						{
-							let between_distance = (1+Math.random()*4)*building_scale;
-							let point0 = new scope.Point(startpoint.x - awayDir.x*pushFromRoad, startpoint.y - awayDir.y*pushFromRoad);
-							let point1 = point0.clone();
-							let random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-							point1 = point1.add(new scope.Point(awayDir.x*(-random_height), awayDir.y*(-random_height)));
-							let previous_height = random_height;
-							building_path.moveTo(point0);
-							building_path.lineTo(point1);
-							while (remaining_length > 0)
-							{
-								let random_length = (Math.random()*(5*building_scale))+(5*building_scale);
-								random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-								
-								if (random_length > remaining_length)
-									random_length = remaining_length;
-								
-								remaining_length -= random_length;
-								if (remaining_length <= 0)
-								{
-									point0 = point1.clone();
-									point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
-									point1 = point0.clone();
-									point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
-									
-									building_path.lineTo(point0);
-									building_path.lineTo(point1);
-								}
-								else
-								{
-									point0 = point1.clone();
-									point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
-									point1 = point0.clone();
-									point1 = point1.add(new scope.Point(awayDir.x*(previous_height-random_height), awayDir.y*(previous_height-random_height)));
-									
-									building_path.lineTo(point0);
-									building_path.lineTo(point1);
-									
-									previous_height = random_height;
-								}
-							}
-							building_path.closePath();
-							
-							buildings = buildings.unite(building_path);
-						}
-					}
-				}
-				
-				// outer districts
-				if (cell.district >= d*4+1)
-				{
-					cell.halfedges.forEach(halfedge =>
-					{
-						if ((halfedge.edge.rSite != null && city.diagram.cells[halfedge.edge.rSite.voronoiId].district != cell.district) || city.diagram.cells[halfedge.edge.lSite.voronoiId].district != cell.district)
-						{
-							let building_path = new scope.Path();
-							building_path.visible = false;
-							let startpoint = halfedge.getStartpoint();
-							let endpoint = halfedge.getEndpoint();
-							let distance = Math.min(DistanceBetweenPoints(endpoint, centrepoint),DistanceBetweenPoints(startpoint, centrepoint));
-							
-							let pushFromRoad = 2;
-							
-							let pathDir = SubtractVectors(endpoint, startpoint);
-							pathDir = NormalizeVector(pathDir);
-							let awayDir = { x: pathDir.y, y: -pathDir.x };
-							let length = DistanceBetweenPoints(startpoint, endpoint);
-							let remaining_length = length;
-							
-							if (remaining_length > (5*building_scale) && distance/max_distance)
-							{
-								let between_distance = (1+Math.random()*6)*building_scale;
-								let point0 = new scope.Point(startpoint.x + awayDir.x*pushFromRoad, startpoint.y + awayDir.y*pushFromRoad);
-								let point1 = point0.clone();
-								let random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-								point1 = point1.add(new scope.Point(awayDir.x*(random_height), awayDir.y*(random_height)));
-								let previous_height = random_height;
-								building_path.moveTo(point0);
-								building_path.lineTo(point1);
-								while (remaining_length > 0)
-								{
-									let random_length = (Math.random()*(5*building_scale))+(5*building_scale);
-									random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-									
-									if (random_length > remaining_length)
-										random_length = remaining_length;
-									
-									remaining_length -= random_length;
-									if (remaining_length <= 0)
-									{
-										point0 = point1.clone();
-										point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
-										point1 = point0.clone();
-										point1 = point1.add(new scope.Point(awayDir.x*(-previous_height), awayDir.y*(-previous_height)));
-										//point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
-										
-										building_path.lineTo(point0);
-										building_path.lineTo(point1);
-									}
-									else
-									{
-										point0 = point1.clone();
-										point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
-										point1 = point0.clone();
-										point1 = point1.add(new scope.Point(awayDir.x*(-previous_height), awayDir.y*(-previous_height)));
-										
-										building_path.lineTo(point0);
-										building_path.lineTo(point1);
-										
-										random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-										previous_height = random_height;
-										
-										remaining_length -= between_distance;
-										if (remaining_length <= 0)
-										{
-											break;
-										}
-										
-										building_path.closePath();
-										between_distance = (1+Math.random()*6)*building_scale;
-										
-										buildings = buildings.unite(building_path);
-										building_path = new scope.Path();
-										point0 = point1.clone();
-										point0 = point0.add(new scope.Point(pathDir.x*between_distance, pathDir.y*between_distance));
-										point1 = point0.clone();
-										point1 = point1.add(new scope.Point(awayDir.x*(random_height), awayDir.y*(random_height)));
-												
-										building_path.moveTo(point0);
-										building_path.lineTo(point1);
-									}
-								}
-								building_path.closePath();
-								
-								buildings = buildings.unite(building_path);
-							}
-							//other side of road
-							remaining_length = length;
-							
-							if (remaining_length > (5*building_scale) && distance/max_distance)
-							{
-								let between_distance = (1+Math.random()*6)*building_scale;
-								let point0 = new scope.Point(startpoint.x - awayDir.x*pushFromRoad, startpoint.y - awayDir.y*pushFromRoad);
-								let point1 = point0.clone();
-								let random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-								point1 = point1.add(new scope.Point(awayDir.x*(-random_height), awayDir.y*(-random_height)));
-								let previous_height = random_height;
-								building_path.moveTo(point0);
-								building_path.lineTo(point1);
-								while (remaining_length > 0)
-								{
-									let random_length = (Math.random()*(5*building_scale))+(5*building_scale);
-									random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-									
-									if (random_length > remaining_length)
-										random_length = remaining_length;
-									
-									remaining_length -= random_length;
-									if (remaining_length <= 0)
-									{
-										point0 = point1.clone();
-										point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
-										point1 = point0.clone();
-										point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
-										
-										building_path.lineTo(point0);
-										building_path.lineTo(point1);
-									}
-									else
-									{
-										point0 = point1.clone();
-										point0 = point0.add(new scope.Point(pathDir.x*random_length, pathDir.y*random_length));
-										point1 = point0.clone();
-										point1 = point1.add(new scope.Point(awayDir.x*(previous_height), awayDir.y*(previous_height)));
-										
-										building_path.lineTo(point0);
-										building_path.lineTo(point1);
-										
-										random_height = (Math.random()*(4*building_scale))+(4*building_scale);
-										previous_height = random_height;
-										
-										remaining_length -= between_distance;
-										if (remaining_length <= 0)
-										{
-											break;
-										}
-										
-										building_path.closePath();
-										between_distance = (1+Math.random()*6)*building_scale;
-										
-										buildings = buildings.unite(building_path);
-										building_path = new scope.Path();
-										point0 = point1.clone();
-										point0 = point0.add(new scope.Point(pathDir.x*between_distance, pathDir.y*between_distance));
-										point1 = point0.clone();
-										point1 = point1.add(new scope.Point(awayDir.x*(-random_height), awayDir.y*(-random_height)));
-												
-										building_path.moveTo(point0);
-										building_path.lineTo(point1);
-									}
-								}
-								building_path.closePath();
-								
-								buildings = buildings.unite(building_path);
-							}
-						}
-					});
-				}
-				
-				let contractedCell = PaperOffset.offsetStroke(cell.path, 4, { join: 'round' });
-				cell.buildings = buildings.clone();
-				cell.buildings = buildings.intersect(cell.path);
-				cell.buildings = cell.buildings.subtract(contractedCell);
-				cell.buildings.visible = true;
-				cell.buildings.fillColor = new scope.Color('#70584B');
-				cell.buildings.strokeColor = new scope.Color('#000000');
-				cell.buildings.strokeWidth = 1;
-				cell.buildings.bringToFront();
-			}
-		});
-		
-		console.log("Buildings done");
-		//debug paths
-		/*
-		city.diagram.cells.forEach(cell =>
-		{
-			let cellcenter = cell.site;
-			let debugPoint = new scope.Point(cellcenter.x, cellcenter.y);
-			let debugPath = new scope.Path.Circle(debugPoint, 3);
-			debugPath.fillColor = new scope.Color('#FFFFFF');
-		});
-		*/
-		
-		scope.view.draw();
-		
-		//output file
-		let file = 'voronoicity.png';
-		let filepath = './' + file;
-		
-		let b64 = scope.view.element.toDataURL('image/png', 0.92);
-		
-		fs.writeFile(filepath,base64data(b64), {encoding: 'base64'}, (err) => {
-			if (err) throw err;
-			let draw_time = new Date().getTime() - start_time - citygen_time;
-			console.log('The voronoicity has been saved! Took ' + draw_time + ' milliseconds to draw');
-			channel.send({ files: [{ attachment: filepath, name: file }] });
-		});
-	}
-}
-
 
 function spreadTemperature(world, pos, w, h, target, distance)
 {
@@ -24756,17 +13394,47 @@ function generateIsometricWorldMap(channel, arguments)
 	let margin = Math.floor(Math.min(width, height)/5);
 	let xmargin = Math.floor(margin / 3);
 	let temperature = 0;
+	let temperature_noise_factor = 3
+	let temperature_variation = 0.5
+	let elevation_variation = 1
 	
 	if (arguments != null && arguments.length > 0)
 	{
 		argumentpos = arguments.indexOf("-t")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
-			temperature = parseInt(arguments[argumentpos+1]);
-			if (temperature > 2)
-				temperature = 2;
-			if (temperature < -2)
-				temperature = -2;
+			temperature = parseFloat(arguments[argumentpos+1]);
+			if (temperature > 20)
+				temperature = 20;
+			if (temperature < -20)
+				temperature = -20;
+		}
+		argumentpos = arguments.indexOf("-tn")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			temperature_noise_factor = parseFloat(arguments[argumentpos+1]);
+			if (temperature_noise_factor > 10)
+				temperature_noise_factor = 10;
+			if (temperature_noise_factor <= 0)
+				temperature_noise_factor = 0.01;
+		}
+		argumentpos = arguments.indexOf("-tv")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			temperature_variation = parseFloat(arguments[argumentpos+1]);
+			if (temperature_variation > 2)
+				temperature_variation = 2;
+			if (temperature_variation < -2)
+				temperature_variation = -2;
+		}
+		argumentpos = arguments.indexOf("-ev")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			elevation_variation = parseFloat(arguments[argumentpos+1]);
+			if (elevation_variation > 2)
+				elevation_variation = 2;
+			if (elevation_variation < -2)
+				elevation_variation = -2;
 		}
 		argumentpos = arguments.indexOf("-w")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
@@ -24786,7 +13454,8 @@ function generateIsometricWorldMap(channel, arguments)
 			if (height < 81)
 				height = 81;
 		}
-		margin = Math.floor(Math.min(width, height)/5);		argumentpos = arguments.indexOf("-m")
+		margin = Math.floor(Math.min(width, height)/5);
+		argumentpos = arguments.indexOf("-m")
 		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
 		{
 			margin = parseInt(arguments[argumentpos+1]);
@@ -24813,11 +13482,20 @@ function generateIsometricWorldMap(channel, arguments)
 		let distance = Math.abs(equator - y + margin);
 		if (y > equator)
 			distance = Math.abs(equator - y - margin);
-		let tile_temperature = 3.667 - (distance / equator) * 3.667
+		let tile_temperature = (3.667 + temperature) - (distance / equator) * (3.667 + temperature)
 		for (let x = 0; x < width; x++)
 		{
-			let temperature_noise = (noisemap[x + y * width] - 0.5) / 3;
-			world.push({ waterlevel: -1, biome: tile_temperature + temperature_noise, forest: false});
+			world.push({ waterlevel: -1, biome: tile_temperature, forest: false});
+		}
+	}
+	
+	for (let y = 0; y < height; y++)
+	{
+		for (let x = 0; x < width; x++)
+		{
+			let temperature_noise = (noisemap[x + y * width] - 0.5) / temperature_noise_factor;
+			let noisePos = { x: x, y: y };
+			spreadTemperature(world, noisePos, width, height, temperature_noise, 4);
 		}
 	}
 	
@@ -24891,7 +13569,7 @@ function generateIsometricWorldMap(channel, arguments)
 	biomeShifts = Math.round(Math.min(width, height)*2.85)
 	for (let i = 0; i < biomeShifts; i++)
 	{
-		//get hotter closer to center
+		//get hotter closer to equator
 		let randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(yo + Math.random() * dy) }
 		let index = randomPos.x + randomPos.y * width;
 		while (world[index].waterlevel < 0)
@@ -24900,7 +13578,7 @@ function generateIsometricWorldMap(channel, arguments)
 			index = randomPos.x + randomPos.y * width;
 		}
 		let randomDistance = 5 + Math.round(Math.random()*((width+height)/54));
-		spreadTemperature(world, randomPos, width, height, Math.random()*0.35, randomDistance);
+		spreadTemperature(world, randomPos, width, height, Math.random()*temperature_variation*0.7, randomDistance);
 	}
 	console.log("hot temps");
 	dy = height/10 - 1;
@@ -24915,7 +13593,7 @@ function generateIsometricWorldMap(channel, arguments)
 			index = randomPos.x + randomPos.y * width;
 		}
 		let randomDistance = 5 + Math.round(Math.random()*((width+height)/63));
-		spreadTemperature(world, randomPos, width, height, Math.random()*-0.35, randomDistance);
+		spreadTemperature(world, randomPos, width, height, Math.random()*temperature_variation*-0.7, randomDistance);
 		
 		randomPos = { x: Math.floor(xo + Math.random() * dx), y: Math.floor(height - margin - Math.random() * dy) }
 		index = randomPos.x + randomPos.y * width;
@@ -24925,7 +13603,7 @@ function generateIsometricWorldMap(channel, arguments)
 			index = randomPos.x + randomPos.y * width;
 		}
 		randomDistance = 5 + Math.round(Math.random()*((width+height)/63));
-		spreadTemperature(world, randomPos, width, height, Math.random()*-0.35, randomDistance);
+		spreadTemperature(world, randomPos, width, height, Math.random()*temperature_variation*-0.7, randomDistance);
 	}
 	
 	console.log("cold temps");
@@ -24954,6 +13632,7 @@ function generateIsometricWorldMap(channel, arguments)
 	}
 	console.log("forests");
 	
+	/*
 	for (let y = 0; y < height; y++)
 	{
 		for (let x = 0; x < width; x++)
@@ -24967,6 +13646,7 @@ function generateIsometricWorldMap(channel, arguments)
 		}
 	}
 	console.log("shore temperature normalization");
+	*/
 	
 	let renderMap = [];
 	for (let y = 0; y < height; y++)
@@ -25074,7 +13754,7 @@ function generateIsometricWorldMap(channel, arguments)
 			}
 			else if (world[index].waterlevel <= 1) // flat land
 			{
-				if (Math.round(world[index].biome) == 0)
+				if (Math.round(world[index].biome) <= 0)
 				{
 					renderMap.push({ src: './isometric_map_tiles/snow_flat.png', x: xpos, y: ypos});
 					if (world[index].forest)
@@ -25098,14 +13778,14 @@ function generateIsometricWorldMap(channel, arguments)
 					if (world[index].forest)
 						renderMap.push({ src: './isometric_map_tiles/forest_plains.png', x: xpos, y: ypos});
 				}
-				else if (Math.round(world[index].biome) == 4)
+				else if (Math.round(world[index].biome) >= 4)
 				{
 					renderMap.push({ src: './isometric_map_tiles/sand_flat.png', x: xpos, y: ypos});
 				}
 			}
 			else if (world[index].waterlevel <= 2.2) // hills land
 			{
-				if (Math.round(world[index].biome) == 0)
+				if (Math.round(world[index].biome) <= 0)
 				{
 					renderMap.push({ src: './isometric_map_tiles/snow_hill.png', x: xpos, y: ypos});
 					if (world[index].forest)
@@ -25129,7 +13809,7 @@ function generateIsometricWorldMap(channel, arguments)
 					if (world[index].forest)
 						renderMap.push({ src: './isometric_map_tiles/forest_plains.png', x: xpos, y: ypos});
 				}
-				else if (Math.round(world[index].biome) == 4)
+				else if (Math.round(world[index].biome) >= 4)
 				{
 					renderMap.push({ src: './isometric_map_tiles/sand_hill.png', x: xpos, y: ypos});
 				}
@@ -25188,11 +13868,437 @@ function generateIsometricWorldMap(channel, arguments)
 		))
 }
 
+function GenerateTavern()
+{
+	let tavern_name = RandomArrayEntry(tavern_gen.tavernnames, false, "[donotnest]");
+	
+	let position = tavern_name.indexOf("\[");
+	let endposition = -1;
+	let podcastsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = tavern_name.indexOf("\]");
+		podcastsubstr = tavern_name.substring(position+1,endposition);
+		let primaryword = "";
+		if (podcastsubstr == "verb")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.verbs, false, "[donotnest]");
+		}
+		else if (podcastsubstr == "adjective")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.adjectives, false, "[donotnest]");
+		}
+		else if (podcastsubstr == "object")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.objects, false, "[donotnest]");
+		}
+		else if (podcastsubstr == "title")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.titles, false, "[donotnest]");
+		}
+		else if (podcastsubstr == "name")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.names, false, "[donotnest]");
+		}
+		tavern_name = tavern_name.substr(0,position) + grammarCapitalFirstLetter(primaryword) + tavern_name.substr(endposition+1);
+		
+		position = tavern_name.indexOf("\[");
+	}
+	
+	let tavern_type = RandomArrayEntry(tavern_gen.taverntype, false, "[donotnest]");
+	let tavern_drink_prices = RandomArrayEntry(tavern_gen.drinksprice, false, "[donotnest]");
+	let tavern_food_prices = RandomArrayEntry(tavern_gen.foodprice, false, "[donotnest]");
+	let tavern_room_prices = RandomArrayEntry(tavern_gen.roomprice, false, "[donotnest]");
+	let tavern_housewine = RandomArrayEntry(tavern_gen.housewine, false, "[donotnest]");
+	
+	position = tavern_housewine.indexOf("\[");
+	endposition = -1;
+	podcastsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = tavern_housewine.indexOf("\]");
+		podcastsubstr = tavern_housewine.substring(position+1,endposition);
+		substrcommands = podcastsubstr.split(" ");
+		let primaryword = "";
+		if (substrcommands[0] == "adjective")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.wineadjectives, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "race")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.wineraces, false, "[donotnest]");
+		}
+		else if (substrcommands[0].includes("-"))
+		{
+			let delimiter_place = substrcommands[0].indexOf("-");
+			let min = parseInt(substrcommands[0].substr(0,delimiter_place));
+			let roll = parseInt(substrcommands[0].substr(delimiter_place+1));
+			primaryword = (min + Math.floor(Math.random() * (roll + 1))).toString()
+		}
+		tavern_housewine = tavern_housewine.substr(0,position) + primaryword + tavern_housewine.substr(endposition+1);
+		
+		position = tavern_housewine.indexOf("\[");
+	}
+	
+	let tavern_signaturedish = RandomArrayEntry(tavern_gen.signaturedishmain, false, "[donotnest]");
+	
+	position = tavern_signaturedish.indexOf("\[");
+	endposition = -1;
+	podcastsubstr = "";
+	
+	while (position != -1)
+	{
+		endposition = tavern_signaturedish.indexOf("\]");
+		podcastsubstr = tavern_signaturedish.substring(position+1,endposition);
+		substrcommands = podcastsubstr.split(" ");
+		let primaryword = "";
+		if (substrcommands[0] == "batter")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishbatter, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "ingredient")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishingredient, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "side")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishside, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "method")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishmethod, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "spice")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishspice, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "sweet")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishsweet, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "wineadjective")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.wineadjectives, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "meat")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishmeat, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "vegetable")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishvegetable, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "pasta")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishpasta, false, "[donotnest]");
+		}
+		else if (substrcommands[0] == "fruit")
+		{
+			primaryword = RandomArrayEntry(tavern_gen.signaturedishfruit, true, "[fruit]");
+		}
+		tavern_signaturedish = tavern_signaturedish.substr(0,position) + primaryword + tavern_signaturedish.substr(endposition+1);
+		
+		position = tavern_signaturedish.indexOf("\[");
+	}
+	
+	let full_string = grammarCapitalFirstLetter(tavern_name) + ", a " + tavern_type + "\nIt has " + tavern_drink_prices + ", " + tavern_food_prices + " and " + tavern_room_prices + "\nTheir main house drink is " + grammarAorAn(tavern_housewine.substring(0,1)) + " " + tavern_housewine + " and their specialty is " + tavern_signaturedish;
+	
+	return full_string;
+}
+
+//
+//
+// pixel drawn landmass map
+
+function GenerateLandmass(canvas_width = 2560, canvas_height = 2560, shapeblending = 0.33, height_max = 8, height_min = -4)
+{
+	
+	let map = {
+		width: canvas_width,
+		height: canvas_height,
+		heightmap: null,
+		shape: null,
+		shape_blending: shapeblending,
+		modificationmap: null,
+		max_height: height_max,
+		min_height: height_min,
+		
+		init: function(shape)
+		{
+			this.shape = shape
+			this.heightmap = objectNoiseMap2D(4, 4, { x: 0, y: 0})
+			this.heightmap.init()
+		},
+		
+		sample: function(p)
+		{
+			let heightmap_p = { x: p.x / this.width * this.heightmap.width, y: p.y / this.height * this.heightmap.height }
+			let shape_mod = 1.0
+			let height_mod = 1.0
+			if (this.shape != null)
+			{
+				let shape_p = { x: p.x / this.width * this.shape.width, y: p.y / this.height * this.shape.height }
+				shape_height = this.shape.sample(shape_p)
+				if(shape_height < -0.125)
+					shape_mod = shape_height
+				else if (shape_height > 0.5)
+				{
+					shape_mod = shape_height * 0.5 + 0.5
+					height_mod = 8
+				}
+				else
+					shape_mod = shape_height * 0.5 + 0.5
+			}
+			let sample_h = this.heightmap.sample(heightmap_p)
+			let interpolate_hs = interpolateBetween(shape_mod, sample_h, this.shape_blending)
+			if (shape_mod >= 0)
+			{
+				interpolate_hs = interpolateBetween(shape_mod, sample_h, 1-this.shape_blending)
+			}
+			return interpolate_hs
+		},
+		
+		modifyArea(p, h, r)
+		{
+			for(let i = 0; i < this.modificationmap.map.length; i++)
+			{
+				let x = i % (this.modificationmap.width/2)
+				let y = Math.floor(i / (this.modificationmap.width/2))
+				let ip = { x: x, y: y }
+				let dist = LengthBetweenPoints(p, ip)
+				if  (dist <= r)
+				{
+					let prop = 1 - (dist / r)
+					this.modificationmap.changeValue(ip, this.modificationmap.map[i] + (prop * h))
+				}
+			}
+		},
+		
+		mountainRanges: function(p, h, l)
+		{
+			this.modifyArea(p, h, l/4)
+			let x_dir = Math.round(Math.random()*2 - 1)
+			let y_dir = Math.round(Math.random()*2 - 1)
+			let h_movement = Math.random()* 0.125 + 0.025
+			
+			for (let i = 0; i < l/2; i++)
+			{
+				this.modifyArea({ x: p.x + x_dir*i, y: p.y + y_dir*i }, h - h_movement*i, (l/4)-i)
+			}
+			
+			for (let i = 0; i < l/2; i++)
+			{
+				this.modifyArea({ x: p.x - x_dir*i, y: p.y - y_dir*i }, h - h_movement*i, (l/4)-i)
+			}
+		},
+		
+		randomMountainRanges: function(n, hv, hm, lv, lm)
+		{
+			for (let i = 0; i < n; i++)
+			{
+				let dl = Math.random()*lv + lm
+				
+				let dx = this.modificationmap.width - dl * 2
+				let xm = dl
+				let dy = this.modificationmap.height - dl * 2
+				let ym = dl
+				
+				let p = { x: Math.random()*dx+xm, y: Math.random()*dy+ym }
+				
+				this.mountainRanges(p, Math.random()*hv + hm, dl)
+			}
+		}
+	}
+	return map
+}
+
+function DrawLandmass(channel, arguments)
+{
+	let shape_min = -0.25
+	let shape_max = 2.25
+	let shape_blending = 0.33
+	let map_width = 1024
+	let map_height = 1024
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-w")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			map_width = parseInt(arguments[argumentpos+1]);
+			if (map_width > 2560)
+				map_width = 2560;
+			if (map_width < 128)
+				map_width = 128;
+		}
+		argumentpos = arguments.indexOf("-h")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			map_height = parseInt(arguments[argumentpos+1]);
+			if (map_height > 2560)
+				map_height = 2560;
+			if (map_height < 128)
+				map_height = 128;
+		}
+		argumentpos = arguments.indexOf("-smin")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			shape_min = parseFloat(arguments[argumentpos+1]);
+			if (shape_min > 8)
+				shape_min = 8;
+			if (shape_min < -8)
+				shape_min = -8;
+		}
+		argumentpos = arguments.indexOf("-smax")
+		if (argumentpos > -1 && argumentpos+1 < arguments.length && !isNaN(arguments[argumentpos+1]))
+		{
+			shape_max = parseFloat(arguments[argumentpos+1]);
+			if (shape_max > 8)
+				shape_max = 8;
+			if (shape_max < -8)
+				shape_max = -8;
+		}
+		
+		if (shape_max <= shape_min)
+		{
+			console.log("invalid shape min/max")
+			channel.send("Invalid shape min/max: min must always be smaller than and different to max.");
+			return
+		}
+	}
+	
+	let start = new Date().getTime();
+	let new_map = GenerateLandmass(map_width, map_height, shape_blending)
+	let shape = objectShapeMap(shape_min, shape_max)
+	new_map.init(shape)
+	
+	let generation_time = new Date().getTime();
+	
+	console.log("map generation took " + (generation_time-start) + " milliseconds")
+	// new_map.heightmap.normalize(-5, 8)
+	// console.log(new_map.heightmap)
+	
+	var tempcanvas = new Canvas();
+	tempcanvas.width = new_map.width;
+	tempcanvas.height = new_map.height;
+	if (tempcanvas.getContext)
+	{
+		var ctx = tempcanvas.getContext('2d');
+
+		var imgdata = ctx.getImageData(0,0, new_map.width, new_map.height);
+		var imgdatalen = imgdata.data.length;
+		// console.log(imgdatalen/4)
+		let highest_pixel = -99
+		let lowest_pixel = 99
+		for(let i=0;i<imgdatalen/4;i++)
+		{  //iterate over every pixel in the canvas
+			let x = i % new_map.width
+			let y = Math.floor(i / new_map.width)
+			let p = { x: x, y: y }
+			
+			let pixel_height = new_map.sample(p)
+			
+			let _red = 255
+			let _green = 255
+			let _blue = 255
+			
+			if (pixel_height < -2) //ocean
+			{
+				_red = 0
+				_green = 112
+				_blue = 223
+			}
+			else if (pixel_height < 0) //ocean
+			{
+				let height_point = pixel_height / -2
+				_red = Math.round(0 * (1 - height_point) + 0 * height_point)
+				_green = Math.round(128 * (1 - height_point) + 112 * height_point)
+				_blue = Math.round(255 * (1 - height_point) + 223 * height_point)
+			}
+			else if (pixel_height < 0.75)
+			{
+				let height_point = (pixel_height) / 0.75
+				_red = Math.round(34 * (1 - height_point) + 37 * height_point)
+				_green = Math.round(177 * (1 - height_point) + 197 * height_point)
+				_blue = Math.round(76 * (1 - height_point) + 85 * height_point)
+			}
+			else if (pixel_height < 1.5)
+			{
+				let height_point = (pixel_height-0.75) / 0.75
+				_red = Math.round(37 * (1 - height_point) + 164 * height_point)
+				_green = Math.round(197 * (1 - height_point) + 184 * height_point)
+				_blue = Math.round(85 * (1 - height_point) + 54 * height_point)
+			}
+			else if (pixel_height < 2.5)
+			{
+				let height_point = (pixel_height-1.5) / 1
+				_red = Math.round(164 * (1 - height_point) + 195 * height_point)
+				_green = Math.round(184 * (1 - height_point) + 195 * height_point)
+				_blue = Math.round(54 * (1 - height_point) + 195 * height_point)
+			}
+			else if (pixel_height < 5)
+			{
+				let height_point = (pixel_height-2.5) / 2.5
+				_red = Math.round(195 * (1 - height_point) + 255 * height_point)
+				_green = Math.round(195 * (1 - height_point) + 255 * height_point)
+				_blue = Math.round(195 * (1 - height_point) + 255 * height_point)
+			}
+			else if (pixel_height <= 8)
+			{
+				_red = 255
+				_green = 255
+				_blue = 255
+			}
+			else
+			{
+				console.log(pixel_height)
+				_red = 255
+				_green = 0
+				_blue = 255
+			}
+			
+			imgdata.data[4*i] = _red;    // RED (0-255)
+			imgdata.data[4*i+1] = _green;    // GREEN (0-255)
+			imgdata.data[4*i+2] = _blue;    // BLUE (0-255)
+			imgdata.data[4*i+3] = 255;  // APLHA (0-255)
+		}
+		
+		ctx.putImageData(imgdata,0,0);
+		
+		// ctx.fillStyle = 'rgb(255, 255, 255)';
+		// for (let i = 0; i < new_map.points.length; i++)
+		// {
+			// ctx.fillRect(new_map.points[i].x-2, new_map.points[i].y-2, 4, 4);
+		// }
+		
+		let file = 'voronoimap.png';
+		let path = './' + file;
+		
+		let b64 = tempcanvas.toDataURL('image/png', 0.92);
+		
+		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
+			if (err) throw err;
+			let end = new Date().getTime(); 
+			console.log('The drawn landmass has been saved! Rendering took ' + (end-generation_time) + ' milliseconds');
+			channel.send({ files: [{ attachment: path, name: file }] });
+		})
+	}
+	else
+	{
+		console.log("getContext failed");
+	}
+	
+}
+
+
 //
 //
 //
 // handle errors??? no
 
+process.on('uncaughtException', console.log);
 client.on('error', console.error);
 
 
@@ -25202,6 +14308,5 @@ client.on('error', console.error);
 client.login(logintoken); //allidroid logon
 
 loadCurrentGayValue();
-initializeAndStartAdventureSim();
 MarkovPhonemeNameTrain();
 LoadBattleshipsGames();
