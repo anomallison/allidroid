@@ -11115,27 +11115,27 @@ function GetRandomDndMagicItems(arguments)
 	
 	let items = [];
 	
-	let templootlist = [];
+	let templootlist = dnd_magic_items.magic_item_list.slice();
 	
 	if (filterlist.length > 0)
 	{
-		templootlist = templootlist.concat(dnd_magic_items.magic_item_list.filter(filterByAtleastOneList,filterlist));
-	}
-	else
-	{
-		templootlist = dnd_magic_items.magic_item_list.slice();
+		for (let i = 0; i < filterlist.length; i++)
+			templootlist = templootlist.filter(filterByList,filterlist[i]);
 	}
 	
 	if (removelist.length > 0)
 	{
-		templootlist = templootlist.filter(removeByListArray,removelist);
+		for (let i = 0; i < removelist.length; i++)
+			templootlist = templootlist.filter(removeByList,removelist[i]);
 	}
+	
+	// console.log(templootlist)
+	// console.log(filterlist)
+	// console.log(removelist)
 	
 	if (templootlist.length == 0)
 	{
 		console.log("error, templootlist is empty");
-		console.log(filterlist)
-		console.log(removelist)
 		return "no items returnable with parameters";
 	}
 	
