@@ -78,6 +78,7 @@ var dungeon_gen_assets = JSON.parse(fs.readFileSync('dungeon_gen_assets/dungeon_
 
 // D&D 5e adventure generator files
 var dnd_adventure_gen = JSON.parse(fs.readFileSync('dd5e_adventure_gen.json'));
+var dnd_magic_items = JSON.parse(fs.readFileSync('dndmagicitems.json'));
 
 // blaseballer generator files
 var blaseballer_gen = JSON.parse(fs.readFileSync('blaseballer_gen.json'));
@@ -140,9 +141,6 @@ var podcaster_gen = JSON.parse(fs.readFileSync('podcaster_gen.json'));
 
 // tavern gen from file
 var tavern_gen = JSON.parse(fs.readFileSync('tavern_gen.json'));
-
-// fractal map gen
-var fractal_map_symbols = JSON.parse(fs.readFileSync('fractal_map_gen/fractal_map_symbols.json'));
 
 // continent shapes gen
 var continent_shapes = JSON.parse(fs.readFileSync('continent_map/continent_shapes.json'));
@@ -676,6 +674,20 @@ async function processCommand(receivedMessage)
 		if (output == null)
 		{
 			console.log("failed command: dndworldshakingevent");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
+    } else if (normalizedCommand == "dndrandommagicitem") 
+	{
+		output = GetRandomDndMagicItems(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: dndnpc");
 			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
 			return;
 		} else
@@ -10336,7 +10348,7 @@ function noisemaptopng(channel, arguments)
 		fs.writeFile(path,base64data(b64), {encoding: 'base64'}, (err) => {
 			if (err) throw err;
 			let end = new Date().getTime(); 
-			console.log('The drawn landmass has been saved! Took ' + (end-start) + ' milliseconds');
+			console.log('The noisemap has been saved! Took ' + (end-start) + ' milliseconds');
 			channel.send({ files: [{ attachment: path, name: file }] });
 		})
 	}
@@ -11036,10 +11048,10 @@ function MoveUpwardHex(hex, direction)
 function RandomArrayEntry(array, nesting, nestingcode)
 {
 	let entry = array[Math.floor(Math.random()*array.length)];
-	while (nesting == false && entry.includes(nestingcode))
-	{
-		entry = array[Math.floor(Math.random()*array.length)];
-	}
+	// while (nesting == false && entry.includes(nestingcode))
+	// {
+		// entry = array[Math.floor(Math.random()*array.length)];
+	// }
 	return entry;
 }
 
@@ -11058,6 +11070,91 @@ function RandomNPCAbilities()
 	
 	return high + ", " + low;
 }
+
+function GetRandomDndMagicItems(arguments)
+{
+	let item_count = 1;
+	let argumentpos = -1;
+	let filterlist = [];
+	let removelist = [];
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-number")
+		if (argumentpos > -1)
+		{
+			let cur_arg = 1
+			if (arguments.length > cur_arg+argumentpos)
+			{
+				let tenative_count = parseInt(arguments[cur_arg+argumentpos])
+				if (!isNaN(tenative_count) && tenative_count >= 1)
+				item_count = tenative_count
+			}
+		}
+		argumentpos = arguments.indexOf("-filter")
+		if (argumentpos > -1)
+		{
+			let cur_arg = 1
+			while (arguments.length > cur_arg+argumentpos && arguments[cur_arg+argumentpos].charAt(0) != "-")
+			{
+				filterlist.push(arguments[cur_arg + argumentpos]);
+				cur_arg += 1
+			}
+		}
+		argumentpos = arguments.indexOf("-remove")
+		if (argumentpos > -1)
+		{
+			let cur_arg = 1
+			while (arguments.length > cur_arg+argumentpos && arguments[cur_arg+argumentpos].charAt(0) != "-")
+			{
+				removelist.push(arguments[cur_arg + argumentpos]);
+				cur_arg += 1
+			}
+		}
+	}
+	
+	let items = [];
+	
+	let templootlist = [];
+	
+	if (filterlist.length > 0)
+	{
+		templootlist = templootlist.concat(dnd_magic_items.magic_item_list.filter(filterByAtleastOneList,filterlist));
+	}
+	else
+	{
+		templootlist = dnd_magic_items.magic_item_list.slice();
+	}
+	
+	if (removelist.length > 0)
+	{
+		templootlist = templootlist.filter(removeByListArray,removelist);
+	}
+	
+	if (templootlist.length == 0)
+	{
+		console.log("error, templootlist is empty");
+		console.log(filterlist)
+		console.log(removelist)
+		return "no items returnable with parameters";
+	}
+	
+	for(let i = 0; i < item_count; i++)
+	{
+		items.push(RandomArrayEntry(templootlist, false, "DOESNOTNEST"))
+	}
+	
+	let output = ""
+	for(let i = 0; i < items.length; i++)
+	{
+		if (i > 0)
+			output += "\n"
+		output += items[i].item
+	}
+	
+	return output
+}
+
 
 function GenerateDnDDungeonTrap()
 {
@@ -11326,7 +11423,8 @@ function GenerateDnDAdventure()
 }
 
 function GenerateDnDLoot(arguments)
-{	
+{
+	let argumentpos = -1;
 	let filterlist = [];
 	let removelist = [];
 	if (arguments != null && arguments.length > 0)

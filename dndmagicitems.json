@@ -1,0 +1,1781 @@
+{
+	"magic_item_list":
+	[
+		{
+			"item": "adamantine armour",
+			"lists": ["armour","uncommon"]
+		},
+		{
+			"item": "adamantine weapon",
+			"lists": ["weapon","uncommon"]
+		},
+		{
+			"item": "alchemy jug",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "+1 ammunition",
+			"lists": ["ammunition","uncommon","consumable"]
+		},
+		{
+			"item": "+2 ammunition",
+			"lists": ["ammunition","rare","consumable"]
+		},
+		{
+			"item": "+3 ammunition",
+			"lists": ["ammunition","veryrare","consumable"]
+		},
+		{
+			"item": "ammunition of slaying",
+			"lists": ["ammunition","veryrare","consumable"]
+		},
+		{
+			"item": "amulet of health",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "amulet of proof against detection and location",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "amulet of the planes",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "animated shield",
+			"lists": ["shield","veryrare","attunement"]
+		},
+		{
+			"item": "apparatus of kwalish",
+			"lists": ["wondrousitem","legendary"]
+		},
+		{
+			"item": "+1 armour",
+			"lists": ["armour","rare"]
+		},
+		{
+			"item": "+2 armour",
+			"lists": ["armour","veryrare"]
+		},
+		{
+			"item": "+3 armour",
+			"lists": ["armour","legendary"]
+		},
+		{
+			"item": "armour of gleaming",
+			"lists": ["armour","common"]
+		},
+		{
+			"item": "armour of invulnerability",
+			"lists": ["armour","legendary","attunement"]
+		},
+		{
+			"item": "armour of resistance",
+			"lists": ["armour","rare","attunement"]
+		},
+		{
+			"item": "armour of vulnerability",
+			"lists": ["armour","rare","attunement","cursed"]
+		},
+		{
+			"item": "arrow-catching shield",
+			"lists": ["shield","rare","attunement"]
+		},
+		{
+			"item": "axe of the dwarvish lords",
+			"lists": ["weapon","artifact","attunement"]
+		},
+		{
+			"item": "baba yagas dancing broom",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "bag of beans",
+			"lists": ["wondrousitem","rare","consumable"]
+		},
+		{
+			"item": "bag of devouring",
+			"lists": ["wondrousitem","veryrare","cursed"]
+		},
+		{
+			"item": "bag of holding",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "gray bag of tricks",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "rust bag of tricks",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "tan bag of tricks",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "bead of force",
+			"lists": ["wondrousitem","rare","consumable"]
+		},
+		{
+			"item": "bead of nourishment",
+			"lists": ["wondrousitem","common","consumable"]
+		},
+		{
+			"item": "bead of refreshment",
+			"lists": ["wondrousitem","common","consumable"]
+		},
+		{
+			"item": "belt of dwarvenkind",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "belt of hill giant strength",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "belt of frost giant strength",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "belt of stone giant strength",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "belt of fire giant strength",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "belt of cloud giant strength",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "belt of storm giant strength",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "berserker axe",
+			"lists": ["weapon","rare","attunement","cursed"]
+		},
+		{
+			"item": "blackrazor",
+			"lists": ["weapon","artifact","attunement"]
+		},
+		{
+			"item": "book of exalted deeds",
+			"lists": ["wondrousitem","artifact","attunement"]
+		},
+		{
+			"item": "book of vile darkness",
+			"lists": ["wondrousitem","artifact","attunement"]
+		},
+		{
+			"item": "boots of elvenkind",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "boots of false tracks",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "boots of levitation",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "boots of speed",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "boots of speed",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "boots of striding and springing",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "boots of the winterlands",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "bowl of commanding water elementals",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "bowl of commanding water elementals",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "bracers of archery",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "bracers of defense",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "brazier of commanding fire elementals",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "brooch of shielding",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "broom of flying",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "candle of invocation",
+			"lists": ["wondrousitem","veryrare","attunement","consumable"]
+		},
+		{
+			"item": "candle of the deep",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "cap of water breathing",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "cape of the mountebank",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "carpet of flying (3x5ft)",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "carpet of flying (4x6ft)",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "carpet of flying (5x7ft)",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "carpet of flying (6x9ft)",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "cast-off armour",
+			"lists": ["armour","common"]
+		},
+		{
+			"item": "cauldron of rebirth",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "censer of controlling air elementals",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "charlatans die",
+			"lists": ["wondrousitem","common","attunement"]
+		},
+		{
+			"item": "chime of opening",
+			"lists": ["wondrousitem","rare","consumable"]
+		},
+		{
+			"item": "circlet of blasting",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "cloak of arachnida",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "cloak of billowing",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "cloak of displacement",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "cloak of elvenkind",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "cloak of invisibility",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "cloak of many fashions",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "cloak of protection",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "cloak of the bat",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "cloak of the manta ray",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "clockwork amulet",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "clothes of mending",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "crystal ball",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "crystal ball of mind reading",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "crystal ball of telepathy",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "crystal ball of true seeing",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "cube of force",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "cube of summoning",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "cubic gate",
+			"lists": ["wondrousitem","legendary"]
+		},
+		{
+			"item": "daerns instant fortress",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "dagger of venom",
+			"lists": ["weapon","veryrare"]
+		},
+		{
+			"item": "dancing sword",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "dark shard amulet",
+			"lists": ["wondrousitem","common","attunement"]
+		},
+		{
+			"item": "decanter of endless water",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "deck of illusions",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "deck of many things",
+			"lists": ["wondrousitem","legendary"]
+		},
+		{
+			"item": "defender",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "demon armour",
+			"lists": ["armour","veryrare","attunement"]
+		},
+		{
+			"item": "demonomicon of iggwilv",
+			"lists": ["wondrousitem","artifact","attunement"]
+		},
+		{
+			"item": "dimensional shackles",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "dragon scale mail",
+			"lists": ["armour","veryrare","attunement"]
+		},
+		{
+			"item": "dragon slayer",
+			"lists": ["weapon","rare"]
+		},
+		{
+			"item": "dread helm",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "driftglobe",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "dust of disappearance",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "dust of dryness",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "dust of sneezing and choking",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "dwarven plate",
+			"lists": ["armour","veryrare"]
+		},
+		{
+			"item": "dwarven thrower",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "ear horn of hearing",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "efreeti bottle",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "efreeti chain",
+			"lists": ["armour","legendary","attunement"]
+		},
+		{
+			"item": "elemental gem",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "elixir of health",
+			"lists": ["potion","rare"]
+		},
+		{
+			"item": "elven chain",
+			"lists": ["armour","rare"]
+		},
+		{
+			"item": "enduring spellbook",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "energy bow",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "enspelled armour (cantrip)",
+			"lists": ["armour","uncommon","attunement"]
+		},
+		{
+			"item": "enspelled armour (1st)",
+			"lists": ["armour","uncommon","attunement"]
+		},
+		{
+			"item": "enspelled armour (2nd)",
+			"lists": ["armour","rare","attunement"]
+		},
+		{
+			"item": "enspelled armour (3rd)",
+			"lists": ["armour","rare","attunement"]
+		},
+		{
+			"item": "enspelled armour (4th)",
+			"lists": ["armour","veryrare","attunement"]
+		},
+		{
+			"item": "enspelled armour (5th)",
+			"lists": ["armour","veryrare","attunement"]
+		},
+		{
+			"item": "enspelled armour (6th)",
+			"lists": ["armour","legendary","attunement"]
+		},
+		{
+			"item": "enspelled armour (7th)",
+			"lists": ["armour","legendary","attunement"]
+		},
+		{
+			"item": "enspelled armour (8th)",
+			"lists": ["armour","legendary","attunement"]
+		},
+		{
+			"item": "enspelled staff (cantrip)",
+			"lists": ["staff","uncommon","attunement"]
+		},
+		{
+			"item": "enspelled staff (1st)",
+			"lists": ["staff","uncommon","attunement"]
+		},
+		{
+			"item": "enspelled staff (2nd)",
+			"lists": ["staff","rare","attunement"]
+		},
+		{
+			"item": "enspelled staff (3rd)",
+			"lists": ["staff","rare","attunement"]
+		},
+		{
+			"item": "enspelled staff (4th)",
+			"lists": ["staff","veryrare","attunement"]
+		},
+		{
+			"item": "enspelled staff (5th)",
+			"lists": ["staff","veryrare","attunement"]
+		},
+		{
+			"item": "enspelled staff (6th)",
+			"lists": ["staff","legendary","attunement"]
+		},
+		{
+			"item": "enspelled staff (7th)",
+			"lists": ["staff","legendary","attunement"]
+		},
+		{
+			"item": "enspelled staff (8th)",
+			"lists": ["staff","legendary","attunement"]
+		},
+		{
+			"item": "enspelled weapon (cantrip)",
+			"lists": ["weapon","uncommon","attunement"]
+		},
+		{
+			"item": "enspelled weapon (1st)",
+			"lists": ["weapon","uncommon","attunement"]
+		},
+		{
+			"item": "enspelled weapon (2nd)",
+			"lists": ["weapon","rare","attunement"]
+		},
+		{
+			"item": "enspelled weapon (3rd)",
+			"lists": ["weapon","rare","attunement"]
+		},
+		{
+			"item": "enspelled weapon (4th)",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "enspelled weapon (5th)",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "enspelled weapon (6th)",
+			"lists": ["weapon","legendary","attunement"]
+		},
+		{
+			"item": "enspelled weapon (7th)",
+			"lists": ["weapon","legendary","attunement"]
+		},
+		{
+			"item": "enspelled weapon (8th)",
+			"lists": ["weapon","legendary","attunement"]
+		},
+		{
+			"item": "ersatz eye",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "eversmoking bottle",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "executioners axe",
+			"lists": ["weapon","veryrare"]
+		},
+		{
+			"item": "eye and hand of vecna",
+			"lists": ["wondrousitem","artifact","attunement"]
+		},
+		{
+			"item": "eyes of charming",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "eyes of minute seeing",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "eyes of the eagle",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "figurine of wondrous power",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "flame tongue",
+			"lists": ["weapon","rare","attunement"]
+		},
+		{
+			"item": "folding boat",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "frost brand",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "gauntlets of ogre power",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "gem of brightness",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "gem of seeing",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "giant slayer",
+			"lists": ["weapon","rare"]
+		},
+		{
+			"item": "glamoured studded leather",
+			"lists": ["armour","rare"]
+		},
+		{
+			"item": "gloves of missile snaring",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "gloves of swimming and climbing",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "gloves of thievery",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "goggles of night",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "hag eye",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "hammer of thunderbolts",
+			"lists": ["weapon","legendary"]
+		},
+		{
+			"item": "hat of disguise",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "hat of many spells",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "hat of vermin",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "hat of wizardry",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "headband of intellect",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "helm of brilliance",
+			"lists": ["wondrousitem","veryrare","attunement","consumable"]
+		},
+		{
+			"item": "helm of comprehending languages",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "helm of telepathy",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "helm of teleportation",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "hewards handy haversack",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "hewards handy spice pouch",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "holy avenger",
+			"lists": ["weapon","legendary","attunement"]
+		},
+		{
+			"item": "horn of blasting",
+			"lists": ["wondrousitem","rare","consumable"]
+		},
+		{
+			"item": "horn of silent alarm",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "horn of valhalla (brass)",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "horn of valhalla (silver)",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "horn of valhalla (bronze)",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "horn of valhalla (iron)",
+			"lists": ["wondrousitem","legendary"]
+		},
+		{
+			"item": "horseshoes of a zephyr",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "horseshoes of speed",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "immovable rod",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "instrument of illusions",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "instrument of scribing",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "instrument of the bards (anstruth harp)",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "instrument of the bards (canaith mandolin)",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "instrument of the bards (cli lyre)",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "instrument of the bards (doss lute)",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "instrument of the bards (fochlucan bandore)",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "instrument of the bards (mac-fuirmidg mitten)",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "instrument of the bards (ollamh harp)",
+			"lists": ["wondrousitem","legendary"]
+		},
+		{
+			"item": "ioun stone (absorption)",
+			"lists": ["wondrousitem","veryrare","consumable","attunement"]
+		},
+		{
+			"item": "ioun stone (agility)",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "ioun stone (awareness)",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "ioun stone (fortitude)",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "ioun stone (greater absorption)",
+			"lists": ["wondrousitem","legendary","consumable","attunement"]
+		},
+		{
+			"item": "ioun stone (insight)",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "ioun stone (intellect)",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "ioun stone (leadership)",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "ioun stone (mastery)",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "ioun stone (protection)",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "ioun stone (regeneration)",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "ioun stone (reserve)",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "ioun stone (strength)",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "ioun stone (sustenance)",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "iron bands of bilarro",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "iron flash",
+			"lists": ["wondrousitem","legendary"]
+		},
+		{
+			"item": "javelin of lightning",
+			"lists": ["weapon","uncommon"]
+		},
+		{
+			"item": "keoghtoms ointment",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "lantern of revealing",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "lock of trickery",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "luck blade",
+			"lists": ["weapon","legendary","attunement"]
+		},
+		{
+			"item": "mace of disruption",
+			"lists": ["weapon","rare","attunement"]
+		},
+		{
+			"item": "mace of smiting",
+			"lists": ["weapon","rare"]
+		},
+		{
+			"item": "mace of terror",
+			"lists": ["weapon","rare","attunement"]
+		},
+		{
+			"item": "mantle of spell resistance",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "manual of bodily health",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "manual of gainful exercise",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "manual of golems (clay golem)",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "manual of golems (flesh golem)",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "manual of golems (iron golem)",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "manual of golems (stone golem)",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "manual of quickness of action",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "mariners armour",
+			"lists": ["armour","uncommon"]
+		},
+		{
+			"item": "medallion of thoughts",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "mirror of life trapping",
+			"lists": ["wondrousitem","veryrare"]
+		},
+		{
+			"item": "mithral armour",
+			"lists": ["armour","uncommon"]
+		},
+		{
+			"item": "moonblade",
+			"lists": ["weapon","legendary","attunement"]
+		},
+		{
+			"item": "moon-touched sword",
+			"lists": ["weapon","common"]
+		},
+		{
+			"item": "mystery key",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "nature's mantle",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "necklace of adaptation",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "necklace of fireballs",
+			"lists": ["wondrousitem","rare","consumable"]
+		},
+		{
+			"item": "nacklace of prayer beads",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "nine lives stealer",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "nolzurs marvelous pigments",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "oathbow",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "oil of etherealness",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "oil of sharpness",
+			"lists": ["potion","veryrare","consumable"]
+		},
+		{
+			"item": "oil of slipperiness",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "orb of direction",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "orb of dragonkind",
+			"lists": ["wondrousitem","artifact","attunement"]
+		},
+		{
+			"item": "orb of time",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "pearl of power",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "perfume of bewitching",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "periapt of health",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "periapt of proof against poison",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "periapt of wound closure",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "philter of love",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "pipe of smoke monsters",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "pipes of haunting",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "pipes of the sewers",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "plate armour of etherealness",
+			"lists": ["armour","legendary","attunement"]
+		},
+		{
+			"item": "pole of angling",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "pole of collapsing",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "portable hole",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "potion of animal friendship",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "potion of clairvoyance",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of climbing",
+			"lists": ["potion","common","consumable"]
+		},
+		{
+			"item": "potion of comprehension",
+			"lists": ["potion","common","consumable"]
+		},
+		{
+			"item": "potion of diminution",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of fire breath",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "potion of flying",
+			"lists": ["potion","veryrare","consumable"]
+		},
+		{
+			"item": "potion of gaseous form",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of hill giant strength",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "potion of frost giant strength",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of stone giant strength",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of fire giant strength",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of cloud giant strength",
+			"lists": ["potion","veryrare","consumable"]
+		},
+		{
+			"item": "potion of storm giant strength",
+			"lists": ["potion","legendary","consumable"]
+		},
+		{
+			"item": "potion of growth",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "potion of healing",
+			"lists": ["potion","common","consumable"]
+		},
+		{
+			"item": "potion of greater healing",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "potion of superior healing",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of supreme healing",
+			"lists": ["potion","veryrare","consumable"]
+		},
+		{
+			"item": "potion of heroism",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of invisibility",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of invulnerability ",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of longevity",
+			"lists": ["potion","veryrare","consumable"]
+		},
+		{
+			"item": "potion of mind reading",
+			"lists": ["potion","rare","consumable"]
+		},
+		{
+			"item": "potion of poison",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "potion of pugilism",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "potion of resistance",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "potion of speed",
+			"lists": ["potion","veryrare","consumable"]
+		},
+		{
+			"item": "potion of vitality",
+			"lists": ["potion","veryrare","consumable"]
+		},
+		{
+			"item": "potion of water breathing",
+			"lists": ["potion","uncommon","consumable"]
+		},
+		{
+			"item": "pot of awakening",
+			"lists": ["wondrousitem","common","consumable"]
+		},
+		{
+			"item": "prosthetic limb",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "quaals feather token (anchor)",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "quaals feather token (bird)",
+			"lists": ["wondrousitem","rare","consumable"]
+		},
+		{
+			"item": "quaals feather token (fan)",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "quaals feather token (swan boat)",
+			"lists": ["wondrousitem","rare","consumable"]
+		},
+		{
+			"item": "quaals feather token (tree)",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "quaals feather token (whip)",
+			"lists": ["wondrousitem","rare","consumable"]
+		},
+		{
+			"item": "quarterstaff of the acrobat",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "quiver of ehlonna",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "ring of animal influence",
+			"lists": ["ring","rare"]
+		},
+		{
+			"item": "ring of djinni summoning",
+			"lists": ["ring","legendary","attunement"]
+		},
+		{
+			"item": "ring of elemental command",
+			"lists": ["ring","legendary","attunement"]
+		},
+		{
+			"item": "ring of evasion",
+			"lists": ["ring","rare","attunement"]
+		},
+		{
+			"item": "ring of feather falling",
+			"lists": ["ring","rare","attunement"]
+		},
+		{
+			"item": "ring of free action",
+			"lists": ["ring","rare","attunement"]
+		},
+		{
+			"item": "ring of invisibility",
+			"lists": ["ring","legendary","attunement"]
+		},
+		{
+			"item": "ring of jumping",
+			"lists": ["ring","uncommon","attunement"]
+		},
+		{
+			"item": "ring of mind shielding",
+			"lists": ["ring","uncommon","attunement"]
+		},
+		{
+			"item": "ring of protection",
+			"lists": ["ring","rare","attunement"]
+		},
+		{
+			"item": "ring of regeneration",
+			"lists": ["ring","veryrare","attunement"]
+		},
+		{
+			"item": "ring of resistance",
+			"lists": ["ring","rare"]
+		},
+		{
+			"item": "ring of shooting stars",
+			"lists": ["ring","veryrare","attunement"]
+		},
+		{
+			"item": "ring of spell storing",
+			"lists": ["ring","rare","attunement"]
+		},
+		{
+			"item": "ring of spell turning",
+			"lists": ["ring","legendary","attunement"]
+		},
+		{
+			"item": "ring of swimming",
+			"lists": ["ring","uncommon"]
+		},
+		{
+			"item": "ring of telekinesis",
+			"lists": ["ring","veryrare","attunement"]
+		},
+		{
+			"item": "ring of the ram",
+			"lists": ["ring","rare","attunement"]
+		},
+		{
+			"item": "ring of three wishes",
+			"lists": ["ring","legendary","consumable"]
+		},
+		{
+			"item": "ring of warmth",
+			"lists": ["ring","uncommon","attunement"]
+		},
+		{
+			"item": "ring of water walking",
+			"lists": ["ring","uncommon"]
+		},
+		{
+			"item": "ring of x-ray vision",
+			"lists": ["ring","rare","attunement"]
+		},
+		{
+			"item": "rival coin",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "robe of eyes",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "robe of scintillating colors",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "robe of stars",
+			"lists": ["wondrousitem","veryrare","attunement"]
+		},
+		{
+			"item": "robe of the archmagi",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "robe of useful items",
+			"lists": ["wondrousitem","uncommon","consumable"]
+		},
+		{
+			"item": "rod of absorption",
+			"lists": ["rod","veryrare","attunement","consumable"]
+		},
+		{
+			"item": "rod of alertness",
+			"lists": ["rod","veryrare","attunement"]
+		},
+		{
+			"item": "rod of lordly might",
+			"lists": ["rod","legendary","attunement"]
+		},
+		{
+			"item": "rod of resurrection",
+			"lists": ["rod","legendary","attunement"]
+		},
+		{
+			"item": "rod of rulership",
+			"lists": ["rod","rare","attunement"]
+		},
+		{
+			"item": "rod of security",
+			"lists": ["rod","veryrare"]
+		},
+		{
+			"item": "rod of the pact keeper +1",
+			"lists": ["rod","uncommon","attunement"]
+		},
+		{
+			"item": "rod of the pact keeper +2",
+			"lists": ["rod","rare","attunement"]
+		},
+		{
+			"item": "rod of the pact keeper +1",
+			"lists": ["rod","veryrare","attunement"]
+		},
+		{
+			"item": "rope of climbing",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "rope of entanglement",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "rope of mending",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "ruby of the war mage",
+			"lists": ["wondrousitem","common","attunement"]
+		},
+		{
+			"item": "saddle of the cavalier",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "scarab of protection",
+			"lists": ["wondrousitem","legendary","attunement","consumable"]
+		},
+		{
+			"item": "scimitar of speed",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "scroll of protection",
+			"lists": ["scroll","rare","consumable"]
+		},
+		{
+			"item": "scroll of titan summoning",
+			"lists": ["scroll","legendary"]
+		},
+		{
+			"item": "sending stones",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "sentinel shield",
+			"lists": ["shield","uncommon"]
+		},
+		{
+			"item": "+1 shield",
+			"lists": ["shield","uncommon"]
+		},
+		{
+			"item": "+2 shield",
+			"lists": ["shield","rare"]
+		},
+		{
+			"item": "+3 shield",
+			"lists": ["shield","veryrare"]
+		},
+		{
+			"item": "shield of expression",
+			"lists": ["shield","common"]
+		},
+		{
+			"item": "shield of missile attraction",
+			"lists": ["shield","rare","attunement","cursed"]
+		},
+		{
+			"item": "shield of the cavalier",
+			"lists": ["shield","veryrare","attunement"]
+		},
+		{
+			"item": "silvered weapon",
+			"lists": ["weapon","common"]
+		},
+		{
+			"item": "slippers of spider climbing",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "smoldering armour",
+			"lists": ["armour","common"]
+		},
+		{
+			"item": "sovereign glue",
+			"lists": ["wondrousitem","legendary","consumable"]
+		},
+		{
+			"item": "spellguard shield",
+			"lists": ["shield","veryrare","consumable"]
+		},
+		{
+			"item": "spell scroll (cantrip)",
+			"lists": ["scroll","common","consumable"]
+		},
+		{
+			"item": "spell scroll (1st)",
+			"lists": ["scroll","common","consumable"]
+		},
+		{
+			"item": "spell scroll (2nd)",
+			"lists": ["scroll","uncommon","consumable"]
+		},
+		{
+			"item": "spell scroll (3rd)",
+			"lists": ["scroll","uncommon","consumable"]
+		},
+		{
+			"item": "spell scroll (4th)",
+			"lists": ["scroll","rare","consumable"]
+		},
+		{
+			"item": "spell scroll (5th)",
+			"lists": ["scroll","rare","consumable"]
+		},
+		{
+			"item": "spell scroll (6th)",
+			"lists": ["scroll","veryrare","consumable"]
+		},
+		{
+			"item": "spell scroll (7th)",
+			"lists": ["scroll","veryrare","consumable"]
+		},
+		{
+			"item": "spell scroll (8th)",
+			"lists": ["scroll","veryrare","consumable"]
+		},
+		{
+			"item": "spell scroll (9th)",
+			"lists": ["scroll","legendary","consumable"]
+		},
+		{
+			"item": "sphere of annihilation",
+			"lists": ["wondrousitem","legendary"]
+		},
+		{
+			"item": "staff of adornment",
+			"lists": ["staff","common"]
+		},
+		{
+			"item": "staff of birdcalls",
+			"lists": ["staff","common"]
+		},
+		{
+			"item": "staff of charming",
+			"lists": ["staff","rare","attunement"]
+		},
+		{
+			"item": "staff of fire",
+			"lists": ["staff","veryrare","attunement"]
+		},
+		{
+			"item": "staff of flowers",
+			"lists": ["staff","common"]
+		},
+		{
+			"item": "staff of frost",
+			"lists": ["staff","veryrare","attunement"]
+		},
+		{
+			"item": "staff of healing",
+			"lists": ["staff","rare","attunement"]
+		},
+		{
+			"item": "staff of power",
+			"lists": ["staff","veryrare","attunement"]
+		},
+		{
+			"item": "staff of striking",
+			"lists": ["staff","veryrare","attunement"]
+		},
+		{
+			"item": "staff of swarming insects",
+			"lists": ["staff","rare","attunement"]
+		},
+		{
+			"item": "staff of the adder",
+			"lists": ["staff","uncommon","attunement"]
+		},
+		{
+			"item": "staff of the magi",
+			"lists": ["staff","legendary","attunement"]
+		},
+		{
+			"item": "staff of the python",
+			"lists": ["staff","uncommon","attunement"]
+		},
+		{
+			"item": "staff of the woodlands",
+			"lists": ["staff","rare","attunement"]
+		},
+		{
+			"item": "staff of thunder and lightning",
+			"lists": ["staff","veryrare","attunement"]
+		},
+		{
+			"item": "staff of withering",
+			"lists": ["staff","rare","attunement"]
+		},
+		{
+			"item": "stone of controlling earth elementals",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "stone of good luck",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "sun blade",
+			"lists": ["weapon","rare","attunement"]
+		},
+		{
+			"item": "sword of answering",
+			"lists": ["weapon","legendary","attunement"]
+		},
+		{
+			"item": "sword of kas",
+			"lists": ["weapon","artifact","attunement"]
+		},
+		{
+			"item": "sword of life stealing",
+			"lists": ["weapon","rare","attunement"]
+		},
+		{
+			"item": "sword of sharpness",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "sword of vengeance",
+			"lists": ["weapon","uncommon","attunement","cursed"]
+		},
+		{
+			"item": "sword of wounding",
+			"lists": ["weapon","rare","attunement"]
+		},
+		{
+			"item": "sylvan talon",
+			"lists": ["weapon","common","attunement"]
+		},
+		{
+			"item": "talisman of pure good",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "talisman of the sphere",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "talisman of ultimate evil",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "talking doll",
+			"lists": ["wondrousitem","common","attunement"]
+		},
+		{
+			"item": "tankard of sobriety",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "tentacle rod",
+			"lists": ["rod","rare","attunement"]
+		},
+		{
+			"item": "thunderous greatclub",
+			"lists": ["weapon","veryrare","attunement"]
+		},
+		{
+			"item": "tome of clear thought",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "tome of leadership and influence",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "tome of the stilled tongue",
+			"lists": ["wondrousitem","legendary","attunement"]
+		},
+		{
+			"item": "tome of understanding",
+			"lists": ["wondrousitem","veryrare","consumable"]
+		},
+		{
+			"item": "trident of fish command",
+			"lists": ["weapon","uncommon","attunement"]
+		},
+		{
+			"item": "universal solvent",
+			"lists": ["wondrousitem","legendary","consumable"]
+		},
+		{
+			"item": "veterans cane",
+			"lists": ["wondrousitem","common"]
+		},
+		{
+			"item": "vicious weapon",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "vorpal sword",
+			"lists": ["weapon","legendary","attunement"]
+		},
+		{
+			"item": "walloping ammunition",
+			"lists": ["ammunition","common","consumable"]
+		},
+		{
+			"item": "wand of binding",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wand of conducting",
+			"lists": ["wand","common"]
+		},
+		{
+			"item": "wand of enemy detection",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wand of fear",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wand of fireballs",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wand of lightning bolts",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wand of magic detection",
+			"lists": ["wand","uncommon"]
+		},
+		{
+			"item": "wand of magic missiles",
+			"lists": ["wand","uncommon"]
+		},
+		{
+			"item": "wand of orcus",
+			"lists": ["wand","artifact","attunement"]
+		},
+		{
+			"item": "wand of paralysis",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wand of polymorph",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wand of pyrotechnics",
+			"lists": ["wand","common"]
+		},
+		{
+			"item": "wand of secrets",
+			"lists": ["wand","uncommon"]
+		},
+		{
+			"item": "wand of the war mage +1",
+			"lists": ["wand","uncommon","attunement"]
+		},
+		{
+			"item": "wand of the war mage +2",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wand of the war mage +3",
+			"lists": ["wand","veryrare","attunement"]
+		},
+		{
+			"item": "wand of web",
+			"lists": ["wand","uncommon","attunement"]
+		},
+		{
+			"item": "wand of wonder",
+			"lists": ["wand","rare","attunement"]
+		},
+		{
+			"item": "wave",
+			"lists": ["weapon","artifact","attunement"]
+		},
+		{
+			"item": "+1 weapon",
+			"lists": ["weapon","uncommon"]
+		},
+		{
+			"item": "+2 weapon",
+			"lists": ["weapon","rare"]
+		},
+		{
+			"item": "+3 weapon",
+			"lists": ["weapon","veryrare"]
+		},
+		{
+			"item": "weapon of warning",
+			"lists": ["weapon","uncommon","attunement"]
+		},
+		{
+			"item": "well of many worlds",
+			"lists": ["wondrousitem","legendary"]
+		},
+		{
+			"item": "whelm",
+			"lists": ["weapon","artifact","attunement"]
+		},
+		{
+			"item": "wind fan",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "winged boots",
+			"lists": ["wondrousitem","uncommon","attunement"]
+		},
+		{
+			"item": "wings of flying",
+			"lists": ["wondrousitem","rare","attunement"]
+		},
+		{
+			"item": "wraps of unarmed power +1",
+			"lists": ["wondrousitem","uncommon"]
+		},
+		{
+			"item": "wraps of unarmed power +2",
+			"lists": ["wondrousitem","rare"]
+		},
+		{
+			"item": "wraps of unarmed power +3",
+			"lists": ["wondrousitem","veryrare"]
+		}
+	]
+}
