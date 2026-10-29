@@ -695,6 +695,20 @@ async function processCommand(receivedMessage)
 			receivedMessage.channel.send(output);
 			return;
 		}
+    } else if (normalizedCommand == "dndrandommundaneitem") 
+	{
+		output = GetRandomDndMundaneItems(arguments);
+		
+		if (output == null)
+		{
+			console.log("failed command: dndnpc");
+			receivedMessage.channel.send("Something went wrong, I'm sorry. !feedback to get feedback link");
+			return;
+		} else
+		{
+			receivedMessage.channel.send(output);
+			return;
+		}
     } else if (normalizedCommand == "blaseballer") 
 	{
 		output = GenerateBlaseballer();
@@ -11077,9 +11091,15 @@ function GetRandomDndMagicItems(arguments)
 	let argumentpos = -1;
 	let filterlist = [];
 	let removelist = [];
+	let no_dupes = false;
 	
 	if (arguments != null && arguments.length > 0)
 	{
+		argumentpos = arguments.indexOf("-noduplicates")
+		if (argumentpos > -1)
+		{
+			no_dupes = true
+		}
 		argumentpos = arguments.indexOf("-number")
 		if (argumentpos > -1)
 		{
@@ -11141,15 +11161,123 @@ function GetRandomDndMagicItems(arguments)
 	
 	for(let i = 0; i < item_count; i++)
 	{
-		items.push(RandomArrayEntry(templootlist, false, "DOESNOTNEST"))
+		if (templootlist.length <= 0)
+			break
+		
+		let random_item = Math.floor(Math.random()*templootlist.length)
+		items.push(templootlist[random_item])
+		if (no_dupes)
+			templootlist.splice(random_item,1)
 	}
 	
 	let output = ""
 	for(let i = 0; i < items.length; i++)
 	{
+		//console.log(items[i])
 		if (i > 0)
 			output += "\n"
 		output += items[i].item
+		if (items[i].subitem.length > 0)
+			output += " (" + items[i].subitem[Math.floor(Math.random()*items[i].subitem.length)] + ")"
+	}
+	
+	return output
+}
+
+function GetRandomDndMundaneItems(arguments)
+{
+	let item_count = 1;
+	let argumentpos = -1;
+	let filterlist = [];
+	let removelist = [];
+	let no_dupes = false;
+	
+	if (arguments != null && arguments.length > 0)
+	{
+		argumentpos = arguments.indexOf("-noduplicates")
+		if (argumentpos > -1)
+		{
+			no_dupes = true
+		}
+		argumentpos = arguments.indexOf("-number")
+		if (argumentpos > -1)
+		{
+			let cur_arg = 1
+			if (arguments.length > cur_arg+argumentpos)
+			{
+				let tenative_count = parseInt(arguments[cur_arg+argumentpos])
+				if (!isNaN(tenative_count) && tenative_count >= 1)
+				item_count = tenative_count
+			}
+		}
+		argumentpos = arguments.indexOf("-filter")
+		if (argumentpos > -1)
+		{
+			let cur_arg = 1
+			while (arguments.length > cur_arg+argumentpos && arguments[cur_arg+argumentpos].charAt(0) != "-")
+			{
+				filterlist.push(arguments[cur_arg + argumentpos]);
+				cur_arg += 1
+			}
+		}
+		argumentpos = arguments.indexOf("-remove")
+		if (argumentpos > -1)
+		{
+			let cur_arg = 1
+			while (arguments.length > cur_arg+argumentpos && arguments[cur_arg+argumentpos].charAt(0) != "-")
+			{
+				removelist.push(arguments[cur_arg + argumentpos]);
+				cur_arg += 1
+			}
+		}
+	}
+	
+	let items = [];
+	
+	let templootlist = dnd_magic_items.mundane_item_list.slice();
+	
+	if (filterlist.length > 0)
+	{
+		for (let i = 0; i < filterlist.length; i++)
+			templootlist = templootlist.filter(filterByList,filterlist[i]);
+	}
+	
+	if (removelist.length > 0)
+	{
+		for (let i = 0; i < removelist.length; i++)
+			templootlist = templootlist.filter(removeByList,removelist[i]);
+	}
+	
+	// console.log(templootlist)
+	// console.log(filterlist)
+	// console.log(removelist)
+	
+	if (templootlist.length == 0)
+	{
+		console.log("error, templootlist is empty");
+		return "no items returnable with parameters";
+	}
+	
+	for(let i = 0; i < item_count; i++)
+	{
+		if (templootlist.length <= 0)
+			break
+		
+		let random_item = Math.floor(Math.random()*templootlist.length)
+		items.push(templootlist[random_item])
+		if (no_dupes)
+			templootlist.splice(random_item,1)
+	}
+	
+	let output = ""
+	for(let i = 0; i < items.length; i++)
+	{
+		//console.log(items[i])
+		if (i > 0)
+			output += "\n"
+		output += items[i].item
+		if (items[i].subitem.length > 0)
+			output += " (" + items[i].subitem[Math.floor(Math.random()*items[i].subitem.length)] + ")"
 	}
 	
 	return output
