@@ -1292,12 +1292,12 @@
 			"subitem": []
 		},
 		{
-			"item": "quaals feather token (bird)",
+			"item": "quaals feather token",
 			"lists": ["wondrousitem","rare","consumable"],
 			"subitem": ["bird","swan boat","whip"]
 		},
 		{
-			"item": "quaals feather token (fan)",
+			"item": "quaals feather token",
 			"lists": ["wondrousitem","uncommon","consumable"],
 			"subitem": ["fan","tree"]
 		},
